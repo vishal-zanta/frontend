@@ -1,0 +1,350 @@
+import React, { useState, useEffect } from "react";
+import { Trash2, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import EditDialog from "@/components/EditDialog";
+import DeleteDialog from "@/components/DeleteDialog";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postSubservice, putSubservice, deleteSubservice } from "./api";
+
+export default function SubServicesTable({ service, dialog, setDialog }) {
+  const [subservices, setSubservices] = useState(service.subservices || []);
+  const queryClient = useQueryClient();
+
+  // Sync state if services list refetches in background
+  useEffect(() => {
+    setSubservices(service.subservices || []);
+  }, [service.subservices]);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    titleHindi: "",
+    sla: 24,
+    geoTagged: false,
+    fieldVisit: false,
+  });
+  const [errors, setErrors] = useState({
+    title: "",
+    titleHindi: "",
+    sla: "",
+  });
+
+  useEffect(() => {
+    if (dialog) {
+      setErrors({ title: "", titleHindi: "", sla: "" });
+      if (dialog.type === "edit") {
+        setFormData({
+          title: dialog.item?.title || "",
+          titleHindi: dialog.item?.titleHindi || "",
+          sla: dialog.item?.sla || 24,
+          geoTagged: !!dialog.item?.geoTagged,
+          fieldVisit: !!dialog.item?.fieldVisit,
+        });
+      } else if (dialog.type === "add") {
+        setFormData({
+          title: "",
+          titleHindi: "",
+          sla: 24,
+          geoTagged: false,
+          fieldVisit: false,
+        });
+      }
+    }
+  }, [dialog]);
+
+  const postMutation = useMutation({
+    mutationFn: postSubservice,
+    onSuccess: (res) => {
+      // API typically returns { success: true, data: newSubservice } or the newSubservice directly
+      const newSubservice = res?.data?.data;
+      // console.log({newSubservice})
+      setSubservices((prev) => [...prev, newSubservice]);
+
+      getSuccessToast("Sub-service added successfully");
+      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SERVICES] });
+      setDialog(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const putMutation = useMutation({
+    mutationFn: putSubservice,
+    onSuccess: (res) => {
+      const updatedSubservice = res?.data?.data;
+      console.log({ updatedSubservice });
+
+      setSubservices((prev) =>
+        prev.map((item) =>
+          item._id === updatedSubservice._id ? updatedSubservice : item,
+        ),
+      );
+
+      getSuccessToast("Sub-service updated successfully");
+      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SERVICES] });
+      setDialog(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteSubservice,
+    onSuccess: (res, deletedId) => {
+      setSubservices((prev) => prev.filter((item) => item._id !== deletedId));
+
+      getSuccessToast("Sub-service deleted successfully");
+      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SERVICES] });
+      setDialog(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const handleSave = () => {
+    if (dialog.type === "delete") {
+      deleteMutation.mutate(dialog.item._id);
+      return;
+    }
+
+    const newErrors = {};
+    if (!formData.title.trim()) {
+      newErrors.title = "Sub-service name (English) is required";
+    }
+    if (!formData.titleHindi.trim()) {
+      newErrors.titleHindi = "उप-सेवा का नाम (Hindi) is required";
+    }
+    if (
+      !formData.sla ||
+      isNaN(Number(formData.sla)) ||
+      Number(formData.sla) <= 0
+    ) {
+      newErrors.sla = "Valid SLA hours are required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({ title: "", titleHindi: "", sla: "" });
+
+    if (dialog.type === "add") {
+      postMutation.mutate({
+        ...formData,
+        sla: Number(formData.sla),
+        service: dialog.item._id,
+      });
+    } else {
+      putMutation.mutate({
+        subserviceId: dialog.item._id,
+        subservice: {
+          ...dialog.item,
+          ...formData,
+          sla: Number(formData.sla),
+        },
+      });
+    }
+  };
+
+  const isDialogActive =
+    dialog &&
+    (dialog.type === "add"
+      ? dialog.item?._id === service._id
+      : dialog.item?.service?._id === service._id ||
+        dialog.item?.service === service._id);
+
+  return (
+    <>
+      {subservices.length === 0 ? (
+        <div className="text-center py-6 text-sm text-muted-foreground bg-muted/10 rounded-lg border border-dashed border-border">
+          No sub-services configured for this service yet.
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50">
+              <tr className="text-left text-xs text-muted-foreground">
+                <th className="px-3 py-2.5 font-medium">
+                  Sub-Service (English)
+                </th>
+                <th className="px-3 py-2.5 font-medium">उप-सेवा (Hindi)</th>
+                <th className="px-3 py-2.5 font-medium text-center">
+                  SLA (hrs)
+                </th>
+                <th className="px-3 py-2.5 font-medium text-center">
+                  Geo-Tagged
+                </th>
+                <th className="px-3 py-2.5 font-medium text-center">
+                  Field Visit
+                </th>
+                <th className="px-3 py-2.5 text-center font-medium">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {subservices.map((ss) => (
+                <tr key={ss._id} className="hover:bg-muted/30">
+                  <td className="px-3 py-2.5 font-medium">{ss.title}</td>
+                  <td className="px-3 py-2.5 text-muted-foreground">
+                    {ss.titleHindi || "—"}
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-amber-50 text-amber-700 font-semibold border-amber-200"
+                    >
+                      {ss.sla}h
+                    </Badge>
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    {ss.geoTagged ? "✅" : "—"}
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    {ss.fieldVisit ? "✅" : "—"}
+                  </td>
+                  <td className="px-3 py-2.5">
+                    <div className="flex gap-1 justify-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setDialog({ type: "edit", item: ss })}
+                      >
+                        <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => setDialog({ type: "delete", item: ss })}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {isDialogActive && dialog && dialog.type === "delete" && (
+        <DeleteDialog
+          title={dialog.item.title}
+          onDelete={handleSave}
+          onClose={() => setDialog(null)}
+          deleting={deleteMutation.isPending}
+        />
+      )}
+
+      {isDialogActive && dialog && dialog.type !== "delete" && (
+        <EditDialog
+          title={
+            dialog.type === "add"
+              ? "Add Sub-service"
+              : `Edit ${dialog.item?.title || "Record"}`
+          }
+          onClose={() => setDialog(null)}
+          onSave={handleSave}
+          saving={postMutation.isPending || putMutation.isPending}
+        >
+          <div className="space-y-4">
+            <div>
+              <Label className="mb-1.5 block">
+                Sub-Service Name (English) *
+              </Label>
+              <Input
+                value={formData.title}
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, title: e.target.value }));
+                  if (errors.title)
+                    setErrors((prev) => ({ ...prev, title: "" }));
+                }}
+                placeholder="e.g., Pothole Repair"
+                required
+              />
+              {errors.title && (
+                <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+              )}
+            </div>
+            <div>
+              <Label className="mb-1.5 block">उप-सेवा (Hindi) *</Label>
+              <Input
+                value={formData.titleHindi}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    titleHindi: e.target.value,
+                  }));
+                  if (errors.titleHindi)
+                    setErrors((prev) => ({ ...prev, titleHindi: "" }));
+                }}
+                placeholder="उदा. गड्ढा मरम्मत"
+                required
+              />
+              {errors.titleHindi && (
+                <p className="text-red-500 text-xs mt-1">{errors.titleHindi}</p>
+              )}
+            </div>
+            <div>
+              <Label className="mb-1.5 block">SLA Hours *</Label>
+              <Input
+                type="number"
+                value={formData.sla}
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, sla: e.target.value }));
+                  if (errors.sla) setErrors((prev) => ({ ...prev, sla: "" }));
+                }}
+                placeholder="e.g., 48"
+                required
+              />
+              {errors.sla && (
+                <p className="text-red-500 text-xs mt-1">{errors.sla}</p>
+              )}
+            </div>
+            <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-muted/20">
+              <div className="space-y-0.5">
+                <Label className="text-sm font-medium">Geo-Tagged</Label>
+                <p className="text-xs text-muted-foreground">
+                  Require geo-location for this service
+                </p>
+              </div>
+              <Switch
+                checked={formData.geoTagged}
+                onCheckedChange={(val) =>
+                  setFormData((prev) => ({ ...prev, geoTagged: val }))
+                }
+              />
+            </div>
+            <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-muted/20">
+              <div className="space-y-0.5">
+                <Label className="text-sm font-medium">Field Visit</Label>
+                <p className="text-xs text-muted-foreground">
+                  Requires physical site inspection by officer
+                </p>
+              </div>
+              <Switch
+                checked={formData.fieldVisit}
+                onCheckedChange={(val) =>
+                  setFormData((prev) => ({ ...prev, fieldVisit: val }))
+                }
+              />
+            </div>
+            <div>
+              <Label className="mb-1.5 block">Parent Service</Label>
+              <Input disabled value={service.title} className="bg-muted/50" />
+            </div>
+          </div>
+        </EditDialog>
+      )}
+    </>
+  );
+}

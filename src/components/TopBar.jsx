@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, Bell, Menu, LogOut, Settings, CheckCircle2, AlertCircle, Info, X, Shield, Repeat } from "lucide-react";
-import { base44 } from "@/api/base44Client";
 import { PORTAL_META } from "@/lib/biharData";
 
 const roleInfo = {
@@ -77,7 +76,9 @@ export default function TopBar({ role = "superadmin", profile, onProfileChange, 
   }, []);
 
   const handleLogout = async () => {
-    try { await base44.auth.logout("/"); } catch { window.location.href = "/"; }
+   localStorage.removeItem("usertoken") 
+   sessionStorage.removeItem("usertoken")
+   navigate("/");
   };
 
   const handleSwitchProfile = (profileId) => {

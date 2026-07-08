@@ -6,7 +6,7 @@ import { PORTAL_META, DASHBOARD_KPIS } from "@/lib/biharData";
 const portals = [
   {
     role: "superadmin",
-    path: "/admin",
+    path: "/login",
     title: "Super Admin Console",
     desc: "Full system control - workflow config, SLA, master data, dashboards, MIS reports, user management & audit trail",
     icon: ShieldCheck,
@@ -17,7 +17,7 @@ const portals = [
   },
   {
     role: "officer",
-    path: "/officer",
+    path: "/login",
     title: "Officer Portal",
     desc: "View & action assigned complaints, geo-tag photos, update status, field visit documentation, SLA tracking",
     icon: UserCog,
@@ -28,7 +28,7 @@ const portals = [
   },
   {
     role: "crm",
-    path: "/crm",
+    path: "/login",
     title: "CRM / Call Centre",
     desc: "Raise complaints on behalf of citizens, call tracking, shift management, agent performance, officer contact",
     icon: Headphones,
