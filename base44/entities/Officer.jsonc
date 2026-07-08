@@ -1,0 +1,80 @@
+{
+  "name": "Officer",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Officer Name"
+    },
+    "designation": {
+      "type": "string",
+      "title": "Designation"
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "L1",
+        "L2",
+        "Zone",
+        "ULB",
+        "Division",
+        "SUDA"
+      ]
+    },
+    "district": {
+      "type": "string",
+      "title": "District"
+    },
+    "ulb": {
+      "type": "string",
+      "title": "ULB"
+    },
+    "wards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Assigned Wards"
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Assigned Services"
+    },
+    "mobile": {
+      "type": "string",
+      "title": "Mobile"
+    },
+    "resolved_count": {
+      "type": "number",
+      "default": 0
+    },
+    "pending_count": {
+      "type": "number",
+      "default": 0
+    },
+    "sla_breached": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_resolution_hrs": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name",
+    "designation",
+    "district"
+  ]
+}

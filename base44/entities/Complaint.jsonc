@@ -1,0 +1,131 @@
+{
+  "name": "Complaint",
+  "type": "object",
+  "properties": {
+    "complaint_id": {
+      "type": "string",
+      "title": "Complaint ID"
+    },
+    "citizen_name": {
+      "type": "string",
+      "title": "Citizen Name"
+    },
+    "mobile": {
+      "type": "string",
+      "title": "Mobile Number"
+    },
+    "address": {
+      "type": "string",
+      "title": "Address"
+    },
+    "district": {
+      "type": "string",
+      "title": "District"
+    },
+    "ulb": {
+      "type": "string",
+      "title": "ULB"
+    },
+    "ward": {
+      "type": "string",
+      "title": "Ward"
+    },
+    "landmark": {
+      "type": "string",
+      "title": "Landmark"
+    },
+    "service": {
+      "type": "string",
+      "title": "Service"
+    },
+    "subservice": {
+      "type": "string",
+      "title": "Sub-Service"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "Normal",
+        "Low",
+        "High"
+      ],
+      "default": "Normal"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Assigned",
+        "In Progress",
+        "Field Visit",
+        "On Hold",
+        "Reopened",
+        "Resolved",
+        "Rejected",
+        "Closed",
+        "Withdrawn",
+        "Escalated"
+      ],
+      "default": "Pending"
+    },
+    "source": {
+      "type": "string",
+      "title": "Source"
+    },
+    "l1_officer": {
+      "type": "string",
+      "title": "L1 Officer ID"
+    },
+    "l2_officer": {
+      "type": "string",
+      "title": "L2 Officer ID"
+    },
+    "geo_lat": {
+      "type": "number",
+      "title": "Latitude"
+    },
+    "geo_lng": {
+      "type": "number",
+      "title": "Longitude"
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Photo URL"
+    },
+    "sla_hours": {
+      "type": "number",
+      "title": "SLA Hours"
+    },
+    "resolved_date": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Resolved Date"
+    },
+    "dept_transfer": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Department Transfers"
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "title": "Timeline Events"
+    }
+  },
+  "required": [
+    "complaint_id",
+    "citizen_name",
+    "mobile",
+    "service",
+    "subservice",
+    "status"
+  ]
+}

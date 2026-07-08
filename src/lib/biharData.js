@@ -1,0 +1,685 @@
+// ============================================================
+// Bihar Unified Citizen Grievance Portal — Dummy Data
+// Simulates a portal in active use for 6+ months
+// ============================================================
+
+export const PORTAL_META = {
+  name: "Bihar e-Grievance Portal",
+  tagline: "सुशासन ही जनसेवा — Good Governance is Public Service",
+  dept: "Urban Development & Housing Department, Government of Bihar",
+  version: "v2.4.1",
+  lastSync: "06 Jul 2026, 09:42 AM IST",
+};
+
+// ── Districts & ULBs (Urban Local Bodies) ──
+export const DISTRICTS = [
+  { id: "patna", name: "Patna", name_hi: "पटना", division: "Patna", zone: "South Bihar", population: 2442383, ulbRank: 1, urban: true },
+  { id: "gaya", name: "Gaya", name_hi: "गया", division: "Magadh", zone: "South Bihar", population: 4758432, ulbRank: 2, urban: true },
+  { id: "bhagalpur", name: "Bhagalpur", name_hi: "भागलपुर", division: "Bhagalpur", zone: "North Bihar", population: 3137219, ulbRank: 3, urban: true },
+  { id: "muzaffarpur", name: "Muzaffarpur", name_hi: "मुजफ्फरपुर", division: "Tirhut", zone: "North Bihar", population: 4363769, ulbRank: 4, urban: true },
+  { id: "darbhanga", name: "Darbhanga", name_hi: "दरभंगा", division: "Darbhanga", zone: "North Bihar", population: 3815342, ulbRank: 5, urban: true },
+  { id: "purnia", name: "Purnia", name_hi: "पूर्णिया", division: "Purnia", zone: "North Bihar", population: 2927134, ulbRank: 6, urban: true },
+  { id: "katihar", name: "Katihar", name_hi: "कटिहार", division: "Purnia", zone: "North Bihar", population: 2687643, ulbRank: 7, urban: true },
+  { id: "begusarai", name: "Begusarai", name_hi: "बेगूसराय", division: "Munger", zone: "North Bihar", population: 2394064, ulbRank: 8, urban: true },
+  { id: "chapra", name: "Chapra (Saran)", name_hi: "छपरा", division: "Saran", zone: "North Bihar", population: 3451303, ulbRank: 9, urban: true },
+  { id: "motihari", name: "Motihari (E.Champaran)", name_hi: "मोतिहारी", division: "Tirhut", zone: "North Bihar", population: 4215172, ulbRank: 10, urban: true },
+  { id: "munger", name: "Munger", name_hi: "मुंगेर", division: "Munger", zone: "South Bihar", population: 1367703, ulbRank: 11, urban: true },
+  { id: "buxar", name: "Buxar", name_hi: "बक्सर", division: "Saran", zone: "South Bihar", population: 1398105, ulbRank: 12, urban: false },
+];
+
+export const ULBS = [
+  { id: "pmc", name: "Patna Municipal Corporation", district: "patna", wards: 75, population: 2065784, rank: 1 },
+  { id: "gmc", name: "Gaya Municipal Corporation", district: "gaya", wards: 53, population: 470839, rank: 2 },
+  { id: "bmc", name: "Bhagalpur Municipal Corporation", district: "bhagalpur", wards: 51, population: 413200, rank: 3 },
+  { id: "mmc", name: "Muzaffarpur Municipal Corporation", district: "muzaffarpur", wards: 49, population: 354462, rank: 4 },
+  { id: "dmc", name: "Darbhanga Municipal Corporation", district: "darbhanga", wards: 48, population: 306956, rank: 5 },
+  { id: "purnia", name: "Purnia Municipal Corporation", district: "purnia", wards: 45, population: 280583, rank: 6 },
+];
+
+// ── Services & Sub-services ──
+export const SERVICES = [
+  {
+    id: "street-light", name: "Street Lighting", name_hi: "स्ट्रीट लाइटिंग", dept: "Energy Dept", icon: "Lightbulb",
+    subservices: [
+      { id: "sl-not-working", name: "Street light not working", name_hi: "स्ट्रीट लाइट काम नहीं कर रहा", slaHours: 24, geoTagged: true, fieldVisit: true },
+      { id: "sl-pole-damaged", name: "Street light pole damaged", name_hi: "स्ट्रीट लाइट पोल टूटा हुआ", slaHours: 48, geoTagged: true, fieldVisit: true },
+      { id: "sl-wiring", name: "Exposed wiring / spark", name_hi: "तार का कटना / चिंगारी", slaHours: 6, geoTagged: true, fieldVisit: false },
+    ]
+  },
+  {
+    id: "drainage", name: "Drainage & Sewerage", name_hi: "नाली एवं सीवरेज", dept: "Urban Dev Dept", icon: "Droplets",
+    subservices: [
+      { id: "dr-overflow", name: "Drain overflow / waterlogging", name_hi: "नाली ओवरफ्लो / जलभराव", slaHours: 12, geoTagged: true, fieldVisit: true },
+      { id: "dr-blocked", name: "Drain blocked", name_hi: "नाली बंद", slaHours: 24, geoTagged: true, fieldVisit: true },
+      { id: "dr-damaged", name: "Drain cover damaged / missing", name_hi: "नाली कवर टूटा / गायब", slaHours: 48, geoTagged: true, fieldVisit: false },
+    ]
+  },
+  {
+    id: "water-supply", name: "Water Supply", name_hi: "जल आपूर्ति", dept: "PHED", icon: "Waves",
+    subservices: [
+      { id: "ws-no-water", name: "No water supply", name_hi: "जल आपूर्ति नहीं", slaHours: 24, geoTagged: true, fieldVisit: true },
+      { id: "ws-dirty", name: "Dirty / contaminated water", name_hi: "गंदा पानी", slaHours: 12, geoTagged: true, fieldVisit: true },
+      { id: "ws-pipe-leak", name: "Pipe leakage / burst", name_hi: "पाइप लीक / फटना", slaHours: 8, geoTagged: true, fieldVisit: true },
+    ]
+  },
+  {
+    id: "road", name: "Road & Infrastructure", name_hi: "सड़क एवं बुनियादी ढांचा", dept: "RCD", icon: "Road",
+    subservices: [
+      { id: "rd-potholes", name: "Potholes / damaged road", name_hi: "गड्ढे / टूटी सड़क", slaHours: 72, geoTagged: true, fieldVisit: true },
+      { id: "rd-blockage", name: "Road blockade", name_hi: "सड़क अवरोध", slaHours: 4, geoTagged: true, fieldVisit: true },
+      { id: "rd-footpath", name: "Damaged footpath", name_hi: "टूटा हुआ फुटपाथ", slaHours: 96, geoTagged: false, fieldVisit: false },
+    ]
+  },
+  {
+    id: "sanitation", name: "Sanitation & Waste", name_hi: "सफाई एवं कचरा", dept: "Urban Dev Dept", icon: "Trash2",
+    subservices: [
+      { id: "sa-no-collection", name: "Garbage not collected", name_hi: "कचरा नहीं उठाया गया", slaHours: 24, geoTagged: true, fieldVisit: false },
+      { id: "sa-dump", name: "Illegal garbage dumping", name_hi: "अवैध कचरा डालना", slaHours: 48, geoTagged: true, fieldVisit: true },
+      { id: "sa-toilet", name: "Public toilet maintenance", name_hi: "सार्वजनिक शौचालय रखरखाव", slaHours: 24, geoTagged: false, fieldVisit: false },
+    ]
+  },
+  {
+    id: "animal", name: "Animal Rescue", name_hi: "जीव बचाव", dept: "Forest Dept", icon: "PawPrint",
+    subservices: [
+      { id: "an-stray-dog", name: "Stray dog menace", name_hi: "आवारा कुत्तों की समस्या", slaHours: 12, geoTagged: true, fieldVisit: true },
+      { id: "an-snake", name: "Snake rescue", name_hi: "सांप बचाव", slaHours: 2, geoTagged: true, fieldVisit: true },
+      { id: "an-cattle", name: "Stray cattle on road", name_hi: "सड़क पर आवारा मवेशी", slaHours: 6, geoTagged: true, fieldVisit: true },
+    ]
+  },
+  {
+    id: "streetlight-drainage", name: "Cross-Departmental", name_hi: "अंतर-विभागीय", dept: "Multi-Dept", icon: "GitBranch",
+    subservices: [
+      { id: "cd-light-drain", name: "Fallen street light in drain", name_hi: "नाली में गिरी स्ट्रीट लाइट", slaHours: 8, geoTagged: true, fieldVisit: true, depts: ["Energy Dept", "Urban Dev Dept"] },
+      { id: "cd-road-water", name: "Road cut + water pipe damage", name_hi: "सड़क कटाव + जल पाइप क्षति", slaHours: 12, geoTagged: true, fieldVisit: true, depts: ["RCD", "PHED"] },
+    ]
+  },
+];
+
+// ── Designations ──
+export const DESIGNATIONS = [
+  { id: "l1-officer", name_en: "L1 Field Officer", name_hi: "एल-1 फील्ड अधिकारी", level: "L1" },
+  { id: "l2-officer", name_en: "L2 Supervisory Officer", name_hi: "एल-2 पर्यवेक्षी अधिकारी", level: "L2" },
+  { id: "zone-admin", name_en: "Zone Administrator", name_hi: "ज़ोन प्रशासक", level: "Zone" },
+  { id: "ulb-admin", name_en: "ULB Administrator", name_hi: "नगर निकाय प्रशासक", level: "ULB" },
+  { id: "div-admin", name_en: "Divisional Administrator", name_hi: "संभागीय प्रशासक", level: "Division" },
+  { id: "suda-admin", name_en: "SUDA Administrator", name_hi: "सुडा प्रशासक", level: "SUDA" },
+  { id: "cce", name_en: "Customer Care Executive", name_hi: "ग्राहक सेवा कार्यपालक", level: "CCE" },
+  { id: "cc-supervisor", name_en: "Call Centre Supervisor", name_hi: "कॉल सेंटर पर्यवेक्षक", level: "Supervisor" },
+];
+
+// ── Complaint Sources ──
+export const COMPLAINT_SOURCES = [
+  { id: "website", name: "Website", icon: "Globe" },
+  { id: "app", name: "Mobile App", icon: "Smartphone" },
+  { id: "call", name: "Phone Call / IVR", icon: "Phone" },
+  { id: "social-twitter", name: "Twitter / X", icon: "Twitter" },
+  { id: "social-insta", name: "Instagram", icon: "Instagram" },
+  { id: "whatsapp", name: "WhatsApp", icon: "MessageCircle" },
+  { id: "newspaper", name: "Newspaper", icon: "Newspaper" },
+  { id: "voicebot", name: "Voice Bot", icon: "Mic" },
+  { id: "chatbot", name: "Chat Bot", icon: "Bot" },
+];
+
+export const COMPLAINT_STATUS = ["Pending", "Assigned", "In Progress", "Field Visit", "On Hold", "Reopened", "Resolved", "Rejected", "Closed", "Withdrawn", "Escalated"];
+
+export const PRIORITY_LEVELS = ["Normal", "Low", "High"];
+
+// ── Officers ──
+export const OFFICERS = [
+  { id: "off-001", name: "Rajesh Kumar Singh", designation: "l1-officer", designationLabel: "L1 Field Officer", district: "patna", ulb: "pmc", wards: ["Patna Ward-12", "Patna Ward-13", "Patna Ward-14"], services: ["street-light", "drainage"], mobile: "+91 94310 12345", resolved: 142, pending: 8, slaBreached: 3, avgResolutionHrs: 18, status: "active" },
+  { id: "off-002", name: "Sunita Devi", designation: "l1-officer", designationLabel: "L1 Field Officer", district: "patna", ulb: "pmc", wards: ["Patna Ward-07", "Patna Ward-08"], services: ["water-supply", "sanitation"], mobile: "+91 94310 22345", resolved: 98, pending: 5, slaBreached: 1, avgResolutionHrs: 22, status: "active" },
+  { id: "off-003", name: "Amit Ranjan", designation: "l1-officer", designationLabel: "L1 Field Officer", district: "gaya", ulb: "gmc", wards: ["Gaya Ward-03", "Gaya Ward-04", "Gaya Ward-05"], services: ["road", "animal"], mobile: "+91 94310 32345", resolved: 76, pending: 12, slaBreached: 4, avgResolutionHrs: 36, status: "active" },
+  { id: "off-004", name: "Prakash Jha", designation: "l2-officer", designationLabel: "L2 Supervisory Officer", district: "patna", ulb: "pmc", wards: [], services: ["street-light", "drainage", "water-supply"], mobile: "+91 94310 42345", resolved: 210, pending: 3, slaBreached: 0, avgResolutionHrs: 14, status: "active" },
+  { id: "off-005", name: "Nisha Kumari", designation: "l1-officer", designationLabel: "L1 Field Officer", district: "bhagalpur", ulb: "bmc", wards: ["Bhagalpur Ward-22", "Bhagalpur Ward-23"], services: ["street-light", "sanitation"], mobile: "+91 94310 52345", resolved: 64, pending: 7, slaBreached: 2, avgResolutionHrs: 20, status: "active" },
+  { id: "off-006", name: "Md. Irfan Alam", designation: "l1-officer", designationLabel: "L1 Field Officer", district: "muzaffarpur", ulb: "mmc", wards: ["Muzaffarpur Ward-15"], services: ["drainage", "road"], mobile: "+91 94310 62345", resolved: 88, pending: 6, slaBreached: 3, avgResolutionHrs: 28, status: "active" },
+  { id: "off-007", name: "Vikash Prasad", designation: "div-admin", designationLabel: "Divisional Administrator", district: "patna", ulb: "pmc", wards: [], services: [], mobile: "+91 94310 72345", resolved: 0, pending: 0, slaBreached: 0, avgResolutionHrs: 0, status: "active" },
+  { id: "off-008", name: "Sangeeta Gupta", designation: "ulb-admin", designationLabel: "ULB Administrator", district: "gaya", ulb: "gmc", wards: [], services: [], mobile: "+91 94310 82345", resolved: 0, pending: 0, slaBreached: 0, avgResolutionHrs: 0, status: "active" },
+  { id: "off-009", name: "Ramanuj Prasad", designation: "suda-admin", designationLabel: "SUDA Administrator", district: "patna", ulb: "pmc", wards: [], services: [], mobile: "+91 94310 92345", resolved: 0, pending: 0, slaBreached: 0, avgResolutionHrs: 0, status: "active" },
+];
+
+// ── Complaint Timeline Event Generator ──
+function genTimeline(complaintId, createdDate, status) {
+  const base = new Date(createdDate);
+  const events = [
+    { type: "Complaint Registered", actor: "Citizen / System", timestamp: fmtDate(base, 0, 0), icon: "FilePlus2", notes: `Complaint ${complaintId} submitted via Portal` },
+    { type: "Priority Set", actor: "CCE - Priya Sharma", timestamp: fmtDate(base, 0, 0, 8), icon: "Flag", notes: "Priority set to Normal" },
+    { type: "Auto-Assigned L1 Officer", actor: "System", timestamp: fmtDate(base, 0, 0, 1), icon: "UserCheck", notes: "Tagged to L1 Field Officer — Rajesh Kumar Singh" },
+    { type: "SMS Notification Sent", actor: "System", timestamp: fmtDate(base, 0, 0, 1), icon: "MessageSquare", notes: "Notification sent to officer: +91 94310 12345" },
+    { type: "Field Visit Conducted", actor: "Rajesh Kumar Singh (L1)", timestamp: fmtDate(base, 1, 6), icon: "MapPin", notes: "Site inspected. Geo-tagged photo uploaded." },
+  ];
+  if (status === "Escalated" || status === "Resolved" || status === "Closed") {
+    events.push({ type: "Escalated to L2", actor: "System (SLA Breach)", timestamp: fmtDate(base, 2, 4), icon: "AlertTriangle", notes: "SLA breached (24h). Auto-escalated to L2 — Prakash Jha" });
+  }
+  if (status === "Resolved" || status === "Closed") {
+    events.push({ type: "Status: Resolved", actor: "Rajesh Kumar Singh (L1)", timestamp: fmtDate(base, 1, 12), icon: "CheckCircle2", notes: "Issue addressed. Drain cleaned and cover repaired." });
+    events.push({ type: "Resolution Photo Uploaded", actor: "Rajesh Kumar Singh (L1)", timestamp: fmtDate(base, 1, 12, 15), icon: "Camera", notes: "1 photo uploaded with geo-tag (25.6093°N, 85.1235°E)" });
+    events.push({ type: "Citizen Feedback Received", actor: "Citizen", timestamp: fmtDate(base, 2, 0), icon: "Star", notes: "Rating: 4/5 — Satisfied with resolution" });
+    events.push({ type: "Complaint Closed", actor: "System", timestamp: fmtDate(base, 2, 2), icon: "Lock", notes: "Auto-closed after 48h of resolution with no dispute" });
+  }
+  return events;
+}
+
+function fmtDate(base, addDays, addHours, addMins = 0) {
+  const d = new Date(base);
+  d.setDate(d.getDate() + addDays);
+  d.setHours(d.getHours() + addHours);
+  d.setMinutes(d.getMinutes() + addMins);
+  return d.toISOString();
+}
+
+// ── Complaints ──
+export const COMPLAINTS = [
+  {
+    id: "BH-2026-047821", citizenName: "Ramesh Prasad", mobile: "+91 98350 11234", address: "Housing Board Colony, Kankarbagh", district: "patna", districtName: "Patna", ulb: "pmc", ulbName: "Patna Municipal Corporation", ward: "Patna Ward-12", landmark: "Near Kankarbagh Main Road", service: "drainage", serviceName: "Drainage & Sewerage", subservice: "dr-overflow", subserviceName: "Drain overflow / waterlogging", description: "Drain near our house is overflowing for 3 days. Dirty water on the road causing health hazard.", priority: "High", status: "Resolved", source: "call", createdDate: "2026-06-28T10:15:00Z", slaHours: 12, resolvedDate: "2026-06-29T22:30:00Z", l1Officer: "off-001", l1OfficerName: "Rajesh Kumar Singh", l2Officer: "off-004", l2OfficerName: "Prakash Jha", geoTag: { lat: 25.6093, lng: 85.1235 }, photoUrl: "https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?w=400", assigned: true, timeline: []
+  },
+  {
+    id: "BH-2026-047822", citizenName: "Anjali Kumari", mobile: "+91 98350 22345", address: "Boring Canal Road, Rajendra Nagar", district: "patna", districtName: "Patna", ulb: "pmc", ulbName: "Patna Municipal Corporation", ward: "Patna Ward-07", landmark: "Near Rajendra Nagar Roundabout", service: "street-light", serviceName: "Street Lighting", subservice: "sl-not-working", subserviceName: "Street light not working", description: "3 street lights not working on our lane for a week. Area is very dark at night.", priority: "Normal", status: "In Progress", source: "app", createdDate: "2026-07-03T14:20:00Z", slaHours: 24, resolvedDate: null, l1Officer: "off-002", l1OfficerName: "Sunita Devi", l2Officer: "off-004", l2OfficerName: "Prakash Jha", geoTag: { lat: 25.6130, lng: 85.1441 }, photoUrl: "https://images.unsplash.com/photo-1517414948242-7c1f3e0a8f4a?w=400", assigned: true, timeline: []
+  },
+  {
+    id: "BH-2026-047823", citizenName: "Mohammad Yusuf", mobile: "+91 98350 33456", address: "Mahavir Nagar, Kankarbagh", district: "patna", districtName: "Patna", ulb: "pmc", ulbName: "Patna Municipal Corporation", ward: "Patna Ward-13", landmark: "Near Mahavir Mandir", service: "water-supply", serviceName: "Water Supply", subservice: "ws-dirty", subserviceName: "Dirty / contaminated water", description: "Muddy water coming from tap since 2 days. Not safe to drink.", priority: "High", status: "Escalated", source: "social-twitter", createdDate: "2026-07-04T06:30:00Z", slaHours: 12, resolvedDate: null, l1Officer: "off-002", l1OfficerName: "Sunita Devi", l2Officer: "off-004", l2OfficerName: "Prakash Jha", geoTag: { lat: 25.6175, lng: 85.1289 }, photoUrl: "https://images.unsplash.com/photo-1559825481-12a05cc00344?w=400", assigned: true, timeline: []
+  },
+  {
+    id: "BH-2026-047824", citizenName: "Vikram Singh", mobile: "+91 98350 44567", address: "Gola Road, Rajauli", district: "gaya", districtName: "Gaya", ulb: "gmc", ulbName: "Gaya Municipal Corporation", ward: "Gaya Ward-03", landmark: "Near Gola Road Chowk", service: "road", serviceName: "Road & Infrastructure", subservice: "rd-potholes", subserviceName: "Potholes / damaged road", description: "Multiple large potholes on Gola Road causing accidents. Needs urgent repair.", priority: "High", status: "Field Visit", source: "website", createdDate: "2026-07-02T09:00:00Z", slaHours: 72, resolvedDate: null, l1Officer: "off-003", l1OfficerName: "Amit Ranjan", l2Officer: "off-008", l2OfficerName: "Sangeeta Gupta", geoTag: { lat: 24.7914, lng: 85.0002 }, photoUrl: "https://images.unsplash.com/photo-1597007030739-6d2e7172ee2f?w=400", assigned: true, timeline: []
+  },
+  {
+    id: "BH-2026-047825", citizenName: "Priya Bharti", mobile: "+91 98350 55678", address: "Sujaganj, Bhagalpur", district: "bhagalpur", districtName: "Bhagalpur", ulb: "bmc", ulbName: "Bhagalpur Municipal Corporation", ward: "Bhagalpur Ward-22", landmark: "Near Sujaganj Thana", service: "sanitation", serviceName: "Sanitation & Waste", subservice: "sa-no-collection", subserviceName: "Garbage not collected", description: "Garbage has not been collected from our area for 5 days. Foul smell everywhere.", priority: "Normal", status: "Assigned", source: "whatsapp", createdDate: "2026-07-05T07:45:00Z", slaHours: 24, resolvedDate: null, l1Officer: "off-005", l1OfficerName: "Nisha Kumari", l2Officer: "off-007", l2OfficerName: "Vikash Prasad", geoTag: { lat: 25.2425, lng: 86.9842 }, photoUrl: "https://images.unsplash.com/photo-1530247647843-049a5d5e5e3b?w=400", assigned: true, timeline: []
+  },
+  {
+    id: "BH-2026-047826", citizenName: "Suman Verma", mobile: "+91 98350 66789", address: "Mithanpura, Muzaffarpur", district: "muzaffarpur", districtName: "Muzaffarpur", ulb: "mmc", ulbName: "Muzaffarpur Municipal Corporation", ward: "Muzaffarpur Ward-15", landmark: "Near Mithanpura Chowk", service: "animal", serviceName: "Animal Rescue", subservice: "an-stray-dog", subserviceName: "Stray dog menace", description: "Pack of aggressive stray dogs near school. Children getting bitten.", priority: "High", status: "In Progress", source: "call", createdDate: "2026-07-04T16:00:00Z", slaHours: 12, resolvedDate: null, l1Officer: "off-006", l1OfficerName: "Md. Irfan Alam", l2Officer: "off-007", l2OfficerName: "Vikash Prasad", geoTag: { lat: 26.1209, lng: 85.3647 }, photoUrl: "https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=400", assigned: true, timeline: []
+  },
+  {
+    id: "BH-2026-047820", citizenName: "Kamla Devi", mobile: "+91 98350 00987", address: "Budh Marg, Patna", district: "patna", districtName: "Patna", ulb: "pmc", ulbName: "Patna Municipal Corporation", ward: "Patna Ward-14", landmark: "Near Patna Junction", service: "streetlight-drainage", serviceName: "Cross-Departmental", subservice: "cd-light-drain", subserviceName: "Fallen street light in drain", description: "A street light pole fell into the drain during storm. Needs Electricity + Drainage dept.", priority: "High", status: "Closed", source: "call", createdDate: "2026-06-20T11:00:00Z", slaHours: 8, resolvedDate: "2026-06-21T15:00:00Z", l1Officer: "off-001", l1OfficerName: "Rajesh Kumar Singh", l2Officer: "off-004", l2OfficerName: "Prakash Jha", geoTag: { lat: 25.6010, lng: 85.1378 }, photoUrl: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400", assigned: true, deptTransfer: ["Energy Dept", "Urban Dev Dept"], timeline: []
+  },
+  {
+    id: "BH-2026-047827", citizenName: "Ravi Shankar", mobile: "+91 98350 77890", address: "Sultanganj, Patna", district: "patna", districtName: "Patna", ulb: "pmc", ulbName: "Patna Municipal Corporation", ward: "Patna Ward-08", landmark: "Near Gola Ghat", service: "drainage", serviceName: "Drainage & Sewerage", subservice: "dr-blocked", subserviceName: "Drain blocked", description: "Drain completely blocked with debris. Overflowing during rains.", priority: "Normal", status: "Pending", source: "website", createdDate: "2026-07-06T05:30:00Z", slaHours: 24, resolvedDate: null, l1Officer: null, l1OfficerName: null, l2Officer: "off-004", l2OfficerName: "Prakash Jha", geoTag: { lat: 25.6200, lng: 85.1500 }, photoUrl: null, assigned: false, timeline: []
+  },
+];
+
+// ── Generate 100+ additional complaints for realistic data ──
+const genCitizenNames = [
+  "Ramesh Prasad", "Anjali Kumari", "Mohammad Yusuf", "Vikram Singh", "Priya Bharti",
+  "Suman Verma", "Kamla Devi", "Ravi Shankar", "Sunita Devi", "Amit Ranjan",
+  "Prakash Jha", "Nisha Kumari", "Md. Irfan Alam", "Vikash Prasad", "Sangeeta Gupta",
+  "Ramanuj Prasad", "Rajesh Kumar Singh", "Birendra Singh", "Kavita Kumari", "Dinesh Prasad",
+  "Geeta Devi", "Mohan Lal", "Rashmi Kumari", "Sanjay Verma", "Anita Singh",
+  "Rakesh Kumar", "Meena Devi", "Arjun Prasad", "Lakshmi Devi", "Vinod Kumar",
+  "Saroj Kumari", "Deepak Yadav", "Rekha Devi", "Manoj Kumar", "Sadhana Kumari",
+  "Bikash Singh", "Pooja Kumari", "Awdhesh Prasad", "Nirmala Devi", "Shyam Kumar",
+];
+
+const genDescriptions = {
+  "dr-overflow": "Drain near our house is overflowing for several days. Dirty water on the road causing health hazard.",
+  "dr-blocked": "Drain completely blocked with debris. Overflowing during rains causing waterlogging.",
+  "dr-damaged": "Drain cover is damaged and missing. Risk of accident for pedestrians and vehicles.",
+  "sl-not-working": "Street lights not working on our lane for several days. Area is very dark at night.",
+  "sl-pole-damaged": "Street light pole is damaged and leaning. Risk of falling during storms.",
+  "sl-wiring": "Exposed wiring with sparks from street light pole. Dangerous for children.",
+  "ws-no-water": "No water supply in our area for several days. Residents facing severe difficulties.",
+  "ws-dirty": "Muddy and contaminated water coming from tap. Not safe for drinking or cooking.",
+  "ws-pipe-leak": "Water pipe leakage causing water wastage and road damage.",
+  "rd-potholes": "Multiple large potholes on the road causing accidents and vehicle damage.",
+  "rd-blockage": "Road blocked due to construction debris or encroachment. Traffic affected.",
+  "rd-footpath": "Damaged footpath causing difficulty for pedestrians, especially elderly and children.",
+  "sa-no-collection": "Garbage has not been collected from our area for several days. Foul smell everywhere.",
+  "sa-dump": "Illegal garbage dumping in open area. Creating health and sanitation issues.",
+  "sa-toilet": "Public toilet in our area needs urgent maintenance and cleaning.",
+  "an-stray-dog": "Pack of aggressive stray dogs near residential area. Risk to children and elderly.",
+  "an-snake": "Snake sighted in residential area. Need urgent rescue and removal.",
+  "an-cattle": "Stray cattle on main road causing traffic obstruction and accident risk.",
+  "cd-light-drain": "A street light pole fell into the drain during storm. Needs Electricity and Drainage dept.",
+  "cd-road-water": "Road cutting work damaged water pipeline. Needs Road and Water Supply dept.",
+};
+
+const genLandmarks = [
+  "Near Main Road", "Near Bus Stop", "Near Temple", "Near School", "Near Market",
+  "Near Hospital", "Near Railway Station", "Near Park", "Near Chowk", "Near Thana",
+];
+
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randomDate() {
+  const start = new Date("2026-01-01").getTime();
+  const end = new Date("2026-07-06").getTime();
+  return new Date(start + Math.random() * (end - start)).toISOString();
+}
+
+const genStatuses = ["Pending", "Assigned", "In Progress", "Field Visit", "Resolved", "Closed", "Escalated", "Resolved", "Resolved", "Closed", "Rejected", "On Hold"];
+const genPriorities = ["Normal", "Normal", "Normal", "Normal", "High", "High", "Low"];
+const genSources = ["website", "app", "call", "social-twitter", "whatsapp", "voicebot", "chatbot", "call", "call", "website"];
+
+for (let i = 0; i < 100; i++) {
+  const dist = pickRandom(DISTRICTS);
+  const ulb = ULBS.find(u => u.district === dist.id) || ULBS[0];
+  const service = pickRandom(SERVICES);
+  const subservice = pickRandom(service.subservices);
+  const status = pickRandom(genStatuses);
+  const isResolved = status === "Resolved" || status === "Closed";
+  const createdDate = randomDate();
+  const created = new Date(createdDate);
+  const resolvedDate = isResolved ? new Date(created.getTime() + (subservice.slaHours * 0.5 + Math.random() * 24) * 3600000).toISOString() : null;
+  const wardNum = Math.floor(Math.random() * (ulb.wards || 50)) + 1;
+  const lat = dist.id === "patna" ? 25.6 + (Math.random() - 0.5) * 0.1 : 24.8 + (Math.random() - 0.5) * 2;
+  const lng = dist.id === "patna" ? 85.1 + (Math.random() - 0.5) * 0.1 : 84.5 + (Math.random() - 0.5) * 2;
+  const seq = String(47828 + i).padStart(6, "0");
+  const officer = OFFICERS.find(o => o.district === dist.id && o.services.includes(service.id)) || OFFICERS[0];
+
+  COMPLAINTS.push({
+    id: `BH-2026-${seq}`,
+    citizenName: pickRandom(genCitizenNames),
+    mobile: `+91 9${Math.floor(100000000 + Math.random() * 899999999)}`,
+    address: `${pickRandom(["Housing Board Colony", "Main Road", "Station Road", "Gandhi Nagar", "Nehru Nagar", "Shastri Nagar"])}, ${dist.name}`,
+    district: dist.id,
+    districtName: dist.name,
+    ulb: ulb.id,
+    ulbName: ulb.name,
+    ward: `${dist.name} Ward-${wardNum}`,
+    landmark: pickRandom(genLandmarks),
+    service: service.id,
+    serviceName: service.name,
+    subservice: subservice.id,
+    subserviceName: subservice.name,
+    description: genDescriptions[subservice.id] || "Issue reported by citizen requesting resolution.",
+    priority: pickRandom(genPriorities),
+    status,
+    source: pickRandom(genSources),
+    createdDate,
+    slaHours: subservice.slaHours,
+    resolvedDate,
+    l1Officer: status === "Pending" ? null : officer.id,
+    l1OfficerName: status === "Pending" ? null : officer.name,
+    l2Officer: "off-004",
+    l2OfficerName: "Prakash Jha",
+    geoTag: { lat: parseFloat(lat.toFixed(4)), lng: parseFloat(lng.toFixed(4)) },
+    photoUrl: isResolved || Math.random() > 0.5 ? `https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?w=400&sig=${i}` : null,
+    assigned: status !== "Pending",
+    timeline: [],
+  });
+}
+
+// Shuffle so recent complaints appear first
+COMPLAINTS.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+
+// Populate timelines
+COMPLAINTS.forEach(c => { c.timeline = genTimeline(c.id, c.createdDate, c.status); });
+
+// ── Dashboard KPIs ──
+export const DASHBOARD_KPIS = {
+  totalComplaints: 48732,
+  active: 3841,
+  pending: 412,
+  inProgress: 2891,
+  resolved: 42118,
+  rejected: 893,
+  escalated: 537,
+  withinSLA: 38290,
+  beyondSLA: 1953,
+  slaCompliance: 95.1,
+  avgResolutionDays: 2.4,
+  citizenSatisfaction: 4.2,
+  todayNew: 187,
+  todayResolved: 143,
+  feedbacksReceived: 38642,
+  socialMediaComplaints: 2341,
+};
+
+// ── Time-series: Daily complaint volume (last 30 days) ──
+export const DAILY_VOLUME = Array.from({ length: 30 }, (_, i) => {
+  const d = new Date("2026-07-06");
+  d.setDate(d.getDate() - (29 - i));
+  const base = 160 + Math.sin(i / 3) * 25 + Math.random() * 20;
+  return {
+    date: d.toISOString().split("T")[0],
+    label: `${d.getDate()}/${d.getMonth() + 1}`,
+    raised: Math.round(base + 20),
+    resolved: Math.round(base),
+    pending: Math.round(20 + Math.random() * 15),
+  };
+});
+
+// ── Weekly & Monthly ──
+export const WEEKLY_VOLUME = [
+  { week: "W1", raised: 1240, resolved: 1180, pending: 60 },
+  { week: "W2", raised: 1380, resolved: 1290, pending: 90 },
+  { week: "W3", raised: 1180, resolved: 1150, pending: 30 },
+  { week: "W4", raised: 1450, resolved: 1320, pending: 130 },
+  { week: "W5", raised: 1520, resolved: 1410, pending: 110 },
+  { week: "W6", raised: 1390, resolved: 1350, pending: 40 },
+];
+
+export const MONTHLY_VOLUME = [
+  { month: "Jan", raised: 4120, resolved: 3890, pending: 230 },
+  { month: "Feb", raised: 4380, resolved: 4100, pending: 280 },
+  { month: "Mar", raised: 4650, resolved: 4380, pending: 270 },
+  { month: "Apr", raised: 4920, resolved: 4610, pending: 310 },
+  { month: "May", raised: 5180, resolved: 4890, pending: 290 },
+  { month: "Jun", raised: 4730, resolved: 4520, pending: 210 },
+  { month: "Jul", raised: 2890, resolved: 2630, pending: 260 },
+];
+
+// ── Category distribution ──
+export const CATEGORY_DISTRIBUTION = [
+  { name: "Drainage & Sewerage", value: 12834, color: "#1d4ed8" },
+  { name: "Street Lighting", value: 9421, color: "#0ea5e9" },
+  { name: "Water Supply", value: 7234, color: "#22c55e" },
+  { name: "Road & Infrastructure", value: 6890, color: "#f59e0b" },
+  { name: "Sanitation & Waste", value: 5432, color: "#a855f7" },
+  { name: "Animal Rescue", value: 2103, color: "#ef4444" },
+  { name: "Cross-Departmental", value: 818, color: "#64748b" },
+];
+
+// ── District-wise ──
+export const DISTRICT_WISE = [
+  { district: "Patna", total: 12480, resolved: 10892, pending: 891, inProgress: 523, escalated: 274 },
+  { district: "Gaya", total: 6230, resolved: 5421, pending: 312, inProgress: 398, escalated: 99 },
+  { district: "Bhagalpur", total: 4890, resolved: 4230, pending: 210, inProgress: 340, escalated: 110 },
+  { district: "Muzaffarpur", total: 4560, resolved: 3980, pending: 190, inProgress: 280, escalated: 110 },
+  { district: "Darbhanga", total: 3890, resolved: 3420, pending: 150, inProgress: 210, escalated: 110 },
+  { district: "Purnia", total: 3120, resolved: 2780, pending: 120, inProgress: 160, escalated: 60 },
+  { district: "Chapra", total: 2980, resolved: 2610, pending: 130, inProgress: 180, escalated: 60 },
+  { district: "Begusarai", total: 2540, resolved: 2230, pending: 98, inProgress: 142, escalated: 70 },
+  { district: "Motihari", total: 2380, resolved: 2090, pending: 85, inProgress: 140, escalated: 65 },
+  { district: "Katihar", total: 1980, resolved: 1740, pending: 72, inProgress: 118, escalated: 50 },
+  { district: "Munger", total: 1680, resolved: 1480, pending: 55, inProgress: 102, escalated: 43 },
+  { district: "Buxar", total: 1400, resolved: 1235, pending: 45, inProgress: 78, escalated: 42 },
+];
+
+// ── Mode-wise ──
+export const MODE_WISE = [
+  { name: "Phone Call / IVR", value: 18234, color: "#1d4ed8" },
+  { name: "Website", value: 9876, color: "#0ea5e9" },
+  { name: "Mobile App", value: 7234, color: "#22c55e" },
+  { name: "WhatsApp", value: 5890, color: "#f59e0b" },
+  { name: "Twitter/X", value: 3421, color: "#a855f7" },
+  { name: "Voice Bot", value: 2180, color: "#ef4444" },
+  { name: "Chat Bot", value: 1453, color: "#64748b" },
+  { name: "Newspaper", value: 444, color: "#94a3b8" },
+];
+
+// ── SLA Performance ──
+export const SLA_PERFORMANCE = [
+  { service: "Street Lighting", withinSLA: 8920, beyondSLA: 501, compliance: 94.7 },
+  { service: "Drainage & Sewerage", withinSLA: 11982, beyondSLA: 852, compliance: 93.4 },
+  { service: "Water Supply", withinSLA: 6810, beyondSLA: 424, compliance: 94.1 },
+  { service: "Road & Infrastructure", withinSLA: 5980, beyondSLA: 910, compliance: 86.8 },
+  { service: "Sanitation & Waste", withinSLA: 5120, beyondSLA: 312, compliance: 94.3 },
+  { service: "Animal Rescue", withinSLA: 2050, beyondSLA: 53, compliance: 97.5 },
+];
+
+// ── Aging Analysis ──
+export const AGING_ANALYSIS = [
+  { range: "0-1 day", count: 12480, percentage: 25.6 },
+  { range: "1-3 days", count: 18230, percentage: 37.4 },
+  { range: "3-7 days", count: 9876, percentage: 20.3 },
+  { range: "7-15 days", count: 5432, percentage: 11.2 },
+  { range: "15-30 days", count: 2103, percentage: 4.3 },
+  { range: "30+ days", count: 611, percentage: 1.3 },
+];
+
+// ── Helpdesk Status ──
+export const HELPDESK_STATUS = [
+  { status: "Available", count: 24, color: "#22c55e" },
+  { status: "On Call", count: 18, color: "#f59e0b" },
+  { status: "Break", count: 6, color: "#a855f7" },
+  { status: "Offline", count: 4, color: "#94a3b8" },
+];
+
+// ── IVR / Call Tracker ──
+export const IVR_STATS = {
+  totalCallsToday: 3420,
+  callsAnswered: 3198,
+  callsMissed: 222,
+  successRate: 93.5,
+  avgTalkTime: "4m 32s",
+  avgWaitTime: "38s",
+  peakHour: "10:00 - 11:00 AM",
+  activeAgents: 24,
+  totalAgents: 52,
+  ivrCompletionRate: 87.2,
+};
+
+export const CALL_TRACKER = [
+  { id: "CALL-2026-08421", time: "09:12 AM", agent: "Priya Sharma", duration: "5m 12s", complaintId: "BH-2026-047821", status: "Resolved", disposition: "Complaint Registered" },
+  { id: "CALL-2026-08422", time: "09:18 AM", agent: "Amit Verma", duration: "3m 45s", complaintId: "BH-2026-047822", status: "Resolved", disposition: "Information Provided" },
+  { id: "CALL-2026-08423", time: "09:25 AM", agent: "Priya Sharma", duration: "7m 22s", complaintId: "BH-2026-047823", status: "Escalated", disposition: "Complaint Registered" },
+  { id: "CALL-2026-08424", time: "09:31 AM", agent: "Neha Singh", duration: "2m 10s", complaintId: null, status: "Resolved", disposition: "General Query" },
+  { id: "CALL-2026-08425", time: "09:38 AM", agent: "Amit Verma", duration: "4m 55s", complaintId: "BH-2026-047825", status: "Resolved", disposition: "Complaint Registered" },
+  { id: "CALL-2026-08426", time: "09:45 AM", agent: "Rohit Kumar", duration: "6m 30s", complaintId: "BH-2026-047826", status: "Resolved", disposition: "Complaint Registered" },
+  { id: "CALL-2026-08427", time: "09:52 AM", agent: "Priya Sharma", duration: "1m 20s", complaintId: null, status: "Missed", disposition: "Call Dropped" },
+  { id: "CALL-2026-08428", time: "09:58 AM", agent: "Neha Singh", duration: "8m 15s", complaintId: "BH-2026-047824", status: "Resolved", disposition: "Status Update" },
+];
+
+export const AGENT_PERFORMANCE = [
+  { agent: "Priya Sharma", calls: 412, resolved: 389, avgTalkTime: "4m 12s", csat: 4.5, slaCompliance: 96.2, status: "Online" },
+  { agent: "Amit Verma", calls: 388, resolved: 356, avgTalkTime: "3m 55s", csat: 4.3, slaCompliance: 94.8, status: "Online" },
+  { agent: "Neha Singh", calls: 356, resolved: 330, avgTalkTime: "4m 28s", csat: 4.4, slaCompliance: 95.1, status: "Online" },
+  { agent: "Rohit Kumar", calls: 334, resolved: 305, avgTalkTime: "5m 02s", csat: 4.1, slaCompliance: 93.5, status: "On Break" },
+  { agent: "Sneha Gupta", calls: 312, resolved: 288, avgTalkTime: "4m 15s", csat: 4.6, slaCompliance: 96.8, status: "Online" },
+  { agent: "Manish Tiwari", calls: 298, resolved: 271, avgTalkTime: "4m 48s", csat: 4.2, slaCompliance: 94.3, status: "Offline" },
+];
+
+export const HOURLY_DISPOSITION = Array.from({ length: 12 }, (_, i) => {
+  const hour = 8 + i;
+  return {
+    hour: `${hour}:00`,
+    calls: Math.round(180 + Math.sin(i / 2) * 80 + Math.random() * 40),
+    answered: Math.round(170 + Math.sin(i / 2) * 75 + Math.random() * 35),
+  };
+});
+
+// ── Officer Ranking ──
+export const OFFICER_RANKING = [
+  { rank: 1, name: "Prakash Jha", designation: "L2 Supervisory Officer", district: "Patna", resolved: 210, slaCompliance: 98.5, avgResolution: "14h", rating: 4.8 },
+  { rank: 2, name: "Rajesh Kumar Singh", designation: "L1 Field Officer", district: "Patna", resolved: 142, slaCompliance: 95.8, avgResolution: "18h", rating: 4.6 },
+  { rank: 3, name: "Sunita Devi", designation: "L1 Field Officer", district: "Patna", resolved: 98, slaCompliance: 94.2, avgResolution: "22h", rating: 4.4 },
+  { rank: 4, name: "Md. Irfan Alam", designation: "L1 Field Officer", district: "Muzaffarpur", resolved: 88, slaCompliance: 93.1, avgResolution: "28h", rating: 4.3 },
+  { rank: 5, name: "Amit Ranjan", designation: "L1 Field Officer", district: "Gaya", resolved: 76, slaCompliance: 91.7, avgResolution: "36h", rating: 4.1 },
+  { rank: 6, name: "Nisha Kumari", designation: "L1 Field Officer", district: "Bhagalpur", resolved: 64, slaCompliance: 92.5, avgResolution: "20h", rating: 4.2 },
+];
+
+// ── Hotspots ──
+export const HOTSPOTS = [
+  { district: "Patna", ward: "Kankarbagh-12", lat: 25.6093, lng: 85.1235, complaints: 342, category: "Drainage", severity: "High" },
+  { district: "Patna", ward: "Rajendra Nagar-07", lat: 25.6130, lng: 85.1441, complaints: 289, category: "Street Lighting", severity: "Medium" },
+  { district: "Gaya", ward: "Gola Road-03", lat: 24.7914, lng: 85.0002, complaints: 234, category: "Road", severity: "High" },
+  { district: "Patna", ward: "Sultanganj-08", lat: 25.6200, lng: 85.1500, complaints: 198, category: "Drainage", severity: "Medium" },
+  { district: "Bhagalpur", ward: "Sujaganj-22", lat: 25.2425, lng: 86.9842, complaints: 176, category: "Sanitation", severity: "Medium" },
+  { district: "Muzaffarpur", ward: "Mithanpura-15", lat: 26.1209, lng: 85.3647, complaints: 152, category: "Animal", severity: "Low" },
+];
+
+// ── Escalation Data ──
+export const ESCALATION_DATA = [
+  { level: "L1 → L2", count: 537, percentage: 68.2 },
+  { level: "L2 → Zone Admin", count: 168, percentage: 21.3 },
+  { level: "Zone → Division", count: 62, percentage: 7.9 },
+  { level: "Division → SUDA", count: 19, percentage: 2.6 },
+];
+
+export const ESCALATION_BY_CATEGORY = [
+  { category: "Road & Infrastructure", escalations: 910, rate: 13.2 },
+  { category: "Drainage & Sewerage", escalations: 852, rate: 6.6 },
+  { category: "Street Lighting", escalations: 501, rate: 5.3 },
+  { category: "Water Supply", escalations: 424, rate: 5.9 },
+  { category: "Sanitation & Waste", escalations: 312, rate: 5.7 },
+  { category: "Animal Rescue", escalations: 53, rate: 2.5 },
+];
+
+// ── AI Predictions ──
+export const AI_PREDICTIONS = {
+  nextWeek: [
+    { dept: "Drainage & Sewerage", predicted: 380, trend: "up", confidence: 92 },
+    { dept: "Street Lighting", predicted: 290, trend: "up", confidence: 89 },
+    { dept: "Water Supply", predicted: 210, trend: "down", confidence: 85 },
+    { dept: "Road & Infrastructure", predicted: 180, trend: "up", confidence: 88 },
+    { dept: "Sanitation & Waste", predicted: 150, trend: "stable", confidence: 91 },
+  ],
+  nextMonth: [
+    { dept: "Drainage & Sewerage", predicted: 1620, trend: "up", confidence: 87 },
+    { dept: "Street Lighting", predicted: 1240, trend: "up", confidence: 84 },
+    { dept: "Water Supply", predicted: 890, trend: "down", confidence: 82 },
+    { dept: "Road & Infrastructure", predicted: 760, trend: "up", confidence: 80 },
+    { dept: "Sanitation & Waste", predicted: 640, trend: "stable", confidence: 88 },
+  ],
+  insights: [
+    "Drainage complaints expected to surge 18% next week due to monsoon onset — recommend pre-positioning teams in Kankarbagh & Sultanganj wards.",
+    "Street Lighting complaints showing weekly cyclic pattern (peak Thu–Sat) — schedule preventive maintenance on Wednesdays.",
+    "Road & Infrastructure has the worst SLA compliance (86.8%) and highest escalation rate (13.2%) — needs additional L1 officers in Gaya division.",
+    "Animal Rescue complaints peak during early morning (6–8 AM) — shift CCE coverage earlier by 1 hour.",
+    "Water Supply complaints decreasing trend observed — pipe replacement work in Patna wards 7–8 showing results.",
+  ],
+};
+
+// ── ULB Intelligence ──
+export const ULB_INTELLIGENCE = [
+  { ulb: "Patna MC", population: 2065784, rank: 1, complaints: 12480, perCapita: 0.60, slaCompliance: 95.2, rating: 4.3, trend: "up" },
+  { ulb: "Gaya MC", population: 470839, rank: 2, complaints: 6230, perCapita: 1.32, slaCompliance: 92.1, rating: 4.0, trend: "stable" },
+  { ulb: "Bhagalpur MC", population: 413200, rank: 3, complaints: 4890, perCapita: 1.18, slaCompliance: 93.5, rating: 4.1, trend: "up" },
+  { ulb: "Muzaffarpur MC", population: 354462, rank: 4, complaints: 4560, perCapita: 1.29, slaCompliance: 91.8, rating: 3.9, trend: "down" },
+  { ulb: "Darbhanga MC", population: 306956, rank: 5, complaints: 3890, perCapita: 1.27, slaCompliance: 93.2, rating: 4.0, trend: "stable" },
+  { ulb: "Purnia MC", population: 280583, rank: 6, complaints: 3120, perCapita: 1.11, slaCompliance: 94.5, rating: 4.2, trend: "up" },
+];
+
+// ── CRM Agents ──
+export const CRM_AGENTS = [
+  { id: "cce-001", name: "Priya Sharma", role: "CCE", shift: "Morning (06:00–14:00)", status: "On Call", callsToday: 42, resolvedToday: 38, avgTalkTime: "4m 12s", csat: 4.5 },
+  { id: "cce-002", name: "Amit Verma", role: "CCE", shift: "Morning (06:00–14:00)", status: "Available", callsToday: 38, resolvedToday: 35, avgTalkTime: "3m 55s", csat: 4.3 },
+  { id: "cce-003", name: "Neha Singh", role: "CCE", shift: "Morning (06:00–14:00)", status: "On Call", callsToday: 35, resolvedToday: 32, avgTalkTime: "4m 28s", csat: 4.4 },
+  { id: "cce-004", name: "Rohit Kumar", role: "CCE", shift: "Afternoon (14:00–22:00)", status: "Break", callsToday: 28, resolvedToday: 25, avgTalkTime: "5m 02s", csat: 4.1 },
+  { id: "cce-005", name: "Sneha Gupta", role: "Supervisor", shift: "Full Day (08:00–20:00)", status: "Available", callsToday: 12, resolvedToday: 10, avgTalkTime: "4m 15s", csat: 4.6 },
+  { id: "cce-006", name: "Manish Tiwari", role: "CCE", shift: "Night (22:00–06:00)", status: "Offline", callsToday: 0, resolvedToday: 0, avgTalkTime: "—", csat: 4.2 },
+];
+
+// ── Users (for User Management) ──
+export const SYSTEM_USERS = [
+  { id: "usr-001", name: "Ramanuj Prasad", email: "suda.admin@bihar.gov.in", role: "SUDA Admin", designation: "suda-admin", district: "Patna", status: "Active", lastLogin: "06 Jul 2026, 08:15 AM", permissions: ["Full Access", "Config", "Reports", "User Mgmt"] },
+  { id: "usr-002", name: "Vikash Prasad", email: "div.admin@bihar.gov.in", role: "Division Admin", designation: "div-admin", district: "Patna", status: "Active", lastLogin: "06 Jul 2026, 07:42 AM", permissions: ["Dashboard", "Reports", "Officer Mgmt"] },
+  { id: "usr-003", name: "Sangeeta Gupta", email: "ulb.admin@bihar.gov.in", role: "ULB Admin", designation: "ulb-admin", district: "Gaya", status: "Active", lastLogin: "06 Jul 2026, 09:01 AM", permissions: ["Dashboard", "Reports"] },
+  { id: "usr-004", name: "Prakash Jha", email: "l2.officer@bihar.gov.in", role: "L2 Officer", designation: "l2-officer", district: "Patna", status: "Active", lastLogin: "06 Jul 2026, 06:30 AM", permissions: ["Complaint Action", "Field Visit"] },
+  { id: "usr-005", name: "Rajesh Kumar Singh", email: "l1.officer@bihar.gov.in", role: "L1 Officer", designation: "l1-officer", district: "Patna", status: "Active", lastLogin: "06 Jul 2026, 08:45 AM", permissions: ["Complaint Action", "Field Visit", "Geo-Tag"] },
+  { id: "usr-006", name: "Priya Sharma", email: "cce.priya@bihar.gov.in", role: "CCE Agent", designation: "cce", district: "Patna", status: "Active", lastLogin: "06 Jul 2026, 06:00 AM", permissions: ["Raise Complaint", "Call Tracker"] },
+  { id: "usr-007", name: "Sneha Gupta", email: "supervisor@bihar.gov.in", role: "CC Supervisor", designation: "cc-supervisor", district: "Patna", status: "Active", lastLogin: "06 Jul 2026, 08:00 AM", permissions: ["Dashboard", "Call Tracker", "Agent Mgmt", "Reports"] },
+  { id: "usr-008", name: "Amit Ranjan", email: "l1.amit@bihar.gov.in", role: "L1 Officer", designation: "l1-officer", district: "Gaya", status: "Inactive", lastLogin: "28 Jun 2026, 04:20 PM", permissions: ["Complaint Action", "Field Visit"] },
+  { id: "usr-009", name: "Manish Tiwari", email: "cce.manish@bihar.gov.in", role: "CCE Agent", designation: "cce", district: "Patna", status: "Suspended", lastLogin: "30 Jun 2026, 10:15 PM", permissions: ["Raise Complaint"] },
+  { id: "usr-010", name: "Md. Irfan Alam", email: "l1.irfan@bihar.gov.in", role: "L1 Officer", designation: "l1-officer", district: "Muzaffarpur", status: "Active", lastLogin: "06 Jul 2026, 07:15 AM", permissions: ["Complaint Action", "Field Visit", "Geo-Tag"] },
+];
+
+// ── Audit Trail ──
+export const AUDIT_TRAIL = [
+  { id: "aud-001", timestamp: "06 Jul 2026, 09:42:15 AM", user: "Rajesh Kumar Singh", role: "L1 Officer", action: "Status Updated", complaintId: "BH-2026-047821", details: "Changed status from 'In Progress' to 'Resolved'", ipAddress: "10.42.18.34" },
+  { id: "aud-002", timestamp: "06 Jul 2026, 09:38:02 AM", user: "Priya Sharma", role: "CCE Agent", action: "Complaint Registered", complaintId: "BH-2026-047827", details: "New complaint registered via Phone Call", ipAddress: "10.42.18.52" },
+  { id: "aud-003", timestamp: "06 Jul 2026, 09:31:48 AM", user: "System", role: "System", action: "Auto-Escalation", complaintId: "BH-2026-047823", details: "SLA breached (12h). Auto-escalated from L1 to L2", ipAddress: "System" },
+  { id: "aud-004", timestamp: "06 Jul 2026, 09:25:11 AM", user: "Ramanuj Prasad", role: "SUDA Admin", action: "Config Updated", complaintId: "—", details: "SLA config modified for 'Drainage overflow' from 24h to 12h", ipAddress: "10.42.18.01" },
+  { id: "aud-005", timestamp: "06 Jul 2026, 09:18:33 AM", user: "Sunita Devi", role: "L1 Officer", action: "Photo Uploaded", complaintId: "BH-2026-047822", details: "Geo-tagged field photo uploaded (25.6130°N, 85.1441°E)", ipAddress: "10.42.19.12" },
+  { id: "aud-006", timestamp: "06 Jul 2026, 09:12:05 AM", user: "Vikash Prasad", role: "Division Admin", action: "Reassigned Complaint", complaintId: "BH-2026-047824", details: "Reassigned from off-001 to off-003 (service: Road)", ipAddress: "10.42.18.22" },
+  { id: "aud-007", timestamp: "06 Jul 2026, 08:58:44 AM", user: "System", role: "System", action: "Complaint Closed", complaintId: "BH-2026-047820", details: "Auto-closed after 48h post-resolution", ipAddress: "System" },
+  { id: "aud-008", timestamp: "06 Jul 2026, 08:45:20 AM", user: "Ramanuj Prasad", role: "SUDA Admin", action: "User Created", complaintId: "—", details: "New user 'usr-010' created with role 'L1 Officer'", ipAddress: "10.42.18.01" },
+  { id: "aud-009", timestamp: "06 Jul 2026, 08:30:15 AM", user: "Sneha Gupta", role: "CC Supervisor", action: "Shift Updated", complaintId: "—", details: "Shift changed for 'cce-004' from Morning to Afternoon", ipAddress: "10.42.18.40" },
+  { id: "aud-010", timestamp: "06 Jul 2026, 08:15:00 AM", user: "Ramanuj Prasad", role: "SUDA Admin", action: "Login", complaintId: "—", details: "Successful login from 10.42.18.01", ipAddress: "10.42.18.01" },
+];
+
+// ── Workflow Config ──
+export const WORKFLOW_LEVELS = [
+  { level: "Complaint Initiator", role: "Citizen / CCE", sla: "—", description: "Complaint submitted via portal/app/call" },
+  { level: "L1 Officer", role: "Field Officer", sla: "24 hrs", description: "First responder — field visit + action" },
+  { level: "L2 Officer", role: "Supervisory Officer", sla: "48 hrs", description: "Handles escalations from L1 SLA breach" },
+  { level: "Zone Administrator", role: "Zone Admin", sla: "72 hrs", description: "Zone-level escalation handling" },
+  { level: "ULB Administrator", role: "ULB Admin", sla: "96 hrs", description: "ULB-level dispute resolution" },
+  { level: "Division Administrator", role: "Div Admin", sla: "120 hrs", description: "Division-level intervention" },
+  { level: "SUDA Administrator", role: "SUDA Admin", sla: "168 hrs", description: "Final escalation — state HQ level" },
+];
+
+// ── SLA Config ──
+export const SLA_CONFIG = [
+  { subservice: "Street light not working", l1: "24h", l2: "48h", zone: "72h", ulb: "96h", division: "120h", suda: "168h", officerAssigned: true },
+  { subservice: "Street light pole damaged", l1: "48h", l2: "96h", zone: "144h", ulb: "192h", division: "240h", suda: "336h", officerAssigned: true },
+  { subservice: "Exposed wiring / spark", l1: "6h", l2: "12h", zone: "24h", ulb: "48h", division: "72h", suda: "120h", officerAssigned: true },
+  { subservice: "Drain overflow / waterlogging", l1: "12h", l2: "24h", zone: "48h", ulb: "72h", division: "96h", suda: "144h", officerAssigned: true },
+  { subservice: "Drain blocked", l1: "24h", l2: "48h", zone: "72h", ulb: "96h", division: "120h", suda: "168h", officerAssigned: true },
+  { subservice: "No water supply", l1: "24h", l2: "48h", zone: "72h", ulb: "96h", division: "120h", suda: "168h", officerAssigned: true },
+  { subservice: "Dirty / contaminated water", l1: "12h", l2: "24h", zone: "48h", ulb: "72h", division: "96h", suda: "144h", officerAssigned: true },
+  { subservice: "Potholes / damaged road", l1: "72h", l2: "144h", zone: "216h", ulb: "288h", division: "360h", suda: "504h", officerAssigned: false },
+  { subservice: "Garbage not collected", l1: "24h", l2: "48h", zone: "72h", ulb: "96h", division: "120h", suda: "168h", officerAssigned: true },
+  { subservice: "Stray dog menace", l1: "12h", l2: "24h", zone: "48h", ulb: "72h", division: "96h", suda: "144h", officerAssigned: true },
+  { subservice: "Snake rescue", l1: "2h", l2: "4h", zone: "8h", ulb: "16h", division: "24h", suda: "48h", officerAssigned: true },
+  { subservice: "Fallen street light in drain", l1: "8h", l2: "16h", zone: "32h", ulb: "48h", division: "72h", suda: "120h", officerAssigned: true },
+];
+
+// ── Officer Tagging ──
+export const OFFICER_TAGGING = [
+  { officer: "Rajesh Kumar Singh", designation: "L1 Field Officer", services: ["Street Lighting", "Drainage & Sewerage"], wards: ["Patna Ward-12", "Patna Ward-13", "Patna Ward-14"], activeComplaints: 8, slaCompliant: true },
+  { officer: "Sunita Devi", designation: "L1 Field Officer", services: ["Water Supply", "Sanitation & Waste"], wards: ["Patna Ward-07", "Patna Ward-08"], activeComplaints: 5, slaCompliant: true },
+  { officer: "Amit Ranjan", designation: "L1 Field Officer", services: ["Road & Infrastructure", "Animal Rescue"], wards: ["Gaya Ward-03", "Gaya Ward-04", "Gaya Ward-05"], activeComplaints: 12, slaCompliant: false },
+  { officer: "Nisha Kumari", designation: "L1 Field Officer", services: ["Street Lighting", "Sanitation & Waste"], wards: ["Bhagalpur Ward-22", "Bhagalpur Ward-23"], activeComplaints: 7, slaCompliant: true },
+  { officer: "Md. Irfan Alam", designation: "L1 Field Officer", services: ["Drainage & Sewerage", "Road & Infrastructure"], wards: ["Muzaffarpur Ward-15"], activeComplaints: 6, slaCompliant: false },
+  { officer: "Prakash Jha", designation: "L2 Supervisory Officer", services: ["Street Lighting", "Drainage & Sewerage", "Water Supply"], wards: ["Patna (All Wards)"], activeComplaints: 3, slaCompliant: true },
+];
+
+// ── Social Media Complaints ──
+export const SOCIAL_COMPLAINTS = [
+  { id: "SOC-2026-0142", platform: "Twitter / X", handle: "@ramesh_patna", complaintId: "BH-2026-047823", text: "Dirty water supply in Rajendra Nagar for 3 days @CMDAPatna @UrbanDevBihar", time: "2h ago", status: "Converted", sentiment: "Negative", engagement: 234 },
+  { id: "SOC-2026-0141", platform: "WhatsApp", handle: "Group: Patna Residents", complaintId: "BH-2026-047825", text: "Garbage not collected in Sujaganj Bhagalpur since 5 days", time: "4h ago", status: "Converted", sentiment: "Negative", engagement: 0 },
+  { id: "SOC-2026-0140", platform: "Instagram", handle: "@bhagalpur_updates", complaintId: null, text: "Potholes everywhere on Gola Road, when will this be fixed?", time: "6h ago", status: "Pending", sentiment: "Negative", engagement: 156 },
+  { id: "SOC-2026-0139", platform: "Twitter / X", handle: "@citizen_muz", complaintId: "BH-2026-047826", text: "Stray dogs near school in Mithanpura, children at risk", time: "8h ago", status: "Converted", sentiment: "Negative", engagement: 89 },
+  { id: "SOC-2026-0138", platform: "Newspaper", handle: "Dainik Jagran", complaintId: null, text: "Report on drainage issues in Kankarbagh, Patna", time: "1d ago", status: "Pending", sentiment: "Negative", engagement: 0 },
+];
+
+// ── Citizen Interaction Analytics ──
+export const CITIZEN_INTERACTION = {
+  totalInteractions: 89234,
+  uniqueCitizens: 38742,
+  repeatGrievances: 12480,
+  repeatRate: 16.2,
+  avgResolutionSatisfaction: 4.2,
+  topIssues: [
+    { issue: "Drainage overflow", interactions: 12834, trend: "up" },
+    { issue: "Street light not working", interactions: 9421, trend: "up" },
+    { issue: "Garbage not collected", interactions: 5432, trend: "stable" },
+    { issue: "No water supply", interactions: 4120, trend: "down" },
+    { issue: "Potholes", interactions: 3890, trend: "up" },
+  ],
+  channelSatisfaction: [
+    { channel: "Phone Call", satisfaction: 4.3, volume: 18234 },
+    { channel: "Website", satisfaction: 4.1, volume: 9876 },
+    { channel: "Mobile App", satisfaction: 4.4, volume: 7234 },
+    { channel: "WhatsApp", satisfaction: 4.0, volume: 5890 },
+    { channel: "AI Chatbot", satisfaction: 4.2, volume: 3421 },
+  ],
+};
+
+// ── System Health ──
+export const SYSTEM_HEALTH = {
+  uptime: "99.97%",
+  apiResponseTime: "142ms",
+  activeSessions: 1247,
+  dbConnections: 38,
+  cpuUsage: 34,
+  memoryUsage: 58,
+  storageUsed: "2.4 TB / 5 TB",
+  smsGateway: "Operational",
+  emailService: "Operational",
+  ivrService: "Operational",
+  mobileAppSync: "Operational",
+};
+
+// ── Performance Dashboard ──
+export const PERFORMANCE_DATA = {
+  serviceWise: SLA_PERFORMANCE,
+  districtWise: DISTRICT_WISE,
+  divisionWise: [
+    { division: "Patna", complaints: 12480, resolved: 10892, sla: 95.2 },
+    { division: "Tirhut", complaints: 7340, resolved: 6470, sla: 93.8 },
+    { division: "Darbhanga", complaints: 5870, resolved: 5210, sla: 94.1 },
+    { division: "Saran", complaints: 4380, resolved: 3845, sla: 92.7 },
+    { division: "Bhagalpur", complaints: 4890, resolved: 4230, sla: 93.5 },
+    { division: "Purnia", complaints: 5100, resolved: 4520, sla: 94.0 },
+    { division: "Magadh", complaints: 6230, resolved: 5421, sla: 92.1 },
+    { division: "Munger", complaints: 4220, resolved: 3715, sla: 93.3 },
+  ],
+  ulbWise: ULB_INTELLIGENCE,
+  timeDelayed: [
+    { service: "Road & Infrastructure", avgDelay: "18h", breachRate: 13.2 },
+    { service: "Drainage & Sewerage", avgDelay: "8h", breachRate: 6.6 },
+    { service: "Street Lighting", avgDelay: "5h", breachRate: 5.3 },
+    { service: "Water Supply", avgDelay: "6h", breachRate: 5.9 },
+    { service: "Sanitation & Waste", avgDelay: "4h", breachRate: 5.7 },
+    { service: "Animal Rescue", avgDelay: "2h", breachRate: 2.5 },
+  ],
+};

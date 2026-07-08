@@ -1,0 +1,218 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Inbox, Clock, AlertTriangle, CheckCircle2, MapPin, Search, Navigation, Calendar, ChevronDown, Building2, Users, TrendingUp, Activity, FileText } from "lucide-react";
+import { COMPLAINTS, OFFICERS, DASHBOARD_KPIS, DISTRICT_WISE, SERVICES } from "@/lib/biharData";
+import PortalLayout from "@/components/PortalLayout";
+import { ComplaintId, OfficerId } from "@/components/ComplaintDetailDialog";
+import { usePortalProfile } from "@/hooks/usePortalProfile";
+import StatCard from "@/components/StatCard";
+import { StatusBadge, PriorityBadge } from "@/components/Badges";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import QuickActions from "@/components/officer/QuickActions";
+
+const officerProfiles = {
+  l1: { officer: OFFICERS[0], label: "L1 Field Officer" },
+  l2: { officer: OFFICERS[3], label: "L2 Supervisory Officer" },
+  zone: { officer: OFFICERS[6], label: "Zone Administrator" },
+  division: { officer: OFFICERS[6], label: "Divisional Administrator" },
+  suda: { officer: OFFICERS[8], label: "SUDA Administrator" },
+};
+
+export default function OfficerDashboard() {
+  const [profileId] = usePortalProfile("officer");
+  const profile = officerProfiles[profileId] || officerProfiles.l1;
+  const officer = profile.officer;
+  const [search, setSearch] = useState("");
+
+  const myComplaints = COMPLAINTS.filter(c => c.l1Officer === officer.id || c.l2Officer === officer.id);
+  const active = myComplaints.filter(c => !["Resolved", "Closed", "Withdrawn"].includes(c.status));
+  const resolved = myComplaints.filter(c => ["Resolved", "Closed"].includes(c.status));
+  const fieldVisits = myComplaints.filter(c => c.status === "Field Visit" || c.status === "In Progress");
+  const filtered = search ? myComplaints.filter(c => c.id.toLowerCase().includes(search.toLowerCase()) || c.serviceName.toLowerCase().includes(search.toLowerCase())) : myComplaints;
+
+  // SUDA / Division / Zone admin view — state-level overview
+  if (profileId === "suda" || profileId === "division" || profileId === "zone") {
+    return (
+      <PortalLayout role="officer">
+        <div className="p-6 space-y-6">
+          <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold mb-1">Welcome, {officer.name}</h1>
+                <p className="text-white/80 text-sm">{profile.label} • State-level overview • All districts</p>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold">{DASHBOARD_KPIS.active.toLocaleString("en-IN")}</div>
+                <div className="text-sm text-white/80">Active Complaints</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <StatCard icon={Inbox} label="Total Complaints" value={DASHBOARD_KPIS.totalComplaints.toLocaleString("en-IN")} color="blue" />
+            <StatCard icon={Activity} label="Active" value={DASHBOARD_KPIS.active.toLocaleString("en-IN")} color="amber" />
+            <StatCard icon={CheckCircle2} label="Resolved" value={DASHBOARD_KPIS.resolved.toLocaleString("en-IN")} color="green" />
+            <StatCard icon={AlertTriangle} label="Escalated" value={DASHBOARD_KPIS.escalated} color="red" />
+            <StatCard icon={Clock} label="SLA Compliance" value={`${DASHBOARD_KPIS.slaCompliance}%`} color="purple" sublabel="Target: 95%" />
+            <StatCard icon={TrendingUp} label="Satisfaction" value={`${DASHBOARD_KPIS.citizenSatisfaction}/5`} color="sky" />
+          </div>
+
+          <div className="bg-white rounded-xl border border-border overflow-hidden">
+            <div className="px-5 py-3 border-b border-border">
+              <h3 className="font-bold text-foreground">District-wise Complaint Status</h3>
+            </div>
+            <div className="overflow-x-auto max-h-[400px] overflow-y-auto scrollbar-thin">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50 sticky top-0">
+                  <tr className="text-left text-xs text-muted-foreground">
+                    <th className="px-4 py-2 font-medium">District</th>
+                    <th className="px-4 py-2 font-medium text-right">Total</th>
+                    <th className="px-4 py-2 font-medium text-right">Resolved</th>
+                    <th className="px-4 py-2 font-medium text-right">Pending</th>
+                    <th className="px-4 py-2 font-medium text-right">Escalated</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {DISTRICT_WISE.map((d, i) => (
+                    <tr key={i} className="hover:bg-muted/30">
+                      <td className="px-4 py-2.5 font-medium">{d.district}</td>
+                      <td className="px-4 py-2.5 text-right font-semibold">{d.total.toLocaleString("en-IN")}</td>
+                      <td className="px-4 py-2.5 text-right text-emerald-600">{d.resolved.toLocaleString("en-IN")}</td>
+                      <td className="px-4 py-2.5 text-right text-amber-600">{d.pending}</td>
+                      <td className="px-4 py-2.5 text-right text-red-600">{d.escalated}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <QuickActions officer={officer} />
+        </div>
+      </PortalLayout>
+    );
+  }
+
+  // L1 / L2 officer view — complaint list + field visits
+  return (
+    <PortalLayout role="officer">
+      <div className="p-6 space-y-6">
+        <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">Welcome, {officer.name}</h1>
+              <p className="text-white/80 text-sm">{profile.label} • Officer ID: <span className="font-mono text-white">{officer.id}</span> • {officer.wards.join(", ") || "All wards"}</p>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold">{officer.pending}</div>
+              <div className="text-sm text-white/80">Active Complaints</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard icon={Inbox} label="Total Assigned" value={officer.resolved + officer.pending} color="blue" />
+          <StatCard icon={Clock} label="Pending" value={officer.pending} color="amber" />
+          <StatCard icon={CheckCircle2} label="Resolved" value={officer.resolved} color="green" trend="up" trendValue="+12% vs last week" />
+          <StatCard icon={AlertTriangle} label="SLA Breached" value={officer.slaBreached} color="red" trend="down" trendValue="-2 vs last week" />
+        </div>
+
+        {/* Department / Services */}
+        <div className="bg-white rounded-xl border border-border p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-bold text-foreground text-sm">Department & Services Assigned</h3>
+            <span className="text-xs text-muted-foreground">Officer ID: <OfficerId id={officer.id} /></span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {officer.services.length > 0 ? officer.services.map(sId => {
+              const svc = SERVICES.find(s => s.id === sId);
+              return <Badge key={sId} variant="outline" className="text-xs bg-blue-50 text-primary">{svc?.name || sId}{svc ? ` — ${svc.dept}` : ""}</Badge>;
+            }) : <span className="text-sm text-muted-foreground">All services (admin level)</span>}
+          </div>
+        </div>
+
+        {/* Assigned Complaints Table */}
+        <div className="bg-white rounded-xl border border-border">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+            <h3 className="font-bold text-foreground">My Assigned Complaints</h3>
+            <div className="flex gap-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-8 h-8 w-40" />
+              </div>
+              <Link to="/officer/complaints"><Button variant="outline" size="sm">View All</Button></Link>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr className="text-left text-xs text-muted-foreground">
+                  <th className="px-4 py-2 font-medium">Complaint ID</th>
+                  <th className="px-4 py-2 font-medium">Service</th>
+                  <th className="px-4 py-2 font-medium">Sub-Service</th>
+                  <th className="px-4 py-2 font-medium">Ward</th>
+                  <th className="px-4 py-2 font-medium">Priority</th>
+                  <th className="px-4 py-2 font-medium">SLA</th>
+                  <th className="px-4 py-2 font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {filtered.slice(0, 10).map((c, i) => (
+                  <tr key={i} className="hover:bg-muted/30">
+                    <td className="px-4 py-2.5"><ComplaintId id={c.id} /></td>
+                    <td className="px-4 py-2.5 text-muted-foreground">{c.serviceName}</td>
+                    <td className="px-4 py-2.5 text-muted-foreground text-xs">{c.subserviceName}</td>
+                    <td className="px-4 py-2.5 text-muted-foreground"><MapPin className="w-3 h-3 inline mr-1" />{c.ward}</td>
+                    <td className="px-4 py-2.5"><PriorityBadge priority={c.priority} /></td>
+                    <td className="px-4 py-2.5"><span className="text-xs text-muted-foreground"><Clock className="w-3 h-3 inline mr-1" />{c.slaHours}h</span></td>
+                    <td className="px-4 py-2.5"><StatusBadge status={c.status} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Field Visits Table */}
+        <div className="bg-white rounded-xl border border-border">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+            <h3 className="font-bold text-foreground flex items-center gap-2"><Navigation className="w-4 h-4" /> Field Visits</h3>
+            <Link to="/officer/field-visits"><Button variant="outline" size="sm">View All</Button></Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr className="text-left text-xs text-muted-foreground">
+                  <th className="px-4 py-2 font-medium">Complaint ID</th>
+                  <th className="px-4 py-2 font-medium">Sub-Service</th>
+                  <th className="px-4 py-2 font-medium">Location</th>
+                  <th className="px-4 py-2 font-medium">Priority</th>
+                  <th className="px-4 py-2 font-medium">SLA Remaining</th>
+                  <th className="px-4 py-2 font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {fieldVisits.length === 0 ? (
+                  <tr><td colSpan="6" className="px-4 py-8 text-center text-sm text-muted-foreground">No field visits scheduled.</td></tr>
+                ) : fieldVisits.map((c, i) => (
+                  <tr key={i} className="hover:bg-muted/30">
+                    <td className="px-4 py-2.5"><ComplaintId id={c.id} /></td>
+                    <td className="px-4 py-2.5 text-muted-foreground text-xs">{c.subserviceName}</td>
+                    <td className="px-4 py-2.5 text-xs text-muted-foreground"><MapPin className="w-3 h-3 inline mr-1" />{c.ward}, {c.districtName}</td>
+                    <td className="px-4 py-2.5"><PriorityBadge priority={c.priority} /></td>
+                    <td className="px-4 py-2.5 text-xs"><Clock className="w-3 h-3 inline mr-1" />{c.slaHours}h</td>
+                    <td className="px-4 py-2.5"><StatusBadge status={c.status} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <QuickActions officer={officer} />
+      </div>
+    </PortalLayout>
+  );
+}
