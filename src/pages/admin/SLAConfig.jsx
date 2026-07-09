@@ -1,163 +1,386 @@
 import React, { useState } from "react";
-import { SlidersHorizontal, Save, Plus, AlertTriangle, CheckCircle2, Search, X, Check, Pencil, Trash2 } from "lucide-react";
-import { SLA_CONFIG } from "@/lib/biharData";
+import { Plus, X, Check, AlertTriangle } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import MySelect from "@/components/inputs/MySelect";
+import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+
+import SlaAnalytics from "./sla-config/SlaAnalytics";
+import SlaTable from "./sla-config/SlaTable";
+import { useGetSlaconfig } from "./sla-config/hooks";
+import { useGetSubservices } from "./master-data/hooks";
+import useGetRoles from "@/hooks/query/useGetRoles";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postSlaConfig, putSlaConfig, deleteSlaConfig } from "./sla-config/api";
+import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
+import { QUERY_KEYS } from "@/utils/constants";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "@/components/Pagination";
+import SearchDebounced from "@/components/debounced/SearchDebounced";
+import clsx from "clsx";
 
 export default function SLAConfig() {
-  const [config, setConfig] = useState(SLA_CONFIG);
   const [search, setSearch] = useState("");
-  const [toast, setToast] = useState("");
   const [dialog, setDialog] = useState(null);
   const [editItem, setEditItem] = useState(null);
 
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
+  const { page, limit, ...pageProps } = usePagination();
+  const queryClient = useQueryClient();
 
-  const filtered = config.filter(c => !search || c.subservice.toLowerCase().includes(search.toLowerCase()));
+  // 1. Fetch SLA configs
+  const {
+    data: slaApiData,
+    isLoading: isSlaLoading,
+    error: slaError,
+  } = useGetSlaconfig([search, page, limit], {
+    search,
+    page,
+    limit,
+  });
+  const docs = slaApiData?.data?.data?.docs || [];
+  const totalPages = slaApiData?.data?.data?.pagination?.totalPages || 1;
 
-  const handleSave = () => {
-    showToast("All SLA changes saved successfully");
-  };
+  // 2. Fetch roles
+  const {
+    data: rolesApiData,
+    isLoading: isRolesLoading,
+    error: rolesError,
+  } = useGetRoles([], { page: 1, limit: 100 });
+  const roles = rolesApiData?.data?.docs || [];
 
-  const handleSaveItem = () => {
-    showToast(`SLA config ${editItem ? "updated" : "added"} successfully`);
-    setDialog(null);
-    setEditItem(null);
+  // 3. Fetch subservices for selection dropdown
+  const { data: subservicesData } = useGetSubservices(
+    [1, 100],
+    { page: 1, limit: 100 },
+    true,
+  );
+  const subservices = subservicesData?.data?.data?.docs || [];
+
+  // Filter available subservices for the SLA config select dropdown
+  const availableSubservices = subservices.filter((ss) => {
+    if (
+      editItem &&
+      (editItem.subService?._id || editItem.subService) === ss._id
+    ) {
+      return true;
+    }
+    return !docs.some(
+      (doc) => (doc.subService?._id || doc.subService) === ss._id,
+    );
+  });
+
+  const postMutation = useMutation({
+    mutationFn: postSlaConfig,
+    onSuccess: () => {
+      getSuccessToast("SLA config created successfully");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SLA_CONFIGS] });
+      setDialog(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const putMutation = useMutation({
+    mutationFn: putSlaConfig,
+    onSuccess: () => {
+      getSuccessToast("SLA config updated successfully");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SLA_CONFIGS] });
+      setDialog(null);
+      setEditItem(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteSlaConfig,
+    onSuccess: () => {
+      getSuccessToast("SLA config deleted successfully");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SLA_CONFIGS] });
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const filtered = docs.filter((c) => {
+    const title =
+      c.subService?.title || c.subService?.name || c.subService || "";
+    return !search || title.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const handleEdit = (item) => {
+    setEditItem(item);
+    setDialog({
+      subService: item.subService?._id || item.subService,
+      escalations: (item.escalations || []).map((e) => ({
+        role: e.role?._id || e.role,
+        slaHours: e.slaHours,
+      })),
+      officer: !!item.officer,
+      active: !!item.active,
+    });
   };
 
   const handleDelete = (item) => {
-    setConfig(prev => prev.filter(c => c.subservice !== item.subservice));
-    showToast(`"${item.subservice}" deleted`);
+    if (
+      confirm(
+        `Are you sure you want to delete the SLA config for "${
+          item.subService?.title || "this sub-service"
+        }"?`,
+      )
+    ) {
+      deleteMutation.mutate(item._id);
+    }
   };
+
+  const handleSaveItem = () => {
+    if (!dialog.subService) {
+      getErrorToast({ message: "Please select a sub-service" });
+      return;
+    }
+
+    const cleanedEscalations = (dialog.escalations || []).filter(
+      (e) =>
+        e.slaHours !== "" && e.slaHours !== undefined && e.slaHours !== null,
+    );
+    let sum = 0;
+    cleanedEscalations.forEach((e) => {
+      sum += e.slaHours;
+    });
+    if (sum > 24) {
+      getErrorToast({ message: "SLA hours sum cannot exceed 24 hrs" });
+      return;
+    }
+
+    const payload = {
+      subService: dialog.subService,
+      escalations: cleanedEscalations,
+      officer: !!dialog.officer,
+      active: true,
+    };
+
+    if (editItem) {
+      putMutation.mutate({
+        id: editItem._id,
+        config: payload,
+      });
+    } else {
+      postMutation.mutate(payload);
+    }
+  };
+
+  const subServiceOptions = availableSubservices.map((ss) => ({
+    label: ss.title || ss.name || "",
+    value: ss._id,
+  }));
 
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
-        <SectionTitle title="SLA Configuration" subtitle="Define SLA timeline per level for each sub-service — breach triggers auto-escalation" />
+        <SectionTitle
+          title="SLA Configuration"
+          subtitle="Define SLA timeline per level for each sub-service — breach triggers auto-escalation"
+        />
 
-        {toast && (
-          <div className="fixed top-16 right-6 z-50 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm">
-            <Check className="w-4 h-4" /> {toast}
-          </div>
-        )}
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-blue-600">{config.length}</div>
-            <div className="text-sm text-muted-foreground">Sub-services Configured</div>
-          </div>
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-emerald-600">{config.filter(s => s.officerAssigned).length}</div>
-            <div className="text-sm text-muted-foreground">With Officer Assigned</div>
-          </div>
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-amber-600">{config.filter(s => !s.officerAssigned).length}</div>
-            <div className="text-sm text-muted-foreground">Missing Officer</div>
-          </div>
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-purple-600">7</div>
-            <div className="text-sm text-muted-foreground">Escalation Levels</div>
-          </div>
-        </div>
+        {/* <LoaderErrWrapper isLoading={isSlaLoading || isRolesLoading} error={slaError || rolesError}> */}
+        <SlaAnalytics docs={docs} rolesCount={roles.length} />
+        {/* </LoaderErrWrapper> */}
 
         {/* Search + Add */}
-        <div className="flex gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search sub-service..." className="pl-9" />
-          </div>
-          <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => { setEditItem(null); setDialog({ subservice: "", l1: "24h", l2: "48h", zone: "72h", ulb: "96h", division: "120h", suda: "168h", officerAssigned: true }); }}>
+        <div className="flex gap-3 mt-6">
+          <SearchDebounced
+            handleDebouncedChange={(val) => {
+              setSearch(val);
+              pageProps.setPage(1);
+            }}
+            delay={500}
+            className="flex-1"
+            placeholder="Search sub-service..."
+          />
+          <Button
+            className="bg-blue-600 hover:bg-blue-700"
+            onClick={() => {
+              setEditItem(null);
+              setDialog({
+                subService: "",
+                escalations: [],
+                officer: true,
+                active: true,
+              });
+            }}
+          >
             <Plus className="w-4 h-4 mr-1" /> Add SLA Config
           </Button>
         </div>
 
-        {/* SLA table */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-3 py-3 font-medium">Sub-Service</th>
-                  <th className="px-3 py-3 font-medium text-center">L1</th>
-                  <th className="px-3 py-3 font-medium text-center">L2</th>
-                  <th className="px-3 py-3 font-medium text-center">Zone</th>
-                  <th className="px-3 py-3 font-medium text-center">ULB</th>
-                  <th className="px-3 py-3 font-medium text-center">Division</th>
-                  <th className="px-3 py-3 font-medium text-center">SUDA</th>
-                  <th className="px-3 py-3 font-medium text-center">Officer</th>
-                  <th className="px-3 py-3 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filtered.map((s, i) => (
-                  <tr key={i} className="hover:bg-muted/30">
-                    <td className="px-3 py-2.5 font-medium">{s.subservice}</td>
-                    <td className="px-3 py-2.5 text-center"><Badge variant="outline" className="text-xs">{s.l1}</Badge></td>
-                    <td className="px-3 py-2.5 text-center"><Badge variant="outline" className="text-xs">{s.l2}</Badge></td>
-                    <td className="px-3 py-2.5 text-center"><Badge variant="outline" className="text-xs">{s.zone}</Badge></td>
-                    <td className="px-3 py-2.5 text-center"><Badge variant="outline" className="text-xs">{s.ulb}</Badge></td>
-                    <td className="px-3 py-2.5 text-center"><Badge variant="outline" className="text-xs">{s.division}</Badge></td>
-                    <td className="px-3 py-2.5 text-center"><Badge variant="outline" className="text-xs">{s.suda}</Badge></td>
-                    <td className="px-3 py-2.5 text-center">
-                      {s.officerAssigned ? <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" /> : <AlertTriangle className="w-4 h-4 text-red-500 mx-auto" />}
-                    </td>
-                    <td className="px-3 py-2.5">
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" onClick={() => { setEditItem(s); setDialog({ ...s }); }}>
-                          <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                        </Button>
-                        <Button variant="ghost" size="sm" className="text-red-600" onClick={() => handleDelete(s)}>
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {/* SLA Table */}
+        <div
+          className={clsx(
+            "bg-white rounded-xl border border-border overflow-hidden mt-6",
+            deleteMutation.isPending && "opacity-70 pointer-events-none",
+          )}
+        >
+          <LoaderErrWrapper
+            isLoading={isSlaLoading || isRolesLoading}
+            error={slaError || rolesError}
+          >
+            <SlaTable
+              docs={filtered}
+              roles={roles}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </LoaderErrWrapper>
+          <Pagination
+            page={page}
+            limit={limit}
+            totalPage={totalPages}
+            {...pageProps}
+          />
           <div className="px-5 py-3 border-t border-border flex items-center justify-between">
-            <div className="text-xs text-amber-600 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Sub-services without an assigned officer will not be visible to citizens</div>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleSave}>
-              <Save className="w-4 h-4 mr-1" /> Save All Changes
-            </Button>
+            <div className="text-xs text-amber-600 flex items-center gap-1">
+              <AlertTriangle className="w-3.5 h-3.5" /> Sub-services without an
+              assigned officer will not be visible to citizens
+            </div>
           </div>
         </div>
 
         {/* Add/Edit Dialog */}
         {dialog && (
-          <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setDialog(null)}>
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div
+            style={{
+              margin: 0,
+            }}
+            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+            onClick={() => setDialog(null)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-                <h3 className="font-bold text-foreground">{editItem ? "Edit SLA Config" : "Add SLA Config"}</h3>
-                <button onClick={() => setDialog(null)} className="p-1.5 hover:bg-muted rounded-lg"><X className="w-4 h-4" /></button>
+                <h3 className="font-bold text-foreground">
+                  {editItem ? "Edit SLA Config" : "Add SLA Config"}
+                </h3>
+                <button
+                  onClick={() => setDialog(null)}
+                  className="p-1.5 hover:bg-muted rounded-lg"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
               <div className="p-5 space-y-4">
                 <div>
-                  <Label className="mb-1.5 block">Sub-Service Name *</Label>
-                  <Input value={dialog.subservice || ""} onChange={e => setDialog({ ...dialog, subservice: e.target.value })} placeholder="e.g., Street light not working" />
+                  <Label className="mb-1.5 block">Sub-Service *</Label>
+                  {editItem ? (
+                    <Input
+                      disabled
+                      value={
+                        editItem.subService?.title ||
+                        editItem.subService?.name ||
+                        ""
+                      }
+                      className="bg-muted/50"
+                    />
+                  ) : (
+                    <MySelect
+                      options={subServiceOptions}
+                      value={dialog.subService || ""}
+                      onValueChange={(val) =>
+                        setDialog({ ...dialog, subService: val })
+                      }
+                      placeholder="Select sub-service..."
+                    />
+                  )}
                 </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div><Label className="mb-1.5 block">L1</Label><Input value={dialog.l1 || ""} onChange={e => setDialog({ ...dialog, l1: e.target.value })} /></div>
-                  <div><Label className="mb-1.5 block">L2</Label><Input value={dialog.l2 || ""} onChange={e => setDialog({ ...dialog, l2: e.target.value })} /></div>
-                  <div><Label className="mb-1.5 block">Zone</Label><Input value={dialog.zone || ""} onChange={e => setDialog({ ...dialog, zone: e.target.value })} /></div>
-                  <div><Label className="mb-1.5 block">ULB</Label><Input value={dialog.ulb || ""} onChange={e => setDialog({ ...dialog, ulb: e.target.value })} /></div>
-                  <div><Label className="mb-1.5 block">Division</Label><Input value={dialog.division || ""} onChange={e => setDialog({ ...dialog, division: e.target.value })} /></div>
-                  <div><Label className="mb-1.5 block">SUDA</Label><Input value={dialog.suda || ""} onChange={e => setDialog({ ...dialog, suda: e.target.value })} /></div>
+
+                <div className="space-y-3">
+                  <Label className="block font-medium">
+                    Escalation Levels (SLA Hours)
+                  </Label>
+                  <div className="grid grid-cols-2 p-3 gap-3 max-h-[40vh] overflow-y-auto  border rounded-lg bg-muted/10">
+                    {roles.map((role) => {
+                      const value =
+                        dialog.escalations?.find(
+                          (item) => (item.role?._id || item.role) === role._id,
+                        )?.slaHours ?? "";
+                      return (
+                        <div key={role._id} className="space-y-1">
+                          <Label className="text-xs truncate block text-muted-foreground">
+                            {role.designationEnglish}
+                          </Label>
+                          <Input
+                            // type="number"
+                            value={value}
+                            placeholder="Hours"
+                            // min={0}
+                            // max={24}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const isValid = isValidNumber(val, 0, 24);
+                              console.log({ val, isValid });
+                              if (!isValid) return;
+                              let newEsc = [...(dialog.escalations || [])];
+                              const idx = newEsc.findIndex(
+                                (item) =>
+                                  (item.role?._id || item.role) === role._id,
+                              );
+                              if (val === "") {
+                                if (idx > -1) {
+                                  newEsc.splice(idx, 1);
+                                }
+                              } else {
+                                if (idx > -1) {
+                                  newEsc[idx] = {
+                                    ...newEsc[idx],
+                                    slaHours: Number(val),
+                                  };
+                                } else {
+                                  newEsc.push({
+                                    role: role._id,
+                                    slaHours: Number(val),
+                                  });
+                                }
+                              }
+                              setDialog({ ...dialog, escalations: newEsc });
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" checked={dialog.officerAssigned || false} onChange={e => setDialog({ ...dialog, officerAssigned: e.target.checked })} className="rounded" />
-                  <Label>Officer Assigned</Label>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <input
+                    type="checkbox"
+                    id="officer-assigned"
+                    checked={dialog.officer || false}
+                    onChange={(e) =>
+                      setDialog({ ...dialog, officer: e.target.checked })
+                    }
+                    className="rounded text-blue-600 focus:ring-blue-500"
+                  />
+                  <Label htmlFor="officer-assigned" className="cursor-pointer">
+                    Officer Assigned
+                  </Label>
                 </div>
               </div>
               <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setDialog(null)}>Cancel</Button>
-                <Button className="bg-primary hover:bg-primary/90" onClick={handleSaveItem}>
+                <Button variant="outline" onClick={() => setDialog(null)}>
+                  Cancel
+                </Button>
+                <Button
+                  className="bg-primary hover:bg-primary/90"
+                  onClick={handleSaveItem}
+                  disabled={postMutation.isPending || putMutation.isPending}
+                >
                   <Check className="w-4 h-4 mr-1" /> Save
                 </Button>
               </div>

@@ -7,5 +7,7 @@ export const QUERY_KEYS = {
     DEMOGRAPHY: "demography",
     ULBS: "ulbs",
     USERS : "users",
-    OFFICER_TAGGINGS: "officer-taggings"
+    OFFICER_TAGGINGS: "officer-taggings",
+    SLA_CONFIGS: "sla-configs",
+    WORKFLOW_LEVELS: "workflow-levels"
 }

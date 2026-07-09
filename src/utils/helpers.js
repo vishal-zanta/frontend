@@ -64,3 +64,21 @@ export const getInfoToast = (description) => {
         },
     });
 }
+
+export function isValidNumber(value, min, max) {
+  // Empty string is considered valid
+  if (value === "") return true;
+
+  const num = Number(value);
+
+  // Not a valid number
+  if (Number.isNaN(num)) return false;
+
+  // Check minimum if provided
+  if (min !== undefined && num < min) return false;
+
+  // Check maximum if provided
+  if (max !== undefined && num > max) return false;
+
+  return true;
+}
