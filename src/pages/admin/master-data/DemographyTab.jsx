@@ -21,11 +21,15 @@ import { postDemographic, putDemographic, deleteDemographic } from "./api";
 import { QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import UrbanLocalBodiesTable from "./UrbanLocalBodiesTable";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "@/components/Pagination";
 
 export default function DemographyTab() {
   const queryClient = useQueryClient();
-  const { data, isLoading, error } = useGetDemographics();
+  const { page, limit, ...paginationProps } = usePagination();
+  const { data, isLoading, error } = useGetDemographics([page, limit], { page, limit });
   const districts = data?.data?.data?.docs || [];
+  const totalPages = data?.data?.data?.pagination?.totalPages || 1;
 
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
   const [formData, setFormData] = useState({
@@ -223,6 +227,12 @@ export default function DemographyTab() {
                     ))}
                   </tbody>
                 </table>
+                <Pagination
+                  page={page}
+                  limit={limit}
+                  totalPage={totalPages}
+                  {...paginationProps}
+                />
               </div>
             )}
           </LoaderErrWrapper>

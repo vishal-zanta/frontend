@@ -12,11 +12,15 @@ import { postService, putService, deleteService } from "./api";
 import { QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import SubServicesTable from "./SubServicesTable";
+import Pagination from "@/components/Pagination";
+import usePagination from "@/hooks/usePagination";
 
 export default function ServicesTab() {
   const queryClient = useQueryClient();
-  const { data: servicesData, isLoading, error } = useGetServices();
+  const { page, limit, ...paginationProps } = usePagination();
+  const { data: servicesData, isLoading, error } = useGetServices([page, limit], {page, limit});
   const services = servicesData?.data?.data?.docs || [];
+  const totalPages = servicesData?.data?.data?.pagination?.totalPages || 1
   const [subServiceDialog, setSubServiceDialog] = useState(null);
   const [serviceDialog, setServiceDialog] = useState(null);
 
@@ -171,14 +175,18 @@ export default function ServicesTab() {
                     size="sm"
                     variant="ghost"
                     className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                    onClick={() => setServiceDialog({ type: "delete", item: s })}
+                    onClick={() =>
+                      setServiceDialog({ type: "delete", item: s })
+                    }
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => setSubServiceDialog({ type: "add", item: s })}
+                    onClick={() =>
+                      setSubServiceDialog({ type: "add", item: s })
+                    }
                     className="border-primary text-primary hover:bg-primary/5 hover:text-primary-foreground transition-all duration-200"
                   >
                     <Plus className="w-4 h-4 mr-1" /> Add Sub-service
@@ -194,6 +202,9 @@ export default function ServicesTab() {
             </div>
           ))}
         </div>
+        <Pagination page={page} limit={limit}
+        totalPage={totalPages}
+        {...paginationProps} />
       </LoaderErrWrapper>
 
       {serviceDialog && serviceDialog.type === "delete" && (
@@ -222,7 +233,10 @@ export default function ServicesTab() {
               <Input
                 value={serviceFormData.title}
                 onChange={(e) => {
-                  setServiceFormData((prev) => ({ ...prev, title: e.target.value }));
+                  setServiceFormData((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }));
                   if (serviceErrors.title)
                     setServiceErrors((prev) => ({ ...prev, title: "" }));
                 }}
@@ -230,7 +244,9 @@ export default function ServicesTab() {
                 required
               />
               {serviceErrors.title && (
-                <p className="text-red-500 text-xs mt-1">{serviceErrors.title}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {serviceErrors.title}
+                </p>
               )}
             </div>
             <div>
@@ -249,7 +265,9 @@ export default function ServicesTab() {
                 required
               />
               {serviceErrors.titleHindi && (
-                <p className="text-red-500 text-xs mt-1">{serviceErrors.titleHindi}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {serviceErrors.titleHindi}
+                </p>
               )}
             </div>
             <div>
@@ -268,7 +286,9 @@ export default function ServicesTab() {
                 required
               />
               {serviceErrors.department && (
-                <p className="text-red-500 text-xs mt-1">{serviceErrors.department}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {serviceErrors.department}
+                </p>
               )}
             </div>
           </div>

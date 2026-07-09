@@ -18,11 +18,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postUlb, putUlb, deleteUlb } from "./api";
 import { QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "@/components/Pagination";
 
 export default function UrbanLocalBodiesTable({ districts = [] }) {
   const queryClient = useQueryClient();
-  const { data: ulbsData, isLoading: ulbsLoading, error: ulbsError } = useGetUlbs();
+  const { page, limit, ...paginationProps } = usePagination();
+  const { data: ulbsData, isLoading: ulbsLoading, error: ulbsError } = useGetUlbs([page, limit], { page, limit });
   const ulbs = ulbsData?.data?.data?.docs || [];
+  const totalPages = ulbsData?.data?.data?.pagination?.totalPages || 1;
 
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
   const [formData, setFormData] = useState({
@@ -225,6 +229,12 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                   })}
                 </tbody>
               </table>
+              <Pagination
+                page={page}
+                limit={limit}
+                totalPage={totalPages}
+                {...paginationProps}
+              />
             </div>
           )}
         </LoaderErrWrapper>

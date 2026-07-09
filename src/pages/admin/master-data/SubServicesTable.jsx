@@ -10,15 +10,36 @@ import DeleteDialog from "@/components/DeleteDialog";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSubservice, putSubservice, deleteSubservice } from "./api";
+import { useGetSubservices } from "./hooks";
+import { QUERY_KEYS } from "@/utils/constants";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "@/components/Pagination";
 
 export default function SubServicesTable({ service, dialog, setDialog }) {
+  const { page, limit, ...paginationProps } = usePagination();
   const [subservices, setSubservices] = useState(service.subservices || []);
+  const [anyMutationDone, setAnyMutationDone] = useState(false);
+  const { data: subservicesData } = useGetSubservices(
+    [page, limit],
+    { serviceId: service?._id, page, limit },
+    anyMutationDone,
+  );
+  const totalPages = subservicesData?.data?.data?.pagination?.totalPages || 1;
   const queryClient = useQueryClient();
 
-  // Sync state if services list refetches in background
   useEffect(() => {
-    setSubservices(service.subservices || []);
-  }, [service.subservices]);
+    if (!anyMutationDone) {
+      setSubservices(service.subservices || []);
+    }
+  }, [service.subservices, anyMutationDone]);
+
+  useEffect(() => {
+    if (anyMutationDone && subservicesData?.data?.data?.docs) {
+      const allSub = subservicesData?.data?.data?.docs || [];
+
+      setSubservices(allSub);
+    }
+  }, [subservicesData, anyMutationDone, service]);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -58,14 +79,10 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
 
   const postMutation = useMutation({
     mutationFn: postSubservice,
-    onSuccess: (res) => {
-      // API typically returns { success: true, data: newSubservice } or the newSubservice directly
-      const newSubservice = res?.data?.data;
-      // console.log({newSubservice})
-      setSubservices((prev) => [...prev, newSubservice]);
-
+    onSuccess: () => {
       getSuccessToast("Sub-service added successfully");
-      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SERVICES] });
+      setAnyMutationDone(true);
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBSERVICES] });
       setDialog(null);
     },
     onError: (err) => {
@@ -75,18 +92,10 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
 
   const putMutation = useMutation({
     mutationFn: putSubservice,
-    onSuccess: (res) => {
-      const updatedSubservice = res?.data?.data;
-      console.log({ updatedSubservice });
-
-      setSubservices((prev) =>
-        prev.map((item) =>
-          item._id === updatedSubservice._id ? updatedSubservice : item,
-        ),
-      );
-
+    onSuccess: () => {
       getSuccessToast("Sub-service updated successfully");
-      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SERVICES] });
+      setAnyMutationDone(true);
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBSERVICES] });
       setDialog(null);
     },
     onError: (err) => {
@@ -96,11 +105,10 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
 
   const deleteMutation = useMutation({
     mutationFn: deleteSubservice,
-    onSuccess: (res, deletedId) => {
-      setSubservices((prev) => prev.filter((item) => item._id !== deletedId));
-
+    onSuccess: () => {
       getSuccessToast("Sub-service deleted successfully");
-      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SERVICES] });
+      setAnyMutationDone(true);
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBSERVICES] });
       setDialog(null);
     },
     onError: (err) => {
@@ -233,6 +241,12 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
               ))}
             </tbody>
           </table>
+          <Pagination
+            page={page}
+            limit={limit}
+            totalPage={totalPages}
+            {...paginationProps}
+          />
         </div>
       )}
 

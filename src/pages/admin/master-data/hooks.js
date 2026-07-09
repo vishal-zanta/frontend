@@ -9,10 +9,11 @@ export const useGetServices = (keys = [], params = {}) => {
   });
 };
 
-export const useGetSubservices = (keys = [], params = {}) => {
+export const useGetSubservices = (keys = [], params = {}, enabled = false) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SUBSERVICES, ...keys],
     queryFn: () => getSubservices(params),
+    enabled: enabled
   });
 };
 

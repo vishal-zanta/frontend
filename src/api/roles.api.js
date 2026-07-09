@@ -1,7 +1,7 @@
 import instance from "../lib/axios"
 
 const getRoles = async(params = {})=> {
-    return instance.get("/roles" , params).then(res=> res.data);
+    return instance.get("/roles" , {params}).then(res=> res.data);
 }
 
 

@@ -19,10 +19,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteRole, postRole, putRole } from "@/api/roles.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "@/components/Pagination";
 
 export default function DesignationsTab() {
-  const { data, isLoading, isFetching, isRefetching, error } = useGetRoles();
+  const { page, limit, ...paginationProps } = usePagination();
+  const { data, isLoading, isFetching, isRefetching, error } = useGetRoles(
+    [page, limit],
+    { page, limit },
+  );
   const designations = data?.data?.docs || [];
+  const totalPages = data?.data?.pagination?.totalPages || 1;
   const queryClient = useQueryClient();
 
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
@@ -133,10 +140,7 @@ export default function DesignationsTab() {
             <Plus className="w-4 h-4 mr-1" /> Add Designation
           </Button>
         </div>
-        <LoaderErrWrapper
-          isLoading={isLoading}
-          error={error}
-        >
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
@@ -183,6 +187,12 @@ export default function DesignationsTab() {
               ))}
             </tbody>
           </table>
+          <Pagination
+            page={page}
+            limit={limit}
+            totalPage={totalPages}
+            {...paginationProps}
+          />
         </LoaderErrWrapper>
       </div>
 
@@ -222,7 +232,9 @@ export default function DesignationsTab() {
               placeholder="e.g., Municipal Commissioner"
             />
             {errors.designationEnglish && (
-              <p className="text-red-500 text-xs mt-1">{errors.designationEnglish}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.designationEnglish}
+              </p>
             )}
           </div>
           <div>
@@ -242,7 +254,9 @@ export default function DesignationsTab() {
               placeholder="उदा. नगर आयुक्त"
             />
             {errors.designationHindi && (
-              <p className="text-red-500 text-xs mt-1">{errors.designationHindi}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.designationHindi}
+              </p>
             )}
           </div>
           <div>
