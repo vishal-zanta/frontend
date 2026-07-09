@@ -6,4 +6,6 @@ export const QUERY_KEYS = {
     COMPLAINT_SOURCES: "complaint-sources",
     DEMOGRAPHY: "demography",
     ULBS: "ulbs",
+    USERS : "users",
+    OFFICER_TAGGINGS: "officer-taggings"
 }

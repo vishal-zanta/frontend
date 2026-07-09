@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +39,13 @@ export default function Login() {
       setLoading(false);
     }
   };
+  useEffect(()=> {
+    const token = localStorage.getItem("usertoken");
+    console.log({token});
+    if(!!token){
+      navigate("/admin");
+    }
+  },[])
 
   return (
     <AuthLayout
