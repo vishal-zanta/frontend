@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Filter, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ComplaintId } from "@/components/ComplaintDetailDialog";
@@ -21,10 +21,15 @@ export default function ComplaintList({
     isFetchingNextPage,
   } = useGetComplaintsOfOfiicer({ limit: 10 });
 
-  const complaints =
-    data?.pages?.flatMap(
-      (page) => page?.data?.docs || page?.data || page?.docs || [],
-    ) || [];
+  const complaints = useMemo(() => {
+    return (
+      data?.pages?.flatMap(
+        (page) => page?.data?.docs || page?.data || page?.docs || [],
+      ) || []
+    );
+  }, [data]);
+
+  const lastStatsRef = useRef(null);
 
   // Automatically select the first complaint when the list loads
   useEffect(() => {
@@ -46,7 +51,21 @@ export default function ComplaintList({
       const slaBreachRisk = complaints.filter(
         (c) => c.status === "Escalated",
       ).length;
-      onStatsChange({ totalAssigned, pendingAction, resolved, slaBreachRisk });
+
+      const currentStats = { totalAssigned, pendingAction, resolved, slaBreachRisk };
+
+      // Shallow equality check to prevent infinite loop on stats callback
+      const hasChanged =
+        !lastStatsRef.current ||
+        lastStatsRef.current.totalAssigned !== currentStats.totalAssigned ||
+        lastStatsRef.current.pendingAction !== currentStats.pendingAction ||
+        lastStatsRef.current.resolved !== currentStats.resolved ||
+        lastStatsRef.current.slaBreachRisk !== currentStats.slaBreachRisk;
+
+      if (hasChanged) {
+        lastStatsRef.current = currentStats;
+        onStatsChange(currentStats);
+      }
     }
   }, [complaints, onStatsChange]);
 

@@ -181,6 +181,7 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
             userOptions={userOptions}
             assignOfficerMutation={assignOfficerMutation}
             selectedId={selectedId}
+          
           />
 
           {/* Classification details */}

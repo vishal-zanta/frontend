@@ -47,7 +47,7 @@ export default function ComplaintDetailHeader({
               }
             }}
             disabled={assignOfficerMutation.isPending}
-            className="w-full text-xs bg-background border border-border rounded-lg p-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+            className="w-full text-xs bg-background border border-border rounded-lg p-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none disabled:opacity-60"
           >
             <option value="">Select Officer...</option>
             {userOptions.map((opt) => (
