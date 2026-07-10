@@ -15,7 +15,7 @@ export default function ComplaintTimeline({ events }) {
       {/* Vertical line */}
       <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-gradient-to-b from-blue-500 via-sky-300 to-slate-200"></div>
 
-      {events.map((event, i) => {
+      {[...events].reverse().map((event, i) => {
         const iconMapping = {
           COMPLAINT_REGISTERED: "FilePlus2",
           PRIORITY_SET: "Flag",
