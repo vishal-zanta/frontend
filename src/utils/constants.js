@@ -9,5 +9,7 @@ export const QUERY_KEYS = {
     USERS : "users",
     OFFICER_TAGGINGS: "officer-taggings",
     SLA_CONFIGS: "sla-configs",
-    WORKFLOW_LEVELS: "workflow-levels"
+    WORKFLOW_LEVELS: "workflow-levels",
+    OPTIONS: "options",
+    OPTION_TYPES: "option-types",
 }

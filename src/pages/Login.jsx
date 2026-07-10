@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,8 @@ import AuthLayout from "@/components/AuthLayout";
 import { postLogin } from "@/api/auth.api";
 
 export default function Login() {
+  const {state} = useLocation();
+  const afterLoginPath = state?.afterLoginPath || "/admin";
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +30,7 @@ export default function Login() {
         sessionStorage.setItem("usertoken", token);
         // localStorage.setItem("userstoken", token);
         // sessionStorage.setItem("userstoken", token);
-        navigate("/admin");
+        navigate(afterLoginPath);
       }
       else{
         throw new Error("token not found");
@@ -43,7 +45,7 @@ export default function Login() {
     const token = localStorage.getItem("usertoken");
     console.log({token});
     if(!!token){
-      navigate("/admin");
+      navigate(afterLoginPath);
     }
   },[])
 

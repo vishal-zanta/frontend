@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { Building2, Tag, MapPin, Globe } from "lucide-react";
+import { Building2, Tag, MapPin, Globe, FileHeart } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import DesignationsTab from "./master-data/DesignationsTab";
 import ServicesTab from "./master-data/ServicesTab";
 import ComplaintSourcesTab from "./master-data/ComplaintSourcesTab";
 import DemographyTab from "./master-data/DemographyTab";
+import GrievenceNatureTab from "./master-data/GrievenceNatureTab";
 
 const tabs = [
   { id: "designation", label: "Designations", icon: Tag },
   { id: "service", label: "Services & Sub-services", icon: Building2 },
   { id: "source", label: "Complaint Sources", icon: Globe },
   { id: "demography", label: "Demography & ULBs", icon: MapPin },
+  { id: "grievances-nature", label: "Grievance Nature", icon: FileHeart },
 ];
 
 export default function MasterData() {
@@ -55,6 +57,9 @@ export default function MasterData() {
 
         {/* Demography */}
         {tab === "demography" && <DemographyTab />}
+
+        {/* Grievance Nature */}
+        {tab === "grievances-nature" && <GrievenceNatureTab />}
       </div>
     </PortalLayout>
   );

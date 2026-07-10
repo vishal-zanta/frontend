@@ -147,7 +147,7 @@ export default function RhfSelect({
   const { control } = useFormContext();
 
   // isCreatable always implies multiple
-  const isMulti = isCreatable ? true : isMultiple;
+  const isMulti = !!isMultiple;
 
   return (
     <Controller
@@ -230,7 +230,7 @@ export default function RhfSelect({
             {isCreatable ? (
               <CreatableSelect
                 {...commonProps}
-                isMulti
+                isMulti={isMultiple}
                 createOptionPosition="last"
                 isValidNewOption={(inputValue) => inputValue.trim().length > 0}
                 formatCreateLabel={(inputValue) => `Add "${inputValue}"`}

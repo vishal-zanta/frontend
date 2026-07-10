@@ -84,3 +84,24 @@ export const putUlb = async ({ ulbId, ulb }) => {
 export const deleteUlb = async (ulbId) => {
   return instance.delete(`/demography/ulb/${ulbId}`);
 };
+
+// ---- grievance-nature options ----
+export const getOptions = async (params = {}) => {
+  return instance.get("/options", { params });
+};
+
+export const getOptionTypes = async () => {
+  return instance.get("/options/types");
+};
+
+export const postOption = async (option) => {
+  return instance.post("/options", option);
+};
+
+export const putOption = async ({ optionId, option }) => {
+  return instance.put(`/options/${optionId}`, option);
+};
+
+export const deleteOption = async (optionId) => {
+  return instance.delete(`/options/${optionId}`);
+};
