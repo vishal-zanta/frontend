@@ -20,13 +20,14 @@ import CitizenDashboard from "./pages/citizen/CitizenDashboard";
 import RaiseComplaint from "./pages/citizen/RaiseComplaint";
 import TrackComplaint from "./pages/citizen/TrackComplaint";
 import OfficerDashboard from "./pages/officer/OfficerDashboard";
-import OfficerComplaints from "./pages/officer/OfficerComplaints";
+import OfficerComplaints from "./pages/officer/officer-complaints";
 import CRMDashboard from "./pages/crm/CRMDashboard";
 import CRMRaiseComplaint from "./pages/crm/CRMRaiseComplaint";
 import CallTracker from "./pages/crm/CallTracker";
 import ShiftManagement from "./pages/crm/ShiftManagement";
 import IncomingCall from "./pages/crm/IncomingCall";
 import CallHistoryLog from "./pages/crm/CallHistoryLog";
+import TrackCCMComplaint from "./pages/crm/track-ccm-complaint";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import OperationalDashboards from "./pages/admin/OperationalDashboards";
 import AIReports from "./pages/admin/AIReports";
@@ -149,6 +150,10 @@ const router = createBrowserRouter([
               {
                 path: "history",
                 element: <CallHistoryLog />,
+              },
+              {
+                path: "track-complaint",
+                element: <TrackCCMComplaint />,
               },
               {
                 path: "settings",

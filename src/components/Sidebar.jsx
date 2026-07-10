@@ -73,6 +73,7 @@ const roleConfig = {
       ]},
       { title: "Complaints", items: [
         { label: "Raise Complaint", path: "/crm/raise", icon: FileText },
+        { label: "Track Complaint", path: "/crm/track-complaint", icon: Search },
       ]},
       { title: "Call Centre", items: [
         { label: "Incoming Call", path: "/crm/incoming-call", icon: Phone },
