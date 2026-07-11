@@ -33,10 +33,10 @@ import OperationalDashboards from "./pages/admin/OperationalDashboards";
 import AIReports from "./pages/admin/AIReports";
 import PerformanceDashboard from "./pages/admin/PerformanceDashboard";
 import MISReports from "./pages/admin/MISReports";
-import WorkflowConfig from "./pages/admin/WorkflowConfig";
+import WorkflowConfig from "./pages/admin/workflow-levels";
 import SLAConfig from "./pages/admin/SLAConfig";
 import OfficerTagging from "./pages/admin/OfficerTagging";
-import MasterData from "./pages/admin/MasterData";
+import MasterData from "./pages/admin/master-data";
 import UserManagement from "./pages/admin/UserManagement";
 import ManageLinks from "./pages/admin/ManageLinks";
 import AuditTrail from "./pages/admin/AuditTrail";
@@ -49,7 +49,7 @@ import FieldVisits from "./pages/officer/FieldVisits";
 import CitizenFeedback from "./pages/citizen/CitizenFeedback";
 import CitizenSettings from "./pages/citizen/CitizenSettings";
 import Login from "./pages/Login";
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const RootLayout = () => {
   return (
@@ -266,14 +266,13 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthProvider>
-    <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
-
-      <QueryClientProvider client={queryClientInstance}>
-        <RouterProvider router={router} />
-        <Toaster />
-        <HotToaster />
-      </QueryClientProvider>
-    </GoogleReCaptchaProvider>
+      <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
+        <QueryClientProvider client={queryClientInstance}>
+          <RouterProvider router={router} />
+          <Toaster />
+          <HotToaster />
+        </QueryClientProvider>
+      </GoogleReCaptchaProvider>
     </AuthProvider>
   );
 }

@@ -21,6 +21,9 @@ import { QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
+import DesignationTable from "./components/DesignationTable";
+import DesignationForm from "./components/DesignationForm";
+
 
 export default function DesignationsTab() {
   const { page, limit, ...paginationProps } = usePagination();
@@ -141,52 +144,7 @@ export default function DesignationsTab() {
           </Button>
         </div>
         <LoaderErrWrapper isLoading={isLoading} error={error}>
-          <table className="w-full text-sm">
-            <thead className="bg-muted/50">
-              <tr className="text-left text-xs text-muted-foreground">
-                <th className="px-4 py-2 font-medium">Designation (English)</th>
-                <th className="px-4 py-2 font-medium">पदनाम (Hindi)</th>
-                <th className="px-4 py-2 font-medium">Level</th>
-                <th className="px-4 py-2 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {designations.map((d, i) => (
-                <tr key={d._id || i} className="hover:bg-muted/30">
-                  <td className="px-4 py-2.5 font-medium">
-                    {d.designationEnglish}
-                  </td>
-                  <td className="px-4 py-2.5 text-muted-foreground">
-                    {d.designationHindi}
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <Badge variant="outline" className="text-xs">
-                      {d.level}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setDialog({ type: "edit", item: d })}
-                      >
-                        <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-600 hover:text-red-700"
-                        onClick={() => setDialog({ type: "delete", item: d })}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DesignationTable designations={designations} setDialog={setDialog} />
           <Pagination
             page={page}
             limit={limit}
@@ -215,73 +173,18 @@ export default function DesignationsTab() {
           onSave={handleSave}
           saving={postMutation.isPending || putMutation.isPending}
         >
-          <div>
-            <Label className="mb-1.5 block">Designation (English) *</Label>
-            <Input
-              value={formData.designationEnglish}
-              onChange={(e) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  designationEnglish: e.target.value,
-                }));
-                if (errors.designationEnglish) {
-                  setErrors((prev) => ({ ...prev, designationEnglish: "" }));
-                }
-              }}
-              required
-              placeholder="e.g., Municipal Commissioner"
-            />
-            {errors.designationEnglish && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.designationEnglish}
-              </p>
-            )}
-          </div>
-          <div>
-            <Label className="mb-1.5 block">पदनाम (Hindi) *</Label>
-            <Input
-              value={formData.designationHindi}
-              onChange={(e) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  designationHindi: e.target.value,
-                }));
-                if (errors.designationHindi) {
-                  setErrors((prev) => ({ ...prev, designationHindi: "" }));
-                }
-              }}
-              required
-              placeholder="उदा. नगर आयुक्त"
-            />
-            {errors.designationHindi && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.designationHindi}
-              </p>
-            )}
-          </div>
-          <div>
-            <Label className="mb-1.5 block">Level *</Label>
-            <Select
-              value={formData.level}
-              onValueChange={(val) =>
-                setFormData((prev) => ({ ...prev, level: val }))
-              }
-              required
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {["L1", "L2", "Zone", "ULB", "Division", "SUDA"].map((l) => (
-                  <SelectItem key={l} value={l}>
-                    {l}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <DesignationForm
+            errors={errors}
+            formData={formData}
+            setFormData={setFormData}
+            setErrors={setErrors}
+          />
         </EditDialog>
       )}
+    
+      
+      
+      
     </>
   );
 }

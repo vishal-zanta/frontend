@@ -8,9 +8,9 @@ import { Label } from "@/components/ui/label";
 import MySelect from "@/components/inputs/MySelect";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 
-import EscalationFlow from "./workflow-levels/EscalationFlow";
-import WorkflowTable from "./workflow-levels/WorkflowTable";
-import { useGetWorkflow } from "./workflow-levels/hooks";
+import EscalationFlow from "./components/EscalationFlow";
+import WorkflowTable from "./components/WorkflowTable";
+import { useGetWorkflow } from "./hooks";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -18,12 +18,13 @@ import {
   putWorkflowLevel,
   deleteWorkflowLevel,
   reorderWorkflowLevels,
-} from "./workflow-levels/api";
+} from "./api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
-
+import WorkflowRules from "./components/WorkflowRules";
+import WorkflowForm from "./components/WorkflowForm";
 
 export default function WorkflowConfig() {
   const [dialog, setDialog] = useState(null);
@@ -179,7 +180,6 @@ export default function WorkflowConfig() {
     }
   }, [workflowApiData?.data?.data?.docs]);
 
-
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
@@ -228,85 +228,25 @@ export default function WorkflowConfig() {
         </div>
 
         {/* Rules */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
-          <h4 className="font-bold text-amber-800 mb-2 text-sm">
-            ⚠ Workflow Rules
-          </h4>
-          <ul className="text-sm text-amber-700 space-y-1">
-            <li>
-              • If action not taken within SLA time, ticket auto-escalates to
-              next level with SMS notification
-            </li>
-            <li>
-              • Every SLA level must have at least 1 officer assigned — or the
-              ticket will not be visible
-            </li>
-            <li>
-              • Officers can only be added manually due to location restriction
-            </li>
-            <li>
-              • If a ticket remains unassigned, it can be reassigned later by
-              the admin
-            </li>
-            <li>• Complaints can be transferred department-to-department</li>
-          </ul>
-        </div>
+        <WorkflowRules />
 
         {/* Add/Edit Dialog */}
         {dialog && (
           <div
-            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+            style={{
+              marginTop: 0,
+            }}
+            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 "
             onClick={() => setDialog(null)}
           >
-            <div
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-                <h3 className="font-bold text-foreground">
-                  {editLevel ? "Edit Level" : "Add Workflow Level"}
-                </h3>
-                <button
-                  onClick={() => setDialog(null)}
-                  className="p-1.5 hover:bg-muted rounded-lg"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="p-5 space-y-4">
-                <div>
-                  <Label className="mb-1.5 block">Role *</Label>
-                  <MySelect
-                    options={roleOptions}
-                    value={dialog.role || ""}
-                    onValueChange={(val) => setDialog({ ...dialog, role: val })}
-                    placeholder="Select Role..."
-                  />
-                </div>
-                <div>
-                  <Label className="mb-1.5 block">Description</Label>
-                  <Input
-                    value={dialog.description || ""}
-                    onChange={(e) =>
-                      setDialog({ ...dialog, description: e.target.value })
-                    }
-                    placeholder="Description..."
-                  />
-                </div>
-              </div>
-              <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setDialog(null)}>
-                  Cancel
-                </Button>
-                <Button
-                  className="bg-primary hover:bg-primary/90"
-                  onClick={handleSaveLevel}
-                  disabled={postMutation.isPending || putMutation.isPending}
-                >
-                  <Check className="w-4 h-4 mr-1" /> Save
-                </Button>
-              </div>
-            </div>
+            <WorkflowForm
+              editLevel={editLevel}
+              roleOptions={roleOptions}
+              dialog={dialog}
+              setDialog={setDialog}
+              handleSaveLevel={handleSaveLevel}
+              isPending={postMutation.isPending || putMutation.isPending}
+            />
           </div>
         )}
       </div>

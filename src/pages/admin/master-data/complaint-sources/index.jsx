@@ -6,13 +6,15 @@ import { Label } from "@/components/ui/label";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
-import { useGetComplaintSources } from "./hooks";
+import { useGetComplaintSources } from "../hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postComplaintSource, putComplaintSource, deleteComplaintSource } from "./api";
+import { postComplaintSource, putComplaintSource, deleteComplaintSource } from "../api";
 import { QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
+import ComplaintTable from "./components/ComplaintTable";
+import ComplaintForm from "./components/ComplaintForm";
 
 export default function ComplaintSourcesTab() {
   const queryClient = useQueryClient();
@@ -131,31 +133,10 @@ export default function ComplaintSourcesTab() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-2">
-                {rawSources.map((s) => (
-                  <div
-                    key={s._id}
-                    className="flex items-center gap-3 p-3 border border-border rounded-lg hover:bg-muted/50 group bg-card transition-all duration-200 shadow-sm"
-                  >
-                    <Globe className="w-5 h-5 text-primary shrink-0" />
-                    <span className="text-sm font-medium flex-1 truncate">{s.title}</span>
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={() => setDialog({ type: "edit", item: s })}
-                        className="p-1 hover:bg-muted rounded"
-                      >
-                        <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
-                      </button>
-                      <button
-                        onClick={() => setDialog({ type: "delete", item: s })}
-                        className="p-1 hover:bg-muted rounded text-red-500"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+             <ComplaintTable
+             rawSources={rawSources}
+             setDialog={setDialog}
+             />
               <Pagination
                 page={page}
                 limit={limit}
@@ -182,19 +163,12 @@ export default function ComplaintSourcesTab() {
           onSave={handleSave}
           saving={postMutation.isPending || putMutation.isPending}
         >
-          <div>
-            <Label className="mb-1.5 block">Source Name *</Label>
-            <Input
-              value={formData.title}
-              onChange={(e) => {
-                setFormData((prev) => ({ ...prev, title: e.target.value }));
-                if (errors.title) setErrors((prev) => ({ ...prev, title: "" }));
-              }}
-              placeholder="e.g., Mobile App"
-              required
-            />
-            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
-          </div>
+         <ComplaintForm
+         formData={formData}
+         setFormData={setFormData}
+         errors={errors}
+         setErrors={setErrors}
+         />
         </EditDialog>
       )}
     </>

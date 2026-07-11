@@ -20,7 +20,11 @@ import { useGetOfficerTag } from "./officer-tagging/hooks";
 import { useGetSubservices } from "./master-data/hooks";
 import { useGetUsers } from "./user-management/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postOfficerTagging, putOfficerTagging, deleteOfficerTagging } from "./officer-tagging/api";
+import {
+  postOfficerTagging,
+  putOfficerTagging,
+  deleteOfficerTagging,
+} from "./officer-tagging/api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 
@@ -45,17 +49,37 @@ export default function OfficerTagging() {
   const docs = taggingsApiData?.data?.data?.docs || [];
   const totalPages = taggingsApiData?.data?.data?.pagination?.totalPages || 1;
 
-  const { data: subservicesData } = useGetSubservices([1, 100], { page: 1, limit: 100 }, true);
-  const subservicesOptions = (subservicesData?.data?.data?.docs || []).map((s) => ({
-    label: s.title || s.name || "",
-    value: s._id,
-  }));
+  const { data: subservicesData } = useGetSubservices(
+    [1, 100],
+    { page: 1, limit: 100 },
+    true,
+  );
+  const subservicesOptions = (subservicesData?.data?.data?.docs || []).map(
+    (s) => ({
+      label: s.title || s.name || "",
+      value: s._id,
+    }),
+  );
 
-  const { data: usersApiData } = useGetUsers([1, 100], { page: 1, limit: 100 , untagged: true});
+  const { data: usersApiDataUntagged} = useGetUsers([1, 100, "untagged"], {
+    page: 1,
+    limit: 100,
+    untagged: true,
+  });
+  const userOptionsUnTagged = (usersApiDataUntagged?.data?.data?.docs || []).map((u) => ({
+    label: `${u.name} (${u.role?.designationEnglish || ""})`,
+    value: u._id,
+  }));
+    const { data: usersApiData } = useGetUsers([1, 100], {
+    page: 1,
+    limit: 100,
+    // untagged: true,
+  });
   const userOptions = (usersApiData?.data?.data?.docs || []).map((u) => ({
     label: `${u.name} (${u.role?.designationEnglish || ""})`,
     value: u._id,
   }));
+
 
   const filtered = docs.filter(
     (t) =>
@@ -66,7 +90,13 @@ export default function OfficerTagging() {
     mutationFn: postOfficerTagging,
     onSuccess: () => {
       getSuccessToast("Officer tagging added successfully");
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.OFFICER_TAGGINGS] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.USERS],
+        refetchType: "active"
+      })
       setDialogOpen(false);
     },
     onError: (err) => {
@@ -78,7 +108,9 @@ export default function OfficerTagging() {
     mutationFn: putOfficerTagging,
     onSuccess: () => {
       getSuccessToast("Officer tagging updated successfully");
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.OFFICER_TAGGINGS] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
+      });
       setDialogOpen(false);
       setEditItem(null);
     },
@@ -91,7 +123,9 @@ export default function OfficerTagging() {
     mutationFn: deleteOfficerTagging,
     onSuccess: () => {
       getSuccessToast("Officer tagging deleted successfully");
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.OFFICER_TAGGINGS] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
+      });
       setDeleteRecord(null);
     },
     onError: (err) => {
@@ -107,7 +141,10 @@ export default function OfficerTagging() {
     const payload = {
       officer: formData.officer,
       services: formData.services,
-      wards: formData.wards.split(",").map((w) => w.trim()).filter(Boolean),
+      wards: formData.wards
+        .split(",")
+        .map((w) => w.trim())
+        .filter(Boolean),
     };
 
     if (editItem) {
@@ -138,7 +175,12 @@ export default function OfficerTagging() {
           subtitle="Tag officers to multiple services and multiple wards — manually assigned due to location restriction"
         />
 
-        <OfficerTagAnalytics tagging={docs} officers={userOptions.map(o => ({ designation: o.label.includes("L1") ? "l1-officer" : "l2-officer" }))} />
+        <OfficerTagAnalytics
+          tagging={docs}
+          officers={userOptions.map((o) => ({
+            designation: o.label.includes("L1") ? "l1-officer" : "l2-officer",
+          }))}
+        />
 
         {/* Search + Add */}
         <div className="flex gap-3">
@@ -185,7 +227,7 @@ export default function OfficerTagging() {
 
         {/* Add tagging form */}
         <QuickTagOfficer
-          officers={userOptions}
+          officers={userOptionsUnTagged}
           subservices={subservicesOptions}
           handleSaveTagging={handleQuickSave}
         />
@@ -205,7 +247,9 @@ export default function OfficerTagging() {
                 editItem
                   ? {
                       officer: editItem.officer?._id || editItem.officer || "",
-                      services: (editItem.services || []).map((s) => s._id || s),
+                      services: (editItem.services || []).map(
+                        (s) => s._id || s,
+                      ),
                       wards: (editItem.wards || []).join(", "),
                     }
                   : {

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Building2, Tag, MapPin, Globe, FileHeart } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
-import DesignationsTab from "./master-data/DesignationsTab";
-import ServicesTab from "./master-data/ServicesTab";
-import ComplaintSourcesTab from "./master-data/ComplaintSourcesTab";
-import DemographyTab from "./master-data/DemographyTab";
-import GrievenceNatureTab from "./master-data/GrievenceNatureTab";
+import DesignationsTab from "./designation";
+import ServicesTab from "./services";
+import ComplaintSourcesTab from "./complaint-sources";
+import DemographyTab from "./demography";
+import GrievenceNatureTab from "./grievence-nature";
 import { useSearchParams } from "react-router-dom";
 
 const tabs = [

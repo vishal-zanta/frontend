@@ -68,7 +68,7 @@ export const deleteDemographic = async (demographicId) => {
   return instance.delete(`/demography/${demographicId}`);
 };
 
-// ----demography/ulb----
+// ----ulb----
 export const getUlbs = async (params = {}) => {
   return instance.get("/demography/ulb", { params });
 };

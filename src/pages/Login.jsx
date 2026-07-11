@@ -27,8 +27,8 @@ export default function Login() {
       console.log("reCAPTCHA has not loaded yet");
     }
     try {
-      const captchaToken = await executeRecaptcha("submit_login_form");
-      const res = await postLogin({ email, password, captchaToken  });
+      // const captchaToken = await executeRecaptcha("submit_login_form");
+      const res = await postLogin({ email, password  });
       console.log("Login response:", res);
       const token =  res?.data?.data?.token;
       if (token) {
