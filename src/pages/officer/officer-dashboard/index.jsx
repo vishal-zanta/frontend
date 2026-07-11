@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Inbox, Clock, AlertTriangle, CheckCircle2, MapPin, Search, Navigation, Calendar, ChevronDown, Building2, Users, TrendingUp, Activity, FileText } from "lucide-react";
+import { Inbox, Clock, AlertTriangle, CheckCircle2, MapPin, Navigation, TrendingUp, Activity } from "lucide-react";
 import { COMPLAINTS, OFFICERS, DASHBOARD_KPIS, DISTRICT_WISE, SERVICES } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import { ComplaintId, OfficerId } from "@/components/ComplaintDetailDialog";
@@ -8,9 +8,9 @@ import { usePortalProfile } from "@/hooks/usePortalProfile";
 import StatCard from "@/components/StatCard";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import QuickActions from "@/components/officer/QuickActions";
+import AssignedComplaintsTable from "./components/AssignedComplaintsTable";
 
 const officerProfiles = {
   l1: { officer: OFFICERS[0], label: "L1 Field Officer" },
@@ -27,8 +27,6 @@ export default function OfficerDashboard() {
   const [search, setSearch] = useState("");
 
   const myComplaints = COMPLAINTS.filter(c => c.l1Officer === officer.id || c.l2Officer === officer.id);
-  const active = myComplaints.filter(c => !["Resolved", "Closed", "Withdrawn"].includes(c.status));
-  const resolved = myComplaints.filter(c => ["Resolved", "Closed"].includes(c.status));
   const fieldVisits = myComplaints.filter(c => c.status === "Field Visit" || c.status === "In Progress");
   const filtered = search ? myComplaints.filter(c => c.id.toLowerCase().includes(search.toLowerCase()) || c.serviceName.toLowerCase().includes(search.toLowerCase())) : myComplaints;
 
@@ -134,46 +132,11 @@ export default function OfficerDashboard() {
         </div>
 
         {/* Assigned Complaints Table */}
-        <div className="bg-white rounded-xl border border-border">
-          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground">My Assigned Complaints</h3>
-            <div className="flex gap-2">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-8 h-8 w-40" />
-              </div>
-              <Link to="/officer/complaints"><Button variant="outline" size="sm">View All</Button></Link>
-            </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-2 font-medium">Complaint ID</th>
-                  <th className="px-4 py-2 font-medium">Service</th>
-                  <th className="px-4 py-2 font-medium">Sub-Service</th>
-                  <th className="px-4 py-2 font-medium">Ward</th>
-                  <th className="px-4 py-2 font-medium">Priority</th>
-                  <th className="px-4 py-2 font-medium">SLA</th>
-                  <th className="px-4 py-2 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filtered.slice(0, 10).map((c, i) => (
-                  <tr key={i} className="hover:bg-muted/30">
-                    <td className="px-4 py-2.5"><ComplaintId id={c.id} /></td>
-                    <td className="px-4 py-2.5 text-muted-foreground">{c.serviceName}</td>
-                    <td className="px-4 py-2.5 text-muted-foreground text-xs">{c.subserviceName}</td>
-                    <td className="px-4 py-2.5 text-muted-foreground"><MapPin className="w-3 h-3 inline mr-1" />{c.ward}</td>
-                    <td className="px-4 py-2.5"><PriorityBadge priority={c.priority} /></td>
-                    <td className="px-4 py-2.5"><span className="text-xs text-muted-foreground"><Clock className="w-3 h-3 inline mr-1" />{c.slaHours}h</span></td>
-                    <td className="px-4 py-2.5"><StatusBadge status={c.status} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <AssignedComplaintsTable
+          search={search}
+          setSearch={setSearch}
+          filtered={filtered}
+        />
 
         {/* Field Visits Table */}
         <div className="bg-white rounded-xl border border-border">

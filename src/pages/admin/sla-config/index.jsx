@@ -3,19 +3,17 @@ import { Plus, X, Check, AlertTriangle } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import MySelect from "@/components/inputs/MySelect";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 
-import SlaAnalytics from "./sla-config/SlaAnalytics";
-import SlaTable from "./sla-config/SlaTable";
-import { useGetSlaconfig } from "./sla-config/hooks";
-import { useGetSubservices } from "./master-data/hooks";
+import SlaAnalytics from "./components/SlaAnalytics";
+import SlaTable from "./components/SlaTable";
+import Form from "./components/Form";
+import { useGetSlaconfig } from "./hooks";
+import { useGetSubservices } from "../master-data/hooks";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postSlaConfig, putSlaConfig, deleteSlaConfig } from "./sla-config/api";
-import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
+import { postSlaConfig, putSlaConfig, deleteSlaConfig } from "./api";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
@@ -54,7 +52,7 @@ export default function SLAConfig() {
   // 3. Fetch subservices for selection dropdown
   const { data: subservicesData } = useGetSubservices(
     [1, 100],
-    { page: 1, limit: 100 },
+    { page: 1, limit: 100},
     true,
   );
   const subservices = subservicesData?.data?.data?.docs || [];
@@ -275,102 +273,14 @@ export default function SLAConfig() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <div className="p-5 space-y-4">
-                <div>
-                  <Label className="mb-1.5 block">Sub-Service *</Label>
-                  {editItem ? (
-                    <Input
-                      disabled
-                      value={
-                        editItem.subService?.title ||
-                        editItem.subService?.name ||
-                        ""
-                      }
-                      className="bg-muted/50"
-                    />
-                  ) : (
-                    <MySelect
-                      options={subServiceOptions}
-                      value={dialog.subService || ""}
-                      onValueChange={(val) =>
-                        setDialog({ ...dialog, subService: val })
-                      }
-                      placeholder="Select sub-service..."
-                    />
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <Label className="block font-medium">
-                    Escalation Levels (SLA Hours)
-                  </Label>
-                  <div className="grid grid-cols-2 p-3 gap-3 max-h-[40vh] overflow-y-auto  border rounded-lg bg-muted/10">
-                    {roles.map((role) => {
-                      const value =
-                        dialog.escalations?.find(
-                          (item) => (item.role?._id || item.role) === role._id,
-                        )?.slaHours ?? "";
-                      return (
-                        <div key={role._id} className="space-y-1">
-                          <Label className="text-xs truncate block text-muted-foreground">
-                            {role.designationEnglish}
-                          </Label>
-                          <Input
-                            // type="number"
-                            value={value}
-                            placeholder="Hours"
-                            // min={0}
-                            // max={24}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              const isValid = isValidNumber(val, 0, 24);
-                              console.log({ val, isValid });
-                              if (!isValid) return;
-                              let newEsc = [...(dialog.escalations || [])];
-                              const idx = newEsc.findIndex(
-                                (item) =>
-                                  (item.role?._id || item.role) === role._id,
-                              );
-                              if (val === "") {
-                                if (idx > -1) {
-                                  newEsc.splice(idx, 1);
-                                }
-                              } else {
-                                if (idx > -1) {
-                                  newEsc[idx] = {
-                                    ...newEsc[idx],
-                                    slaHours: Number(val),
-                                  };
-                                } else {
-                                  newEsc.push({
-                                    role: role._id,
-                                    slaHours: Number(val),
-                                  });
-                                }
-                              }
-                              setDialog({ ...dialog, escalations: newEsc });
-                            }}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 pt-2">
-                  <input
-                    type="checkbox"
-                    id="officer-assigned"
-                    checked={dialog.officer || false}
-                    onChange={(e) =>
-                      setDialog({ ...dialog, officer: e.target.checked })
-                    }
-                    className="rounded text-blue-600 focus:ring-blue-500"
-                  />
-                  <Label htmlFor="officer-assigned" className="cursor-pointer">
-                    Officer Assigned
-                  </Label>
-                </div>
+              <div className="p-5">
+                <Form
+                  editItem={editItem}
+                  dialog={dialog}
+                  setDialog={setDialog}
+                  roles={roles}
+                  subServiceOptions={subServiceOptions}
+                />
               </div>
               <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
                 <Button variant="outline" onClick={() => setDialog(null)}>

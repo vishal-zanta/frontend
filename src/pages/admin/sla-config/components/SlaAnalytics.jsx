@@ -4,6 +4,7 @@ export default function SlaAnalytics({ docs = [], rolesCount = 0 }) {
   const configured = docs.length;
   const withOfficer = docs.filter((s) => s.officer).length;
   const missingOfficer = docs.filter((s) => !s.officer).length;
+  const rolesCountValue = rolesCount;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -20,7 +21,7 @@ export default function SlaAnalytics({ docs = [], rolesCount = 0 }) {
         <div className="text-sm text-muted-foreground">Missing Officer</div>
       </div>
       <div className="bg-white rounded-xl border border-border p-4">
-        <div className="text-2xl font-bold text-purple-600">{rolesCount}</div>
+        <div className="text-2xl font-bold text-purple-600">{rolesCountValue}</div>
         <div className="text-sm text-muted-foreground">Escalation Levels</div>
       </div>
     </div>

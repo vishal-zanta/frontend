@@ -140,14 +140,16 @@ export default function ComplaintDetailView({
   const { data: usersData } = useGetUsers(
     [
       "cce-officer-list",
-      `subService_${data?.data?.classification?.subService?._id}`,
+      `subServices_${data?.data?.classification?.subService?._id}`,
+
     ],
     {
       page: 1,
       limit: 100,
-      subService: data?.data?.classification?.subService?._id,
+      subServices: data?.data?.classification?.subService?._id,
+
     },
-    isCCE,
+    isCCE && !!data?.data?.classification?.subService?._id,
   );
   const userOptions = (
     usersData?.data?.data?.docs ||

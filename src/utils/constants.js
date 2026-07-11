@@ -114,7 +114,7 @@ export const PRIORITY_ACTIONS = [
 ];
 
 export const getStatusBadgeMeta = (status) => {
-  const norm = (status || "").toUpperCase();
+  const norm = (status || "").toUpperCase().replace(/[\s-]/g, "_");
   const match = STATUS_ACTIONS.find(a => a.value === norm);
   if (match) return match;
   // Legacy / fallbacks
@@ -135,7 +135,7 @@ export const getStatusBadgeMeta = (status) => {
 };
 
 export const getPriorityBadgeMeta = (priority) => {
-  const norm = (priority || "").toUpperCase();
+  const norm = (priority || "").toUpperCase().replace(/[\s-]/g, "_");
   const match = PRIORITY_ACTIONS.find(p => p.value === norm);
   if (match) return match;
   // Fallbacks

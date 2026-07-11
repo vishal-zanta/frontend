@@ -37,4 +37,6 @@ export const updateComplaintPriority = async ({ id, assignedPriority }) => {
 };
 
 
-
+export const postComplaint = async (body)=> {
+  return instance.post("/grievances/officer/create", body);
+}

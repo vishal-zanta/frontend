@@ -129,15 +129,15 @@ export default function GrievenceNatureTab() {
   return (
     <>
       {/* ── List card ────────────────────────────────────────────────────── */}
-      <div className="bg-white rounded-xl border border-border p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-foreground">Grievance Nature</h3>
+      <div className="bg-white rounded-xl border border-border ">
+        <div className="flex items-center justify-between p-5 py-3">
+          <h3 className="font-bold text-foreground">Grievance Options</h3>
           <Button
             size="sm"
             onClick={() => setDialog({ type: "add" })}
             className="bg-primary hover:bg-primary/90 animate-fade-in"
           >
-            <Plus className="w-4 h-4 mr-1" /> Add Nature
+            <Plus className="w-4 h-4 mr-1" /> Add Option
           </Button>
         </div>
 

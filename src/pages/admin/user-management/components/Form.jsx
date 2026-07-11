@@ -3,7 +3,7 @@ import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import { Button } from "@/components/ui/button";
 import useGetRoles from "@/hooks/query/useGetRoles";
-import { useGetDemographics } from "../master-data/hooks";
+import { useGetDemographics } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
 
 export default function Form({

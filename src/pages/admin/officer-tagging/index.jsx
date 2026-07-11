@@ -4,10 +4,10 @@ import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
 import SearchDebounced from "@/components/debounced/SearchDebounced";
-import OfficerTagAnalytics from "./officer-tagging/OfficerTagAnalytics";
-import OfficerTagTable from "./officer-tagging/OfficerTagTable";
-import QuickTagOfficer from "./officer-tagging/QuickTagOfficer";
-import Form from "./officer-tagging/Form";
+import OfficerTagAnalytics from "./components/OfficerTagAnalytics";
+import OfficerTagTable from "./components/OfficerTagTable";
+import QuickTagOfficer from "./components/QuickTagOfficer";
+import Form from "./components/Form";
 
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
@@ -16,15 +16,15 @@ import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import RhfWrapper from "@/components/RhfWrapper";
 
-import { useGetOfficerTag } from "./officer-tagging/hooks";
-import { useGetSubservices } from "./master-data/hooks";
-import { useGetUsers } from "./user-management/hooks";
+import { useGetOfficerTag } from "./hooks";
+import { useGetSubservices } from "../master-data/hooks";
+import { useGetUsers } from "../user-management/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   postOfficerTagging,
   putOfficerTagging,
   deleteOfficerTagging,
-} from "./officer-tagging/api";
+} from "./api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 
