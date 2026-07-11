@@ -1,9 +1,17 @@
 import React, { useState, useRef } from "react";
 import ComplaintTimeline from "@/components/ComplaintTimeline";
-import { useGetComplaintById, useGetComplaintByIdForOfficer } from "@/hooks/query/useGetComplaints";
+import {
+  useGetComplaintById,
+  useGetComplaintByIdForOfficer,
+} from "@/hooks/query/useGetComplaints";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { uploadGeotaggedImage, assignOfficer, updateComplaintStatus, updateComplaintPriority } from "@/api/complaint.api";
+import {
+  uploadGeotaggedImage,
+  assignOfficer,
+  updateComplaintStatus,
+  updateComplaintPriority,
+} from "@/api/complaint.api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
@@ -16,7 +24,12 @@ import ComplaintLocationSection from "./ComplaintLocationSection";
 import ComplaintEvidenceSection from "./ComplaintEvidenceSection";
 import ComplaintActionSection from "./ComplaintActionSection";
 
-export default function ComplaintDetailView({ selected, statusUpdate, setStatusUpdate, isCCE = false }) {
+export default function ComplaintDetailView({
+  selected,
+  statusUpdate,
+  setStatusUpdate,
+  isCCE = false,
+}) {
   const selectedId = selected?._id || selected?.id;
   const [selectedFiles, setSelectedFiles] = useState([]); // array of { file, preview }
   const fileInputRef = useRef(null);
@@ -36,9 +49,17 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
     mutationFn: uploadGeotaggedImage,
     onSuccess: () => {
       getSuccessToast("Geo-tagged photo uploaded successfully");
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER],
+      });
       setSelectedFiles([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
     },
@@ -51,9 +72,17 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
     mutationFn: assignOfficer,
     onSuccess: () => {
       getSuccessToast("Officer assigned/transferred successfully");
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER],
+      });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_ALL] });
     },
     onError: (err) => {
@@ -65,9 +94,17 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
     mutationFn: updateComplaintStatus,
     onSuccess: (updatedData, variables) => {
       getSuccessToast(`Status updated to ${variables.status} successfully`);
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER],
+      });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_ALL] });
       setStatusUpdate(variables.status);
     },
@@ -79,10 +116,20 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
   const updatePriorityMutation = useMutation({
     mutationFn: updateComplaintPriority,
     onSuccess: (updatedData, variables) => {
-      getSuccessToast(`Priority updated to ${variables.assignedPriority} successfully`);
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER], refetchType: "active" });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER] });
+      getSuccessToast(
+        `Priority updated to ${variables.assignedPriority} successfully`,
+      );
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER],
+        refetchType: "active",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER],
+      });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_ALL] });
     },
     onError: (err) => {
@@ -90,8 +137,24 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
     },
   });
 
-  const { data: usersData } = useGetUsers(["cce-officer-list"], { page: 1, limit: 100 }, isCCE);
-  const userOptions = (usersData?.data?.data?.docs || usersData?.data?.docs || usersData?.docs || []).map((u) => ({
+  const { data: usersData } = useGetUsers(
+    [
+      "cce-officer-list",
+      `subService_${data?.data?.classification?.subService?._id}`,
+    ],
+    {
+      page: 1,
+      limit: 100,
+      subService: data?.data?.classification?.subService?._id,
+    },
+    isCCE,
+  );
+  const userOptions = (
+    usersData?.data?.data?.docs ||
+    usersData?.data?.docs ||
+    usersData?.docs ||
+    []
+  ).map((u) => ({
     label: u.name,
     value: u._id,
   }));
@@ -136,30 +199,34 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
   const displayStatus = c.status || "OPEN";
   const displayPriority = c.assignedPriority || c.priority || "NORMAL";
 
-  const serviceText = c.classification?.subService?.service?.title || c.serviceName || "—";
-  const subServiceText = c.classification?.subService?.title || c.subserviceName || "—";
-  const departmentText = c.classification?.subService?.service?.department || "—";
+  const serviceText =
+    c.classification?.subService?.service?.title || c.serviceName || "—";
+  const subServiceText =
+    c.classification?.subService?.title || c.subserviceName || "—";
+  const departmentText =
+    c.classification?.subService?.service?.department || "—";
   const subjectText = c.classification?.subject || "—";
 
-  const formattedDate = c.createdAt || c.createdDate 
-    ? new Date(c.createdAt || c.createdDate).toLocaleDateString("en-IN") 
-    : "—";
-  const occurrenceDate = c.evidence?.occurrenceDate 
-    ? new Date(c.evidence.occurrenceDate).toLocaleDateString("en-IN") 
+  const formattedDate =
+    c.createdAt || c.createdDate
+      ? new Date(c.createdAt || c.createdDate).toLocaleDateString("en-IN")
+      : "—";
+  const occurrenceDate = c.evidence?.occurrenceDate
+    ? new Date(c.evidence.occurrenceDate).toLocaleDateString("en-IN")
     : "—";
 
   const citizenName = c.citizenInfo?.fullName || c.citizenName || "—";
   const mobileNumber = c.citizenInfo?.mobile || c.mobile || "—";
   const emailAddress = c.citizenInfo?.email || "—";
   const preferredLanguage = c.citizenInfo?.preferredLanguage || "—";
-  
+
   const addressState = c.address?.state || "—";
   const addressDistrict = c.address?.district || c.districtName || "—";
   const addressSubdivision = c.address?.subdivision || "—";
   const addressVillageOrWard = c.address?.villageOrWard || c.ward || "—";
   const addressPinCode = c.address?.pinCode || "—";
   const addressLandmark = c.address?.landmark || "—";
-  
+
   const description = c.evidence?.details || c.description || "—";
   const attachments = c.evidence?.attachments || [];
   const geotaggedImages = c.geotaggedImages || [];
@@ -181,7 +248,6 @@ export default function ComplaintDetailView({ selected, statusUpdate, setStatusU
             userOptions={userOptions}
             assignOfficerMutation={assignOfficerMutation}
             selectedId={selectedId}
-          
           />
 
           {/* Classification details */}
