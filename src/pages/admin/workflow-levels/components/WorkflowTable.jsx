@@ -17,7 +17,7 @@ export default function WorkflowTable({
   onEdit,
   onDelete,
   setDocs,
-  handleOrderChange
+  handleOrderChange,
 }) {
   return (
     <div className="overflow-x-auto">
@@ -41,7 +41,6 @@ export default function WorkflowTable({
           onEnd={(evt) => {
             console.log("Sortable onEnd event:", evt);
             handleOrderChange(evt.oldIndex, evt.newIndex);
-
           }}
         >
           {docs.length === 0 ? (
@@ -55,23 +54,20 @@ export default function WorkflowTable({
             </tr>
           ) : (
             docs.map((level, i) => (
-              <tr
-                key={level._id || i}
-                className="hover:bg-muted/30"
-              >
-                <td  className="px-4 py-3">
+              <tr key={level._id || i} className="hover:bg-muted/30">
+                <td className="px-4 py-3">
                   <div className="drag-workflow cursor-grab flex items-center justify-center w-5 h-5 text-muted-foreground/40 hover:text-muted-foreground transition-colors">
                     <GripVertical className="w-4 h-4" />
                   </div>
                 </td>
                 <td className="px-4 py-3 font-medium">
-                  {level.role?.level || "—"}
+                  {level.role?.level || "-"}
                 </td>
                 <td className="px-4 py-3 font-medium">
-                  {level.role?.designationEnglish || "—"}
+                  {level.role?.designationEnglish || "-"}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
-                  {level.description || "—"}
+                  {level.description || "-"}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1">

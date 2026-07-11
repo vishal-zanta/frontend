@@ -40,3 +40,14 @@ export const updateComplaintPriority = async ({ id, assignedPriority }) => {
 export const postComplaint = async (body)=> {
   return instance.post("/grievances/officer/create", body);
 }
+
+// --- field visits
+
+export const getFieldVisits = async (params = {})=> {
+  return instance.get("/visits", {params});
+
+}
+
+export const putFieldVisit = async ({ id, data }) => {
+  return instance.put(`/visits/${id}`, data).then((res) => res.data);
+};

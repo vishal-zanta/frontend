@@ -20,7 +20,7 @@ export default function ComplaintList({
     fetchNextPage,
     isFetchingNextPage,
   } = useGetComplaintsOfOfiicer({ limit: 10 });
-// console.log({selected})
+  // console.log({selected})
   const complaints = useMemo(() => {
     return (
       data?.pages?.flatMap(
@@ -114,7 +114,7 @@ export default function ComplaintList({
                         className="text-xs font-semibold"
                       /> */}
                       <h2 className="text-xs font-bold text-primary font-mono">
-                        {c.grievanceId || c.id} 
+                        {c.grievanceId || c.id}
                       </h2>
 
                       <StatusBadge status={c.status} />
@@ -123,11 +123,11 @@ export default function ComplaintList({
                       {c.classification?.subService?.title ||
                         c.subserviceName ||
                         c.serviceName ||
-                        "—"}
+                        "-"}
                     </div>
                     <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                       <MapPin className="w-3 h-3" />{" "}
-                      {c.address?.villageOrWard || c.ward || "—"}
+                      {c.address?.villageOrWard || c.ward || "-"}
                     </div>
                   </button>
                 );

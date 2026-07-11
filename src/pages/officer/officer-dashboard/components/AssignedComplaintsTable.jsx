@@ -67,17 +67,17 @@ const Table = ({ filtered = [] }) => {
       </thead>
       <tbody className="divide-y divide-border">
         {filtered.slice(0, 10).map((c, i) => {
-          const complaintId = c.grievanceId || c.id || c._id || "—";
+          const complaintId = c.grievanceId || c.id || c._id || "-";
           const serviceName =
             c.classification?.subService?.service?.title ||
             c.serviceName ||
-            "—";
+            "-";
           const subserviceName =
-            c.classification?.subService?.title || c.subserviceName || "—";
-          const ward = c.address?.villageOrWard || c.ward || "—";
+            c.classification?.subService?.title || c.subserviceName || "-";
+          const ward = c.address?.villageOrWard || c.ward || "-";
           const priority = c.assignedPriority || c.priority || "NORMAL";
           const slaHours =
-            c.classification?.subService?.sla ?? c.slaHours ?? "—";
+            c.classification?.subService?.sla ?? c.slaHours ?? "-";
           const status = c.status || "PENDING";
 
           return (

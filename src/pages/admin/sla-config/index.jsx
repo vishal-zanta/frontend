@@ -52,7 +52,7 @@ export default function SLAConfig() {
   // 3. Fetch subservices for selection dropdown
   const { data: subservicesData } = useGetSubservices(
     [1, 100],
-    { page: 1, limit: 100},
+    { page: 1, limit: 100 },
     true,
   );
   const subservices = subservicesData?.data?.data?.docs || [];
@@ -183,7 +183,7 @@ export default function SLAConfig() {
       <div className="p-6 space-y-6">
         <SectionTitle
           title="SLA Configuration"
-          subtitle="Define SLA timeline per level for each sub-service — breach triggers auto-escalation"
+          subtitle="Define SLA timeline per level for each sub-service - breach triggers auto-escalation"
         />
 
         {/* <LoaderErrWrapper isLoading={isSlaLoading || isRolesLoading} error={slaError || rolesError}> */}

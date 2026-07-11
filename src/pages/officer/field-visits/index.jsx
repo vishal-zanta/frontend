@@ -1,0 +1,167 @@
+import React, { useState } from "react";
+import PortalLayout from "@/components/PortalLayout";
+import {
+  FIELD_VISIT_DATA,
+  FieldVisitDetailDialog,
+} from "@/components/ComplaintDetailDialog";
+import FieldVisitCards from "./components/FieldVisitCards";
+import FieldVisitTable from "./components/FieldVisitTable";
+
+import SearchDebounced from "@/components/debounced/SearchDebounced";
+import SelectDebounced from "@/components/debounced/SelectDebounced";
+import Pagination from "@/components/Pagination";
+import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import usePagination from "@/hooks/usePagination";
+import { useGetFieldVisits } from "@/hooks/query/useGetFieldVisits";
+import { FIELD_VISIT_STATUS } from "@/utils/constants";
+
+import EditDialog from "@/components/EditDialog";
+import RhfWrapper from "@/components/RhfWrapper";
+import FieldVisitForm from "./components/FieldVisitForm";
+import { fieldVisitSchema } from "./components/schema";
+import { getSuccessToast, getErrorToast } from "@/utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { putFieldVisit } from "@/api/complaint.api";
+
+export default function FieldVisits() {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [editVisit, setEditVisit] = useState(null);
+  const [viewVisit, setViewVisit] = useState(null);
+
+  const { page, limit, ...pageProps } = usePagination();
+  const queryClient = useQueryClient();
+
+  // Fetch paginated field visit data from API
+  const {
+    data: visitsApiData,
+    isLoading,
+    error,
+  } = useGetFieldVisits({
+    search,
+    status: statusFilter === "all" ? undefined : statusFilter,
+    page,
+    limit,
+  });
+
+  // Update field visit mutation added directly in index.jsx
+  const updateMutation = useMutation({
+    mutationFn: putFieldVisit,
+    onSuccess: () => {
+      getSuccessToast("Field visit updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["field-visits"] });
+      setEditVisit(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const fieldVisits = visitsApiData?.data?.data?.docs;
+  const totalPages = visitsApiData?.data?.data?.pagination?.totalPages ?? 1;
+
+  return (
+    <PortalLayout role="officer">
+      <div className="p-6 space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Field Visits</h1>
+          <p className="text-sm text-muted-foreground">
+            Track all scheduled, in-progress, and completed field visits with
+            geo-tagged photo evidence.
+          </p>
+        </div>
+
+        <FieldVisitCards data={FIELD_VISIT_DATA} />
+
+        <div className="flex gap-3">
+          <SearchDebounced
+            handleDebouncedChange={(val) => {
+              setSearch(val);
+              pageProps.setPage(1);
+            }}
+            delay={500}
+            className="flex-1"
+            placeholder="Search by visit ID or complaint ID..."
+          />
+
+          <SelectDebounced
+            initialValue={statusFilter}
+            handleInstantChange={(val) => {
+              setStatusFilter(val);
+              pageProps.setPage(1);
+            }}
+            options={FIELD_VISIT_STATUS}
+            placeholder="Select Status"
+            isAll={true}
+            allLabel="All Status"
+          />
+        </div>
+
+        <div className="bg-white rounded-xl border border-border overflow-hidden">
+          <LoaderErrWrapper isLoading={isLoading} error={error}>
+            <FieldVisitTable
+              filtered={fieldVisits || []}
+              onEdit={(fv) => setEditVisit(fv)}
+              onView={(fv) => setViewVisit(fv)}
+            />
+          </LoaderErrWrapper>
+          <Pagination
+            page={page}
+            limit={limit}
+            totalPage={totalPages}
+            {...pageProps}
+          />
+        </div>
+
+        {viewVisit && (
+          <FieldVisitDetailDialog
+            open={!!viewVisit}
+            onClose={() => setViewVisit(null)}
+            visit={viewVisit}
+          />
+        )}
+
+        {/* Edit Visit Dialog */}
+        {editVisit && (
+          <EditDialog
+            isHideFooter
+            title="Edit Field Visit"
+            onClose={() => setEditVisit(null)}
+          >
+            <RhfWrapper
+              initialValues={{
+                status: editVisit.status || "PENDING",
+                schedule: (editVisit.schedule || editVisit.scheduledDate)
+                  ? new Date(editVisit.schedule || editVisit.scheduledDate)
+                      .toISOString()
+                      .split("T")[0]
+                  : "",
+                remarks: editVisit.remarks || "",
+              }}
+              isValidation
+              validationSchema={fieldVisitSchema}
+              onSubmit={(formData) => {
+                updateMutation.mutate({
+                  id: editVisit._id,
+                  data: {
+                    status: formData.status,
+                    schedule: formData.schedule,
+                    remarks:
+                      formData.status === "COMPLETED"
+                        ? formData.remarks
+                        : undefined,
+                  },
+                });
+              }}
+            >
+              <FieldVisitForm
+                onCancel={() => setEditVisit(null)}
+                isLoading={updateMutation.isPending}
+              />
+            </RhfWrapper>
+          </EditDialog>
+        )}
+      </div>
+    </PortalLayout>
+  );
+}

@@ -53,7 +53,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-1">
-                State Dashboard — Bihar
+                State Dashboard - Bihar
               </h1>
               <p className="text-white/80 text-sm">
                 Real-time grievance overview • 12 districts • 6 ULBs • 6 months

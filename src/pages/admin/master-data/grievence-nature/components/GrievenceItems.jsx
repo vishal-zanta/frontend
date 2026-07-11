@@ -16,8 +16,12 @@ const GrievenceItems = ({ rawItems = [], setDialog }) => {
         <tbody className="divide-y divide-border">
           {rawItems.map((item) => (
             <tr key={item._id} className="hover:bg-muted/30">
-              <td className="px-4 py-3 font-medium text-foreground">{item.title}</td>
-              <td className="px-4 py-3 text-muted-foreground text-xs">{item.type || "—"}</td>
+              <td className="px-4 py-3 font-medium text-foreground">
+                {item.title}
+              </td>
+              <td className="px-4 py-3 text-muted-foreground text-xs">
+                {item.type || "-"}
+              </td>
               <td className="px-4 py-3">
                 <div className="flex gap-1">
                   <Button

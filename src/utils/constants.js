@@ -116,6 +116,23 @@ export const PRIORITY_ACTIONS = [
   },
 ];
 
+export const FIELD_VISIT_STATUS = [
+  { value: "PENDING", label: "Pending" },
+  { value: "SCHEDULED", label: "Scheduled" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "CANCELLED", label: "Cancelled" },
+  { value: "IN_PROGRESS", label: "In Progress" },
+];
+
+export const getFieldVisitStatusClass = (status) => {
+  const normStatus = (status || "").toUpperCase();
+  if (normStatus === "COMPLETED") return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  if (normStatus === "IN_PROGRESS") return "bg-purple-50 text-purple-700 border-purple-200";
+  if (normStatus === "SCHEDULED") return "bg-blue-50 text-blue-700 border-blue-200";
+  if (normStatus === "CANCELLED") return "bg-red-50 text-red-700 border-red-200";
+  return "bg-amber-50 text-amber-700 border-amber-200";
+};
+
 export const getStatusBadgeMeta = (status) => {
   const norm = (status || "").toUpperCase().replace(/[\s-]/g, "_");
   const match = STATUS_ACTIONS.find(a => a.value === norm);

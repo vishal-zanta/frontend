@@ -1,11 +1,11 @@
 // ============================================================
-// Bihar Unified Citizen Grievance Portal — Dummy Data
+// Bihar Unified Citizen Grievance Portal - Dummy Data
 // Simulates a portal in active use for 6+ months
 // ============================================================
 
 export const PORTAL_META = {
   name: "Bihar e-Grievance Portal",
-  tagline: "सुशासन ही जनसेवा — Good Governance is Public Service",
+  tagline: "सुशासन ही जनसेवा - Good Governance is Public Service",
   dept: "Urban Development & Housing Department, Government of Bihar",
   version: "v2.4.1",
   lastSync: "06 Jul 2026, 09:42 AM IST",
@@ -667,7 +667,7 @@ function genTimeline(complaintId, createdDate, status) {
       actor: "System",
       timestamp: fmtDate(base, 0, 0, 1),
       icon: "UserCheck",
-      notes: "Tagged to L1 Field Officer — Rajesh Kumar Singh",
+      notes: "Tagged to L1 Field Officer - Rajesh Kumar Singh",
     },
     {
       type: "SMS Notification Sent",
@@ -690,7 +690,7 @@ function genTimeline(complaintId, createdDate, status) {
       actor: "System (SLA Breach)",
       timestamp: fmtDate(base, 2, 4),
       icon: "AlertTriangle",
-      notes: "SLA breached (24h). Auto-escalated to L2 — Prakash Jha",
+      notes: "SLA breached (24h). Auto-escalated to L2 - Prakash Jha",
     });
   }
   if (status === "Resolved" || status === "Closed") {
@@ -713,7 +713,7 @@ function genTimeline(complaintId, createdDate, status) {
       actor: "Citizen",
       timestamp: fmtDate(base, 2, 0),
       icon: "Star",
-      notes: "Rating: 4/5 — Satisfied with resolution",
+      notes: "Rating: 4/5 - Satisfied with resolution",
     });
     events.push({
       type: "Complaint Closed",
@@ -1799,11 +1799,11 @@ export const AI_PREDICTIONS = {
     },
   ],
   insights: [
-    "Drainage complaints expected to surge 18% next week due to monsoon onset — recommend pre-positioning teams in Kankarbagh & Sultanganj wards.",
-    "Street Lighting complaints showing weekly cyclic pattern (peak Thu–Sat) — schedule preventive maintenance on Wednesdays.",
-    "Road & Infrastructure has the worst SLA compliance (86.8%) and highest escalation rate (13.2%) — needs additional L1 officers in Gaya division.",
-    "Animal Rescue complaints peak during early morning (6–8 AM) — shift CCE coverage earlier by 1 hour.",
-    "Water Supply complaints decreasing trend observed — pipe replacement work in Patna wards 7–8 showing results.",
+    "Drainage complaints expected to surge 18% next week due to monsoon onset - recommend pre-positioning teams in Kankarbagh & Sultanganj wards.",
+    "Street Lighting complaints showing weekly cyclic pattern (peak Thu–Sat) - schedule preventive maintenance on Wednesdays.",
+    "Road & Infrastructure has the worst SLA compliance (86.8%) and highest escalation rate (13.2%) - needs additional L1 officers in Gaya division.",
+    "Animal Rescue complaints peak during early morning (6–8 AM) - shift CCE coverage earlier by 1 hour.",
+    "Water Supply complaints decreasing trend observed - pipe replacement work in Patna wards 7–8 showing results.",
   ],
 };
 
@@ -1936,7 +1936,7 @@ export const CRM_AGENTS = [
     status: "Offline",
     callsToday: 0,
     resolvedToday: 0,
-    avgTalkTime: "—",
+    avgTalkTime: "-",
     csat: 4.2,
   },
 ];
@@ -2093,7 +2093,7 @@ export const AUDIT_TRAIL = [
     user: "Ramanuj Prasad",
     role: "SUDA Admin",
     action: "Config Updated",
-    complaintId: "—",
+    complaintId: "-",
     details: "SLA config modified for 'Drainage overflow' from 24h to 12h",
     ipAddress: "10.42.18.01",
   },
@@ -2133,7 +2133,7 @@ export const AUDIT_TRAIL = [
     user: "Ramanuj Prasad",
     role: "SUDA Admin",
     action: "User Created",
-    complaintId: "—",
+    complaintId: "-",
     details: "New user 'usr-010' created with role 'L1 Officer'",
     ipAddress: "10.42.18.01",
   },
@@ -2143,7 +2143,7 @@ export const AUDIT_TRAIL = [
     user: "Sneha Gupta",
     role: "CC Supervisor",
     action: "Shift Updated",
-    complaintId: "—",
+    complaintId: "-",
     details: "Shift changed for 'cce-004' from Morning to Afternoon",
     ipAddress: "10.42.18.40",
   },
@@ -2153,7 +2153,7 @@ export const AUDIT_TRAIL = [
     user: "Ramanuj Prasad",
     role: "SUDA Admin",
     action: "Login",
-    complaintId: "—",
+    complaintId: "-",
     details: "Successful login from 10.42.18.01",
     ipAddress: "10.42.18.01",
   },
@@ -2164,14 +2164,14 @@ export const WORKFLOW_LEVELS = [
   {
     level: "Complaint Initiator",
     role: "Citizen / CCE",
-    sla: "—",
+    sla: "-",
     description: "Complaint submitted via portal/app/call",
   },
   {
     level: "L1 Officer",
     role: "Field Officer",
     sla: "24 hrs",
-    description: "First responder — field visit + action",
+    description: "First responder - field visit + action",
   },
   {
     level: "L2 Officer",
@@ -2201,7 +2201,7 @@ export const WORKFLOW_LEVELS = [
     level: "SUDA Administrator",
     role: "SUDA Admin",
     sla: "168 hrs",
-    description: "Final escalation — state HQ level",
+    description: "Final escalation - state HQ level",
   },
 ];
 

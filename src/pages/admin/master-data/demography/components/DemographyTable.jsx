@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
 
-const DemographyTable = ({districts = [],setDialog }) => {
+const DemographyTable = ({ districts = [], setDialog }) => {
   return (
     <table className="w-full text-sm">
       <thead className="bg-muted/50">
@@ -21,14 +21,14 @@ const DemographyTable = ({districts = [],setDialog }) => {
           <tr key={d._id} className="hover:bg-muted/30">
             <td className="px-4 py-2.5 font-medium">{d.name}</td>
             <td className="px-4 py-2.5 text-muted-foreground">
-              {d.nameHindi || "—"}
+              {d.nameHindi || "-"}
             </td>
             <td className="px-4 py-2.5 text-muted-foreground">{d.division}</td>
             <td className="px-4 py-2.5 text-muted-foreground">{d.zone}</td>
             <td className="px-4 py-2.5 text-right font-semibold">
               {d.population.toLocaleString("en-IN")}
             </td>
-            <td className="px-4 py-2.5 text-center">{d.urban ? "✅" : "—"}</td>
+            <td className="px-4 py-2.5 text-center">{d.urban ? "✅" : "-"}</td>
             <td className="px-4 py-2.5">
               <div className="flex gap-1 justify-center">
                 <Button

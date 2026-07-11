@@ -141,13 +141,11 @@ export default function ComplaintDetailView({
     [
       "cce-officer-list",
       `subServices_${data?.data?.classification?.subService?._id}`,
-
     ],
     {
       page: 1,
       limit: 100,
       subServices: data?.data?.classification?.subService?._id,
-
     },
     isCCE && !!data?.data?.classification?.subService?._id,
   );
@@ -197,39 +195,39 @@ export default function ComplaintDetailView({
   const detail = data?.data || data;
   const c = detail || selected;
 
-  const displayId = c.grievanceId || c.id || "—";
+  const displayId = c.grievanceId || c.id || "-";
   const displayStatus = c.status || "OPEN";
   const displayPriority = c.assignedPriority || c.priority || "NORMAL";
 
   const serviceText =
-    c.classification?.subService?.service?.title || c.serviceName || "—";
+    c.classification?.subService?.service?.title || c.serviceName || "-";
   const subServiceText =
-    c.classification?.subService?.title || c.subserviceName || "—";
+    c.classification?.subService?.title || c.subserviceName || "-";
   const departmentText =
-    c.classification?.subService?.service?.department || "—";
-  const subjectText = c.classification?.subject || "—";
+    c.classification?.subService?.service?.department || "-";
+  const subjectText = c.classification?.subject || "-";
 
   const formattedDate =
     c.createdAt || c.createdDate
       ? new Date(c.createdAt || c.createdDate).toLocaleDateString("en-IN")
-      : "—";
+      : "-";
   const occurrenceDate = c.evidence?.occurrenceDate
     ? new Date(c.evidence.occurrenceDate).toLocaleDateString("en-IN")
-    : "—";
+    : "-";
 
-  const citizenName = c.citizenInfo?.fullName || c.citizenName || "—";
-  const mobileNumber = c.citizenInfo?.mobile || c.mobile || "—";
-  const emailAddress = c.citizenInfo?.email || "—";
-  const preferredLanguage = c.citizenInfo?.preferredLanguage || "—";
+  const citizenName = c.citizenInfo?.fullName || c.citizenName || "-";
+  const mobileNumber = c.citizenInfo?.mobile || c.mobile || "-";
+  const emailAddress = c.citizenInfo?.email || "-";
+  const preferredLanguage = c.citizenInfo?.preferredLanguage || "-";
 
-  const addressState = c.address?.state || "—";
-  const addressDistrict = c.address?.district || c.districtName || "—";
-  const addressSubdivision = c.address?.subdivision || "—";
-  const addressVillageOrWard = c.address?.villageOrWard || c.ward || "—";
-  const addressPinCode = c.address?.pinCode || "—";
-  const addressLandmark = c.address?.landmark || "—";
+  const addressState = c.address?.state || "-";
+  const addressDistrict = c.address?.district || c.districtName || "-";
+  const addressSubdivision = c.address?.subdivision || "-";
+  const addressVillageOrWard = c.address?.villageOrWard || c.ward || "-";
+  const addressPinCode = c.address?.pinCode || "-";
+  const addressLandmark = c.address?.landmark || "-";
 
-  const description = c.evidence?.details || c.description || "—";
+  const description = c.evidence?.details || c.description || "-";
   const attachments = c.evidence?.attachments || [];
   const geotaggedImages = c.geotaggedImages || [];
 

@@ -11,7 +11,8 @@ export default function EscalationFlow({ levels = [] }) {
       </h3>
       <div className="flex items-center gap-2 flex-wrap">
         {sortedLevels.map((level, i) => {
-          const title = level.role?.designationEnglish || level.description || "—";
+          const title =
+            level.role?.designationEnglish || level.description || "-";
           const levelName = level.role?.level || `L${level.order}`;
           return (
             <React.Fragment key={level._id || i}>
@@ -23,8 +24,8 @@ export default function EscalationFlow({ levels = [] }) {
                       i === 0
                         ? "#059669"
                         : i === sortedLevels.length - 1
-                        ? "#dc2626"
-                        : `hsl(${217 - i * 12}, 80%, ${45 - i * 3}%)`,
+                          ? "#dc2626"
+                          : `hsl(${217 - i * 12}, 80%, ${45 - i * 3}%)`,
                   }}
                 >
                   <div className="text-xs opacity-80">

@@ -202,7 +202,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                 <tr key={ss._id} className="hover:bg-muted/30">
                   <td className="px-3 py-2.5 font-medium">{ss.title}</td>
                   <td className="px-3 py-2.5 text-muted-foreground">
-                    {ss.titleHindi || "—"}
+                    {ss.titleHindi || "-"}
                   </td>
                   <td className="px-3 py-2.5 text-center">
                     <Badge
@@ -213,10 +213,10 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                     </Badge>
                   </td>
                   <td className="px-3 py-2.5 text-center">
-                    {ss.geoTagged ? "✅" : "—"}
+                    {ss.geoTagged ? "✅" : "-"}
                   </td>
                   <td className="px-3 py-2.5 text-center">
-                    {ss.fieldVisit ? "✅" : "—"}
+                    {ss.fieldVisit ? "✅" : "-"}
                   </td>
                   <td className="px-3 py-2.5">
                     <div className="flex gap-1 justify-center">

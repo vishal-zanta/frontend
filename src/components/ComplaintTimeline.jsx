@@ -1,12 +1,34 @@
 import React from "react";
 import {
-  FilePlus2, UserCheck, MapPin, AlertTriangle, CheckCircle2, MessageSquare,
-  Camera, Star, Lock, Flag, Clock, Send, ArrowRight
+  FilePlus2,
+  UserCheck,
+  MapPin,
+  AlertTriangle,
+  CheckCircle2,
+  MessageSquare,
+  Camera,
+  Star,
+  Lock,
+  Flag,
+  Clock,
+  Send,
+  ArrowRight,
 } from "lucide-react";
 
 const iconMap = {
-  FilePlus2, UserCheck, MapPin, AlertTriangle, CheckCircle2, MessageSquare,
-  Camera, Star, Lock, Flag, Clock, Send, ArrowRight
+  FilePlus2,
+  UserCheck,
+  MapPin,
+  AlertTriangle,
+  CheckCircle2,
+  MessageSquare,
+  Camera,
+  Star,
+  Lock,
+  Flag,
+  Clock,
+  Send,
+  ArrowRight,
 };
 
 export default function ComplaintTimeline({ events }) {
@@ -26,7 +48,8 @@ export default function ComplaintTimeline({ events }) {
         };
         const iconName = event.icon || iconMapping[event.type] || "FilePlus2";
         const Icon = iconMap[iconName] || FilePlus2;
-        const notes = event.notes || event.metadata?.description || event.description;
+        const notes =
+          event.notes || event.metadata?.description || event.description;
         const eventTime = event.timestamp || event.createdAt;
 
         return (
@@ -43,23 +66,25 @@ export default function ComplaintTimeline({ events }) {
                     {event.type?.replace(/_/g, " ")}
                   </div>
                   <div className="text-[11px] text-muted-foreground mt-0.5">
-                    by {event.actor?.name || event.actor?.role || "-" }
+                    by {event.actor?.name || event.actor?.role || "-"}
                   </div>
-                  {notes && <div className="text-sm text-muted-foreground mt-1">{notes}</div>}
+                  {notes && (
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {notes}
+                    </div>
+                  )}
                 </div>
                 <div className="text-[10px] text-muted-foreground whitespace-nowrap flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  {eventTime ? (
-                    new Date(eventTime).toLocaleString("en-IN", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  ) : (
-                    "—"
-                  )}
+                  {eventTime
+                    ? new Date(eventTime).toLocaleString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "-"}
                 </div>
               </div>
             </div>

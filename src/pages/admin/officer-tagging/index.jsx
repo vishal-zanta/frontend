@@ -61,16 +61,18 @@ export default function OfficerTagging() {
     }),
   );
 
-  const { data: usersApiDataUntagged} = useGetUsers([1, 100, "untagged"], {
+  const { data: usersApiDataUntagged } = useGetUsers([1, 100, "untagged"], {
     page: 1,
     limit: 100,
     untagged: true,
   });
-  const userOptionsUnTagged = (usersApiDataUntagged?.data?.data?.docs || []).map((u) => ({
+  const userOptionsUnTagged = (
+    usersApiDataUntagged?.data?.data?.docs || []
+  ).map((u) => ({
     label: `${u.name} (${u.role?.designationEnglish || ""})`,
     value: u._id,
   }));
-    const { data: usersApiData } = useGetUsers([1, 100], {
+  const { data: usersApiData } = useGetUsers([1, 100], {
     page: 1,
     limit: 100,
     // untagged: true,
@@ -79,7 +81,6 @@ export default function OfficerTagging() {
     label: `${u.name} (${u.role?.designationEnglish || ""})`,
     value: u._id,
   }));
-
 
   const filtered = docs.filter(
     (t) =>
@@ -95,8 +96,8 @@ export default function OfficerTagging() {
       });
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.USERS],
-        refetchType: "active"
-      })
+        refetchType: "active",
+      });
       setDialogOpen(false);
     },
     onError: (err) => {
@@ -172,7 +173,7 @@ export default function OfficerTagging() {
       <div className="p-6 space-y-6">
         <SectionTitle
           title="Officer Tagging"
-          subtitle="Tag officers to multiple services and multiple wards — manually assigned due to location restriction"
+          subtitle="Tag officers to multiple services and multiple wards - manually assigned due to location restriction"
         />
 
         <OfficerTagAnalytics
@@ -295,7 +296,7 @@ export default function OfficerTagging() {
               wards
             </li>
             <li>
-              • Every SLA must have at least 1 officer — or the ticket will not
+              • Every SLA must have at least 1 officer - or the ticket will not
               be visible
             </li>
             <li>

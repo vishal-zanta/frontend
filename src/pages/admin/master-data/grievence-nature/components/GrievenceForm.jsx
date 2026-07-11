@@ -21,7 +21,7 @@ const GrievenceForm = ({ initialValues, handleSubmit, typeOptions = [] }) => {
         required
       />
 
-      {/* Type — creatable single select from /options/types */}
+      {/* Type - creatable single select from /options/types */}
       <RhfSelect
         name="type"
         label="Type"

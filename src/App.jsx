@@ -45,7 +45,7 @@ import ManageOfficers from "./pages/admin/ManageOfficers";
 import ManageAgents from "./pages/admin/ManageAgents";
 import OfficerSettings from "./pages/officer/OfficerSettings";
 import CRMSettings from "./pages/crm/CRMSettings";
-import FieldVisits from "./pages/officer/FieldVisits";
+import FieldVisits from "./pages/officer/field-visits";
 import CitizenFeedback from "./pages/citizen/CitizenFeedback";
 import CitizenSettings from "./pages/citizen/CitizenSettings";
 import Login from "./pages/Login";
