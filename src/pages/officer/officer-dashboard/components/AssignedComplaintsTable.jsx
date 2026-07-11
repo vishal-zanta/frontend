@@ -83,7 +83,7 @@ const Table = ({ filtered = [] }) => {
           return (
             <tr key={c._id || c.id || i} className="hover:bg-muted/30">
               <td className="px-4 py-2.5">
-                <ComplaintId id={complaintId} />
+                <ComplaintId id={complaintId} complaint={c} />
               </td>
               <td className="px-4 py-2.5 text-muted-foreground">
                 {serviceName}

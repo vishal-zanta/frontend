@@ -20,7 +20,7 @@ export default function ComplaintList({
     fetchNextPage,
     isFetchingNextPage,
   } = useGetComplaintsOfOfiicer({ limit: 10 });
-
+// console.log({selected})
   const complaints = useMemo(() => {
     return (
       data?.pages?.flatMap(
@@ -52,7 +52,12 @@ export default function ComplaintList({
         (c) => c.status === "Escalated",
       ).length;
 
-      const currentStats = { totalAssigned, pendingAction, resolved, slaBreachRisk };
+      const currentStats = {
+        totalAssigned,
+        pendingAction,
+        resolved,
+        slaBreachRisk,
+      };
 
       // Shallow equality check to prevent infinite loop on stats callback
       const hasChanged =
@@ -90,7 +95,8 @@ export default function ComplaintList({
             <>
               {complaints.map((c, i) => {
                 const id = c._id || c.id;
-                const isSelected = selected?._id === id || selected?.id === id;
+                const isSelected = selected?._id == id;
+                // console.log({selected : selected?._id, id, isSelected})
                 return (
                   <button
                     key={id || i}
@@ -103,10 +109,14 @@ export default function ComplaintList({
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <ComplaintId
+                      {/* <ComplaintId
                         id={c.grievanceId || c.id}
                         className="text-xs font-semibold"
-                      />
+                      /> */}
+                      <h2 className="text-xs font-bold text-primary font-mono">
+                        {c.grievanceId || c.id} 
+                      </h2>
+
                       <StatusBadge status={c.status} />
                     </div>
                     <div className="text-sm text-foreground truncate">

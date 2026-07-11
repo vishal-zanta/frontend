@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { COMPLAINTS, CALL_TRACKER, OFFICERS, SERVICES, DISTRICTS, ULBS } from "@/lib/biharData";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
-import { User, Phone, MapPin, Building2, Calendar, Tag, ExternalLink, HardHat, Navigation, Camera, CheckCircle2, Clock, Star } from "lucide-react";
+import { User, Phone, MapPin, Building2, Calendar, Tag, ExternalLink, HardHat, Navigation, Camera, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
@@ -20,14 +20,14 @@ function getServiceName(serviceId) {
   return s ? s.name : serviceId;
 }
 
-export function ComplaintId({ id, className = "" }) {
+export function ComplaintId({ id, className = "", complaint }) {
   const [open, setOpen] = useState(false);
   return (
     <>
       <button onClick={() => setOpen(true)} className={`font-mono text-primary hover:underline cursor-pointer ${className}`}>
         {id}
       </button>
-      <ComplaintDetailDialog complaintId={id} open={open} onClose={() => setOpen(false)} />
+      <ComplaintDetailDialog complaintId={id} open={open} onClose={() => setOpen(false)} complaintData={complaint} />
     </>
   );
 }
@@ -68,8 +68,31 @@ export function FieldVisitId({ id, className = "" }) {
   );
 }
 
-export function ComplaintDetailDialog({ complaintId, open, onClose }) {
-  const complaint = COMPLAINTS.find(c => c.id === complaintId);
+export function ComplaintDetailDialog({ complaintId, open, onClose, complaintData }) {
+  console.log({complaintData});
+  const unifiedComplaint = complaintData
+    ? {
+        status: complaintData.status,
+        priority: complaintData.assignedPriority,
+        source: complaintData.source || "online",
+        citizenName: complaintData.citizenInfo?.fullName || "Anonymous",
+        mobile: complaintData.citizenInfo?.mobile || "—",
+        districtName: complaintData.address?.district || "—",
+        ulbName: complaintData.address?.subdivision || "—",
+        ward: complaintData.address?.villageOrWard || "—",
+        createdDate: complaintData.createdAt,
+        serviceName: complaintData.classification?.subService?.service?.title || "—",
+        subserviceName: complaintData.classification?.subService?.title || "—",
+        description: complaintData.evidence?.details || "—",
+        l1OfficerName: complaintData.l1Officer?.name || "Unassigned",
+        l1Officer: complaintData.l1Officer?._id || complaintData.l1Officer || null,
+        l2OfficerName: complaintData.l2Officer?.name || "Unassigned",
+        l2Officer: complaintData.l2Officer?._id || complaintData.l2Officer || null,
+        resolvedDate: complaintData.resolvedDate || null,
+      }
+    : COMPLAINTS.find(c => c.id === complaintId);
+
+  const displayId = complaintData?.grievanceId || complaintId;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -77,50 +100,50 @@ export function ComplaintDetailDialog({ complaintId, open, onClose }) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             Complaint Details
-            <span className="font-mono text-primary">{complaintId}</span>
+            <span className="font-mono text-primary">{displayId}</span>
           </DialogTitle>
         </DialogHeader>
-        {complaint ? (
+        {unifiedComplaint ? (
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <StatusBadge status={complaint.status} />
-              <PriorityBadge priority={complaint.priority} />
-              <span className="text-xs text-muted-foreground ml-auto capitalize">{complaint.source}</span>
+              <StatusBadge status={unifiedComplaint.status} />
+              <PriorityBadge priority={unifiedComplaint.priority} />
+              <span className="text-xs text-muted-foreground ml-auto capitalize">{unifiedComplaint.source}</span>
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2"><User className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Citizen:</span><span className="font-medium">{complaint.citizenName}</span></div>
-              <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Mobile:</span><span className="font-medium">{complaint.mobile}</span></div>
-              <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">District:</span><span className="font-medium">{complaint.districtName}</span></div>
-              <div className="flex items-center gap-2"><Building2 className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">ULB:</span><span className="font-medium">{complaint.ulbName}</span></div>
-              <div className="flex items-center gap-2"><Tag className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Ward:</span><span className="font-medium">{complaint.ward}</span></div>
-              <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Filed:</span><span className="font-medium">{new Date(complaint.createdDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</span></div>
+              {/* <div className="flex items-center gap-2"><User className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Citizen:</span><span className="font-medium">{unifiedComplaint.citizenName}</span></div>
+              <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Mobile:</span><span className="font-medium">{unifiedComplaint.mobile}</span></div> */}
+              <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">District:</span><span className="font-medium">{unifiedComplaint.districtName}</span></div>
+              <div className="flex items-center gap-2"><Building2 className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">ULB:</span><span className="font-medium">{unifiedComplaint.ulbName}</span></div>
+              <div className="flex items-center gap-2"><Tag className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Ward:</span><span className="font-medium">{unifiedComplaint.ward}</span></div>
+              <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Filed:</span><span className="font-medium">{new Date(unifiedComplaint.createdDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</span></div>
             </div>
             <div className="bg-muted/50 rounded-lg p-3">
               <div className="text-xs text-muted-foreground mb-1">Service</div>
-              <div className="font-medium">{complaint.serviceName} - {complaint.subserviceName}</div>
+              <div className="font-medium">{unifiedComplaint.serviceName} - {unifiedComplaint.subserviceName}</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">Description</div>
-              <p className="text-sm">{complaint.description}</p>
+              <p className="text-sm">{unifiedComplaint.description}</p>
             </div>
             <div className="flex gap-3">
               <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <div className="text-[10px] uppercase text-muted-foreground">L1 Officer</div>
-                <div className="font-semibold text-sm">{complaint.l1OfficerName || "Unassigned"}</div>
-                {complaint.l1Officer && <div className="text-[11px] mt-0.5"><OfficerId id={complaint.l1Officer} /></div>}
+                <div className="font-semibold text-sm">{unifiedComplaint.l1OfficerName || "Unassigned"}</div>
+                {unifiedComplaint.l1Officer && <div className="text-[11px] mt-0.5"><OfficerId id={unifiedComplaint.l1Officer} /></div>}
               </div>
               <div className="flex-1 bg-purple-50 border border-purple-200 rounded-lg p-3">
                 <div className="text-[10px] uppercase text-muted-foreground">L2 Officer</div>
-                <div className="font-semibold text-sm">{complaint.l2OfficerName || "Unassigned"}</div>
-                {complaint.l2Officer && <div className="text-[11px] mt-0.5"><OfficerId id={complaint.l2Officer} /></div>}
+                <div className="font-semibold text-sm">{unifiedComplaint.l2OfficerName || "Unassigned"}</div>
+                {unifiedComplaint.l2Officer && <div className="text-[11px] mt-0.5"><OfficerId id={unifiedComplaint.l2Officer} /></div>}
               </div>
             </div>
-            {complaint.resolvedDate && (
+            {unifiedComplaint.resolvedDate && (
               <div className="text-sm text-emerald-600">
-                Resolved on {new Date(complaint.resolvedDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                Resolved on {new Date(unifiedComplaint.resolvedDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
               </div>
             )}
-            <Link to="/citizen/track" className="flex items-center gap-1 text-sm text-primary hover:underline">
+            <Link to="#" className="flex items-center gap-1 text-sm text-primary hover:underline">
               View Full Timeline <ExternalLink className="w-3 h-3" />
             </Link>
           </div>

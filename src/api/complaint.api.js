@@ -28,8 +28,8 @@ export const assignOfficer = async ({ id, assignedOfficer }) => {
   return instance.patch(`/grievances/officer/${id}/transfer`, { assignedOfficer }).then((res) => res.data);
 };
 
-export const updateComplaintStatus = async ({ id, status }) => {
-  return instance.patch(`/grievances/officer/${id}/status`, { status }).then((res) => res.data);
+export const updateComplaintStatus = async ({ id, status, remark }) => {
+  return instance.patch(`/grievances/officer/${id}/status`, { status, remark }).then((res) => res.data);
 };
 
 export const updateComplaintPriority = async ({ id, assignedPriority }) => {

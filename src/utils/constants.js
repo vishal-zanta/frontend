@@ -34,7 +34,8 @@ export const STATUS_ACTIONS = [
     icon: CheckCircle2, 
     color: "bg-emerald-600 hover:bg-emerald-700", 
     badgeLabel: "Resolved", 
-    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200" 
+    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200" ,
+    isRemark : true,
   },
   { 
     label: "Closed", 
@@ -42,7 +43,9 @@ export const STATUS_ACTIONS = [
     icon: XCircle, 
     color: "bg-red-600 hover:bg-red-700", 
     badgeLabel: "Closed", 
-    badgeClass: "bg-slate-50 text-slate-500 border-slate-200" 
+    badgeClass: "bg-slate-50 text-slate-500 border-slate-200",
+    isRemark : true,
+
   },
   { 
     label: "In Progress", 
