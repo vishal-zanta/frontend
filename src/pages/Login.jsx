@@ -29,7 +29,7 @@ export default function Login() {
     try {
       // const captchaToken = await executeRecaptcha("submit_login_form");
       const res = await postLogin({ email, password  });
-      console.log("Login response:", res);
+      // console.log("Login response:", res);
       const token =  res?.data?.data?.token;
       if (token) {
         localStorage.setItem("usertoken", token);
@@ -49,7 +49,7 @@ export default function Login() {
   };
   useEffect(()=> {
     const token = localStorage.getItem("usertoken");
-    console.log({token});
+    // console.log({token});
     if(!!token && state?.redirect!== false){
       navigate(afterLoginPath);
     }
