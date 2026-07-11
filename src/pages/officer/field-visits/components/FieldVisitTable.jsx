@@ -5,7 +5,7 @@ import { PriorityBadge } from "@/components/Badges";
 import { Badge } from "@/components/ui/badge";
 import { getFieldVisitStatusClass } from "@/utils/constants";
 
-export default function FieldVisitTable({ filtered = [], onEdit, onView }) {
+export default function FieldVisitTable({ filtered = [], onEdit, onView , isHideAction = false}) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -20,7 +20,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView }) {
             <th className="px-4 py-3 font-medium min-w-32">Geo-Tag</th>
             <th className="px-4 py-3 font-medium">Photo</th>
             <th className="px-4 py-3 font-medium">Status</th>
-            <th className="px-4 py-3 font-medium text-right">Actions</th>
+           {!isHideAction &&  <th className="px-4 py-3 font-medium text-right">Actions</th>}
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -95,15 +95,9 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView }) {
                     {fv.status || "-"}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-right">
+               {!isHideAction &&  <td className="px-4 py-3 text-right">
                   <div className="flex gap-2 justify-end">
-                    {/* <button
-                      onClick={() => onView && onView(fv)}
-                      className="p-1.5 hover:bg-muted rounded text-primary cursor-pointer"
-                      title="View Details"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button> */}
+                    
                     <button
                       onClick={() => onEdit && onEdit(fv)}
                       className="p-1.5 hover:bg-muted rounded text-muted-foreground cursor-pointer"
@@ -112,7 +106,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView }) {
                       <Pencil className="w-4 h-4" />
                     </button>
                   </div>
-                </td>
+                </td>}
               </tr>
             );
           })}

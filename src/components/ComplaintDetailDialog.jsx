@@ -335,12 +335,12 @@ export function ComplaintDetailDialog({
                 )}
               </div>
             )}
-            <Link
+            {/* <Link
               to="#"
               className="flex items-center gap-1 text-sm text-primary hover:underline"
             >
               View Full Timeline <ExternalLink className="w-3 h-3" />
-            </Link>
+            </Link> */}
           </div>
         ) : (
           <p className="text-muted-foreground text-sm">Complaint not found.</p>

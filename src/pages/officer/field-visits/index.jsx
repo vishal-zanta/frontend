@@ -81,7 +81,7 @@ export default function FieldVisits() {
             }}
             delay={500}
             className="flex-1"
-            placeholder="Search by visit ID or complaint ID..."
+            placeholder="Search by visit ID ..."
           />
 
           <SelectDebounced
