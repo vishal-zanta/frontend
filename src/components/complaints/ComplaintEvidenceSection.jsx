@@ -43,11 +43,29 @@ export default function ComplaintEvidenceSection({ description, attachments, geo
         <div className="mb-4">
           <div className="text-xs text-muted-foreground mb-2 font-semibold">Geo-Tagged Field Photos ({geotaggedImages.length})</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {geotaggedImages.map((img, idx) => (
-              <a key={idx} href={img} target="_blank" rel="noopener noreferrer" className="border border-border rounded-lg p-2 bg-card overflow-hidden">
-                <img src={img} alt={`Field Photo ${idx + 1}`} className="w-full h-24 object-cover rounded hover:scale-105 transition-transform" />
-              </a>
-            ))}
+            {geotaggedImages.map((img, idx) => {
+              const url = typeof img === "string" ? img : (img?.url || img?.path || "");
+              const displayUrl = url.startsWith("http") ? url : (IMG_BASE_URL + url);
+              const fileName = typeof img === "object" ? (img?.fileName || img?.name || `Field Photo ${idx + 1}`) : (url.split("/").pop() || `Field Photo ${idx + 1}`);
+              const isImage = (typeof img === "object" && img?.type === "IMAGE") || !!url.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+
+              return (
+                <div key={idx} className="border border-border rounded-lg p-2 bg-card overflow-hidden">
+                  {isImage ? (
+                    <a href={displayUrl} target="_blank" rel="noopener noreferrer">
+                      <img src={displayUrl} alt={fileName} className="w-full h-24 object-cover rounded hover:scale-105 transition-transform" />
+                    </a>
+                  ) : (
+                    <div className="w-full h-24 bg-muted/50 rounded flex items-center justify-center flex-col p-1 text-center">
+                      <span className="text-[10px] text-muted-foreground font-mono truncate w-full">{fileName}</span>
+                      <a href={displayUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline mt-1 font-semibold">
+                        Download
+                      </a>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
