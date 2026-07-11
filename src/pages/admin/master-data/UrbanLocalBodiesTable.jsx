@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
-import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
 import { useGetUlbs } from "./hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postUlb, putUlb, deleteUlb } from "./api";
@@ -24,7 +24,11 @@ import Pagination from "@/components/Pagination";
 export default function UrbanLocalBodiesTable({ districts = [] }) {
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
-  const { data: ulbsData, isLoading: ulbsLoading, error: ulbsError } = useGetUlbs([page, limit], { page, limit });
+  const {
+    data: ulbsData,
+    isLoading: ulbsLoading,
+    error: ulbsError,
+  } = useGetUlbs([page, limit], { page, limit });
   const ulbs = ulbsData?.data?.data?.docs || [];
   const totalPages = ulbsData?.data?.data?.pagination?.totalPages || 1;
 
@@ -50,7 +54,10 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
           name: dialog.item?.name || "",
           nameHindi: dialog.item?.nameHindi || "",
           wards: dialog.item?.wards || 0,
-          district: typeof dialog.item?.district === "object" ? dialog.item?.district?._id : (dialog.item?.district || ""),
+          district:
+            typeof dialog.item?.district === "object"
+              ? dialog.item?.district?._id
+              : dialog.item?.district || "",
         });
       } else if (dialog.type === "add") {
         setFormData({
@@ -112,7 +119,11 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
     if (!formData.nameHindi.trim()) {
       newErrors.nameHindi = "ULB name (Hindi) is required";
     }
-    if (!formData.wards || isNaN(Number(formData.wards)) || Number(formData.wards) <= 0) {
+    if (
+      !formData.wards ||
+      isNaN(Number(formData.wards)) ||
+      Number(formData.wards) <= 0
+    ) {
       newErrors.wards = "Valid wards count is required";
     }
     if (!formData.district) {
@@ -151,7 +162,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
       <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <div>
-            <h3 className="font-bold text-foreground">Urban Local Bodies (ULBs)</h3>
+            <h3 className="font-bold text-foreground">
+              Urban Local Bodies (ULBs)
+            </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
               Configure and manage municipal corporations and town councils
             </p>
@@ -177,9 +190,15 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                     <th className="px-4 py-2.5 font-medium">ULB Name</th>
                     <th className="px-4 py-2.5 font-medium">Hindi</th>
                     <th className="px-4 py-2.5 font-medium">District</th>
-                    <th className="px-4 py-2.5 font-medium text-right">Wards</th>
-                    <th className="px-4 py-2.5 font-medium text-right">Population</th>
-                    <th className="px-4 py-2.5 text-center font-medium">Actions</th>
+                    <th className="px-4 py-2.5 font-medium text-right">
+                      Wards
+                    </th>
+                    <th className="px-4 py-2.5 font-medium text-right">
+                      Population
+                    </th>
+                    <th className="px-4 py-2.5 text-center font-medium">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -187,7 +206,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                     const districtObj =
                       typeof u.district === "object"
                         ? u.district
-                        : districts.find((d) => d._id === u.district || d.id === u.district);
+                        : districts.find(
+                            (d) => d._id === u.district || d.id === u.district,
+                          );
                     const districtName = districtObj?.name || "—";
                     const districtPopulation = districtObj?.population;
 
@@ -202,7 +223,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                         </td>
                         <td className="px-4 py-2.5 text-right">{u.wards}</td>
                         <td className="px-4 py-2.5 text-right font-semibold">
-                          {districtPopulation ? districtPopulation.toLocaleString("en-IN") : "—"}
+                          {districtPopulation
+                            ? districtPopulation.toLocaleString("en-IN")
+                            : "—"}
                         </td>
                         <td className="px-4 py-2.5">
                           <div className="flex gap-1 justify-center">
@@ -210,7 +233,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                               variant="ghost"
                               size="sm"
                               className="h-8 px-2 text-muted-foreground hover:text-foreground"
-                              onClick={() => setDialog({ type: "edit", item: u })}
+                              onClick={() =>
+                                setDialog({ type: "edit", item: u })
+                              }
                             >
                               <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
                             </Button>
@@ -218,7 +243,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                               variant="ghost"
                               size="sm"
                               className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                              onClick={() => setDialog({ type: "delete", item: u })}
+                              onClick={() =>
+                                setDialog({ type: "delete", item: u })
+                              }
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </Button>
@@ -250,7 +277,11 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
       )}
       {dialog && dialog.type !== "delete" && (
         <EditDialog
-          title={dialog.type === "add" ? "Add ULB" : `Edit ${dialog.item?.name || "Record"}`}
+          title={
+            dialog.type === "add"
+              ? "Add ULB"
+              : `Edit ${dialog.item?.name || "Record"}`
+          }
           onClose={() => setDialog(null)}
           onSave={handleSave}
           saving={postMutation.isPending || putMutation.isPending}
@@ -267,15 +298,21 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                 placeholder="e.g., Patna Municipal Corporation"
                 required
               />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              )}
             </div>
             <div>
               <Label className="mb-1.5 block">नगर निगम (Hindi) *</Label>
               <Input
                 value={formData.nameHindi}
                 onChange={(e) => {
-                  setFormData((prev) => ({ ...prev, nameHindi: e.target.value }));
-                  if (errors.nameHindi) setErrors((prev) => ({ ...prev, nameHindi: "" }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    nameHindi: e.target.value,
+                  }));
+                  if (errors.nameHindi)
+                    setErrors((prev) => ({ ...prev, nameHindi: "" }));
                 }}
                 placeholder="उदा. पटना नगर निगम"
                 required
@@ -290,7 +327,8 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                 value={formData.district}
                 onValueChange={(val) => {
                   setFormData((prev) => ({ ...prev, district: val }));
-                  if (errors.district) setErrors((prev) => ({ ...prev, district: "" }));
+                  if (errors.district)
+                    setErrors((prev) => ({ ...prev, district: "" }));
                 }}
               >
                 <SelectTrigger>
@@ -311,16 +349,20 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
             <div>
               <Label className="mb-1.5 block">Wards *</Label>
               <Input
-                type="number"
                 value={formData.wards}
                 onChange={(e) => {
+                  if (!isValidNumber(e.target.value, 0)) return;
+
                   setFormData((prev) => ({ ...prev, wards: e.target.value }));
-                  if (errors.wards) setErrors((prev) => ({ ...prev, wards: "" }));
+                  if (errors.wards)
+                    setErrors((prev) => ({ ...prev, wards: "" }));
                 }}
                 placeholder="e.g., 75"
                 required
               />
-              {errors.wards && <p className="text-red-500 text-xs mt-1">{errors.wards}</p>}
+              {errors.wards && (
+                <p className="text-red-500 text-xs mt-1">{errors.wards}</p>
+              )}
             </div>
             {/* <div>
               <Label className="mb-1.5 block">Population *</Label>

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
-import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSubservice, putSubservice, deleteSubservice } from "./api";
 import { useGetSubservices } from "./hooks";
@@ -311,9 +311,12 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
             <div>
               <Label className="mb-1.5 block">SLA Hours *</Label>
               <Input
-                type="number"
+                type="text"
                 value={formData.sla}
+               
                 onChange={(e) => {
+                  
+                  if(!isValidNumber(e.target.value, 0)) return;
                   setFormData((prev) => ({ ...prev, sla: e.target.value }));
                   if (errors.sla) setErrors((prev) => ({ ...prev, sla: "" }));
                 }}

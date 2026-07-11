@@ -6,10 +6,12 @@ import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { postLogin } from "@/api/auth.api";
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function Login() {
   const {state} = useLocation();
   const afterLoginPath = state?.afterLoginPath || "/admin";
+  const {executeRecaptcha} = useGoogleReCaptcha();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +23,12 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
+    if(!executeRecaptcha){
+      console.log("reCAPTCHA has not loaded yet");
+    }
     try {
-      const res = await postLogin({ email, password });
+      const captchaToken = await executeRecaptcha("submit_login_form");
+      const res = await postLogin({ email, password, captchaToken  });
       console.log("Login response:", res);
       const token =  res?.data?.data?.token;
       if (token) {

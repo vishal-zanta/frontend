@@ -7,6 +7,7 @@ import ServicesTab from "./master-data/ServicesTab";
 import ComplaintSourcesTab from "./master-data/ComplaintSourcesTab";
 import DemographyTab from "./master-data/DemographyTab";
 import GrievenceNatureTab from "./master-data/GrievenceNatureTab";
+import { useSearchParams } from "react-router-dom";
 
 const tabs = [
   { id: "designation", label: "Designations", icon: Tag },
@@ -17,7 +18,12 @@ const tabs = [
 ];
 
 export default function MasterData() {
-  const [tab, setTab] = useState("designation");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [tab, setTab] = useState(
+    (tabs.map((t) => t.id).includes(searchParams.get("tab"))
+      ? searchParams.get("tab")
+      : undefined) ?? "designation",
+  );
 
   return (
     <PortalLayout role="superadmin">
@@ -33,7 +39,10 @@ export default function MasterData() {
             return (
               <button
                 key={t.id}
-                onClick={() => setTab(t.id)}
+                onClick={() => {
+                  setTab(t.id);
+                  setSearchParams({ tab: t.id }, { replace: true });
+                }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
                   tab === t.id
                     ? "bg-primary text-white shadow-md"

@@ -49,6 +49,7 @@ import FieldVisits from "./pages/officer/FieldVisits";
 import CitizenFeedback from "./pages/citizen/CitizenFeedback";
 import CitizenSettings from "./pages/citizen/CitizenSettings";
 import Login from "./pages/Login";
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 const RootLayout = () => {
   return (
@@ -265,11 +266,14 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthProvider>
+    <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
+
       <QueryClientProvider client={queryClientInstance}>
         <RouterProvider router={router} />
         <Toaster />
         <HotToaster />
       </QueryClientProvider>
+    </GoogleReCaptchaProvider>
     </AuthProvider>
   );
 }

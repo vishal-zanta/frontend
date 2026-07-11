@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
-import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
 import { ULBS } from "@/lib/biharData";
 import { useGetDemographics } from "./hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,7 +27,10 @@ import Pagination from "@/components/Pagination";
 export default function DemographyTab() {
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
-  const { data, isLoading, error } = useGetDemographics([page, limit], { page, limit });
+  const { data, isLoading, error } = useGetDemographics([page, limit], {
+    page,
+    limit,
+  });
   const districts = data?.data?.data?.docs || [];
   const totalPages = data?.data?.data?.pagination?.totalPages || 1;
 
@@ -162,7 +165,9 @@ export default function DemographyTab() {
       <div className="space-y-6">
         <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground">Districts & Demography</h3>
+            <h3 className="font-bold text-foreground">
+              Districts & Demography
+            </h3>
             <Button
               size="sm"
               onClick={() => setDialog({ type: "add" })}
@@ -185,9 +190,15 @@ export default function DemographyTab() {
                       <th className="px-4 py-2.5 font-medium">Hindi</th>
                       <th className="px-4 py-2.5 font-medium">Division</th>
                       <th className="px-4 py-2.5 font-medium">Zone</th>
-                      <th className="px-4 py-2.5 font-medium text-right">Population</th>
-                      <th className="px-4 py-2.5 font-medium text-center">Urban</th>
-                      <th className="px-4 py-2.5 text-center font-medium">Actions</th>
+                      <th className="px-4 py-2.5 font-medium text-right">
+                        Population
+                      </th>
+                      <th className="px-4 py-2.5 font-medium text-center">
+                        Urban
+                      </th>
+                      <th className="px-4 py-2.5 text-center font-medium">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -197,19 +208,27 @@ export default function DemographyTab() {
                         <td className="px-4 py-2.5 text-muted-foreground">
                           {d.nameHindi || "—"}
                         </td>
-                        <td className="px-4 py-2.5 text-muted-foreground">{d.division}</td>
-                        <td className="px-4 py-2.5 text-muted-foreground">{d.zone}</td>
+                        <td className="px-4 py-2.5 text-muted-foreground">
+                          {d.division}
+                        </td>
+                        <td className="px-4 py-2.5 text-muted-foreground">
+                          {d.zone}
+                        </td>
                         <td className="px-4 py-2.5 text-right font-semibold">
                           {d.population.toLocaleString("en-IN")}
                         </td>
-                        <td className="px-4 py-2.5 text-center">{d.urban ? "✅" : "—"}</td>
+                        <td className="px-4 py-2.5 text-center">
+                          {d.urban ? "✅" : "—"}
+                        </td>
                         <td className="px-4 py-2.5">
                           <div className="flex gap-1 justify-center">
                             <Button
                               variant="ghost"
                               size="sm"
                               className="h-8 px-2 text-muted-foreground hover:text-foreground"
-                              onClick={() => setDialog({ type: "edit", item: d })}
+                              onClick={() =>
+                                setDialog({ type: "edit", item: d })
+                              }
                             >
                               <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
                             </Button>
@@ -217,7 +236,9 @@ export default function DemographyTab() {
                               variant="ghost"
                               size="sm"
                               className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                              onClick={() => setDialog({ type: "delete", item: d })}
+                              onClick={() =>
+                                setDialog({ type: "delete", item: d })
+                              }
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </Button>
@@ -273,15 +294,21 @@ export default function DemographyTab() {
                 placeholder="e.g., Patna"
                 required
               />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              )}
             </div>
             <div>
               <Label className="mb-1.5 block">जिला (Hindi) *</Label>
               <Input
                 value={formData.nameHindi}
                 onChange={(e) => {
-                  setFormData((prev) => ({ ...prev, nameHindi: e.target.value }));
-                  if (errors.nameHindi) setErrors((prev) => ({ ...prev, nameHindi: "" }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    nameHindi: e.target.value,
+                  }));
+                  if (errors.nameHindi)
+                    setErrors((prev) => ({ ...prev, nameHindi: "" }));
                 }}
                 placeholder="उदा. पटना"
                 required
@@ -295,19 +322,27 @@ export default function DemographyTab() {
               <Input
                 value={formData.division}
                 onChange={(e) => {
-                  setFormData((prev) => ({ ...prev, division: e.target.value }));
-                  if (errors.division) setErrors((prev) => ({ ...prev, division: "" }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    division: e.target.value,
+                  }));
+                  if (errors.division)
+                    setErrors((prev) => ({ ...prev, division: "" }));
                 }}
                 placeholder="e.g., Patna"
                 required
               />
-              {errors.division && <p className="text-red-500 text-xs mt-1">{errors.division}</p>}
+              {errors.division && (
+                <p className="text-red-500 text-xs mt-1">{errors.division}</p>
+              )}
             </div>
             <div>
               <Label className="mb-1.5 block">Zone *</Label>
               <Select
                 value={formData.zone}
-                onValueChange={(val) => setFormData((prev) => ({ ...prev, zone: val }))}
+                onValueChange={(val) =>
+                  setFormData((prev) => ({ ...prev, zone: val }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -321,11 +356,18 @@ export default function DemographyTab() {
             <div>
               <Label className="mb-1.5 block">Population *</Label>
               <Input
-                type="number"
+                
                 value={formData.population}
                 onChange={(e) => {
-                  setFormData((prev) => ({ ...prev, population: e.target.value }));
-                  if (errors.population) setErrors((prev) => ({ ...prev, population: "" }));
+
+                  if (!isValidNumber(e.target.value, 0)) return;
+
+                  setFormData((prev) => ({
+                    ...prev,
+                    population: e.target.value,
+                  }));
+                  if (errors.population)
+                    setErrors((prev) => ({ ...prev, population: "" }));
                 }}
                 placeholder="e.g., 2442383"
                 required
@@ -343,7 +385,9 @@ export default function DemographyTab() {
               </div>
               <Switch
                 checked={formData.urban}
-                onCheckedChange={(val) => setFormData((prev) => ({ ...prev, urban: val }))}
+                onCheckedChange={(val) =>
+                  setFormData((prev) => ({ ...prev, urban: val }))
+                }
               />
             </div>
           </div>

@@ -1,13 +1,14 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Edit, Trash2 } from "lucide-react";
+import { Shield, Edit, Trash2, Eye } from "lucide-react";
 
 export default function UserManageTable({
   users = [],
   handleToggleStatus,
   setEditUser,
   handleDelete,
+  handleView
  
 }) {
   return (
@@ -95,6 +96,14 @@ export default function UserManageTable({
                             : "text-red-500"
                         }`}
                       />
+                    </Button>
+                     <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleView && handleView({ ...u })}
+                      title="View User"
+                    >
+                      <Eye className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="ghost"

@@ -115,3 +115,6 @@ body.high-contrast {
   .print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
   .no-print { display: none !important; }
 }
+.grecaptcha-badge{
+  display: none;
+}

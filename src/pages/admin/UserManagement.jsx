@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Shield, UserPlus } from "lucide-react";
+import { Shield, UserPlus, Mail, Phone, MapPin, Flame } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,8 @@ export default function UserManagement() {
   const [editUser, setEditUser] = useState(null);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [deleteUserRecord, setDeleteUserRecord] = useState(null);
-  const [addInitialValues, setAddInitialValues] = useState({
+  const [viewUser, setViewUser] = useState(null);
+   const [addInitialValues, setAddInitialValues] = useState({
     name: "",
     email: "",
     phone: "",
@@ -93,6 +95,9 @@ export default function UserManagement() {
   const handleDelete = (user) => {
     setDeleteUserRecord(user);
   };
+  const handleView = (user)=> {
+    setViewUser(user);
+  }
 
   const handleToggleStatus = (user) => {
     const newStatus = user.status === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
@@ -106,15 +111,20 @@ export default function UserManagement() {
   };
 
   const tableData = (data?.data?.data?.docs || []).map((user) => {
+    const districtVal = user?.district;
+    const districtDisplay = (districtVal && typeof districtVal === "object")
+      ? (districtVal.name || districtVal._id || "")
+      : (districtVal || "");
+
     return {
       id: user?._id,
       name: user?.name,
       email: user?.email,
       role: user?.role?.designationEnglish || "",
       designation: user?.role?.designationEnglish || "",
-      district: user?.district?._id || user?.district,
+      district: districtDisplay,
       status: (user?.status || ""),
-      permissions: [],
+      permissions: user?.role?.permissions || [],
       apiData: user,
     };
   });
@@ -158,7 +168,7 @@ export default function UserManagement() {
                   password: "",
                   confirmPassword: "",
                   role: superAdminId,
-                  district: "Statewide",
+                  district: "",
                 });
                 setAddUserOpen(true);
               }}
@@ -205,6 +215,7 @@ export default function UserManagement() {
                 handleToggleStatus={handleToggleStatus}
                 setEditUser={setEditUser}
                 handleDelete={handleDelete}
+                handleView = {handleView}
               />
             </LoaderErrWrapper>
           </div>
@@ -270,6 +281,7 @@ export default function UserManagement() {
                 isEdit={false}
                 isLoading={postMutation.isPending}
                 submitLabel="Add User"
+                disabledKeys = {[...(!!addInitialValues.role ? ["role"] : [])].flat()}
                 onCancel={() => setAddUserOpen(false)}
               />
             </RhfWrapper>
@@ -289,6 +301,80 @@ export default function UserManagement() {
               });
             }}
           />
+        )}
+        {viewUser && (
+          <EditDialog
+            isHideFooter
+            onClose={() => setViewUser(null)}
+            title="User Details"
+          >
+            <div className="space-y-6 pb-4 text-sm">
+              {/* Header profile section */}
+              <div className="flex items-center gap-4 pb-4 border-b border-border">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xl font-bold shadow-md">
+                  {viewUser?.name
+                    ? viewUser.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()
+                    : "U"}
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-foreground leading-none">{viewUser?.name}</h3>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-muted-foreground/75" />
+                    <span>{viewUser?.email}</span>
+                  </p>
+                  
+                </div>
+              </div>
+
+              {/* Information Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Shield className="w-3.5 h-3.5 text-primary" /> Designation / Role
+                  </span>
+                  <span className="font-medium text-foreground block">{viewUser?.role || "N/A"}</span>
+                </div>
+
+                <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Phone className="w-3.5 h-3.5" /> Phone Number
+                  </span>
+                  <span className="font-medium text-foreground block">{viewUser?.apiData?.phone || "N/A"}</span>
+                </div>
+
+                <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5" /> Assigned District
+                  </span>
+                  <span className="font-medium text-foreground block">{viewUser?.district || "N/A"}</span>
+                </div>
+
+                <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Flame className="w-3.5 h-3.5 text-amber-500" /> Escalated Cases
+                  </span>
+                  <span className="font-medium text-foreground block">
+                    {viewUser?.apiData?.escalatedCount ?? 0}
+                  </span>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex justify-end pt-2 border-t border-border/60">
+                <Button
+                  onClick={() => setViewUser(null)}
+                  className="bg-primary hover:bg-primary/90 text-white font-medium px-6"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </EditDialog>
         )}
 
         {/* RBAC info */}

@@ -6,9 +6,18 @@ import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDemographics } from "../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
 
-export default function Form({ onCancel, isEdit = false, submitLabel = "Save", isLoading = false }) {
+export default function Form({
+  onCancel,
+  isEdit = false,
+  submitLabel = "Save",
+  isLoading = false,
+  disabledKeys = [],
+}) {
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: 100 });
-  const { data: demographyData } = useGetDemographics([], { page: 1, limit: 100 });
+  const { data: demographyData } = useGetDemographics([], {
+    page: 1,
+    limit: 100,
+  });
 
   const roleOptions = (rolesApiData?.data?.docs || []).map((r) => ({
     label: r.designationEnglish,
@@ -28,20 +37,48 @@ export default function Form({ onCancel, isEdit = false, submitLabel = "Save", i
 
   return (
     <div className="space-y-4">
-      <RhfInput label="Name" name="name" required placeholder="Enter full name" />
-      <RhfInput label="Email" name="email" required placeholder="email@bihar.gov.in" />
-      <RhfInput label="Phone" name="phone" required placeholder="Enter 10-digit phone number" />
-      <RhfInput label="Password" name="password" type="password" required={!isEdit} placeholder="Enter password" />
-      <RhfInput label="Confirm Password" name="confirmPassword" type="password" required={!isEdit} placeholder="Confirm password" />
-      
+      <RhfInput
+        label="Name"
+        name="name"
+        required
+        placeholder="Enter full name"
+      />
+      <RhfInput
+        label="Email"
+        name="email"
+        required
+        placeholder="email@bihar.gov.in"
+      />
+      <RhfInput
+        label="Phone"
+        name="phone"
+        required
+        placeholder="Enter 10-digit phone number"
+      />
+      <RhfInput
+        label="Password"
+        name="password"
+        type="password"
+        required={!isEdit}
+        placeholder="Enter password"
+      />
+      <RhfInput
+        label="Confirm Password"
+        name="confirmPassword"
+        type="password"
+        required={!isEdit}
+        placeholder="Confirm password"
+      />
+
       <RhfSelect
         name="role"
         label="Role"
         required
+        disabled={disabledKeys.includes("role")}
         options={roleOptions}
         placeholder="Select a role"
       />
-      
+
       <RhfSelect
         name="district"
         label="District"
