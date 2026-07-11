@@ -79,7 +79,7 @@ const AdminProtectedRoute = ({ children }) => {
   }
 
   if (error || !data) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace state={{ redirect: false }} />;
   }
 
   return children;

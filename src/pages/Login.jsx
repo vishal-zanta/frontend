@@ -50,7 +50,7 @@ export default function Login() {
   useEffect(()=> {
     const token = localStorage.getItem("usertoken");
     console.log({token});
-    if(!!token){
+    if(!!token && state?.redirect!== false){
       navigate(afterLoginPath);
     }
   },[])
