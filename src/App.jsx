@@ -28,7 +28,7 @@ import ShiftManagement from "./pages/crm/ShiftManagement";
 import IncomingCall from "./pages/crm/IncomingCall";
 import CallHistoryLog from "./pages/crm/CallHistoryLog";
 import TrackCCMComplaint from "./pages/crm/track-ccm-complaint";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDashboard from "./pages/admin/dashboard";
 import OperationalDashboards from "./pages/admin/operational-dashboard";
 import AIReports from "./pages/admin/AIReports";
 import PerformanceDashboard from "./pages/admin/PerformanceDashboard";
