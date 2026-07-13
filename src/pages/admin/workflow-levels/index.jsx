@@ -223,6 +223,7 @@ export default function WorkflowConfig() {
             page={page}
             limit={limit}
             totalPage={totalPages}
+            isLoading={isWorkflowLoading}
             {...pageProps}
           />
         </div>

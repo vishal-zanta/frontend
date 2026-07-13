@@ -222,6 +222,7 @@ export default function OfficerTagging() {
             page={page}
             limit={limit}
             totalPage={totalPages}
+            isLoading={isLoading}
             {...pageProps}
           />
         </div>

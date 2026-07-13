@@ -149,6 +149,7 @@ export default function DesignationsTab() {
             page={page}
             limit={limit}
             totalPage={totalPages}
+            isLoading={isLoading}
             {...paginationProps}
           />
         </LoaderErrWrapper>

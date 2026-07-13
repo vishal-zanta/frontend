@@ -29,7 +29,7 @@ const DemographyTable = ({ districts = [], setDialog }) => {
               {d.population.toLocaleString("en-IN")}
             </td>
             <td className="px-4 py-2.5 text-center">{d.urban ? "✅" : "-"}</td>
-            <td className="px-4 py-2.5">
+            <td className="px-4 py-2.5 text-center">
               <div className="flex gap-1 justify-center">
                 <Button
                   variant="ghost"

@@ -20,9 +20,9 @@ export default function UserManageTable({
               <th className="px-4 py-3 font-medium">Role</th>
               <th className="px-4 py-3 font-medium">District</th>
               <th className="px-4 py-3 font-medium">Permissions</th>
-              {/* <th className="px-4 py-3 font-medium">Last Login</th> */}
+              <th className="px-4 py-3 font-medium">Last Login</th>
               <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium">Actions</th>
+              <th className="px-4 py-3 font-medium text-center">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -64,9 +64,9 @@ export default function UserManageTable({
                     ))}
                   </div>
                 </td>
-                {/* <td className="px-4 py-3 text-xs text-muted-foreground">
+                <td className="px-4 py-3 text-xs text-muted-foreground">
                   {u.lastLogin}
-                </td> */}
+                </td>
                 <td className="px-4 py-3">
                   <Badge
                     variant="outline"
@@ -81,8 +81,8 @@ export default function UserManageTable({
                     {u?.status?.toLowerCase()}
                   </Badge>
                 </td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-1">
+                <td className="px-4 py-3 text-center">
+                  <div className="flex gap-1 justify-center">
                     <Button
                       variant="ghost"
                       size="sm"

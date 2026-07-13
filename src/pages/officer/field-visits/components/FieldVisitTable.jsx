@@ -20,7 +20,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
             <th className="px-4 py-3 font-medium min-w-32">Geo-Tag</th>
             <th className="px-4 py-3 font-medium">Photo</th>
             <th className="px-4 py-3 font-medium">Status</th>
-           {!isHideAction &&  <th className="px-4 py-3 font-medium text-right">Actions</th>}
+           {!isHideAction &&  <th className="px-4 py-3 font-medium text-center">Actions</th>}
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -95,8 +95,8 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                     {fv.status || "-"}
                   </Badge>
                 </td>
-               {!isHideAction &&  <td className="px-4 py-3 text-right">
-                  <div className="flex gap-2 justify-end">
+               {!isHideAction &&  <td className="px-4 py-3 text-center">
+                  <div className="flex gap-2 justify-center">
                     
                     <button
                       onClick={() => onEdit && onEdit(fv)}

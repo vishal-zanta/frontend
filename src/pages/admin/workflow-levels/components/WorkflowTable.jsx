@@ -28,7 +28,7 @@ export default function WorkflowTable({
             <th className="px-4 py-3 font-medium">Level </th>
             <th className="px-4 py-3 font-medium">Role</th>
             <th className="px-4 py-3 font-medium">Description</th>
-            <th className="px-4 py-3 font-medium">Actions</th>
+            <th className="px-4 py-3 font-medium text-center">Actions</th>
           </tr>
         </thead>
 
@@ -69,8 +69,8 @@ export default function WorkflowTable({
                 <td className="px-4 py-3 text-muted-foreground text-xs">
                   {level.description || "-"}
                 </td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-1">
+                <td className="px-4 py-3 text-center">
+                  <div className="flex gap-1 justify-center">
                     <Button
                       variant="ghost"
                       size="sm"

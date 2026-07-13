@@ -239,6 +239,7 @@ export default function SLAConfig() {
             page={page}
             limit={limit}
             totalPage={totalPages}
+            isLoading={isSlaLoading}
             {...pageProps}
           />
           <div className="px-5 py-3 border-t border-border flex items-center justify-between">

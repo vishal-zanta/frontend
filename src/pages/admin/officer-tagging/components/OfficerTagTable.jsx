@@ -15,7 +15,7 @@ export default function OfficerTagTable({ tagging = [], setEditItem, setDialog, 
             <th className="px-4 py-3 font-medium">Wards</th>
             <th className="px-4 py-3 font-medium text-center">Active</th>
             <th className="px-4 py-3 font-medium text-center">SLA</th>
-            <th className="px-4 py-3 font-medium">Actions</th>
+            <th className="px-4 py-3 font-medium text-center">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -45,8 +45,8 @@ export default function OfficerTagTable({ tagging = [], setEditItem, setDialog, 
               <td className="px-4 py-3 text-center">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" />
               </td>
-              <td className="px-4 py-3">
-                <div className="flex gap-1">
+              <td className="px-4 py-3 text-center">
+                <div className="flex gap-1 justify-center">
                   <Button
                     variant="ghost"
                     size="sm"

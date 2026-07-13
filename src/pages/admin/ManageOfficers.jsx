@@ -175,7 +175,7 @@ export default function ManageOfficers() {
                     SLA Breached
                   </th>
                   <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Actions</th>
+                  <th className="px-4 py-3 font-medium text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -238,8 +238,8 @@ export default function ManageOfficers() {
                         {o.status === "active" ? "● Active" : "● Inactive"}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex gap-1">
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex gap-1 justify-center">
                         <Button
                           variant="ghost"
                           size="sm"

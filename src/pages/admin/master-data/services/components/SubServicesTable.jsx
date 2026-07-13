@@ -20,7 +20,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
   const { page, limit, ...paginationProps } = usePagination();
   const [subservices, setSubservices] = useState(service.subservices || []);
   const [anyMutationDone, setAnyMutationDone] = useState(false);
-  const { data: subservicesData } = useGetSubservices(
+  const { data: subservicesData , isLoading} = useGetSubservices(
     [page, limit],
     { serviceId: service?._id, page, limit },
     anyMutationDone,
@@ -246,6 +246,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
             page={page}
             limit={limit}
             totalPage={totalPages}
+            isLoading={isLoading}
             {...paginationProps}
           />
         </div>

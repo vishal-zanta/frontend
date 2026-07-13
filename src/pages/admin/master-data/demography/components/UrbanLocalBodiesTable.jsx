@@ -261,6 +261,7 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                 page={page}
                 limit={limit}
                 totalPage={totalPages}
+                isLoading={ulbsLoading}
                 {...paginationProps}
               />
             </div>

@@ -159,7 +159,7 @@ export default function ManageAgents() {
                   <th className="px-4 py-3 font-medium">Avg Talk</th>
                   <th className="px-4 py-3 font-medium text-center">CSAT</th>
                   <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Actions</th>
+                  <th className="px-4 py-3 font-medium text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -200,8 +200,8 @@ export default function ManageAgents() {
                         {a.status}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex gap-1">
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex gap-1 justify-center">
                         <Button
                           variant="ghost"
                           size="sm"

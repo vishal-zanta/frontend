@@ -10,7 +10,7 @@ const GrievenceItems = ({ rawItems = [], setDialog }) => {
           <tr className="text-left text-xs text-muted-foreground">
             <th className="px-4 py-3 font-medium">Title</th>
             <th className="px-4 py-3 font-medium">Type</th>
-            <th className="px-4 py-3 font-medium">Actions</th>
+            <th className="px-4 py-3 font-medium text-center">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -22,8 +22,8 @@ const GrievenceItems = ({ rawItems = [], setDialog }) => {
               <td className="px-4 py-3 text-muted-foreground text-xs">
                 {item.type || "-"}
               </td>
-              <td className="px-4 py-3">
-                <div className="flex gap-1">
+              <td className="px-4 py-3 text-center">
+                <div className="flex gap-1 justify-center">
                   <Button
                     variant="ghost"
                     size="sm"

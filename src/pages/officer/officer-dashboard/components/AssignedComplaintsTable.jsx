@@ -45,7 +45,7 @@ export default function AssignedComplaintsTable({}) {
         <div className="overflow-x-auto">
           <Table filtered={displayData} />
         </div>
-        <Pagination {...pageProps} totalPage={totalPages} />
+        <Pagination {...pageProps} totalPage={totalPages} isLoading={isLoading} />
       </LoaderErrWrapper>
     </div>
   );
@@ -66,7 +66,7 @@ const Table = ({ filtered = [] }) => {
         </tr>
       </thead>
       <tbody className="divide-y divide-border">
-        {filtered.slice(0, 10).map((c, i) => {
+        {filtered.map((c, i) => {
           const complaintId = c.grievanceId || c.id || c._id || "-";
           const serviceName =
             c.classification?.subService?.service?.title ||

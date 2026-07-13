@@ -153,6 +153,7 @@ export default function GrievenceNatureTab() {
                 page={page}
                 limit={limit}
                 totalPage={totalPages}
+                isLoading={isLoading}
                 {...paginationProps}
               />
             </>

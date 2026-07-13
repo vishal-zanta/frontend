@@ -23,7 +23,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
             <th className="px-3 py-3 font-medium text-center min-w-40">
               Officer
             </th>
-            <th className="px-3 py-3 font-medium min-w-40 sticky right-0 bg-[#F4F7FA]">
+            <th className="px-3 py-3 font-medium min-w-40 sticky right-0 bg-[#F4F7FA] text-center">
               Actions
             </th>
           </tr>
@@ -73,8 +73,8 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                     <AlertTriangle className="w-4 h-4 text-red-500 mx-auto" />
                   )}
                 </td>
-                <td className="px-3 py-2.5 sticky right-0 bg-white">
-                  <div className="flex gap-1">
+                <td className="px-3 py-2.5 sticky right-0 bg-white text-center">
+                  <div className="flex gap-1 justify-center">
                     <Button variant="ghost" size="sm" onClick={() => onEdit(s)}>
                       <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
                     </Button>

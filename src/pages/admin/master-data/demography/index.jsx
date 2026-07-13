@@ -190,6 +190,7 @@ export default function DemographyTab() {
                   page={page}
                   limit={limit}
                   totalPage={totalPages}
+                  isLoading={isLoading}
                   {...paginationProps}
                 />
               </div>

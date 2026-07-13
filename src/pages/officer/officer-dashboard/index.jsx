@@ -5,7 +5,6 @@ import {
   Clock,
   AlertTriangle,
   CheckCircle2,
-  MapPin,
   Navigation,
   TrendingUp,
   Activity,
@@ -18,14 +17,18 @@ import {
   SERVICES,
 } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
-import { ComplaintId, OfficerId } from "@/components/ComplaintDetailDialog";
+import { OfficerId } from "@/components/ComplaintDetailDialog";
 import { usePortalProfile } from "@/hooks/usePortalProfile";
 import StatCard from "@/components/StatCard";
-import { StatusBadge, PriorityBadge } from "@/components/Badges";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import QuickActions from "@/components/officer/QuickActions";
 import AssignedComplaintsTable from "./components/AssignedComplaintsTable";
+import { useGetFieldVisits } from "@/hooks/query/useGetFieldVisits";
+import FieldVisitTable from "../field-visits/components/FieldVisitTable";
+import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "@/components/Pagination";
 
 const officerProfiles = {
   l1: { officer: OFFICERS[0], label: "L1 Field Officer" },
@@ -44,9 +47,13 @@ export default function OfficerDashboard() {
   const myComplaints = COMPLAINTS.filter(
     (c) => c.l1Officer === officer.id || c.l2Officer === officer.id,
   );
-  const fieldVisits = myComplaints.filter(
-    (c) => c.status === "Field Visit" || c.status === "In Progress",
-  );
+  const { page: visitPage, limit: visitLimit, ...visitPageProps } = usePagination(1);
+  const { data: visitsApiData, isLoading: visitsLoading, error: visitsError } = useGetFieldVisits({
+    page: visitPage,
+    limit: visitLimit,
+  });
+  const fieldVisits = visitsApiData?.data?.data?.docs || [];
+  const totalVisitPages = visitsApiData?.data?.data?.pagination?.totalPages ?? 1;
   const filtered = search
     ? myComplaints.filter(
         (c) =>
@@ -281,57 +288,21 @@ export default function OfficerDashboard() {
               </Button>
             </Link>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-2 font-medium">Complaint ID</th>
-                  <th className="px-4 py-2 font-medium">Sub-Service</th>
-                  <th className="px-4 py-2 font-medium">Location</th>
-                  <th className="px-4 py-2 font-medium">Priority</th>
-                  <th className="px-4 py-2 font-medium">SLA Remaining</th>
-                  <th className="px-4 py-2 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {fieldVisits.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="6"
-                      className="px-4 py-8 text-center text-sm text-muted-foreground"
-                    >
-                      No field visits scheduled.
-                    </td>
-                  </tr>
-                ) : (
-                  fieldVisits.map((c, i) => (
-                    <tr key={i} className="hover:bg-muted/30">
-                      <td className="px-4 py-2.5">
-                        <ComplaintId id={c.id} />
-                      </td>
-                      <td className="px-4 py-2.5 text-muted-foreground text-xs">
-                        {c.subserviceName}
-                      </td>
-                      <td className="px-4 py-2.5 text-xs text-muted-foreground">
-                        <MapPin className="w-3 h-3 inline mr-1" />
-                        {c.ward}, {c.districtName}
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <PriorityBadge priority={c.priority} />
-                      </td>
-                      <td className="px-4 py-2.5 text-xs">
-                        <Clock className="w-3 h-3 inline mr-1" />
-                        {c.slaHours}h
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <StatusBadge status={c.status} />
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <LoaderErrWrapper isLoading={visitsLoading} error={visitsError}>
+            <FieldVisitTable
+              filtered={fieldVisits}
+              isHideAction={true}
+            />
+            <div className="">
+              <Pagination
+                page={visitPage}
+                limit={visitLimit}
+                totalPage={totalVisitPages}
+                isLoading={visitsLoading}
+                {...visitPageProps}
+              />
+            </div>
+          </LoaderErrWrapper>
         </div>
 
         <QuickActions officer={officer} />

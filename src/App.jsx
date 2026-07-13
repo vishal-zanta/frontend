@@ -29,7 +29,7 @@ import IncomingCall from "./pages/crm/IncomingCall";
 import CallHistoryLog from "./pages/crm/CallHistoryLog";
 import TrackCCMComplaint from "./pages/crm/track-ccm-complaint";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import OperationalDashboards from "./pages/admin/OperationalDashboards";
+import OperationalDashboards from "./pages/admin/operational-dashboard";
 import AIReports from "./pages/admin/AIReports";
 import PerformanceDashboard from "./pages/admin/PerformanceDashboard";
 import MISReports from "./pages/admin/MISReports";

@@ -126,6 +126,7 @@ export default function UserManagement() {
       status: user?.status || "",
       permissions: user?.role?.permissions || [],
       apiData: user,
+      lastLogin:user?.lastLogin ? new Date(user?.lastLogin).toLocaleString() || "" : "-",
     };
   });
   console.log({ editUser });
@@ -224,6 +225,7 @@ export default function UserManagement() {
             page={page}
             limit={limit}
             totalPage={totalPages}
+            isLoading={isLoading}
             {...pageProps}
           />
         </div>

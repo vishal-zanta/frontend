@@ -24,7 +24,18 @@ const Pagination = ({
   setLimit,
   totalPage,
   limitOptions = [10, 20, 50],
+  isLoading = false,
 }) => {
+  React.useEffect(() => {
+    if (!isLoading) {
+      if (page > 1 && totalPage > 0 && page > totalPage) {
+        setPage(totalPage);
+      } else if (page > 1 && totalPage === 0) {
+        setPage(1);
+      }
+    }
+  }, [page, totalPage, isLoading, setPage]);
+
   const getPageNumbers = () => {
     const pages = [];
     const maxVisible = 5;

@@ -11,7 +11,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
           <th className="px-4 py-2 font-medium">Designation (English)</th>
           <th className="px-4 py-2 font-medium">पदनाम (Hindi)</th>
           <th className="px-4 py-2 font-medium">Level</th>
-          <th className="px-4 py-2 font-medium">Actions</th>
+          <th className="px-4 py-2 font-medium text-center">Actions</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border">
@@ -26,8 +26,8 @@ const DesignationTable = ({ designations = [], setDialog }) => {
                 {d.level}
               </Badge>
             </td>
-            <td className="px-4 py-2.5">
-              <div className="flex gap-1">
+            <td className="px-4 py-2.5 text-center">
+              <div className="flex gap-1 justify-center">
                 <Button
                   variant="ghost"
                   size="sm"
