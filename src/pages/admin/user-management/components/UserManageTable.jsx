@@ -1,15 +1,21 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Edit, Trash2, Eye } from "lucide-react";
+import { Shield, Edit, Trash2, Eye, MoreVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 export default function UserManageTable({
   users = [],
   handleToggleStatus,
   setEditUser,
   handleDelete,
-  handleView
- 
+  handleView,
+  handleLogoutClick,
 }) {
   return (
     
@@ -121,6 +127,21 @@ export default function UserManageTable({
                     >
                       <Trash2 className="w-4 h-4 text-red-500" />
                     </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() => handleLogoutClick && handleLogoutClick(u)}
+                          className="text-red-600 focus:text-red-700 cursor-pointer"
+                        >
+                          Logout
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </td>
               </tr>

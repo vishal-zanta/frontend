@@ -135,7 +135,7 @@ export default function CRMRaiseComplaint() {
           initialValues={defaultValues}
           isValidation
           validationSchema={grievanceSchema}
-          validationOn="onChange"
+          validationOn="onSubmit"
           onSubmit={handleSubmit}
           className="space-y-6"
         >
@@ -351,18 +351,18 @@ function FormWizard({
 
         <div>
           {step < 3 ? (
-            <Button
+            <button
               type="button"
               onClick={handleNext}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium min-w-[120px] transition-all"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium min-w-[120px] transition-all h-9 px-4 py-2 rounded-lg flex items-center justify-center"
             >
               {t("Next", "आगे")} &rarr;
-            </Button>
+            </button> 
           ) : (
             <Button
               type="submit"
               disabled={postComplaintMutation.isPending}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium min-w-[180px] transition-all"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium min-w-[180px] transition-all "
             >
               {postComplaintMutation.isPending ? (
                 <span className="flex items-center gap-2">

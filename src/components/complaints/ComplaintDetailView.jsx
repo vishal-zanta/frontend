@@ -295,6 +295,8 @@ export default function ComplaintDetailView({
             handleUpload={handleUpload}
             removeFile={removeFile}
             postMutation={postMutation}
+            currentStatus={displayStatus}
+            currentPriority={displayPriority}
           />
         </div>
 

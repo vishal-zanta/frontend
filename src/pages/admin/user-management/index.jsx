@@ -21,6 +21,7 @@ import { postUser, putUser, deleteUser } from "./users.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import ViewDialog from "./components/ViewDialog";
+import { postAdminLogout } from "@/api/auth.api";
 
 export default function UserManagement() {
   const [filterRole, setFilterRole] = useState("");
@@ -91,6 +92,30 @@ export default function UserManagement() {
       getErrorToast(err);
     },
   });
+
+  const [logoutUser, setLogoutUser] = useState(null);
+
+  const logoutMutation = useMutation({
+    mutationFn: postAdminLogout,
+    onSuccess: () => {
+      getSuccessToast("User logged out successfully");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
+      setLogoutUser(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const confirmLogout = () => {
+    if (logoutUser) {
+      logoutMutation.mutate(logoutUser.id);
+    }
+  };
+
+  const handleLogoutClick = (user) => {
+    setLogoutUser(user);
+  };
 
   const handleDelete = (user) => {
     setDeleteUserRecord(user);
@@ -218,6 +243,7 @@ export default function UserManagement() {
                 setEditUser={setEditUser}
                 handleDelete={handleDelete}
                 handleView={handleView}
+                handleLogoutClick={handleLogoutClick}
               />
             </LoaderErrWrapper>
           </div>
@@ -317,6 +343,19 @@ export default function UserManagement() {
             title="User Details"
           >
             <ViewDialog viewUser={viewUser} setViewUser={setViewUser} />
+          </EditDialog>
+        )}
+
+        {logoutUser && (
+          <EditDialog
+            title="Confirm Logout"
+            onClose={() => setLogoutUser(null)}
+            onSave={confirmLogout}
+            saving={logoutMutation.isPending}
+          >
+            <div className="text-sm text-muted-foreground py-2">
+              Are you sure you want to force logout <strong>{logoutUser.name}</strong>? This will terminate their active session.
+            </div>
           </EditDialog>
         )}
 

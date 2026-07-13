@@ -23,6 +23,7 @@ import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
+import EditDialog from "@/components/EditDialog";
 import WorkflowRules from "./components/WorkflowRules";
 import WorkflowForm from "./components/WorkflowForm";
 
@@ -30,6 +31,7 @@ export default function WorkflowConfig() {
   const [dialog, setDialog] = useState(null);
   const [workflowList, setWorkflowList] = useState([]);
   const [editLevel, setEditLevel] = useState(null);
+  const [pendingReorder, setPendingReorder] = useState(null);
 
   const { page, limit, ...pageProps } = usePagination();
   const queryClient = useQueryClient();
@@ -39,6 +41,7 @@ export default function WorkflowConfig() {
     data: workflowApiData,
     isLoading: isWorkflowLoading,
     error: workflowError,
+    refetch,
   } = useGetWorkflow([page, limit], { page, limit });
   const docs = workflowApiData?.data?.data?.docs || [];
   const totalPages = workflowApiData?.data?.data?.pagination?.totalPages || 1;
@@ -154,15 +157,29 @@ export default function WorkflowConfig() {
     const [removed] = reordered.splice(oldIndex, 1);
     reordered.splice(newIndex, 0, removed);
 
-    // Optimistically update local state for a smooth UI transition
-    setWorkflowList(reordered);
-
     const updates = reordered.map((item, index) => ({
       id: item._id,
       order: index + 1,
     }));
 
-    reorderMutation.mutate(updates);
+    setPendingReorder({
+      updates,
+      reordered,
+    });
+  };
+
+  const confirmReorder = () => {
+    if (pendingReorder) {
+      setWorkflowList(pendingReorder.reordered);
+      reorderMutation.mutate(pendingReorder.updates, {
+        onSuccess: () => {
+          setPendingReorder(null);
+        },
+        onError: () => {
+          setPendingReorder(null);
+        },
+      });
+    }
   };
 
   const roleOptions = (rolesApiData?.data?.docs || []).map((r) => ({
@@ -249,6 +266,27 @@ export default function WorkflowConfig() {
               isPending={postMutation.isPending || putMutation.isPending}
             />
           </div>
+        )}
+
+        {pendingReorder && (
+          <EditDialog
+            title="Confirm Reorder"
+            onClose={() => {
+              setPendingReorder(null);
+              const items = docs.map((doc) => ({
+                ...doc,
+                id: doc._id,
+              }));
+              setWorkflowList(items);
+              refetch();
+            }}
+            onSave={confirmReorder}
+            saving={reorderMutation.isPending}
+          >
+            <div className="text-sm text-muted-foreground py-2">
+              Are you sure you want to change the escalation sequence order of workflow levels? This will affect how complaints are escalated across departments.
+            </div>
+          </EditDialog>
         )}
       </div>
     </PortalLayout>

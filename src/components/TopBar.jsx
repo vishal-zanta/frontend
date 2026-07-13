@@ -12,8 +12,14 @@ import {
   X,
   Shield,
   Repeat,
+  Loader2,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getBreakStatus, postToggleBreak, postPulse } from "@/api/breaks.api";
+import { getErrorToast } from "@/utils/helpers";
+import BreakOverlay from "./break-timer/BreakOverlay";
+import { postLogout } from "@/api/auth.api";
 
 const roleInfo = {
   superadmin: {
@@ -171,6 +177,36 @@ export default function TopBar({
 
   const notifications = isCitizen ? CITIZEN_NOTIFICATIONS : STAFF_NOTIFICATIONS;
 
+  const { data: breakStatusData, refetch: refetchBreakStatus } = useQuery({
+    queryKey: ["breakStatus"],
+    queryFn: getBreakStatus,
+    enabled: !isCitizen,
+  });
+
+  const breakStatus = breakStatusData?.data?.data || breakStatusData?.data;
+
+  const toggleBreakMutation = useMutation({
+    mutationFn: postToggleBreak,
+    onSuccess: () => {
+      refetchBreakStatus();
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const pulseMutation = useMutation({
+    mutationFn: postPulse,
+  });
+
+  useEffect(() => {
+    if (isCitizen) return;
+
+    if (breakStatus && breakStatus.isBreak === false) {
+      pulseMutation.mutate();
+    }
+  }, [breakStatus?.isBreak, isCitizen]);
+
   // Determine current sub-profile from props (passed by PortalLayout)
   let profiles = null;
   let currentProfileId = profile || "default";
@@ -201,10 +237,24 @@ export default function TopBar({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleLogout = async () => {
-    localStorage.removeItem("usertoken");
-    sessionStorage.removeItem("usertoken");
-    navigate("/");
+  const logoutMutation = useMutation({
+    mutationFn: postLogout,
+    onSuccess: () => {
+      localStorage.removeItem("usertoken");
+      sessionStorage.removeItem("usertoken");
+      navigate("/");
+    },
+    onError: (err) => {
+      console.error("Logout API failed:", err);
+      // Revert/proceed on failure to avoid blocking users
+      localStorage.removeItem("usertoken");
+      sessionStorage.removeItem("usertoken");
+      navigate("/");
+    },
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
   };
 
   const handleSwitchProfile = (profileId) => {
@@ -351,12 +401,31 @@ export default function TopBar({
           </div>
         )}
 
+        {!isCitizen && (
+          <button
+            onClick={() => toggleBreakMutation.mutate()}
+            disabled={toggleBreakMutation.isPending}
+            className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
+          >
+            {toggleBreakMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
+            Start Break
+          </button>
+        )}
+
         <Link
           to="/"
           className="px-3 py-1.5 text-xs font-medium text-primary bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
         >
           Switch Portal
         </Link>
+
+        {breakStatus?.isBreak && (
+          <BreakOverlay
+            breakStartedAt={breakStatus?.breakStartedAt}
+            onEndBreak={() => toggleBreakMutation.mutate()}
+            isEnding={toggleBreakMutation.isPending}
+          />
+        )}
 
         <div className="relative" ref={profileRef}>
           <button
@@ -406,9 +475,15 @@ export default function TopBar({
               )}
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 border-t border-border"
+                disabled={logoutMutation.isPending}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 border-t border-border disabled:opacity-50"
               >
-                <LogOut className="w-4 h-4" /> Logout
+                {logoutMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-destructive" />
+                ) : (
+                  <LogOut className="w-4 h-4" />
+                )}
+                {logoutMutation.isPending ? "Logging out..." : "Logout"}
               </button>
             </div>
           )}

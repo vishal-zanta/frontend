@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useGetComplaintById, useGetComplaintByIdForOfficer } from "@/hooks/query/useGetComplaints";
+import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import {
   Dialog,
   DialogContent,
@@ -132,13 +134,13 @@ export function ComplaintId({ id, className = "", complaint }) {
         onClick={() => setOpen(true)}
         className={`font-mono text-primary hover:underline cursor-pointer ${className}`}
       >
-        {id}
+        {complaint?.grievanceId || id}
       </button>
       <ComplaintDetailDialog
-        complaintId={id}
+        complaintId={complaint?._id || id}
         open={open}
         onClose={() => setOpen(false)}
-        complaintData={complaint}
+        // complaintData={complaint}
       />
     </>
   );
@@ -208,33 +210,47 @@ export function ComplaintDetailDialog({
   onClose,
   complaintData,
 }) {
-  console.log({ complaintData });
-  const unifiedComplaint = complaintData
+  const { pathname } = window.location;
+  const isOfficer = pathname.startsWith("/officer");
+
+  const officerQuery = useGetComplaintByIdForOfficer(complaintId, {
+    enabled: !!open && !!complaintId && isOfficer && !complaintData,
+  });
+
+  const allQuery = useGetComplaintById(complaintId, {
+    enabled: !!open && !!complaintId && !isOfficer && !complaintData,
+  });
+
+  const query = isOfficer ? officerQuery : allQuery;
+  const activeComplaint = query?.data?.data;
+  console.log({activeComplaint});
+
+  const unifiedComplaint = activeComplaint
     ? {
-        status: complaintData.status,
-        priority: complaintData.assignedPriority,
-        source: complaintData.source || "online",
-        citizenName: complaintData.citizenInfo?.fullName || "Anonymous",
-        mobile: complaintData.citizenInfo?.mobile || "-",
-        districtName: complaintData.address?.district || "-",
-        ulbName: complaintData.address?.subdivision || "-",
-        ward: complaintData.address?.villageOrWard || "-",
-        createdDate: complaintData.createdAt,
+        status: activeComplaint.status,
+        priority: activeComplaint.assignedPriority,
+        source: activeComplaint.source || "online",
+        citizenName: activeComplaint.citizenInfo?.fullName || "-",
+        mobile: activeComplaint.citizenInfo?.mobile || "-",
+        districtName: activeComplaint.address?.district || "-",
+        ulbName: activeComplaint.address?.subdivision || "-",
+        ward: activeComplaint.address?.villageOrWard || "-",
+        createdDate: activeComplaint.createdAt,
         serviceName:
-          complaintData.classification?.subService?.service?.title || "-",
-        subserviceName: complaintData.classification?.subService?.title || "-",
-        description: complaintData.evidence?.details || "-",
-        l1OfficerName: complaintData.l1Officer?.name || "Unassigned",
+          activeComplaint.classification?.subService?.service?.title || "-",
+        subserviceName: activeComplaint.classification?.subService?.title || "-",
+        description: activeComplaint.evidence?.details || "-",
+        l1OfficerName: activeComplaint.l1Officer?.name || "Unassigned",
         l1Officer:
-          complaintData.l1Officer?._id || complaintData.l1Officer || null,
-        l2OfficerName: complaintData.l2Officer?.name || "Unassigned",
+          activeComplaint.l1Officer?._id || activeComplaint.l1Officer || null,
+        l2OfficerName: activeComplaint.l2Officer?.name || "Unassigned",
         l2Officer:
-          complaintData.l2Officer?._id || complaintData.l2Officer || null,
-        resolvedDate: complaintData.resolvedDate || null,
+          activeComplaint.l2Officer?._id || activeComplaint.l2Officer || null,
+        resolvedDate: activeComplaint.resolvedDate || null,
       }
     : COMPLAINTS.find((c) => c.id === complaintId);
 
-  const displayId = complaintData?.grievanceId || complaintId;
+  const displayId = activeComplaint?.grievanceId || complaintId;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -242,11 +258,13 @@ export function ComplaintDetailDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             Complaint Details
-            <span className="font-mono text-primary">{displayId}</span>
           </DialogTitle>
         </DialogHeader>
-        {unifiedComplaint ? (
-          <div className="space-y-4">
+        <LoaderErrWrapper isLoading={query.isLoading} error={query.error}>
+            <span className="font-mono text-primary">{displayId}</span>
+
+          {unifiedComplaint ? (
+            <div className="space-y-4">
             <div className="flex items-center gap-2">
               <StatusBadge status={unifiedComplaint.status} />
               <PriorityBadge priority={unifiedComplaint.priority} />
@@ -345,6 +363,7 @@ export function ComplaintDetailDialog({
         ) : (
           <p className="text-muted-foreground text-sm">Complaint not found.</p>
         )}
+        </LoaderErrWrapper>
       </DialogContent>
     </Dialog>
   );
@@ -574,7 +593,7 @@ export function FieldVisitDetailDialog({ visitId, visit: propVisit, open, onClos
     photoUploaded: isApiObject ? (rawVisit.grievance?.geotaggedImages?.length > 0) : rawVisit.photoUploaded,
     service: isApiObject ? (rawVisit.serviceDetails?.title || "-") : (rawVisit.service || "-"),
     subservice: isApiObject ? (rawVisit.subServiceDetails?.title || "-") : (rawVisit.subservice || "-"),
-    complaintId: isApiObject ? (rawVisit.grievance?.grievanceId || "-") : (rawVisit.complaintId || "-"),
+    complaintId: isApiObject ? (rawVisit.grievance?._id || rawVisit.grievance?.grievanceId || "-") : (rawVisit.complaintId || "-"),
     complaint: isApiObject ? rawVisit.grievance : null,
     geoTag: isApiObject
       ? (() => {

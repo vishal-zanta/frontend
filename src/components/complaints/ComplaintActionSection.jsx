@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { STATUS_ACTIONS, PRIORITY_ACTIONS } from "@/utils/constants";
@@ -21,8 +21,25 @@ export default function ComplaintActionSection({
   handleUpload,
   removeFile,
   postMutation,
+  currentStatus,
+  currentPriority,
 }) {
   const [remark, setRemark] = useState(initialRemark);
+  const [selectedStatus, setSelectedStatus] = useState(currentStatus || "");
+  const [selectedPriority, setSelectedPriority] = useState(currentPriority || "");
+
+  useEffect(() => {
+    if (currentStatus) {
+      setSelectedStatus(currentStatus);
+    }
+  }, [currentStatus]);
+
+  useEffect(() => {
+    if (currentPriority) {
+      setSelectedPriority(currentPriority);
+    }
+  }, [currentPriority]);
+
   async function handleSaveRemark() {
     if (remark.value.trim() === "") {
       getErrorToast("Remark is required");
@@ -35,6 +52,30 @@ export default function ComplaintActionSection({
       setRemark(initialRemark);
     }
   }
+
+  const handleSaveStatus = () => {
+    const action = STATUS_ACTIONS.find((a) => a.value === selectedStatus);
+    if (action?.isRemark) {
+      setRemark({
+        isOpen: true,
+        value: "",
+        id: selectedId,
+        status: selectedStatus,
+      });
+    } else {
+      updateStatusMutation.mutate({
+        id: selectedId,
+        status: selectedStatus,
+      });
+    }
+  };
+
+  const handleSavePriority = () => {
+    updatePriorityMutation.mutate({
+      id: selectedId,
+      assignedPriority: selectedPriority,
+    });
+  };
   return (
     <>
       {/* Status actions */}
@@ -42,32 +83,30 @@ export default function ComplaintActionSection({
         <div className="text-sm font-medium text-foreground mb-2">
           Update Status
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {STATUS_ACTIONS.map((a, i) => {
-            const Icon = a.icon;
-            return (
-              <button
-                key={i}
-                onClick={() =>
-                  a.isRemark
-                    ? setRemark({
-                        isOpen: true,
-                        value: "",
-                        id: selectedId,
-                        status: a.value,
-                      })
-                    : updateStatusMutation.mutate({
-                        id: selectedId,
-                        status: a.value,
-                      })
-                }
-                disabled={updateStatusMutation.isPending}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-white text-sm ${a.color} transition-colors disabled:opacity-50`}
-              >
-                <Icon className="w-4 h-4" /> {a.label}
-              </button>
-            );
-          })}
+        <div className="flex gap-2 items-center">
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            disabled={updateStatusMutation.isPending}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="" disabled>Select Status</option>
+            {STATUS_ACTIONS.map((a, i) => (
+              <option key={i} value={a.value}>
+                {a.badgeLabel || a.label}
+              </option>
+            ))}
+          </select>
+          {selectedStatus !== currentStatus && (
+            <Button
+              onClick={handleSaveStatus}
+              disabled={updateStatusMutation.isPending}
+              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0"
+              size="sm"
+            >
+              {updateStatusMutation.isPending ? "Saving..." : "Save"}
+            </Button>
+          )}
         </div>
 
         {statusUpdate && (
@@ -82,25 +121,30 @@ export default function ComplaintActionSection({
         <div className="text-sm font-medium text-foreground mb-2">
           Update Priority
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {PRIORITY_ACTIONS.map((a, i) => {
-            const Icon = a.icon;
-            return (
-              <button
-                key={i}
-                onClick={() =>
-                  updatePriorityMutation.mutate({
-                    id: selectedId,
-                    assignedPriority: a.value,
-                  })
-                }
-                disabled={updatePriorityMutation.isPending}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-white text-sm ${a.color} transition-colors disabled:opacity-50`}
-              >
-                <Icon className="w-4 h-4" /> {a.label}
-              </button>
-            );
-          })}
+        <div className="flex gap-2 items-center">
+          <select
+            value={selectedPriority}
+            onChange={(e) => setSelectedPriority(e.target.value)}
+            disabled={updatePriorityMutation.isPending}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="" disabled>Select Priority</option>
+            {PRIORITY_ACTIONS.map((a, i) => (
+              <option key={i} value={a.value}>
+                {a.badgeLabel || a.label}
+              </option>
+            ))}
+          </select>
+          {selectedPriority !== currentPriority && (
+            <Button
+              onClick={handleSavePriority}
+              disabled={updatePriorityMutation.isPending}
+              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0"
+              size="sm"
+            >
+              {updatePriorityMutation.isPending ? "Saving..." : "Save"}
+            </Button>
+          )}
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, Camera, Calendar, CheckCircle2, Eye, Pencil } from "lucide-react";
-import { FieldVisitId } from "@/components/ComplaintDetailDialog";
+import { FieldVisitId, ComplaintId } from "@/components/ComplaintDetailDialog";
 import { PriorityBadge } from "@/components/Badges";
 import { Badge } from "@/components/ui/badge";
 import { getFieldVisitStatusClass } from "@/utils/constants";
@@ -31,7 +31,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                   day: "2-digit",
                   month: "short",
                   year: "numeric",
-                })
+                  })
               : "-";
 
             return (
@@ -39,8 +39,12 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                 <td className="px-4 py-3">
                   <FieldVisitId id={fv.visitId || fv._id || "-"} visit={fv} />
                 </td>
-                <td className="px-4 py-3 font-mono text-xs text-foreground">
-                  {fv.grievance?.grievanceId || "-"}
+                <td className="px-4 py-3">
+                  {fv.grievance?._id ? (
+                    <ComplaintId id={fv.grievance._id} complaint={fv.grievance} />
+                  ) : (
+                    "-"
+                  )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
                   {fv.serviceDetails?.title || "-"}
