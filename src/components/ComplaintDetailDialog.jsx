@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { useGetComplaintById, useGetComplaintByIdForOfficer } from "@/hooks/query/useGetComplaints";
+import {
+  useGetComplaintById,
+  useGetComplaintByIdForOfficer,
+} from "@/hooks/query/useGetComplaints";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import {
   Dialog,
@@ -223,7 +226,7 @@ export function ComplaintDetailDialog({
 
   const query = isOfficer ? officerQuery : allQuery;
   const activeComplaint = query?.data?.data;
-  console.log({activeComplaint});
+  console.log({ activeComplaint });
 
   const unifiedComplaint = activeComplaint
     ? {
@@ -238,7 +241,8 @@ export function ComplaintDetailDialog({
         createdDate: activeComplaint.createdAt,
         serviceName:
           activeComplaint.classification?.subService?.service?.title || "-",
-        subserviceName: activeComplaint.classification?.subService?.title || "-",
+        subserviceName:
+          activeComplaint.classification?.subService?.title || "-",
         description: activeComplaint.evidence?.details || "-",
         l1OfficerName: activeComplaint.l1Officer?.name || "Unassigned",
         l1Officer:
@@ -247,6 +251,8 @@ export function ComplaintDetailDialog({
         l2Officer:
           activeComplaint.l2Officer?._id || activeComplaint.l2Officer || null,
         resolvedDate: activeComplaint.resolvedDate || null,
+        assignedOfficer: `${activeComplaint?.assignedOfficer?.name || ""} (${activeComplaint?.assignedOfficer?.role?.designationEnglish})`,
+        assignedOfficerHindi: `${activeComplaint?.assignedOfficer?.name || ""} (${activeComplaint?.assignedOfficer?.role?.designationHindi})`,
       }
     : COMPLAINTS.find((c) => c.id === complaintId);
 
@@ -261,108 +267,120 @@ export function ComplaintDetailDialog({
           </DialogTitle>
         </DialogHeader>
         <LoaderErrWrapper isLoading={query.isLoading} error={query.error}>
-            <span className="font-mono text-primary">{displayId}</span>
+          <span className="font-mono text-primary">{displayId}</span>
 
           {unifiedComplaint ? (
             <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <StatusBadge status={unifiedComplaint.status} />
-              <PriorityBadge priority={unifiedComplaint.priority} />
-              <span className="text-xs text-muted-foreground ml-auto capitalize">
-                {unifiedComplaint.source}
-              </span>
-            </div>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              {/* <div className="flex items-center gap-2"><User className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Citizen:</span><span className="font-medium">{unifiedComplaint.citizenName}</span></div>
-              <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Mobile:</span><span className="font-medium">{unifiedComplaint.mobile}</span></div> */}
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">District:</span>
-                <span className="font-medium">
-                  {unifiedComplaint.districtName}
+                <StatusBadge status={unifiedComplaint.status} />
+                <PriorityBadge priority={unifiedComplaint.priority} />
+                <span className="text-xs text-muted-foreground ml-auto capitalize">
+                  {unifiedComplaint.source}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">ULB:</span>
-                <span className="font-medium">{unifiedComplaint.ulbName}</span>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                {/* <div className="flex items-center gap-2"><User className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Citizen:</span><span className="font-medium">{unifiedComplaint.citizenName}</span></div>
+              <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Mobile:</span><span className="font-medium">{unifiedComplaint.mobile}</span></div> */}
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">District:</span>
+                  <span className="font-medium">
+                    {unifiedComplaint.districtName}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">ULB:</span>
+                  <span className="font-medium">
+                    {unifiedComplaint.ulbName}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Ward:</span>
+                  <span className="font-medium">{unifiedComplaint.ward}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Filed:</span>
+                  <span className="font-medium">
+                    {new Date(unifiedComplaint.createdDate).toLocaleDateString(
+                      "en-IN",
+                      { day: "2-digit", month: "short", year: "numeric" },
+                    )}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Tag className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Ward:</span>
-                <span className="font-medium">{unifiedComplaint.ward}</span>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <div className="text-xs text-muted-foreground mb-1">
+                  Service
+                </div>
+                <div className="font-medium">
+                  {unifiedComplaint.serviceName} -{" "}
+                  {unifiedComplaint.subserviceName}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Filed:</span>
-                <span className="font-medium">
-                  {new Date(unifiedComplaint.createdDate).toLocaleDateString(
+              <div>
+                <div className="text-xs text-muted-foreground mb-1">
+                  Description
+                </div>
+                <p className="text-sm">{unifiedComplaint.description}</p>
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground mb-1">
+                  Assigned Officer
+                </div>
+                <p className="text-sm">{unifiedComplaint.assignedOfficer}</p>
+              </div>
+              <div className="flex gap-3">
+                <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div className="text-[10px] uppercase text-muted-foreground">
+                    L1 Officer
+                  </div>
+                  <div className="font-semibold text-sm">
+                    {unifiedComplaint.l1OfficerName || "Unassigned"}
+                  </div>
+                  {unifiedComplaint.l1Officer && (
+                    <div className="text-[11px] mt-0.5">
+                      <OfficerId id={unifiedComplaint.l1Officer} />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 bg-purple-50 border border-purple-200 rounded-lg p-3">
+                  <div className="text-[10px] uppercase text-muted-foreground">
+                    L2 Officer
+                  </div>
+                  <div className="font-semibold text-sm">
+                    {unifiedComplaint.l2OfficerName || "Unassigned"}
+                  </div>
+                  {unifiedComplaint.l2Officer && (
+                    <div className="text-[11px] mt-0.5">
+                      <OfficerId id={unifiedComplaint.l2Officer} />
+                    </div>
+                  )}
+                </div>
+              </div>
+              {unifiedComplaint.resolvedDate && (
+                <div className="text-sm text-emerald-600">
+                  Resolved on{" "}
+                  {new Date(unifiedComplaint.resolvedDate).toLocaleDateString(
                     "en-IN",
                     { day: "2-digit", month: "short", year: "numeric" },
                   )}
-                </span>
-              </div>
-            </div>
-            <div className="bg-muted/50 rounded-lg p-3">
-              <div className="text-xs text-muted-foreground mb-1">Service</div>
-              <div className="font-medium">
-                {unifiedComplaint.serviceName} -{" "}
-                {unifiedComplaint.subserviceName}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground mb-1">
-                Description
-              </div>
-              <p className="text-sm">{unifiedComplaint.description}</p>
-            </div>
-            <div className="flex gap-3">
-              <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <div className="text-[10px] uppercase text-muted-foreground">
-                  L1 Officer
                 </div>
-                <div className="font-semibold text-sm">
-                  {unifiedComplaint.l1OfficerName || "Unassigned"}
-                </div>
-                {unifiedComplaint.l1Officer && (
-                  <div className="text-[11px] mt-0.5">
-                    <OfficerId id={unifiedComplaint.l1Officer} />
-                  </div>
-                )}
-              </div>
-              <div className="flex-1 bg-purple-50 border border-purple-200 rounded-lg p-3">
-                <div className="text-[10px] uppercase text-muted-foreground">
-                  L2 Officer
-                </div>
-                <div className="font-semibold text-sm">
-                  {unifiedComplaint.l2OfficerName || "Unassigned"}
-                </div>
-                {unifiedComplaint.l2Officer && (
-                  <div className="text-[11px] mt-0.5">
-                    <OfficerId id={unifiedComplaint.l2Officer} />
-                  </div>
-                )}
-              </div>
-            </div>
-            {unifiedComplaint.resolvedDate && (
-              <div className="text-sm text-emerald-600">
-                Resolved on{" "}
-                {new Date(unifiedComplaint.resolvedDate).toLocaleDateString(
-                  "en-IN",
-                  { day: "2-digit", month: "short", year: "numeric" },
-                )}
-              </div>
-            )}
-            {/* <Link
+              )}
+              {/* <Link
               to="#"
               className="flex items-center gap-1 text-sm text-primary hover:underline"
             >
               View Full Timeline <ExternalLink className="w-3 h-3" />
             </Link> */}
-          </div>
-        ) : (
-          <p className="text-muted-foreground text-sm">Complaint not found.</p>
-        )}
+            </div>
+          ) : (
+            <p className="text-muted-foreground text-sm">
+              Complaint not found.
+            </p>
+          )}
         </LoaderErrWrapper>
       </DialogContent>
     </Dialog>
@@ -564,36 +582,68 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
   );
 }
 
-export function FieldVisitDetailDialog({ visitId, visit: propVisit, open, onClose }) {
+export function FieldVisitDetailDialog({
+  visitId,
+  visit: propVisit,
+  open,
+  onClose,
+}) {
   const rawVisit = propVisit || FIELD_VISIT_DATA.find((v) => v.id === visitId);
   if (!rawVisit) return null;
 
-  const isApiObject = !!(rawVisit._id || rawVisit.grievance || rawVisit.serviceDetails);
+  const isApiObject = !!(
+    rawVisit._id ||
+    rawVisit.grievance ||
+    rawVisit.serviceDetails
+  );
 
   const visit = {
-    id: isApiObject ? (rawVisit.visitId || rawVisit._id) : rawVisit.id,
+    id: isApiObject ? rawVisit.visitId || rawVisit._id : rawVisit.id,
     status: rawVisit.status || "-",
-    priority: isApiObject ? (rawVisit.grievance?.assignedPriority || "NORMAL") : (rawVisit.priority || "NORMAL"),
-    officer: isApiObject ? (rawVisit.officer?.name || "-") : (rawVisit.officer || "-"),
-    officerId: isApiObject ? (rawVisit.officer?._id || "-") : (rawVisit.officerId || "-"),
-    ward: isApiObject ? (rawVisit.address?.villageOrWard || rawVisit.grievance?.address?.villageOrWard || "-") : (rawVisit.ward || "-"),
-    district: isApiObject ? (rawVisit.address?.district || rawVisit.grievance?.address?.district || "-") : (rawVisit.district || "-"),
-    scheduledDate: (rawVisit.schedule || rawVisit.scheduledDate)
-      ? (() => {
-          const dateStr = rawVisit.schedule || rawVisit.scheduledDate;
-          return dateStr.includes("-") || dateStr.includes("T")
-            ? new Date(dateStr).toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })
-            : dateStr;
-        })()
-      : "-",
-    photoUploaded: isApiObject ? (rawVisit.grievance?.geotaggedImages?.length > 0) : rawVisit.photoUploaded,
-    service: isApiObject ? (rawVisit.serviceDetails?.title || "-") : (rawVisit.service || "-"),
-    subservice: isApiObject ? (rawVisit.subServiceDetails?.title || "-") : (rawVisit.subservice || "-"),
-    complaintId: isApiObject ? (rawVisit.grievance?._id || rawVisit.grievance?.grievanceId || "-") : (rawVisit.complaintId || "-"),
+    priority: isApiObject
+      ? rawVisit.grievance?.assignedPriority || "NORMAL"
+      : rawVisit.priority || "NORMAL",
+    officer: isApiObject
+      ? rawVisit.officer?.name || "-"
+      : rawVisit.officer || "-",
+    officerId: isApiObject
+      ? rawVisit.officer?._id || "-"
+      : rawVisit.officerId || "-",
+    ward: isApiObject
+      ? rawVisit.address?.villageOrWard ||
+        rawVisit.grievance?.address?.villageOrWard ||
+        "-"
+      : rawVisit.ward || "-",
+    district: isApiObject
+      ? rawVisit.address?.district ||
+        rawVisit.grievance?.address?.district ||
+        "-"
+      : rawVisit.district || "-",
+    scheduledDate:
+      rawVisit.schedule || rawVisit.scheduledDate
+        ? (() => {
+            const dateStr = rawVisit.schedule || rawVisit.scheduledDate;
+            return dateStr.includes("-") || dateStr.includes("T")
+              ? new Date(dateStr).toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+              : dateStr;
+          })()
+        : "-",
+    photoUploaded: isApiObject
+      ? rawVisit.grievance?.geotaggedImages?.length > 0
+      : rawVisit.photoUploaded,
+    service: isApiObject
+      ? rawVisit.serviceDetails?.title || "-"
+      : rawVisit.service || "-",
+    subservice: isApiObject
+      ? rawVisit.subServiceDetails?.title || "-"
+      : rawVisit.subservice || "-",
+    complaintId: isApiObject
+      ? rawVisit.grievance?._id || rawVisit.grievance?.grievanceId || "-"
+      : rawVisit.complaintId || "-",
     complaint: isApiObject ? rawVisit.grievance : null,
     geoTag: isApiObject
       ? (() => {
@@ -602,8 +652,8 @@ export function FieldVisitDetailDialog({ visitId, visit: propVisit, open, onClos
             ? `${String(coords.latitude).slice(0, 6)} | ${String(coords.longitude).slice(0, 6)}`
             : "-";
         })()
-      : (rawVisit.geoTag || "-"),
-    notes: isApiObject ? (rawVisit.remarks || "-") : (rawVisit.notes || "-"),
+      : rawVisit.geoTag || "-",
+    notes: isApiObject ? rawVisit.remarks || "-" : rawVisit.notes || "-",
   };
 
   return (
@@ -625,8 +675,8 @@ export function FieldVisitDetailDialog({ visitId, visit: propVisit, open, onClos
             </Badge>
             <PriorityBadge priority={visit.priority} />
           </div>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              {/* <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            {/* <div className="flex items-center gap-2">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span className="text-muted-foreground">Officer:</span>
                 <span className="font-medium">{visit.officer || "-"}</span>
@@ -636,71 +686,73 @@ export function FieldVisitDetailDialog({ visitId, visit: propVisit, open, onClos
                 <span className="text-muted-foreground">Officer ID:</span>
                 <OfficerId id={visit.officerId || "-"} />
               </div> */}
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Ward:</span>
-                <span className="font-medium">{visit.ward || "-"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">District:</span>
-                <span className="font-medium">{visit.district || "-"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Scheduled:</span>
-                <span className="font-medium">
-                  {visit.scheduledDate ? (
-                    visit.scheduledDate.includes("-") || visit.scheduledDate.includes("T")
-                      ? new Date(visit.scheduledDate).toLocaleDateString("en-IN", {
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Ward:</span>
+              <span className="font-medium">{visit.ward || "-"}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground">District:</span>
+              <span className="font-medium">{visit.district || "-"}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Scheduled:</span>
+              <span className="font-medium">
+                {visit.scheduledDate
+                  ? visit.scheduledDate.includes("-") ||
+                    visit.scheduledDate.includes("T")
+                    ? new Date(visit.scheduledDate).toLocaleDateString(
+                        "en-IN",
+                        {
                           day: "2-digit",
                           month: "short",
                           year: "numeric",
-                        })
-                      : visit.scheduledDate
-                  ) : (
-                    "-"
-                  )}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Camera className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Photo:</span>
-                {visit.photoUploaded ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                ) : (
-                  <span className="text-xs text-amber-600">Pending</span>
-                )}
-              </div>
+                        },
+                      )
+                    : visit.scheduledDate
+                  : "-"}
+              </span>
             </div>
-            <div className="bg-muted/50 rounded-lg p-3">
-              <div className="text-xs text-muted-foreground mb-1">Service</div>
-              <div className="font-medium">
-                {visit.service || "-"} - {visit.subservice || "-"}
-              </div>
-            </div>
-            <div className="bg-muted/50 rounded-lg p-3">
-              <div className="text-xs text-muted-foreground mb-1">
-                Complaint ID
-              </div>
-              {visit.complaintId && visit.complaintId !== "-" ? (
-                <ComplaintId id={visit.complaintId} complaint={visit.complaint} />
+            <div className="flex items-center gap-2">
+              <Camera className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Photo:</span>
+              {visit.photoUploaded ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
               ) : (
-                "-"
+                <span className="text-xs text-amber-600">Pending</span>
               )}
             </div>
-            <div className="bg-muted/50 rounded-lg p-3">
-              <div className="text-xs text-muted-foreground mb-1">Geo-Tag</div>
-              <div className="font-mono text-sm">{visit.geoTag || "-"}</div>
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground mb-1">
-                Visit Notes
-              </div>
-              <p className="text-sm">{visit.notes || "-"}</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="text-xs text-muted-foreground mb-1">Service</div>
+            <div className="font-medium">
+              {visit.service || "-"} - {visit.subservice || "-"}
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="text-xs text-muted-foreground mb-1">
+              Complaint ID
+            </div>
+            {visit.complaintId && visit.complaintId !== "-" ? (
+              <ComplaintId id={visit.complaintId} complaint={visit.complaint} />
+            ) : (
+              "-"
+            )}
+          </div>
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="text-xs text-muted-foreground mb-1">Geo-Tag</div>
+            <div className="font-mono text-sm">{visit.geoTag || "-"}</div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground mb-1">
+              Visit Notes
+            </div>
+            <p className="text-sm">{visit.notes || "-"}</p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
