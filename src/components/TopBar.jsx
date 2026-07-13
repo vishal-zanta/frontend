@@ -200,9 +200,12 @@ export default function TopBar({
   });
 
   useEffect(() => {
-    if (isCitizen) return;
+
     let timer = null;
     if (breakStatus && breakStatus.isBreak === false) {
+              if (document.visibilityState === "visible") {
+          pulseMutation.mutate();
+        }
       timer = setInterval(() => {
         if (document.visibilityState === "visible") {
           pulseMutation.mutate();
