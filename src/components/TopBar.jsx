@@ -201,10 +201,15 @@ export default function TopBar({
 
   useEffect(() => {
     if (isCitizen) return;
-
+    let timer = null;
     if (breakStatus && breakStatus.isBreak === false) {
-      pulseMutation.mutate();
+      timer = setInterval(() => {
+        if (document.visibilityState === "visible") {
+          pulseMutation.mutate();
+        }
+      }, 50000);
     }
+    return () => clearInterval(timer);
   }, [breakStatus?.isBreak, isCitizen]);
 
   // Determine current sub-profile from props (passed by PortalLayout)
