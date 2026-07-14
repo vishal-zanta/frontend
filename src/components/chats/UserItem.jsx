@@ -1,7 +1,7 @@
 import React from "react";
 import Avatar from "./Avatar";
 
-export default function UserItem({ user, selected, onClick }) {
+export default function UserItem({ user, selected, onClick, unreadCounts }) {
   return (
     <button
       onClick={() => onClick(user)}
@@ -19,6 +19,11 @@ export default function UserItem({ user, selected, onClick }) {
           <p className="text-[11px] text-slate-400 truncate">{user.role}</p>
         )}
       </div>
+      {unreadCounts > 0 && (
+        <div className="shrink-0 flex items-center justify-center h-5 min-w-[20px] rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+          {unreadCounts}
+        </div>
+      )}
     </button>
   );
 }

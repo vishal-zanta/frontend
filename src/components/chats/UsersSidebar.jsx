@@ -8,15 +8,18 @@ import { Loader2 } from "lucide-react";
 
 export default function UsersSidebar({
   selectedUser,
+  setSelectedUser,
   onSelect,
   visible,
   currentUserId,
+  sharedState,
+  setSharedState, 
 }) {
   const [search, setSearch] = useState("");
 
   // Use useGetChatsInfinte query hook
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useGetChatsInfinte([search], { search });
+    useGetChatsInfinte([search], { search, limit: 10 });
 
   // Flatten infinite query pages and map to user info
   const conversations =
@@ -29,7 +32,7 @@ export default function UsersSidebar({
 
   // De-duplicate by user ID
   const uniqueConversations = normalizedUserList(conversations, currentUserId);
-  console.log({ currentUserId, conversations, uniqueConversations });
+  // console.log({ currentUserId, conversations, uniqueConversations });
 
   // IntersectionObserver trigger ref
   const observerRef = useRef(null);
@@ -61,8 +64,8 @@ export default function UsersSidebar({
   return (
     <div
       className={`flex flex-col border-r border-slate-100 bg-white
-        ${visible ? "flex" : "hidden md:flex"}
-        w-full md:w-[38%] md:min-w-[180px] md:max-w-[260px] h-full`}
+        ${visible ? "flex" : "hidden"}
+        w-full h-full`}
     >
       {/* Header */}
       <div className="px-4 pt-4 pb-3 border-b border-slate-100 bg-white sticky top-0 z-10">
@@ -75,7 +78,7 @@ export default function UsersSidebar({
       </div>
 
       {/* User List */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin">
+      <div className="flex-1 overflow-y-auto overscroll-contain scrollbar-thin">
         {isLoading ? (
           <div className="space-y-1 p-3">
             {[1, 2, 3, 4].map((i) => (
@@ -101,15 +104,19 @@ export default function UsersSidebar({
               <UserItem
                 key={user.id}
                 user={user?.user}
-                selected={
-                  selectedUser?.conversationId === user?._id
-                }
+                selected={selectedUser?.conversationId === user?._id}
                 onClick={(clickedUser) =>
-                  onSelect({
+                {  onSelect({
                     ...clickedUser,
                     conversationId: user?._id,
                   })
-                }
+                // if((user?.unreadCounts ?? 0 )> 0){
+                    setSharedState({
+                      unreadCounts : (user?.unreadCounts ?? 0 )
+                    })
+                // }
+               } }
+                unreadCounts={user?.unreadCounts ?? 0}
               />
             ))}
 

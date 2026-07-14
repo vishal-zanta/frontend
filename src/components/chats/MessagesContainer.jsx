@@ -1,15 +1,169 @@
-import React, { useEffect, useRef } from "react";
-import { MessageSquareDot } from "lucide-react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
+import { MessageSquareDot, Loader2 } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import { formatDate } from "@/utils/helpers";
+import {
+  useGetChatsMessagesInfinite,
+  usePutMarkMessagesAsRead,
+} from "@/hooks/query/useGetChats";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/utils/constants";
 
-export default function MessagesContainer({ messages, currentUserId, selectedUser }) {
-  const bottomRef = useRef(null);
+// ─── Normalize a raw API message to a common shape ───────────────────────────
+const normalizeMessage = (rawMsg, currentUserId) => {
+  const senderId =
+    rawMsg?.sender?._id || rawMsg?.sender || rawMsg?.senderId || "";
+  return {
+    id: rawMsg._id,
+    fromUserId: senderId,
+    toUserId: currentUserId === senderId ? rawMsg?.receiver : currentUserId,
+    content: rawMsg.content || "",
+    type: rawMsg.type || "TEXT",
+    fileUrl: rawMsg.fileUrl,
+    fileName: rawMsg.fileName,
+    attachments: rawMsg.fileUrl
+      ? [
+          {
+            url: rawMsg.fileUrl,
+            name: rawMsg.fileName || "file",
+            type:
+              rawMsg.type === "IMAGE"
+                ? "image/webp"
+                : "application/octet-stream",
+          },
+        ]
+      : [],
+    createdAt: rawMsg.createdAt,
+    readBy: rawMsg.readBy || [],
+    senderName: rawMsg?.sender?.name,
+  };
+};
 
-  console.log({selectedUser});
+export default function MessagesContainer({ currentUserId, selectedUser, sharedState }) {
+  const conversationId = selectedUser?.conversationId;
+
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useGetChatsMessagesInfinite(
+      conversationId,
+      {},
+      {
+        enabled:
+          !!conversationId && !conversationId.includes("new_") ? true : false,
+      },
+    );
+
+  // Flatten all pages — API returns oldest→newest per page, pages go 1→N (oldest first loaded)
+  // We reverse page order so older pages (higher page numbers) come first in the list
+  const rawMessages =
+    data?.pages
+      ?.slice()
+      .reverse()
+      .flatMap((page) => {
+        const arr = Array.isArray(page?.data?.data)
+          ? page.data.data
+          : page?.data?.data?.docs || page?.data?.docs || [];
+        return arr;
+      }) || [];
+
+  const messages = rawMessages.map((m) => normalizeMessage(m, currentUserId));
+
+  // ─── Mark as read after messages load ────────────────────────────────────
+  const queryClient = useQueryClient();
+  const readMutation = usePutMarkMessagesAsRead({
+    onSuccess: () => {
+   if(sharedState?.unreadCounts > 0) {
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
+   }
+    },
+  });
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, selectedUser]);
+    if (!isLoading && messages.length > 0 && conversationId) {
+      readMutation.mutate(conversationId);
+    }
+  }, [isLoading, messages.length, conversationId]);
+
+  // Refs for scroll management
+  const containerRef = useRef(null);
+  const topSentinelRef = useRef(null); // triggers load-more when visible
+  const bottomRef = useRef(null); // scroll anchor on initial load / conversation change
+  const isInitialLoad = useRef(true);
+  const prevScrollHeight = useRef(0);
+
+  // Auto-scroll to bottom on first load / conversation switch
+  useEffect(() => {
+    isInitialLoad.current = true;
+  }, [conversationId]);
+
+  useEffect(() => {
+    if (!isLoading && isInitialLoad.current && bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "instant" });
+      isInitialLoad.current = false;
+    }
+  }, [isLoading, messages.length]);
+
+  // Smooth scroll to bottom when a new message is received / posted
+  const lastMessageId = messages[messages.length - 1]?.id;
+  const lastMessageIdRef = useRef(lastMessageId);
+
+  useEffect(() => {
+    if (conversationId && lastMessageId && lastMessageId !== lastMessageIdRef.current) {
+      if (!isInitialLoad.current && !isFetchingNextPage) {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      }
+      lastMessageIdRef.current = lastMessageId;
+    } else if (lastMessageId) {
+      lastMessageIdRef.current = lastMessageId;
+    }
+  }, [lastMessageId, conversationId, isFetchingNextPage]);
+
+  // Preserve scroll position when loading older messages
+  useEffect(() => {
+    if (isFetchingNextPage && containerRef.current) {
+      prevScrollHeight.current = containerRef.current.scrollHeight;
+    }
+  }, [isFetchingNextPage]);
+
+  useEffect(() => {
+    if (
+      !isFetchingNextPage &&
+      prevScrollHeight.current &&
+      containerRef.current
+    ) {
+      const newScrollHeight = containerRef.current.scrollHeight;
+      containerRef.current.scrollTop =
+        newScrollHeight - prevScrollHeight.current;
+      prevScrollHeight.current = 0;
+    }
+  }, [isFetchingNextPage, messages.length]);
+
+  // IntersectionObserver on top sentinel to trigger loading older messages
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    const el = topSentinelRef.current;
+    if (el) observer.observe(el);
+    return () => {
+      if (el) observer.unobserve(el);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // ─── Empty state (no conversation selected handled above in ChatArea) ─────
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 text-slate-400">
+        <Loader2 className="w-6 h-6 animate-spin" />
+        <p className="text-sm">Loading messages...</p>
+      </div>
+    );
+  }
 
   if (!messages.length) {
     return (
@@ -18,7 +172,9 @@ export default function MessagesContainer({ messages, currentUserId, selectedUse
           <MessageSquareDot className="w-6 h-6 text-blue-400" />
         </div>
         <p className="text-sm font-medium text-slate-700">No messages yet</p>
-        <p className="text-xs text-slate-400 mt-1">Send a message to start the conversation</p>
+        <p className="text-xs text-slate-400 mt-1">
+          Send a message to start the conversation
+        </p>
       </div>
     );
   }
@@ -35,8 +191,26 @@ export default function MessagesContainer({ messages, currentUserId, selectedUse
     grouped.push({ type: "message", data: msg, id: msg.id });
   });
 
+  // console.log({messages, grouped});
+
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-thin px-4 py-4 space-y-2">
+    <div
+      ref={containerRef}
+      className="flex-1 overflow-y-auto overscroll-contain scrollbar-thin px-4 py-4 space-y-2"
+    >
+      {/* Top sentinel — 0 opacity trigger for IntersectionObserver */}
+      <div ref={topSentinelRef} className="h-1 opacity-0 w-full" />
+
+      {/* Loading older messages spinner */}
+      {isFetchingNextPage && (
+        <div className="flex justify-center items-center py-3 gap-2 text-blue-900">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          <span className="text-xs font-semibold">
+            Loading older messages...
+          </span>
+        </div>
+      )}
+
       {grouped.map((item) => {
         if (item.type === "date") {
           return (
@@ -56,10 +230,12 @@ export default function MessagesContainer({ messages, currentUserId, selectedUse
             key={msg.id}
             msg={msg}
             isOwn={isOwn}
-            senderName={isOwn ? "You" : selectedUser.name}
+            senderName={isOwn ? "You" : msg.senderName || selectedUser?.name}
           />
         );
       })}
+
+      {/* Bottom anchor for auto-scroll */}
       <div ref={bottomRef} />
     </div>
   );

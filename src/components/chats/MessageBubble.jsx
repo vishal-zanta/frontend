@@ -2,6 +2,7 @@ import React from "react";
 import { Paperclip } from "lucide-react";
 import Avatar from "./Avatar";
 import { formatTime, fileSize } from "@/utils/helpers";
+import { IMG_BASE_URL } from "@/utils/constants";
 
 export default function MessageBubble({ msg, isOwn, senderName }) {
   const isImage = (type) => type?.startsWith("image/");
@@ -21,19 +22,21 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
         {/* Attachments */}
         {msg.attachments?.length > 0 && (
           <div className="space-y-1.5">
-            {msg.attachments.map((att, i) => (
+            {msg.attachments.map((att, i) => {
+              const url = IMG_BASE_URL + att.url;
+              return (
               <div key={i}>
                 {isImage(att.type) ? (
-                  <a href={att.url} target="_blank" rel="noreferrer">
+                  <a href={url} target="_blank" rel="noreferrer">
                     <img
-                      src={att.url}
+                      src={url}
                       alt={att.name}
                       className="max-h-48 max-w-xs rounded-xl object-cover border border-slate-200 shadow-sm"
                     />
                   </a>
                 ) : (
                   <a
-                    href={att.url}
+                    href={url}
                     download={att.name}
                     className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm border shadow-sm
                       ${isOwn
@@ -51,7 +54,8 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
                   </a>
                 )}
               </div>
-            ))}
+            )
+            })}
           </div>
         )}
 

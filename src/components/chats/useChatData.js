@@ -314,7 +314,7 @@ export const normalizedUserList = (data = [], currentUserId) => {
         isBreak: user.isBreak || false,
         role : user?.role?.designationEnglish,
       },
-      unreadCounts: item?.unreadCounts[user?._id],
+      unreadCounts: item?.unreadCounts[currentUserId],
       createdAt: item?.createdAt,
       updatedAt: item?.updatedAt,
       __v: item?.__v,

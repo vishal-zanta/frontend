@@ -15,3 +15,13 @@ export const getUserOnlineStatus = async (userId) => {
 export const putMarkMessagesAsRead = async (conversationId) => {
   return instance.put(`/chat/messages/${conversationId}/read`);
 };
+
+export const postConversation = async ({id}) => {
+  return instance.post(`/chat/conversation`, {
+    targetUserId: id,
+  });
+};
+
+export const postChatMessage = async (body) => {
+  return instance.post(`/chat/message`, body);
+};

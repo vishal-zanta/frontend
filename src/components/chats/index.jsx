@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import ChatPanel from "./ChatPanel";
 import FloatingChatButton from "./FloatingChatButton";
+import { useGetProfile } from "@/hooks/query/useGetProfile";
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+    const { data: profileRes } = useGetProfile();
+  const currentUserId = profileRes?.data?.data?._id
 
   return (
     <div className="fixed bottom-5 right-5 z-[9999] flex flex-col items-end gap-2">
@@ -15,7 +18,9 @@ export default function ChatWidget() {
             : "opacity-0 scale-95 translate-y-4 pointer-events-none"
         }`}
       >
-        <ChatPanel onClose={() => setIsOpen(false)} />
+       {isOpen &&  <ChatPanel onClose={(fn) => {setIsOpen(false)
+        fn && fn()
+       }} currentUserId={currentUserId} />}
       </div>
 
       {/* Floating button */}

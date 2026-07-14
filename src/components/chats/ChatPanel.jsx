@@ -5,13 +5,15 @@ import ChatArea from "./ChatArea";
 import { useGetProfile } from "@/hooks/query/useGetProfile";
 import { CURRENT_USER } from "./useChatData";
 
-export default function ChatPanel({ onClose }) {
+const initialState = {
+  unreadCounts: null,
+};
+export default function ChatPanel({ onClose, currentUserId }) {
   const [selectedUser, setSelectedUser] = useState(null);
+  const [sharedState, setSharedState] = useState(initialState);
   const [mobileView, setMobileView] = useState("list"); // "list" | "chat"
-  
+
   // Use useGetProfile to obtain current logged-in user profile
-  const { data: profileRes } = useGetProfile();
-  const currentUserId = profileRes?.data?.data?._id
 
   const handleSelectUser = (user) => {
     setSelectedUser(user);
@@ -22,9 +24,17 @@ export default function ChatPanel({ onClose }) {
     setMobileView("list");
   };
 
+  const handleClose = () => {
+    setSelectedUser(null);
+    setMobileView("list");
+    onClose(()=>{
+      setSharedState(initialState);
+    });
+  };
+
   return (
     <div
-      className="absolute bottom-14 right-0 w-[min(740px,95vw)] bg-white rounded-2xl shadow-2xl border border-slate-200/60 overflow-hidden flex flex-col"
+      className="absolute bottom-14 right-0 w-[min(400px,95vw)] bg-white rounded-2xl shadow-2xl border border-slate-200/60 overflow-hidden flex flex-col"
       style={{ height: "min(560px, 85vh)" }}
     >
       {/* Panel header */}
@@ -34,7 +44,7 @@ export default function ChatPanel({ onClose }) {
           <span className="font-bold text-sm tracking-wide">Messages</span>
         </div>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
         >
           <X className="w-4 h-4" />
@@ -47,21 +57,26 @@ export default function ChatPanel({ onClose }) {
         {/* Mobile: switch between list and chat */}
         <UsersSidebar
           selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
           onSelect={handleSelectUser}
           visible={mobileView === "list"}
           currentUserId={currentUserId}
+          sharedState={sharedState}
+          setSharedState={setSharedState}
         />
 
         {/* Chat area */}
         <div
           className={`flex-1 flex min-w-0
-            ${mobileView === "list" ? "hidden md:flex" : "flex"}
-            md:flex flex-col`}
+            ${mobileView === "list" ? "hidden" : "flex"}
+            flex-col`}
         >
           <ChatArea
             selectedUser={selectedUser}
             currentUserId={currentUserId}
-            onBack={mobileView === "chat" ? handleBack : null}
+            onBack={handleBack}
+            sharedState={sharedState}
+            setSharedState={setSharedState}
           />
         </div>
       </div>

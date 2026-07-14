@@ -15,7 +15,7 @@ export default function ChatHeader({ user, onBack }) {
       {onBack && (
         <button
           onClick={onBack}
-          className="p-1.5 rounded-lg md:hidden text-slate-500 hover:bg-slate-100 transition-colors mr-1"
+          className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors mr-1"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>

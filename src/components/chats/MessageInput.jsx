@@ -1,12 +1,86 @@
 import React, { useState, useRef, useCallback } from "react";
-import { Paperclip, Send } from "lucide-react";
+import { Paperclip, Send, Loader2 } from "lucide-react";
 import AttachmentPreview from "./AttachmentPreview";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postChatMessage, postConversation } from "@/api/chats.api";
+import { QUERY_KEYS } from "@/utils/constants";
 
-export default function MessageInput({ onSend }) {
+// ─── Build FormData for POST /chat/message ───────────────────────────────────
+const buildMessageFormData = ({ conversationId, text, file }) => {
+  const formData = new FormData();
+  formData.append("conversationId", conversationId);
+  if (text?.trim()) formData.append("content", text.trim());
+  if (file) {
+    // Determine type from mime
+    const mime = file.type || "";
+    let type = "FILE";
+    if (mime.startsWith("image/")) type = "IMAGE";
+    else if (mime.startsWith("video/")) type = "VIDEO";
+    else if (mime.startsWith("audio/")) type = "AUDIO";
+    else type = "FILE";
+    formData.append("type", type);
+    formData.append("file", file);
+  } else {
+    formData.append("type", "TEXT");
+  }
+  return formData;
+};
+
+export default function MessageInput({ selectedUser }) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
+  const qc = useQueryClient();
+
+  const postMessageMutation = useMutation({
+    mutationFn: postChatMessage,
+    onSuccess: (data, variables) => {
+      qc.invalidateQueries({ queryKey: ["chat-messages"] });
+      
+    },
+  });
+
+  const postConversionMutation = useMutation({
+    mutationFn: postConversation,
+    onSuccess: (res, variables) => {
+      const conversationId = res?.data?.data?._id;
+      if (conversationId) {
+        const formData = buildMessageFormData({
+          conversationId,
+          text: variables._pendingText,
+          file: variables._pendingFile,
+        });
+        postMessageMutation.mutate(formData);
+      }
+    },
+  });
+
+  const onSend = (trimmedText, attachedFiles) => {
+    const conversationId = selectedUser?.conversationId;
+    const file = attachedFiles?.[0] ?? null; // single file support
+
+    if (!!conversationId && conversationId.startsWith("new_")) {
+      // No conversation yet → create one first, then send message in onSuccess
+      const targetUserId = selectedUser?._id;
+      postConversionMutation.mutate({
+        id: targetUserId,
+        _pendingText: trimmedText,
+        _pendingFile: file,
+      });
+    } else {
+      // Conversation exists → send message directly
+      const formData = buildMessageFormData({
+        conversationId,
+        text: trimmedText,
+        file,
+      });
+      postMessageMutation.mutate(formData);
+    }
+  };
+
+  const isSending =
+    postMessageMutation.isPending || postConversionMutation.isPending;
 
   const handleSend = useCallback(() => {
     const trimmed = text.trim();
@@ -37,7 +111,10 @@ export default function MessageInput({ onSend }) {
 
   const handleFileChange = (e) => {
     const selected = Array.from(e.target.files || []);
-    setFiles((prev) => [...prev, ...selected]);
+    setFiles((prev) => [
+      // ...prev,
+      ...selected,
+    ]);
     e.target.value = "";
   };
 
@@ -45,7 +122,7 @@ export default function MessageInput({ onSend }) {
     setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  const canSend = text.trim().length > 0 || files.length > 0;
+  const canSend = (text.trim().length > 0 || files.length > 0) && !isSending;
 
   return (
     <div className="border-t border-slate-100 bg-white">
@@ -55,7 +132,6 @@ export default function MessageInput({ onSend }) {
         <input
           ref={fileInputRef}
           type="file"
-          multiple
           accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
           className="hidden"
           onChange={handleFileChange}
@@ -71,13 +147,13 @@ export default function MessageInput({ onSend }) {
         {/* Textarea */}
         <textarea
           ref={textareaRef}
-          rows={1}
+          rows={2}
           value={text}
           onChange={handleTextChange}
           onKeyDown={handleKeyDown}
-          placeholder="Type a message... (Enter to send, Shift+Enter for new line)"
-          className="flex-1 resize-none bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 scrollbar-thin transition-all leading-relaxed max-h-[120px] overflow-y-auto"
-          style={{ height: "42px" }}
+          placeholder="Type a message..."
+          className="flex-1 resize-none bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 scrollbar-thin transition-all leading-relaxed max-h-[120px] overflow-y-auto"
+          // style={{ height: "46px !important" }}
         />
 
         {/* Send */}
@@ -91,7 +167,11 @@ export default function MessageInput({ onSend }) {
           }`}
           title="Send message"
         >
-          <Send className="w-[18px] h-[18px]" />
+          {isSending ? (
+            <Loader2 className="w-[18px] h-[18px] animate-spin" />
+          ) : (
+            <Send className="w-[18px] h-[18px]" />
+          )}
         </button>
       </div>
     </div>

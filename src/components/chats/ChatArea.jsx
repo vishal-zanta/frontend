@@ -1,28 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { MessageSquareDot } from "lucide-react";
 import ChatHeader from "./ChatHeader";
 import MessagesContainer from "./MessagesContainer";
 import MessageInput from "./MessageInput";
-import { useLocalChatMessages } from "./useChatData";
-import { usePutMarkMessagesAsRead } from "../../hooks/query/useGetChats";
-import { useQueryClient } from "@tanstack/react-query";
-import { QUERY_KEYS } from "../../utils/constants";
 
-export default function ChatArea({ selectedUser, currentUserId, onBack }) {
-  const { messages, sendMessage } = useLocalChatMessages(currentUserId, selectedUser?.id);
-  const queryClient = useQueryClient();
-  const readMutation = usePutMarkMessagesAsRead({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
-    },
-  });
-
-  useEffect(() => {
-    if (selectedUser?.conversationId) {
-      readMutation.mutate(selectedUser.conversationId);
-    }
-  }, [selectedUser?.conversationId]);
-
+export default function ChatArea({ selectedUser, currentUserId, onBack, sharedState, setSharedState }) {
   if (!selectedUser) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50/50">
@@ -35,16 +17,15 @@ export default function ChatArea({ selectedUser, currentUserId, onBack }) {
     );
   }
 
-  console.log({selectedUser})
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <ChatHeader user={selectedUser} onBack={onBack} />
       <MessagesContainer
-        messages={messages}
         currentUserId={currentUserId}
         selectedUser={selectedUser}
+        sharedState={sharedState}
       />
-      <MessageInput onSend={sendMessage} />
+      <MessageInput selectedUser={selectedUser} />
     </div>
   );
 }
