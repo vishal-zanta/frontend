@@ -251,8 +251,12 @@ export function ComplaintDetailDialog({
         l2Officer:
           activeComplaint.l2Officer?._id || activeComplaint.l2Officer || null,
         resolvedDate: activeComplaint.resolvedDate || null,
-        assignedOfficer: `${activeComplaint?.assignedOfficer?.name || ""} (${activeComplaint?.assignedOfficer?.role?.designationEnglish})`,
-        assignedOfficerHindi: `${activeComplaint?.assignedOfficer?.name || ""} (${activeComplaint?.assignedOfficer?.role?.designationHindi})`,
+        assignedOfficer: activeComplaint?.assignedOfficer?.name
+          ? `${activeComplaint?.assignedOfficer?.name || ""} (${activeComplaint?.assignedOfficer?.role?.designationEnglish})`
+          : "Not Assigned",
+        assignedOfficerHindi: activeComplaint?.assignedOfficer?.name
+          ? `${activeComplaint?.assignedOfficer?.name || ""} (${activeComplaint?.assignedOfficer?.role?.designationHindi})`
+          : "Not Assigned",
       }
     : COMPLAINTS.find((c) => c.id === complaintId);
 
@@ -330,7 +334,9 @@ export function ComplaintDetailDialog({
                 <div className="text-xs text-muted-foreground mb-1">
                   Assigned Officer
                 </div>
-                <p className="text-sm">{unifiedComplaint.assignedOfficer}</p>
+                <p className="text-sm">
+                  {unifiedComplaint?.assignedOfficer || "Not Assigned"}
+                </p>
               </div>
               <div className="flex gap-3">
                 <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-3">

@@ -82,3 +82,31 @@ export function isValidNumber(value, min, max) {
 
   return true;
 }
+
+export const formatTime = (iso) => {
+  try {
+    return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return "";
+  }
+};
+
+export const formatDate = (iso) => {
+  try {
+    const d = new Date(iso);
+    const today = new Date();
+    if (d.toDateString() === today.toDateString()) return "Today";
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+    return d.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" });
+  } catch {
+    return "";
+  }
+};
+
+export const fileSize = (bytes) => {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+};

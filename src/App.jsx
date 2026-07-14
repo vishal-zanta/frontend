@@ -7,6 +7,8 @@ import {
   RouterProvider,
   Outlet,
   Navigate,
+  useRouteError,
+  useNavigate,
 } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "./api/auth.api";
@@ -50,6 +52,7 @@ import CitizenFeedback from "./pages/citizen/CitizenFeedback";
 import CitizenSettings from "./pages/citizen/CitizenSettings";
 import Login from "./pages/Login";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import ErrorPage from "./components/ErrorPage";
 
 const RootLayout = () => {
   return (
@@ -87,10 +90,17 @@ const AdminProtectedRoute = ({ children }) => {
 
   return children;
 };
+
+const RouteErrorPage = () => {
+  const err = useRouteError();
+  const navigate = useNavigate();
+  return <ErrorPage error={err} resetErrorBoundary={() => navigate(0)} />;
+};
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       {
         path: "",

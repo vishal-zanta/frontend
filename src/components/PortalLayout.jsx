@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import Chatbot from "@/components/Chatbot";
+import ChatWidget from "@/components/chats";
 import { usePortalProfile } from "@/hooks/usePortalProfile";
 import clsx from "clsx";
 
@@ -20,6 +21,7 @@ export default function PortalLayout({ children, role = "superadmin", isHideOver
         </main>
       </div>
       {role === "citizen" && <Chatbot role={role} />}
+      <ChatWidget />
     </div>
   );
 }

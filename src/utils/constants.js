@@ -18,6 +18,7 @@ export const QUERY_KEYS = {
     COMPLAINT_DETAIL_OFFICER: "complaint-detail-officer",
 
     COMPLAINTS_ALL: "complaints-all",
+    CHATS_INFINTE : "chats-infinite"
 }
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
