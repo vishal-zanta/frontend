@@ -10,16 +10,19 @@ export default function AddressSection({ t }) {
           name="address.state"
           label={t("State", "राज्य")}
           placeholder={t("e.g. Bihar", "जैसे बिहार")}
+          required
         />
         <RhfInput
           name="address.district"
           label={t("District", "ज़िला")}
           placeholder={t("e.g. Patna", "जैसे पटना")}
+          required
         />
         <RhfInput
           name="address.subdivision"
           label={t("Subdivision", "उपखंड")}
           placeholder={t("e.g. Danapur", "जैसे दानापुर")}
+          required
         />
         <RhfInput
           name="address.villageOrWard"
@@ -31,6 +34,9 @@ export default function AddressSection({ t }) {
           label={t("Pin Code", "पिन कोड")}
           placeholder="e.g. 800001"
           inputClassName="tracking-widest"
+          required
+          isNumsOnly={true}
+          maxLength={6}
         />
         <RhfInput
           name="address.landmark"

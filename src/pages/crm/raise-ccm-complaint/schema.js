@@ -44,11 +44,11 @@ export const grievanceSchema = z.object({
     satisfactionSurveyConsent: z.boolean().optional(),
   }),
   address: z.object({
-    state: z.string().optional(),
-    district: z.string().optional(),
-    subdivision: z.string().optional(),
+    state: z.string().min(1, "State is required"),
+    district: z.string().min(1, "District is required"),
+    subdivision: z.string().min(1, "Subdivision is required"),
     villageOrWard: z.string().optional(),
-    pinCode: z.string().optional(),
+    pinCode: z.string().regex(/^\d{6}$/, "Pin code must be 6 digits"),
     landmark: z.string().optional(),
   }),
 });
