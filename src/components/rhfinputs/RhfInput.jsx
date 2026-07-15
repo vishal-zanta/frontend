@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { isValidNumber } from "@/utils/helpers";
 
 export default function RhfInput({
   name,
@@ -15,13 +16,15 @@ export default function RhfInput({
   inputClassName,
   required = false,
   disabled = false,
+  isNumsOnly = false,
+
+  
   ...props
 }) {
   const { control } = useFormContext();
   const [showPassword, setShowPassword] = useState(false);
 
   const inputType = type === "password" ? (showPassword ? "text" : "password") : type;
-
   return (
     <Controller
       name={name}
@@ -52,6 +55,13 @@ export default function RhfInput({
                 inputClassName,
               )}
               {...field}
+              onChange={(e) => {
+                if (isNumsOnly && !isValidNumber(e.target.value)) {
+                  return;
+                }
+                field.onChange(e);
+                
+              }}
               {...props}
             />
             {type === "password" && (

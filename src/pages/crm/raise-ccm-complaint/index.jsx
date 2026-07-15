@@ -135,7 +135,7 @@ export default function CRMRaiseComplaint() {
           initialValues={defaultValues}
           isValidation
           validationSchema={grievanceSchema}
-          validationOn="onSubmit"
+          validationOn="onChange"
           onSubmit={handleSubmit}
           className="space-y-6"
         >
@@ -200,6 +200,7 @@ function FormWizard({
     let isValid = false;
     if (step === 1) {
       isValid = await trigger([
+        "channel",
         "citizenInfo.fullName",
         "citizenInfo.mobile",
         "citizenInfo.alternateMobile",

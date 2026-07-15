@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Filter, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ComplaintId } from "@/components/ComplaintDetailDialog";
 import { StatusBadge } from "@/components/Badges";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import SearchDebounced from "../debounced/SearchDebounced";
 
 export default function ComplaintList({
   selected,
@@ -12,6 +13,7 @@ export default function ComplaintList({
   onStatsChange,
   useGetComplaintsOfOfiicer,
 }) {
+  const [search, setSearch] = useState("");
   const {
     data,
     isLoading,
@@ -19,7 +21,7 @@ export default function ComplaintList({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGetComplaintsOfOfiicer({ limit: 10 });
+  } = useGetComplaintsOfOfiicer({ limit: 10, search });
   // console.log({selected})
   const complaints = useMemo(() => {
     return (
@@ -76,13 +78,21 @@ export default function ComplaintList({
 
   return (
     <div className="bg-white rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full">
-      <div className="px-4 py-3 border-b border-border flex items-center justify-between shrink-0">
-        <h3 className="font-bold text-foreground text-sm">
-          My Complaints ({complaints.length})
-        </h3>
-        <Button variant="ghost" size="sm">
-          <Filter className="w-4 h-4" />
-        </Button>
+      <div className="px-4 py-3 border-b border-border ">
+        <div className="flex items-center justify-between shrink-0">
+          <h3 className="font-bold text-foreground text-sm">
+            My Complaints ({complaints.length})
+          </h3>
+          <Button variant="ghost" size="sm">
+            <Filter className="w-4 h-4" />
+          </Button>
+        </div>
+        <div className="mt-2">
+          <SearchDebounced
+            placeholder="Search by id ..."
+            handleDebouncedChange={(val) => setSearch(val)}
+          />
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-thin max-h-[600px] divide-y divide-border">
@@ -125,9 +135,11 @@ export default function ComplaintList({
                         c.serviceName ||
                         "-"}
                     </div>
-                    <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                    <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
                       <MapPin className="w-3 h-3" />{" "}
-                      {c.address?.villageOrWard || c.ward || "-"}
+                      {`  ${c.address?.villageOrWard || c.ward || "-"}, 
+                      ${c.address?.district || "-"},
+                      ${c.address?.state || "-"}`.replaceAll("-,", "")}
                     </div>
                   </button>
                 );

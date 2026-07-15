@@ -1,6 +1,10 @@
 export const getFormData = (data, attachments = []) => {
   const formData = new FormData();
 
+  if (data.channel) {
+    formData.append("channel", data.channel);
+  }
+
   // Flatten nested fields to match Postman format
   if (data.citizenInfo.fullName)
     formData.append("citizenInfo[fullName]", data.citizenInfo.fullName);

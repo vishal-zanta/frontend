@@ -5,7 +5,14 @@ export const PREFERRED_LANGUAGE_OPTIONS = [
   { value: "Hindi", label: "हिन्दी (Hindi)" },
 ];
 
+export const CHANNEL_OPTIONS = [
+  { value: "Website", label: "Website" },
+  { value: "Call", label: "Call" },
+  { value: "Whatsapp", label: "Whatsapp" },
+];
+
 export const grievanceSchema = z.object({
+  channel: z.string().min(1, "Channel is required"),
   citizenInfo: z.object({
     fullName: z.string().optional(),
     mobile: z.string().min(10, "Mobile number must be at least 10 digits"),
@@ -47,6 +54,7 @@ export const grievanceSchema = z.object({
 });
 
 export const defaultValues = {
+  channel: "",
   citizenInfo: {
     fullName: "",
     mobile: "",
