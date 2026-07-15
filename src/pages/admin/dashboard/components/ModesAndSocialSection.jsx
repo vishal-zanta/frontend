@@ -4,12 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChartCard } from "@/components/ChartCard";
 import ModeWiseComplaintsChart from "./charts/ModeWiseComplaintsChart";
-import { MODE_WISE, SOCIAL_COMPLAINTS } from "@/lib/biharData";
+import { SOCIAL_COMPLAINTS } from "@/lib/biharData";
 
-export default function ModesAndSocialSection() {
+export default function ModesAndSocialSection({modeData}) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <ModeWiseComplaintsChart data={MODE_WISE} />
+      <ModeWiseComplaintsChart  mainData={modeData} />
       <ChartCard
         title="Social Media Complaints"
         subtitle="Latest from Twitter, WhatsApp, Instagram & Newspaper"

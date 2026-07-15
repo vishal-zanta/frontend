@@ -13,8 +13,8 @@ export default function StatCard({ icon: Icon, label, value, sublabel, trend, co
   const c = colorMap[color] || colorMap.blue;
 
   return (
-    <div className="bg-white rounded-xl border border-border p-5 hover:shadow-lg transition-shadow">
-      <div className="flex items-start justify-between mb-3">
+    <div className="bg-white rounded-xl border border-border p-4 hover:shadow-lg transition-shadow">
+      <div className="flex items-start justify-between mb-3 gap-3">
         <div className={`w-9 h-9 rounded-lg ${c.bg} ${c.text} flex items-center justify-center ring-2 ${c.ring}`}>
           <Icon className="w-4 h-4" />
         </div>

@@ -1,8 +1,11 @@
 import React from "react";
 import { ChartCard } from "@/components/ChartCard";
 import { AreaChartCard } from "@/components/Charts";
+import { transformComplaintVolume } from "../../helpers";
 
-export default function ComplaintVolumeChart({ data }) {
+export default function ComplaintVolumeChart({ mainData}) {
+  const chartData =transformComplaintVolume(mainData) ;
+
   return (
     <ChartCard
       title="Complaint Volume (30 Days)"
@@ -10,7 +13,7 @@ export default function ComplaintVolumeChart({ data }) {
       className="lg:col-span-2"
     >
       <AreaChartCard
-        data={data}
+        data={chartData}
         xKey="label"
         areas={[
           { key: "raised", label: "Raised", color: "#1d4ed8" },

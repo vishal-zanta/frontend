@@ -2,10 +2,9 @@ import React from "react";
 import { ChartCard } from "@/components/ChartCard";
 import ComplaintMap from "@/components/ComplaintMap";
 import ExportButton from "@/components/ExportButton";
-import { DISTRICT_WISE } from "@/lib/biharData";
 
 const districtExportColumns = [
-  { key: "district", label: "District" },
+  { key: "_id", label: "District" },
   { key: "total", label: "Total" },
   { key: "resolved", label: "Resolved" },
   { key: "pending", label: "Pending" },
@@ -13,7 +12,9 @@ const districtExportColumns = [
   { key: "escalated", label: "Escalated" },
 ];
 
-export default function MapAndDistrictSection() {
+export default function MapAndDistrictSection({ districtData }) {
+  const dataList = districtData || [];
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <ChartCard
@@ -34,7 +35,7 @@ export default function MapAndDistrictSection() {
         className="lg:col-span-2"
         actions={
           <ExportButton
-            data={DISTRICT_WISE}
+            data={dataList}
             columns={districtExportColumns}
             filename="district_wise_complaints"
           />
@@ -42,42 +43,34 @@ export default function MapAndDistrictSection() {
       >
         <div className="overflow-x-auto max-h-[320px] overflow-y-auto scrollbar-thin">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50 sticky top-0">
+            <thead className="bg-[#F4F7FA] sticky top-0">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-3 py-2 font-medium">District</th>
                 <th className="px-3 py-2 font-medium text-right">Total</th>
-                <th className="px-3 py-2 font-medium text-right">
-                  Resolved
-                </th>
-                <th className="px-3 py-2 font-medium text-right">
-                  Pending
-                </th>
-                <th className="px-3 py-2 font-medium text-right">
-                  In Progress
-                </th>
-                <th className="px-3 py-2 font-medium text-right">
-                  Escalated
-                </th>
+                <th className="px-3 py-2 font-medium text-right">Resolved</th>
+                <th className="px-3 py-2 font-medium text-right">Pending</th>
+                <th className="px-3 py-2 font-medium text-right">In Progress</th>
+                <th className="px-3 py-2 font-medium text-right">Escalated</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {DISTRICT_WISE.map((d, i) => (
+              {dataList.map((d, i) => (
                 <tr key={i} className="hover:bg-muted/30">
-                  <td className="px-3 py-2 font-medium">{d.district}</td>
+                  <td className="px-3 py-2 font-medium">{d._id || "-"}</td>
                   <td className="px-3 py-2 text-right font-semibold">
-                    {d.total.toLocaleString("en-IN")}
+                    {(d.total || 0).toLocaleString("en-IN")}
                   </td>
                   <td className="px-3 py-2 text-right text-emerald-600">
-                    {d.resolved.toLocaleString("en-IN")}
+                    {(d.resolved || 0).toLocaleString("en-IN")}
                   </td>
                   <td className="px-3 py-2 text-right text-amber-600">
-                    {d.pending}
+                    {(d.pending || 0).toLocaleString("en-IN")}
                   </td>
                   <td className="px-3 py-2 text-right text-blue-600">
-                    {d.inProgress}
+                    {(d.inProgress || 0).toLocaleString("en-IN")}
                   </td>
                   <td className="px-3 py-2 text-right text-red-600">
-                    {d.escalated}
+                    {(d.escalated || 0).toLocaleString("en-IN")}
                   </td>
                 </tr>
               ))}

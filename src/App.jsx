@@ -53,6 +53,8 @@ import CitizenSettings from "./pages/citizen/CitizenSettings";
 import Login from "./pages/Login";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import ErrorPage from "./components/ErrorPage";
+import { useEffect } from "react";
+import { useAuth } from "./context/AuthContext";
 
 const RootLayout = () => {
   return (
@@ -64,6 +66,7 @@ const RootLayout = () => {
 };
 
 const AdminProtectedRoute = ({ children }) => {
+  const {setProfile} = useAuth();
   const token =
     localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
 
@@ -76,6 +79,12 @@ const AdminProtectedRoute = ({ children }) => {
     queryFn: getProfile,
     retry: false,
   });
+
+  useEffect(()=> {
+    if (isLoading || error || !data) return;
+    setProfile(data?.data?.data);
+    
+  },[isLoading, error, data, setProfile])
 
   if (isLoading) {
     return <FullScreenLoader />;

@@ -20,6 +20,7 @@ import { getBreakStatus, postToggleBreak, postPulse } from "@/api/breaks.api";
 import { getErrorToast } from "@/utils/helpers";
 import BreakOverlay from "./break-timer/BreakOverlay";
 import { postLogout } from "@/api/auth.api";
+import { useAuth } from "@/context/AuthContext";
 
 const roleInfo = {
   superadmin: {
@@ -162,6 +163,7 @@ export default function TopBar({
   onToggleSidebar,
   sidebarOpen,
 }) {
+  const {profile: profileData} = useAuth();
   const baseInfo = roleInfo[role] || roleInfo.superadmin;
   const navigate = useNavigate();
   const isCitizen = role === "citizen";
@@ -441,14 +443,14 @@ export default function TopBar({
             className="flex items-center gap-2 pl-3 border-l border-border"
           >
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
-              {info.avatar}
+              {profileData?.name?.slice(0,2)?.toUpperCase()}
             </div>
             <div className="hidden sm:block text-left">
               <div className="text-sm font-semibold text-foreground leading-tight">
-                {info.user}
+                {profileData?.name}
               </div>
               <div className="text-[11px] text-muted-foreground leading-tight">
-                {info.title}
+                {profileData?.role?.designationEnglish ?? profileData?.role}
               </div>
             </div>
             <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />

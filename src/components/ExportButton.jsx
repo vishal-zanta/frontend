@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Download, FileSpreadsheet, FileText, Loader2, Check } from "lucide-react";
+import { Download, FileSpreadsheet, FileDown, Loader2, Check } from "lucide-react";
 import { jsPDF } from "jspdf";
 import { Button } from "@/components/ui/button";
 
@@ -76,16 +76,48 @@ export default function ExportButton({ data, columns, filename = "export" }) {
   };
 
   if (done) {
-    return <Button size="sm" variant="outline" disabled><Check className="w-3.5 h-3.5" /></Button>;
+    const isCsv = done === "csv";
+    return (
+      <Button
+        size="sm"
+        variant="outline"
+        disabled
+        className={isCsv ? "border-emerald-200 bg-emerald-50 text-emerald-600" : "border-rose-200 bg-rose-50 text-rose-600"}
+      >
+        <Check className="w-3.5 h-3.5" />
+      </Button>
+    );
   }
 
   return (
-    <div className="flex gap-1">
-      <Button size="sm" variant="outline" onClick={() => handleExport("csv")} disabled={!!exporting} title="Download CSV">
-        {exporting === "csv" ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileSpreadsheet className="w-3.5 h-3.5" />}
+    <div className="flex gap-1.5">
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => handleExport("csv")}
+        disabled={!!exporting}
+        title="Download CSV"
+        className="hover:bg-emerald-50 border-slate-200 hover:border-emerald-300 hover:text-emerald-700 transition-colors"
+      >
+        {exporting === "csv" ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-600" />
+        ) : (
+          <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+        )}
       </Button>
-      <Button size="sm" variant="outline" onClick={() => handleExport("pdf")} disabled={!!exporting} title="Download PDF">
-        {exporting === "pdf" ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileText className="w-3.5 h-3.5" />}
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => handleExport("pdf")}
+        disabled={!!exporting}
+        title="Download PDF"
+        className="hover:bg-rose-50 border-slate-200 hover:border-rose-300 hover:text-rose-700 transition-colors"
+      >
+        {exporting === "pdf" ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-600" />
+        ) : (
+          <FileDown className="w-3.5 h-3.5 text-rose-600" />
+        )}
       </Button>
     </div>
   );

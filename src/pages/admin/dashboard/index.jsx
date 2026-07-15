@@ -1,14 +1,20 @@
 import React from "react";
 import PortalLayout from "@/components/PortalLayout";
 import { DASHBOARD_KPIS } from "@/lib/biharData";
-import KPIs from "./components/KPIs";
+import StatsBoxes from "./components/StatsBoxes.jsx";
 import VolumeAndCategorySection from "./components/VolumeAndCategorySection";
 import MapAndDistrictSection from "./components/MapAndDistrictSection";
 import ModesAndSocialSection from "./components/ModesAndSocialSection";
 import RecentComplaintsSection from "./components/RecentComplaintsSection";
 import QuickLinksSection from "./components/QuickLinksSection";
+import { useGetDashboardData } from "./query";
+import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 
 export default function AdminDashboard() {
+  const { data, error, isLoading } = useGetDashboardData();
+  const dashboardData = data?.data?.data;
+  console.log({ dashboardData });
+
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
@@ -20,7 +26,8 @@ export default function AdminDashboard() {
                 State Dashboard - Bihar
               </h1>
               <p className="text-white/80 text-sm">
-                Real-time grievance overview • 12 districts • 6 ULBs • 6 months of data
+                Real-time grievance overview • 12 districts • 6 ULBs • 6 months
+                of data
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -40,17 +47,22 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* KPIs Summary Cards */}
-        <KPIs />
+        {/* StatsBoxes Summary Cards */}
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
+          <StatsBoxes metrics={dashboardData?.metrics} />
 
         {/* Volume & Category Charts */}
-        <VolumeAndCategorySection />
+        <VolumeAndCategorySection
+          complaintVolume={dashboardData?.charts?.trend}
+          categoryData={dashboardData?.charts?.bySubservice}
+          />
 
         {/* Hotspot Map & District Table */}
-        <MapAndDistrictSection />
+        <MapAndDistrictSection districtData = {dashboardData?.charts?.byDistrict}/>
 
         {/* Channel Modes & Social Complaints */}
-        <ModesAndSocialSection />
+        <ModesAndSocialSection modeData = {dashboardData?.charts?.bySource} />
+          </LoaderErrWrapper>
 
         {/* Recent Complaints Table */}
         <RecentComplaintsSection />

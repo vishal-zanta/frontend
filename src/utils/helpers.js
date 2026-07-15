@@ -110,3 +110,47 @@ export const fileSize = (bytes) => {
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
   return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 };
+
+export const getTrendProps = (current, previous, reverseColor = false) => {
+  if (
+    previous === undefined ||
+    previous === null ||
+    current === undefined ||
+    current === null
+  ) {
+    return { trend: undefined, trendValue: undefined };
+  }
+
+  if (previous === 0) {
+    if (current > 0) {
+      // Growth from zero (good if normal, bad if reversed)
+      const isUp = !reverseColor;
+      return {
+        trend: isUp ? "up" : "down",
+        trendValue: `+${current} vs last week`,
+      };
+    }
+    return { trend: "neutral", trendValue: "0% vs last week" };
+  }
+
+  const diff = current - previous;
+  const pct = (diff / previous) * 100;
+
+  if (diff > 0) {
+    // Increase: green for normal, red for reversed (e.g. SLA Breached/Escalated)
+    const isUp = !reverseColor;
+    return {
+      trend: isUp ? "up" : "down",
+      trendValue: `+${pct.toFixed(0)} % vs last week`,
+    };
+  } else if (diff < 0) {
+    // Decrease: red for normal, green for reversed
+    const isDown = !reverseColor;
+    return {
+      trend: isDown ? "down" : "up",
+      trendValue: `${pct.toFixed(0)} % vs last week`,
+    };
+  }
+
+  return { trend: "neutral", trendValue: "0% vs last week" };
+};

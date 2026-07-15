@@ -1,14 +1,17 @@
 import React from "react";
 import { ChartCard } from "@/components/ChartCard";
 import { PieChartCard } from "@/components/Charts";
+import { transformCategoryDistribution } from "../../helpers";
 
-export default function CategoryDistributionChart({ data }) {
+export default function CategoryDistributionChart({ mainData }) {
+  const chartData = transformCategoryDistribution(mainData);
+
   return (
     <ChartCard
       title="Category Distribution"
       subtitle="Complaints by service type"
     >
-      <PieChartCard data={data} height={300} />
+      <PieChartCard data={chartData} height={300} />
     </ChartCard>
   );
 }
