@@ -20,8 +20,11 @@ export const QUERY_KEYS = {
     COMPLAINTS_ALL: "complaints-all",
     CHATS_INFINTE : "chats-infinite",
     QUERY_KEY_OFIICER_DASHBOARD: "officer-dashboard",
-    QUERY_KEY_OFFICER_DASHBOARD: "officer-dashboard"
+    QUERY_KEY_OFFICER_DASHBOARD: "officer-dashboard",
+    MIS_REPORTS: "mis-reports",
+    MIS_STATS: "mis-stats",
 }
+
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
   { value: "English", label: "English" },

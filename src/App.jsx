@@ -34,7 +34,7 @@ import AdminDashboard from "./pages/admin/dashboard";
 import OperationalDashboards from "./pages/admin/operational-dashboard";
 import AIReports from "./pages/admin/AIReports";
 import PerformanceDashboard from "./pages/admin/PerformanceDashboard";
-import MISReports from "./pages/admin/MISReports";
+import MISReports from "./pages/admin/mis";
 import WorkflowConfig from "./pages/admin/workflow-levels";
 import SLAConfig from "./pages/admin/sla-config";
 import OfficerTagging from "./pages/admin/officer-tagging";
