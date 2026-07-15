@@ -3,7 +3,7 @@ import SearchDebounced from "@/components/debounced/SearchDebounced";
 import UserItem from "./UserItem";
 import { useGetChatsInfinte } from "@/hooks/query/useGetChats";
 import { useGetProfile } from "@/hooks/query/useGetProfile";
-import { CURRENT_USER, normalizedUserList } from "./useChatData";
+import { normalizedUserList } from "./useChatData";
 import { Loader2 } from "lucide-react";
 
 export default function UsersSidebar({
@@ -13,7 +13,7 @@ export default function UsersSidebar({
   visible,
   currentUserId,
   sharedState,
-  setSharedState, 
+  setSharedState,
 }) {
   const [search, setSearch] = useState("");
 
@@ -105,17 +105,17 @@ export default function UsersSidebar({
                 key={user.id}
                 user={user?.user}
                 selected={selectedUser?.conversationId === user?._id}
-                onClick={(clickedUser) =>
-                {  onSelect({
+                onClick={(clickedUser) => {
+                  onSelect({
                     ...clickedUser,
                     conversationId: user?._id,
-                  })
-                // if((user?.unreadCounts ?? 0 )> 0){
-                    setSharedState({
-                      unreadCounts : (user?.unreadCounts ?? 0 )
-                    })
-                // }
-               } }
+                  });
+                  // if((user?.unreadCounts ?? 0 )> 0){
+                  setSharedState({
+                    unreadCounts: user?.unreadCounts ?? 0,
+                  });
+                  // }
+                }}
                 unreadCounts={user?.unreadCounts ?? 0}
               />
             ))}

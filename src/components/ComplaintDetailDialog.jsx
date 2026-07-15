@@ -226,7 +226,7 @@ export function ComplaintDetailDialog({
 
   const query = isOfficer ? officerQuery : allQuery;
   const activeComplaint = query?.data?.data;
-  console.log({ activeComplaint });
+  // console.log({ activeComplaint });
 
   const unifiedComplaint = activeComplaint
     ? {

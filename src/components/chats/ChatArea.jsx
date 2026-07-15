@@ -24,6 +24,7 @@ export default function ChatArea({ selectedUser, currentUserId, onBack, sharedSt
         currentUserId={currentUserId}
         selectedUser={selectedUser}
         sharedState={sharedState}
+        setSharedState={setSharedState}
       />
       <MessageInput selectedUser={selectedUser} />
     </div>

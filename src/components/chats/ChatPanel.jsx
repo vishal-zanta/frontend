@@ -3,7 +3,6 @@ import { X, MessageSquareDot } from "lucide-react";
 import UsersSidebar from "./UsersSidebar";
 import ChatArea from "./ChatArea";
 import { useGetProfile } from "@/hooks/query/useGetProfile";
-import { CURRENT_USER } from "./useChatData";
 
 const initialState = {
   unreadCounts: null,

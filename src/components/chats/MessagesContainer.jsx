@@ -8,39 +8,22 @@ import {
 } from "@/hooks/query/useGetChats";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/utils/constants";
+import socketIOClient from "socket.io-client";
+import { normalizeMessage } from "./useChatData";
+const token =
+  localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
+const link = `${import.meta.env.VITE_BASE_URL}?token=${token}`;
 
-// ─── Normalize a raw API message to a common shape ───────────────────────────
-const normalizeMessage = (rawMsg, currentUserId) => {
-  const senderId =
-    rawMsg?.sender?._id || rawMsg?.sender || rawMsg?.senderId || "";
-  return {
-    id: rawMsg._id,
-    fromUserId: senderId,
-    toUserId: currentUserId === senderId ? rawMsg?.receiver : currentUserId,
-    content: rawMsg.content || "",
-    type: rawMsg.type || "TEXT",
-    fileUrl: rawMsg.fileUrl,
-    fileName: rawMsg.fileName,
-    attachments: rawMsg.fileUrl
-      ? [
-          {
-            url: rawMsg.fileUrl,
-            name: rawMsg.fileName || "file",
-            type:
-              rawMsg.type === "IMAGE"
-                ? "image/webp"
-                : "application/octet-stream",
-          },
-        ]
-      : [],
-    createdAt: rawMsg.createdAt,
-    readBy: rawMsg.readBy || [],
-    senderName: rawMsg?.sender?.name,
-  };
-};
+const socket = socketIOClient(link);
 
-export default function MessagesContainer({ currentUserId, selectedUser, sharedState }) {
+export default function MessagesContainer({
+  currentUserId,
+  selectedUser,
+  sharedState,
+  setSharedState,
+}) {
   const conversationId = selectedUser?.conversationId;
+  const [socketMessages, setSocketMessages] = useState([]);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetChatsMessagesInfinite(
@@ -54,7 +37,8 @@ export default function MessagesContainer({ currentUserId, selectedUser, sharedS
 
   // Flatten all pages — API returns oldest→newest per page, pages go 1→N (oldest first loaded)
   // We reverse page order so older pages (higher page numbers) come first in the list
-  const rawMessages =
+
+  const allMessagesFromApi =
     data?.pages
       ?.slice()
       .reverse()
@@ -64,18 +48,41 @@ export default function MessagesContainer({ currentUserId, selectedUser, sharedS
           : page?.data?.data?.docs || page?.data?.docs || [];
         return arr;
       }) || [];
-
-  const messages = rawMessages.map((m) => normalizeMessage(m, currentUserId));
+  const messages = [
+    ...allMessagesFromApi,
+    ...socketMessages.filter(
+      (socketMsg) =>
+        !allMessagesFromApi.find((all) => all._id == socketMsg._id),
+    ),
+  ].map((m) => normalizeMessage(m, currentUserId));
 
   // ─── Mark as read after messages load ────────────────────────────────────
   const queryClient = useQueryClient();
   const readMutation = usePutMarkMessagesAsRead({
     onSuccess: () => {
-   if(sharedState?.unreadCounts > 0) {
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
-   }
+      if (sharedState?.unreadCounts > 0) {
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
+        setSharedState({ unreadCounts: 0 });
+      }
     },
   });
+
+  useEffect(() => {
+    const handleNewMessage = (data) => {
+      setSocketMessages((prev) => [...prev, data.message]);
+    };
+    socket.onAny((event, ...args) => {
+      console.log(`New Event eventname -> ${event}`);
+    });
+
+    socket.on("newMessage", handleNewMessage);
+
+    return () => {
+      socket.off("newMessage", handleNewMessage);
+    };
+  }, []);
+
+  console.log({ messages, socketMessages, allMessagesFromApi });
 
   useEffect(() => {
     if (!isLoading && messages.length > 0 && conversationId) {
@@ -93,6 +100,7 @@ export default function MessagesContainer({ currentUserId, selectedUser, sharedS
   // Auto-scroll to bottom on first load / conversation switch
   useEffect(() => {
     isInitialLoad.current = true;
+    setSocketMessages([]);
   }, [conversationId]);
 
   useEffect(() => {
@@ -107,7 +115,11 @@ export default function MessagesContainer({ currentUserId, selectedUser, sharedS
   const lastMessageIdRef = useRef(lastMessageId);
 
   useEffect(() => {
-    if (conversationId && lastMessageId && lastMessageId !== lastMessageIdRef.current) {
+    if (
+      conversationId &&
+      lastMessageId &&
+      lastMessageId !== lastMessageIdRef.current
+    ) {
       if (!isInitialLoad.current && !isFetchingNextPage) {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       }
