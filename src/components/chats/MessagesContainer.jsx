@@ -75,7 +75,7 @@ export default function MessagesContainer({ currentUserId, selectedUser }) {
     };
   }, [readMutation, selectedUser?.conversationId]);
 
-  console.log({ messages, socketMessages, allMessagesFromApi });
+  // console.log({ messages, socketMessages, allMessagesFromApi });
 
   // useEffect(() => {
   //   if (!isLoading && messages.length > 0 && conversationId) {

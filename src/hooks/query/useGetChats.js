@@ -1,13 +1,22 @@
 import { useInfiniteQuery, useQuery, useMutation } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../utils/constants";
-import { getConversations, getUserOnlineStatus, putMarkMessagesAsRead, getConversationMessages } from "../../api/chats.api";
+import {
+  getConversations,
+  getUserOnlineStatus,
+  putMarkMessagesAsRead,
+  getConversationMessages,
+} from "../../api/chats.api";
 
 export const useGetChatsInfinte = (keys = [], param = {}, options = {}) => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.CHATS_INFINTE, ...keys, param],
-    queryFn: ({ pageParam = 1 }) => getConversations({ ...param, page: pageParam }),
+    queryFn: ({ pageParam = 1 }) =>
+      getConversations({ ...param, page: pageParam }),
     getNextPageParam: (lastPage, allPages) => {
-      const pagination = lastPage?.data?.pagination || lastPage?.pagination || lastPage?.data?.data?.pagination;
+      const pagination =
+        lastPage?.data?.pagination ||
+        lastPage?.pagination ||
+        lastPage?.data?.data?.pagination;
       if (pagination) {
         const currentPage = pagination.page || pagination.currentPage || 1;
         const totalPages = pagination.totalPages || 1;
@@ -48,13 +57,24 @@ export const usePutMarkMessagesAsRead = (options = {}) => {
  * - Use fetchNextPage() to load older messages (scroll up trigger).
  * - Messages within each page are already ordered oldest→newest from the API.
  */
-export const useGetChatsMessagesInfinite = (conversationId, params = {}, options = {}) => {
+export const useGetChatsMessagesInfinite = (
+  conversationId,
+  params = {},
+  options = {},
+) => {
   return useInfiniteQuery({
     queryKey: ["chat-messages", conversationId, params],
     queryFn: ({ pageParam = 1 }) =>
-      getConversationMessages(conversationId, { ...params, page: pageParam, limit: params.limit || 10 }),
+      getConversationMessages(conversationId, {
+        ...params,
+        page: pageParam,
+        limit: params.limit || 10,
+      }),
     getNextPageParam: (lastPage, allPages) => {
-      const pagination = lastPage?.data?.pagination || lastPage?.pagination || lastPage?.data?.data?.pagination;
+      const pagination =
+        lastPage?.data?.pagination ||
+        lastPage?.pagination ||
+        lastPage?.data?.data?.pagination;
       if (pagination) {
         const currentPage = pagination.page || pagination.currentPage || 1;
         const totalPages = pagination.totalPages || 1;
@@ -75,6 +95,3 @@ export const useGetChatsMessagesInfinite = (conversationId, params = {}, options
     ...options,
   });
 };
-
-
-
