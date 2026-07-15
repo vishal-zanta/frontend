@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import SearchDebounced from "@/components/debounced/SearchDebounced";
 import UserItem from "./UserItem";
-import { useGetChatsInfinte } from "@/hooks/query/useGetChats";
+import {
+  useGetChatsInfinte,
+  usePutMarkMessagesAsRead,
+} from "@/hooks/query/useGetChats";
 import { useGetProfile } from "@/hooks/query/useGetProfile";
 import { normalizedUserList } from "./useChatData";
 import { Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/utils/constants";
 
 export default function UsersSidebar({
   selectedUser,
@@ -12,14 +17,19 @@ export default function UsersSidebar({
   onSelect,
   visible,
   currentUserId,
-  sharedState,
-  setSharedState,
 }) {
+  const qc = useQueryClient();
   const [search, setSearch] = useState("");
 
   // Use useGetChatsInfinte query hook
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetChatsInfinte([search], { search, limit: 10 });
+
+  const readMutation = usePutMarkMessagesAsRead({
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
+    },
+  });
 
   // Flatten infinite query pages and map to user info
   const conversations =
@@ -32,7 +42,7 @@ export default function UsersSidebar({
 
   // De-duplicate by user ID
   const uniqueConversations = normalizedUserList(conversations, currentUserId);
-  // console.log({ currentUserId, conversations, uniqueConversations });
+  console.log({ currentUserId, conversations, uniqueConversations });
 
   // IntersectionObserver trigger ref
   const observerRef = useRef(null);
@@ -110,10 +120,10 @@ export default function UsersSidebar({
                     ...clickedUser,
                     conversationId: user?._id,
                   });
-                  // if((user?.unreadCounts ?? 0 )> 0){
-                  setSharedState({
-                    unreadCounts: user?.unreadCounts ?? 0,
-                  });
+
+                  if ((user?.unreadCounts ?? 0) > 0) {
+                    readMutation.mutate(user?._id);
+                  }
                   // }
                 }}
                 unreadCounts={user?.unreadCounts ?? 0}

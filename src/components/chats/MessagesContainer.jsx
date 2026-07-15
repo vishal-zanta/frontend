@@ -16,12 +16,7 @@ const link = `${import.meta.env.VITE_BASE_URL}?token=${token}`;
 
 const socket = socketIOClient(link);
 
-export default function MessagesContainer({
-  currentUserId,
-  selectedUser,
-  sharedState,
-  setSharedState,
-}) {
+export default function MessagesContainer({ currentUserId, selectedUser }) {
   const conversationId = selectedUser?.conversationId;
   const [socketMessages, setSocketMessages] = useState([]);
 
@@ -60,16 +55,14 @@ export default function MessagesContainer({
   const queryClient = useQueryClient();
   const readMutation = usePutMarkMessagesAsRead({
     onSuccess: () => {
-      if (sharedState?.unreadCounts > 0) {
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
-        setSharedState({ unreadCounts: 0 });
-      }
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
     },
   });
 
   useEffect(() => {
     const handleNewMessage = (data) => {
       setSocketMessages((prev) => [...prev, data.message]);
+      readMutation.mutate(selectedUser?.conversationId);
     };
     socket.onAny((event, ...args) => {
       console.log(`New Event eventname -> ${event}`);
@@ -80,15 +73,15 @@ export default function MessagesContainer({
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
-  }, []);
+  }, [readMutation, selectedUser?.conversationId]);
 
   console.log({ messages, socketMessages, allMessagesFromApi });
 
-  useEffect(() => {
-    if (!isLoading && messages.length > 0 && conversationId) {
-      readMutation.mutate(conversationId);
-    }
-  }, [isLoading, messages.length, conversationId]);
+  // useEffect(() => {
+  //   if (!isLoading && messages.length > 0 && conversationId) {
+  //     readMutation.mutate(conversationId);
+  //   }
+  // }, [isLoading, messages.length, conversationId]);
 
   // Refs for scroll management
   const containerRef = useRef(null);
