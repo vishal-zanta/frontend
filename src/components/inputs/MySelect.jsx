@@ -19,7 +19,6 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       : "none",
     borderRadius: "var(--radius)",
     minHeight: "36px",
-    height: "36px",
     backgroundColor: disabled ? "#f3f4f6" : "#FFFFFF",
     cursor: disabled ? "not-allowed" : "default",
     "&:hover": {
@@ -32,12 +31,12 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   }),
   valueContainer: (provided) => ({
     ...provided,
-    padding: "0px 12px",
-    height: "34px",
+    padding: "4px 12px",
+    minHeight: "34px",
     display: "flex",
+    flexWrap: "wrap",
     alignItems: "center",
-    maxHeight: "200px",
-
+    maxHeight: "120px",
     overflowY: isMulti ? "auto" : "hidden",
   }),
   menu: (provided) => ({
@@ -114,7 +113,6 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   indicatorSeparator: () => ({ display: "none" }),
   indicatorsContainer: (provided) => ({
     ...provided,
-    height: "34px",
   }),
   dropdownIndicator: (provided, state) => ({
     ...provided,

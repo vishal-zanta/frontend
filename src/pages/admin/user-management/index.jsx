@@ -151,7 +151,9 @@ export default function UserManagement() {
       status: user?.status || "",
       permissions: user?.role?.permissions || [],
       apiData: user,
-      lastLogin:user?.lastLogin ? new Date(user?.lastLogin).toLocaleString() || "" : "-",
+      lastLogin: user?.lastLogin
+        ? new Date(user?.lastLogin).toLocaleString() || ""
+        : "-",
     };
   });
   console.log({ editUser });
@@ -354,7 +356,9 @@ export default function UserManagement() {
             saving={logoutMutation.isPending}
           >
             <div className="text-sm text-muted-foreground py-2">
-              Are you sure you want to force logout <strong>{logoutUser.name}</strong>? This will terminate their active session.
+              Are you sure you want to force logout{" "}
+              <strong>{logoutUser.name}</strong>? This will terminate their
+              active session.
             </div>
           </EditDialog>
         )}

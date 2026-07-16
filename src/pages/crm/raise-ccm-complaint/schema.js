@@ -18,7 +18,7 @@ export const grievanceSchema = z.object({
     mobile: z.string().min(10, "Mobile number must be at least 10 digits"),
     alternateMobile: z.string().optional(),
     email: z.string().email("Enter a valid email").optional().or(z.literal("")),
-    preferredLanguage: z.string().optional(),
+    preferredLanguage: z.string().min(1, "Preferred language is required"),
   }),
   classification: z.object({
     subService: z.string().min(1, "Sub-service is required"),
@@ -48,7 +48,7 @@ export const grievanceSchema = z.object({
     district: z.string().min(1, "District is required"),
     subdivision: z.string().min(1, "Subdivision is required"),
     villageOrWard: z.string().optional(),
-    pinCode: z.string().regex(/^\d{6}$/, "Pin code must be 6 digits"),
+    pinCode: z.string().regex(/^8\d{5}$/, "Enter a valid pin code of Bihar"),
     landmark: z.string().optional(),
   }),
 });
@@ -77,5 +77,5 @@ export const defaultValues = {
     feedbackConsent: false,
     satisfactionSurveyConsent: false,
   },
-  address: { state: "", district: "", subdivision: "", villageOrWard: "", pinCode: "", landmark: "" },
+  address: { state: "Bihar", district: "", subdivision: "", villageOrWard: "", pinCode: "", landmark: "" },
 };

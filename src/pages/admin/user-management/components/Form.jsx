@@ -6,6 +6,7 @@ import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDemographics } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
 
+
 export default function Form({
   onCancel,
   isEdit = false,
@@ -54,6 +55,8 @@ export default function Form({
         name="phone"
         required
         placeholder="Enter 10-digit phone number"
+        isNumsOnly
+        maxLength={10}
       />
       <RhfInput
         label="Password"
@@ -82,7 +85,7 @@ export default function Form({
       <RhfSelect
         name="district"
         label="District"
-        required
+        // required
         options={districtOptions}
         placeholder="Select a district"
       />

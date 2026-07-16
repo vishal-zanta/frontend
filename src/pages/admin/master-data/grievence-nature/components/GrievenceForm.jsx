@@ -13,15 +13,7 @@ const GrievenceForm = ({ initialValues, handleSubmit, typeOptions = [] }) => {
       onSubmit={handleSubmit}
       className={"space-y-4"}
     >
-      {/* Title */}
-      <RhfInput
-        name="title"
-        label="Title"
-        placeholder="e.g., Community, Family, Self"
-        required
-      />
-
-      {/* Type - creatable single select from /options/types */}
+       {/* Type - creatable single select from /options/types */}
       <RhfSelect
         name="type"
         label="Type"
@@ -31,6 +23,15 @@ const GrievenceForm = ({ initialValues, handleSubmit, typeOptions = [] }) => {
         isCreatable={true}
         isMultiple={false}
       />
+      {/* Title */}
+      <RhfInput
+        name="title"
+        label="Title"
+        placeholder="e.g., Community, Family, Self"
+        required
+      />
+
+     
     </RhfWrapper>
   );
 };

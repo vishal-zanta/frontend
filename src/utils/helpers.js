@@ -17,7 +17,7 @@ export const getSuccessToast = ( description) => {
 }
 
 export const getErrorToast = (err) => {
-    toast.error(err?.response?.data?.message || err?.message || "Something went wrong!", {
+    toast.error(err?.response?.data?.message || err?.message ||(typeof err === "string" ? err :   "Something went wrong!"), {
         duration: 3000,
         style: {
             borderRadius: '12px',

@@ -17,7 +17,7 @@ export default function AttachmentsSection({
         type="file"
         className="hidden"
         multiple
-        accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
+        accept="image/jpeg,image/png,image/webp,video/mp4,audio/mpeg"
         onChange={handleFileChange}
       />
 

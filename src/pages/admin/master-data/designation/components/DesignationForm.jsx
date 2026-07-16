@@ -1,9 +1,12 @@
+import MySelect from '@/components/inputs/MySelect';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { apiPermissionOptions } from '@/utils/constants';
 import React from 'react'
 
 const DesignationForm = ({formData,setFormData,errors,setErrors}) => {
+
   return (
     <>
      <div>
@@ -70,6 +73,32 @@ const DesignationForm = ({formData,setFormData,errors,setErrors}) => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+          <div>
+            <MySelect
+              value={formData.permissions}
+              onValueChange={(val) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  permissions: val,
+                }));
+                if (errors.permissions) {
+                  setErrors((prev) => ({ ...prev, permissions: "" }));
+                }
+              }}
+              label="Permissions"
+              // apiKey="permissions"
+              required
+              isMultiple={true}
+              options={apiPermissionOptions}
+              placeholder="Select permissions"
+              error={errors.permissions}
+            />
+            {(formData?.permissions || []).includes("ALL") && (
+              <span className="text-xs font-medium text-emerald-600 block mt-1">
+                Note: Make sure you are aware that you are given full access
+              </span>
+            )}
           </div>
     </>
   )

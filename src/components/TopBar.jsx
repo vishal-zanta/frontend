@@ -458,9 +458,10 @@ export default function TopBar({
           {showProfile && (
             <div className="absolute right-0 top-12 w-56 bg-white border border-border rounded-xl shadow-xl overflow-hidden z-50">
               <div className="px-4 py-3 border-b border-border">
-                <div className="font-semibold text-sm">{info.user}</div>
+                <div className="font-semibold text-sm"> {profileData?.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  {info.title}
+                                {profileData?.role?.designationEnglish ?? profileData?.role}
+
                 </div>
               </div>
               {info.settingsPath && (

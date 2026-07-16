@@ -17,6 +17,7 @@ export default function RhfInput({
   required = false,
   disabled = false,
   isNumsOnly = false,
+  isDisableFutureDates= false,
 
   
   ...props
@@ -62,6 +63,7 @@ export default function RhfInput({
                 field.onChange(e);
                 
               }}
+              max={isDisableFutureDates ?new Date().toISOString().split('T')[0] : undefined }
               {...props}
             />
             {type === "password" && (

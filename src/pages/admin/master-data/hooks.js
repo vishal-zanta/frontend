@@ -31,10 +31,11 @@ export const useGetDemographics = (keys = [], params = {}) => {
   });
 };
 
-export const useGetUlbs = (keys = [], params = {}) => {
+export const useGetUlbs = (keys = [], params = {} , enabled = true) => {
   return useQuery({
     queryKey: [QUERY_KEYS.ULBS, ...keys],
     queryFn: () => getUlbs(params),
+    enabled : enabled
   });
 };
 

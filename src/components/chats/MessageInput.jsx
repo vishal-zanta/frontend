@@ -4,6 +4,17 @@ import AttachmentPreview from "./AttachmentPreview";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postChatMessage, postConversation } from "@/api/chats.api";
 import { QUERY_KEYS } from "@/utils/constants";
+import { getErrorToast } from "@/utils/helpers";
+
+// ─── Allowed MIME types & size limit ────────────────────────────────────────
+const ALLOWED_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "video/mp4",
+  "audio/mpeg",
+]);
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 // ─── Build FormData for POST /chat/message ───────────────────────────────────
 const buildMessageFormData = ({ conversationId, text, file }) => {
@@ -111,11 +122,17 @@ export default function MessageInput({ selectedUser, setAllMessages }) {
   };
 
   const handleFileChange = (e) => {
-    const selected = Array.from(e.target.files || []);
-    setFiles((prev) => [
-      // ...prev,
-      ...selected,
-    ]);
+    const oversized = [];
+    const selected = Array.from(e.target.files || []).filter((f) => {
+      if (!ALLOWED_MIME_TYPES.has(f.type)) return false;
+      if (f.size > MAX_FILE_SIZE) { oversized.push(f.name); return false; }
+      return true;
+    });
+    if (oversized.length) {
+      getErrorToast(`File(s) exceed the 10 MB limit and were not attached:\n${oversized.join("\n")}`);
+      // return;
+    }
+    setFiles(() => [...selected]);
     e.target.value = "";
   };
 
@@ -133,7 +150,7 @@ export default function MessageInput({ selectedUser, setAllMessages }) {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
+          accept="image/jpeg,image/png,image/webp,video/mp4,audio/mpeg"
           className="hidden"
           onChange={handleFileChange}
         />

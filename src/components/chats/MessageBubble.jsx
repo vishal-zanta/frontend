@@ -3,9 +3,11 @@ import { Paperclip } from "lucide-react";
 import Avatar from "./Avatar";
 import { formatTime, fileSize } from "@/utils/helpers";
 import { IMG_BASE_URL } from "@/utils/constants";
+import clsx from "clsx";
 
 export default function MessageBubble({ msg, isOwn, senderName }) {
   const isImage = (type) => type?.startsWith("image/");
+  
 
   return (
     <div className={`flex ${isOwn ? "justify-end" : "justify-start"} group`}>
@@ -21,19 +23,26 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
 
         {/* Attachments */}
         {msg.attachments?.length > 0 && (
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 min-w-0 max-w-[100%]">
             {msg.attachments.map((att, i) => {
-              const url = IMG_BASE_URL + att.url;
+              const url = IMG_BASE_URL + att.url ;
               return (
               <div key={i}>
                 {isImage(att.type) ? (
-                  <a href={url} target="_blank" rel="noreferrer">
-                    <img
-                      src={url}
-                      alt={att.name}
-                      className="max-h-48 max-w-xs rounded-xl object-cover border border-slate-200 shadow-sm"
-                    />
-                  </a>
+                  <div className={clsx("h-48 flex items-center", isOwn ? "justify-end" : "justify-start")}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-center h-full max-w-full"
+                    >
+                      <img
+                        src={url}
+                        alt={att.name}
+                        className="max-h-48 max-w-full rounded-xl object-contain border border-slate-200 shadow-sm"
+                      />
+                    </a>
+                  </div>
                 ) : (
                   <a
                     href={url}

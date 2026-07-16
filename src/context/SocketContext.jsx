@@ -9,52 +9,75 @@ const SocketContext = createContext(null);
  * socket connection for the whole app, no matter how many components
  * use useSockets().
  */
-export function SocketProvider({ children , url}) {
+export function SocketProvider({ children, url }) {
   const socketRef = useRef(null);
   const listenersRef = useRef(new Map()); // eventType -> Set<callback>
 
-  // create the socket exactly once
-  if (!socketRef.current) {
-    const token =
-      localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
-    const link = url ??  `${import.meta.env.VITE_BASE_URL}?token=${token}`;
+  const getToken = () =>
+    localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
 
-    const socket = socketIOClient(link, {
-      autoConnect: true,
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 30000,
-      randomizationFactor: 0.5,
-      transports: ["websocket"],
-    });
+  const initSocket = useCallback(
+    (overrideUrl) => {
+      // Tear down any existing socket before creating a new one
+      if (socketRef.current) {
+        socketRef.current.offAny();
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
 
-    // single onAny dispatcher fans out to all subscribers, registered once
-    socket.onAny((eventType, payload) => {
-     
-    console.log(`[socket] event -> ${eventType}`, payload);
-      const callbacks = listenersRef.current.get(eventType);
-      if (!callbacks) return;
-      callbacks.forEach((cb) => {
-        try {
-          cb(payload);
-        } catch (err) {
-          console.error(`[socket] listener error for "${eventType}"`, err);
-        }
+      const token = getToken();
+      const link =
+        overrideUrl ?? url ?? `${import.meta.env.VITE_BASE_URL}?token=${token}`;
+
+      const socket = socketIOClient(link, {
+        autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 30000,
+        randomizationFactor: 0.5,
+        transports: ["websocket"],
       });
-    });
 
-    socketRef.current = socket;
-  }
+      // single onAny dispatcher fans out to all subscribers, registered once
+      socket.onAny((eventType, payload) => {
+        console.log(`[socket] event -> ${eventType}`, payload);
+        const callbacks = listenersRef.current.get(eventType);
+        if (!callbacks) return;
+        callbacks.forEach((cb) => {
+          try {
+            cb(payload);
+          } catch (err) {
+            console.error(`[socket] listener error for "${eventType}"`, err);
+          }
+        });
+      });
 
-  // disconnect only when the provider itself unmounts (app close/logout),
-  // not on every component render
+      socketRef.current = socket;
+    },
+    [url],
+  );
+
+  // Create the socket AFTER first mount so the auth token is already in
+  // storage. The login flow writes the token before navigating, but React's
+  // synchronous render (and the old `if (!socketRef.current)` guard) would
+  // run before that write completed. Moving to useEffect + setTimeout(0)
+  // pushes socket creation to after the current JS task finishes, guaranteeing
+  // the token is present.
   useEffect(() => {
-    const socket = socketRef.current;
+    const tid = setTimeout(() => initSocket(), 100);
+    return () => clearTimeout(tid);
+  }, [initSocket]);
+
+  // Disconnect only when the provider itself unmounts (app close / logout)
+  useEffect(() => {
     return () => {
-      socket.offAny();
-      socket.removeAllListeners();
-      socket.disconnect();
+      if (socketRef.current) {
+        socketRef.current.offAny();
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+      }
     };
   }, []);
 
@@ -74,12 +97,18 @@ export function SocketProvider({ children , url}) {
       console.warn("[socket] cannot emit, not connected");
       return false;
     }
-    ackCallback ? socket.emit(eventType, payload, ackCallback) : socket.emit(eventType, payload);
+    ackCallback
+      ? socket.emit(eventType, payload, ackCallback)
+      : socket.emit(eventType, payload);
     return true;
   }, []);
 
+  // Expose reconnect so callers can force a fresh authenticated connection
+  // (e.g. call this right after storing a new token on login)
+  const reconnect = useCallback(() => initSocket(), [initSocket]);
+
   return (
-    <SocketContext.Provider value={{ subscribe, emit, socket: socketRef.current }}>
+    <SocketContext.Provider value={{ subscribe, emit, reconnect, socket: socketRef.current }}>
       {children}
     </SocketContext.Provider>
   );

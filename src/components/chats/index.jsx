@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ChatPanel from "./ChatPanel";
 import FloatingChatButton from "./FloatingChatButton";
 import { useGetProfile } from "@/hooks/query/useGetProfile";
-import { useSockets } from "@/context/SocketContext";
 
 
 export default function ChatWidget() {

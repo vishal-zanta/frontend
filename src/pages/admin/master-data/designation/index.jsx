@@ -40,26 +40,30 @@ export default function DesignationsTab() {
     designationEnglish: "",
     designationHindi: "",
     level: "L1",
+    permissions: [],
   });
   const [errors, setErrors] = useState({
     designationEnglish: "",
     designationHindi: "",
+    permissions: "",
   });
 
   useEffect(() => {
     if (dialog) {
-      setErrors({ designationEnglish: "", designationHindi: "" });
+      setErrors({ designationEnglish: "", designationHindi: "", permissions: "" });
       if (dialog.type === "edit") {
         setFormData({
           designationEnglish: dialog.item?.designationEnglish || "",
           designationHindi: dialog.item?.designationHindi || "",
           level: dialog.item?.level || "L1",
+          permissions: dialog.item?.permissions || [],
         });
       } else if (dialog.type === "add") {
         setFormData({
           designationEnglish: "",
           designationHindi: "",
           level: "L1",
+          permissions: [],
         });
       }
     }
@@ -112,13 +116,16 @@ export default function DesignationsTab() {
     if (!formData.designationHindi.trim()) {
       newErrors.designationHindi = "पदनाम (Hindi) is required";
     }
+    if (!formData.permissions || formData.permissions.length === 0) {
+      newErrors.permissions = "Permissions are required";
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    setErrors({ designationEnglish: "", designationHindi: "" });
+    setErrors({ designationEnglish: "", designationHindi: "", permissions: "" });
 
     if (dialog.type === "add") {
       postMutation.mutate(formData);

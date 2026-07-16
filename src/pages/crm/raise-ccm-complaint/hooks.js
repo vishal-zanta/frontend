@@ -1,7 +1,7 @@
-import { useGetOptions, useGetSubservices } from "../../admin/master-data/hooks";
+import { useGetComplaintSources, useGetDemographics, useGetOptions, useGetSubservices } from "../../admin/master-data/hooks";
 
 export const useRaiseComplaintData = (lang) => {
-  const API_PARAMS = { page: 1, limit: 100 };
+  const API_PARAMS = { page: 1, limit: 500, select : "title,titleHindi,name,nameHindi" };
 
   const { data: subServicesData, isLoading: subServicesLoading } =
     useGetSubservices([], API_PARAMS, true);
@@ -9,8 +9,19 @@ export const useRaiseComplaintData = (lang) => {
   const { data: naturesData, isLoading: naturesLoading } =
     useGetOptions([], API_PARAMS);
 
+    const {data : complaintSourcesData , isLoading : complaintSourcesLoading} = useGetComplaintSources([API_PARAMS], API_PARAMS);
+
+    const {data : demographicSourceData , isLoading : demographyLoading} = useGetDemographics([API_PARAMS], API_PARAMS);
+    // const {data : demographicSourceData , isLoading : demographyLoading} = useGet([API_PARAMS], API_PARAMS);
+
+
+
+
   const allSubServices = subServicesData?.data?.data?.docs ?? [];
   const allNatures = naturesData?.data?.data?.docs ?? [];
+  let allChannels = complaintSourcesData?.data?.data?.docs ?? [];
+  let allDemography = demographicSourceData?.data?.data?.docs ?? [];
+  
 
   // Filter grievance natures to only "grievanceNature" type
   const grievanceNatureOptions = allNatures
@@ -39,6 +50,15 @@ export const useRaiseComplaintData = (lang) => {
       value: n._id,
     }));
 
+    allChannels = allChannels.map((v)=> ({
+      label : v.title,
+      value : v?._id
+    })); 
+    allDemography = allDemography.map((v)=> ({
+      label :lang === "hi" && v.nameHindi ? v.nameHindi : v.name ,
+      value : v._id
+    }))
+
   return {
     subServicesLoading,
     naturesLoading,
@@ -46,5 +66,9 @@ export const useRaiseComplaintData = (lang) => {
     grievanceNatureOptions,
     frequencyOptions,
     affectedBeneficiaryOptions,
+    allChannels,
+    complaintSourcesLoading,
+    allDemography,
+    demographyLoading
   };
 };

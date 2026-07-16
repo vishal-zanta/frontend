@@ -4,7 +4,8 @@ import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import FormSection from "./FormSection";
 import { PREFERRED_LANGUAGE_OPTIONS, CHANNEL_OPTIONS } from "../schema";
 
-export default function CitizenInfoSection({ t }) {
+export default function CitizenInfoSection({ t, allChannels , complaintSourcesLoading }) {
+  console.log({allChannels});
   return (
     <FormSection title={t("Complainant Details", "शिकायतकर्ता का विवरण")}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -41,12 +42,13 @@ export default function CitizenInfoSection({ t }) {
           label={t("Preferred Language", "पसंदीदा भाषा")}
           placeholder={t("Select language", "भाषा चुनें")}
           options={PREFERRED_LANGUAGE_OPTIONS}
+          required
         />
           <RhfSelect
           name="channel"
           label={t("Channel", "चैनल")}
-          placeholder={t("Select channel", "चैनल चुनें")}
-          options={CHANNEL_OPTIONS}
+          placeholder={complaintSourcesLoading ? t("Loading...", "लोड हो रहा है...") : t("Select channel", "चैनल चुनें")}
+          options={allChannels}
           required
         />
       </div>

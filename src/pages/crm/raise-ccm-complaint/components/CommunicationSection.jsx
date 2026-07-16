@@ -9,7 +9,7 @@ export default function CommunicationSection({ t }) {
         <RhfBoolean
           name="communication.feedbackConsent"
           label={t(
-            "I consent to receiving feedback",
+            "I consent to receiving feedback call",
             "मैं फ़ीडबैक प्राप्त करने की सहमति देता/देती हूँ",
           )}
         />

@@ -44,6 +44,10 @@ export default function CRMRaiseComplaint() {
     affectedBeneficiaryOptions,
     subServicesLoading,
     naturesLoading,
+    allChannels,
+    complaintSourcesLoading,
+    allDemography,
+    demographyLoading,
   } = useRaiseComplaintData(lang);
 
   const fileInputRef = useRef(null);
@@ -53,13 +57,38 @@ export default function CRMRaiseComplaint() {
   const handleFileChange = (e) => {
     setFileError("");
     const files = Array.from(e.target.files ?? []);
-    const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
-    if (oversized) {
-      setFileError(
-        t("File too large. Max 10 MB.", "फ़ाइल बहुत बड़ी है। अधिकतम 10 MB।"),
+    if (files.length === 0) return;
+
+    const allowedMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "video/mp4",
+      "audio/mpeg",
+    ];
+
+    const invalidTypeFile = files.find((f) => !allowedMimeTypes.includes(f.type));
+    if (invalidTypeFile) {
+      const errMsg = t(
+        "Invalid file type. Only JPEG, PNG, WEBP, MP4, and MPEG files are allowed.",
+        "अमान्य फ़ाइल प्रकार। केवल JPEG, PNG, WEBP, MP4 और MPEG फ़ाइलें ही स्वीकृत हैं।"
       );
+      setFileError(errMsg);
+      getErrorToast({message : errMsg});
       return;
     }
+
+    const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
+    if (oversized) {
+      const errMsg = t(
+        "File too large. Max 10 MB.",
+        "फ़ाइल बहुत बड़ी है। अधिकतम 10 MB।"
+      );
+      setFileError(errMsg);
+      getErrorToast({message : errMsg});
+      return;
+    }
+
     setAttachments((prev) => [...prev, ...files]);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -153,6 +182,10 @@ export default function CRMRaiseComplaint() {
             handleFileChange={handleFileChange}
             removeAttachment={removeAttachment}
             postComplaintMutation={postComplaintMutation}
+            allChannels={allChannels}
+            complaintSourcesLoading={complaintSourcesLoading}
+            allDemography={allDemography}
+            demographyLoading={demographyLoading}
           />
         </RhfWrapper>
       </div>
@@ -174,6 +207,10 @@ function FormWizard({
   handleFileChange,
   removeAttachment,
   postComplaintMutation,
+  allChannels,
+  complaintSourcesLoading,
+  allDemography,
+  demographyLoading
 }) {
   const { trigger } = useFormContext();
   const [step, setStep] = useState(1);
@@ -298,14 +335,19 @@ function FormWizard({
       <div className="bg-card border border-border shadow-sm rounded-xl p-6 transition-all duration-300">
         {step === 1 && (
           <div className="space-y-6">
-            <CitizenInfoSection t={t} />
+            <CitizenInfoSection
+              t={t}
+              allChannels={allChannels}
+              complaintSourcesLoading={complaintSourcesLoading}
+            />
             <CommunicationSection t={t} />
           </div>
         )}
 
         {step === 2 && (
           <div className="space-y-6">
-            <AddressSection t={t} />
+            <AddressSection t={t}   allDemography ={allDemography}
+  demographyLoading={demographyLoading} />
           </div>
         )}
 
@@ -358,7 +400,7 @@ function FormWizard({
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium min-w-[120px] transition-all h-9 px-4 py-2 rounded-lg flex items-center justify-center"
             >
               {t("Next", "आगे")} &rarr;
-            </button> 
+            </button>
           ) : (
             <Button
               type="submit"

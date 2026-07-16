@@ -21,7 +21,7 @@ export default function ComplaintEvidenceSection({ description, attachments, geo
                 <div key={idx} className="border border-border rounded-lg p-2 bg-card overflow-hidden">
                   {isImage ? (
                     <a href={IMG_BASE_URL + att.url} target="_blank" rel="noopener noreferrer">
-                      <img src={IMG_BASE_URL + att.url} alt={att.fileName || "Attachment"} className="w-full h-24 object-cover rounded hover:scale-105 transition-transform" />
+                      <img src={IMG_BASE_URL + att.url} alt={att.fileName || "Attachment"} className=" max-h-48 max-w-48 mx-auto w-full h-full object-contain rounded hover:scale-105 transition-transform" />
                     </a>
                   ) : (
                     <div className="w-full h-24 bg-muted/50 rounded flex items-center justify-center flex-col p-1 text-center">
@@ -53,7 +53,7 @@ export default function ComplaintEvidenceSection({ description, attachments, geo
                 <div key={idx} className="border border-border rounded-lg p-2 bg-card overflow-hidden">
                   {isImage ? (
                     <a href={displayUrl} target="_blank" rel="noopener noreferrer">
-                      <img src={displayUrl} alt={fileName} className="w-full h-24 object-cover rounded hover:scale-105 transition-transform" />
+                      <img src={displayUrl} alt={fileName} className="max-h-48 max-w-48 mx-auto w-full h-full object-contain  rounded hover:scale-105 transition-transform" />
                     </a>
                   ) : (
                     <div className="w-full h-24 bg-muted/50 rounded flex items-center justify-center flex-col p-1 text-center">
