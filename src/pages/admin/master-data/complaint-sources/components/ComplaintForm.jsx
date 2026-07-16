@@ -5,7 +5,7 @@ import React from "react";
 const ComplaintForm = ({ formData, setFormData, errors, setErrors }) => {
   return (
     <div>
-      <Label className="mb-1.5 block">Source Name *</Label>
+      <Label className="mb-1.5 block">Source Name <span className="text-red-500">*</span></Label>
       <Input
         value={formData.title}
         onChange={(e) => {

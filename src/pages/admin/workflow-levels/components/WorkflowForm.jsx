@@ -24,7 +24,7 @@ const WorkflowForm = ({editLevel,roleOptions, dialog, setDialog, handleSaveLevel
               </div>
               <div className="p-5 space-y-4">
                 <div>
-                  <Label className="mb-1.5 block">Role *</Label>
+                  <Label className="mb-1.5 block">Role <span className="text-red-500">*</span></Label>
                   <MySelect
                     options={roleOptions}
                     value={dialog.role || ""}

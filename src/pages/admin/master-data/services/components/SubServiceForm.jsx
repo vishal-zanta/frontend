@@ -14,7 +14,7 @@ const SubServiceForm = ({
   return (
     <div className="space-y-4">
       <div>
-        <Label className="mb-1.5 block">Sub-Service Name (English) *</Label>
+        <Label className="mb-1.5 block">Sub-Service Name (English) <span className="text-red-500">*</span></Label>
         <Input
           value={formData.title}
           onChange={(e) => {
@@ -29,7 +29,7 @@ const SubServiceForm = ({
         )}
       </div>
       <div>
-        <Label className="mb-1.5 block">उप-सेवा (Hindi) *</Label>
+        <Label className="mb-1.5 block">उप-सेवा (Hindi) <span className="text-red-500">*</span></Label>
         <Input
           value={formData.titleHindi}
           onChange={(e) => {
@@ -48,7 +48,7 @@ const SubServiceForm = ({
         )}
       </div>
       <div>
-        <Label className="mb-1.5 block">SLA Hours *</Label>
+        <Label className="mb-1.5 block">SLA Hours <span className="text-red-500">*</span></Label>
         <Input
           type="text"
           value={formData.sla}

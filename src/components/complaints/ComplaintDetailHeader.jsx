@@ -1,5 +1,6 @@
 import React from "react";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ComplaintDetailHeader({
   c,
@@ -14,6 +15,7 @@ export default function ComplaintDetailHeader({
   assignOfficerMutation,
   selectedId,
 }) {
+  const {hasPermission} = useAuth();
   return (
     <div className="flex items-start justify-between border-b border-border pb-3">
       <div>
@@ -33,7 +35,7 @@ export default function ComplaintDetailHeader({
         )}
       </div>
 
-      {isCCE ? (
+      {hasPermission("ASSIGN_GRIEVANCE") ? (
         <div className="w-56 text-left">
           <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
             Assign Officer

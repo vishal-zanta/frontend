@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Coffee, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function BreakOverlay({ breakStartedAt, onEndBreak, isEnding }) {
+export default function BreakOverlay({onEndBreak, isEnding, activeBreak }) {
   const [secondsElapsed, setSecondsElapsed] = useState(0);
+// console.log({activeBreak});
+  const startTime = activeBreak?.startTime 
 
   useEffect(() => {
-    const startTime = breakStartedAt ? new Date(breakStartedAt).getTime() : Date.now();
+    const startTimestamp = startTime ? new Date(startTime).getTime() : Date.now();
 
     const updateTimer = () => {
       const now = Date.now();
-      const diff = Math.floor((now - startTime) / 1000);
+      const diff = Math.floor((now - startTimestamp) / 1000);
       setSecondsElapsed(diff > 0 ? diff : 0);
     };
 
@@ -19,7 +21,7 @@ export default function BreakOverlay({ breakStartedAt, onEndBreak, isEnding }) {
 
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [breakStartedAt]);
+  }, [startTime]);
 
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;

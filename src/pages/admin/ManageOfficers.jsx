@@ -289,7 +289,7 @@ export default function ManageOfficers() {
               </div>
               <div className="p-5 space-y-4">
                 <div>
-                  <Label className="mb-1.5 block">Officer Name *</Label>
+                  <Label className="mb-1.5 block">Officer Name <span className="text-red-500">*</span></Label>
                   <Input
                     value={dialog.name || ""}
                     onChange={(e) =>

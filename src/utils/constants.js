@@ -217,24 +217,24 @@ export const apiPermissionOptions = [
   { label: "All Grievance", value: "ALL_GRIEVANCE" },
   { label: "Create Grievance", value: "CREATE_GRIEVANCE" },
   { label: "Update Grievance", value: "UPDATE_GRIEVANCE" },
-  { label: "Assign Grievance", value: "ASSIGN_GRIEVANCE" },
+  { label: "Assign Grievance", value: "ASSIGN_GRIEVANCE" }, //custom
 
   { label: "View Active Users", value: "VIEW_ACTIVE_USERS" },
-  { label: "Logout Users", value: "LOGOUT_USERS" },
+  { label: "Logout Users", value: "LOGOUT_USERS" }, //custom
 
-  { label: "Source Management", value: "SOURCE_MANAGEMENT" },
+  { label: "Source Management", value: "SOURCE_MANAGEMENT" },//custom
 
-  { label: "Demography Management", value: "DEMOGRAPHY_MANAGEMENT" },
+  { label: "Demography Management", value: "DEMOGRAPHY_MANAGEMENT" },//custom
 
   { label: "MIS Report", value: "MIS_REPORT" },
 
   { label: "Officer Tagging", value: "OFFICER_TAGGING" },
 
-  { label: "Option Management", value: "OPTION_MANAGEMENT" },
+  { label: "Option Management", value: "OPTION_MANAGEMENT" },//custom
 
-  { label: "Role Management", value: "ROLE_MANAGEMENT" },
+  { label: "Role Management", value: "ROLE_MANAGEMENT" },//custom
 
-  { label: "Service Management", value: "SERVICE_MANAGEMENT" },
+  { label: "Service Management", value: "SERVICE_MANAGEMENT" },//custom
 
   { label: "SLA Configuration", value: "SLA_CONFIGURATION" },
 

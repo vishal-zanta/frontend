@@ -251,7 +251,7 @@ export default function ManageAgents() {
               </div>
               <div className="p-5 space-y-4">
                 <div>
-                  <Label className="mb-1.5 block">Agent Name *</Label>
+                  <Label className="mb-1.5 block">Agent Name <span className="text-red-500">*</span></Label>
                   <Input
                     value={dialog.name || ""}
                     onChange={(e) =>

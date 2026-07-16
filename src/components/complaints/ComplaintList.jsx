@@ -138,7 +138,7 @@ export default function ComplaintList({
                     <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
                       <MapPin className="w-3 h-3" />{" "}
                       {`  ${c.address?.villageOrWard || c.ward || "-"}, 
-                      ${c.address?.district || "-"},
+                      ${c.address?.district?.name || "-"},
                       ${c.address?.state || "-"}`.replaceAll("-,", "")}
                     </div>
                   </button>

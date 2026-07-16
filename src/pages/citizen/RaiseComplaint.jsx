@@ -364,8 +364,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label className="mb-1.5 block">
-                    {t("Full Name", "पूरा नाम")} *
-                  </Label>
+                    {t("Full Name", "पूरा नाम")} <span className="text-red-500">*</span></Label>
                   <Input
                     value={form.name}
                     onChange={(e) => update("name", e.target.value)}
@@ -374,8 +373,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
                 </div>
                 <div>
                   <Label className="mb-1.5 block">
-                    {t("Phone Number", "फोन नंबर")} *
-                  </Label>
+                    {t("Phone Number", "फोन नंबर")} <span className="text-red-500">*</span></Label>
                   <Input
                     value={form.mobile}
                     onChange={(e) => update("mobile", e.target.value)}
@@ -431,8 +429,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label className="mb-1.5 block">
-                    {t("District", "ज़िला")} *
-                  </Label>
+                    {t("District", "ज़िला")} <span className="text-red-500">*</span></Label>
                   <Select
                     value={form.district}
                     onValueChange={handleDistrictChange}
@@ -453,8 +450,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
                 </div>
                 <div>
                   <Label className="mb-1.5 block">
-                    {t("ULB (Urban Local Body)", "ULB (नगरीय निकाय)")} *
-                  </Label>
+                    {t("ULB (Urban Local Body)", "ULB (नगरीय निकाय)")} <span className="text-red-500">*</span></Label>
                   <Select
                     value={form.ulb}
                     onValueChange={(v) => update("ulb", v)}
@@ -476,8 +472,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
                 </div>
                 <div>
                   <Label className="mb-1.5 block">
-                    {t("Ward Number", "वार्ड नंबर")} *
-                  </Label>
+                    {t("Ward Number", "वार्ड नंबर")} <span className="text-red-500">*</span></Label>
                   <Input
                     value={form.ward}
                     onChange={(e) => update("ward", e.target.value)}
@@ -559,8 +554,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label className="mb-1.5 block">
-                    {t("Service Category", "सेवा श्रेणी")} *
-                  </Label>
+                    {t("Service Category", "सेवा श्रेणी")} <span className="text-red-500">*</span></Label>
                   <Select
                     value={form.service}
                     onValueChange={(v) => {
@@ -584,8 +578,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
                 </div>
                 <div>
                   <Label className="mb-1.5 block">
-                    {t("Sub-Service", "उप-सेवा")} *
-                  </Label>
+                    {t("Sub-Service", "उप-सेवा")} <span className="text-red-500">*</span></Label>
                   <Select
                     value={form.subservice}
                     onValueChange={(v) => update("subservice", v)}
@@ -636,8 +629,7 @@ export default function RaiseComplaint({ role = "citizen" }) {
 
               <div>
                 <Label className="mb-1.5 block">
-                  {t("Description", "विवरण")} *
-                </Label>
+                  {t("Description", "विवरण")} <span className="text-red-500">*</span></Label>
                 <Textarea
                   value={form.description}
                   onChange={(e) => update("description", e.target.value)}

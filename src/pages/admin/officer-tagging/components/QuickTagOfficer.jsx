@@ -50,7 +50,7 @@ export default function QuickTagOfficer({ officers = [], subservices = [], handl
           />
         </div>
         <div>
-          <label className="text-sm font-medium mb-1.5 block">Wards (Comma-separated) *</label>
+          <label className="text-sm font-medium mb-1.5 block">Wards (Comma-separated) <span className="text-red-500">*</span></label>
           <Input
             value={wards}
             onChange={(e) => setWards(e.target.value)}

@@ -11,7 +11,7 @@ const ServiceForm = ({
   return (
    <div className="space-y-4">
             <div>
-              <Label className="mb-1.5 block">Service Name (English) *</Label>
+              <Label className="mb-1.5 block">Service Name (English) <span className="text-red-500">*</span></Label>
               <Input
                 value={serviceFormData.title}
                 onChange={(e) => {
@@ -32,7 +32,7 @@ const ServiceForm = ({
               )}
             </div>
             <div>
-              <Label className="mb-1.5 block">सेवा का नाम (Hindi) *</Label>
+              <Label className="mb-1.5 block">सेवा का नाम (Hindi) <span className="text-red-500">*</span></Label>
               <Input
                 value={serviceFormData.titleHindi}
                 onChange={(e) => {
@@ -53,7 +53,7 @@ const ServiceForm = ({
               )}
             </div>
             <div>
-              <Label className="mb-1.5 block">Department *</Label>
+              <Label className="mb-1.5 block">Department <span className="text-red-500">*</span></Label>
               <Input
                 value={serviceFormData.department}
                 onChange={(e) => {

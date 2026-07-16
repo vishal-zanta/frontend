@@ -186,6 +186,7 @@ export default function TopBar({
   });
 
   const breakStatus = breakStatusData?.data?.data || breakStatusData?.data;
+  const activeBreak = breakStatusData?.data?.data?.activeBreak;
 
   const toggleBreakMutation = useMutation({
     mutationFn: postToggleBreak,
@@ -431,9 +432,10 @@ export default function TopBar({
 
         {breakStatus?.isBreak && (
           <BreakOverlay
-            breakStartedAt={breakStatus?.breakStartedAt}
+            // breakStartedAt={breakStatus?.breakStartedAt}
             onEndBreak={() => toggleBreakMutation.mutate()}
             isEnding={toggleBreakMutation.isPending}
+            activeBreak={activeBreak}
           />
         )}
 

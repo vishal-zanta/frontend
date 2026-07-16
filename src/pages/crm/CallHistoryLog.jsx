@@ -352,8 +352,7 @@ export default function CallHistoryLog() {
               </div>
               <div>
                 <label className="text-sm font-medium block mb-1.5">
-                  Tagging Reason *
-                </label>
+                  Tagging Reason <span className="text-red-500">*</span></label>
                 <Input placeholder="e.g., Legal escalation, dispute case, citizen complaint against agent..." />
               </div>
               <div>

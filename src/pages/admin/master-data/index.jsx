@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Building2, Tag, MapPin, Globe, FileHeart } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -8,22 +8,58 @@ import ComplaintSourcesTab from "./complaint-sources";
 import DemographyTab from "./demography";
 import GrievenceNatureTab from "./grievence-nature";
 import { useSearchParams } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const tabs = [
-  { id: "designation", label: "Designations", icon: Tag },
-  { id: "service", label: "Services & Sub-services", icon: Building2 },
-  { id: "source", label: "Complaint Sources", icon: Globe },
-  { id: "demography", label: "Demography & ULBs", icon: MapPin },
-  { id: "grievances-nature", label: "Grievance Nature", icon: FileHeart },
+  {
+    id: "designation",
+    label: "Designations",
+    icon: Tag,
+    permissions: ["ROLE_MANAGEMENT"],
+  },
+  {
+    id: "service",
+    label: "Services & Sub-services",
+    icon: Building2,
+    permissions: ["SERVICE_MANAGEMENT"],
+  },
+  {
+    id: "source",
+    label: "Complaint Sources",
+    icon: Globe,
+    permissions: ["SOURCE_MANAGEMENT"],
+  },
+  {
+    id: "demography",
+    label: "Demography & ULBs",
+    icon: MapPin,
+    permissions: ["DEMOGRAPHY_MANAGEMENT"],
+  },
+  {
+    id: "grievances-nature",
+    label: "Grievance Nature",
+    icon: FileHeart,
+    permissions: ["OPTION_MANAGEMENT"],
+  },
 ];
 
 export default function MasterData() {
+  const { hasPermission } = useAuth();
+
   const [searchParams, setSearchParams] = useSearchParams();
+  const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
+
   const [tab, setTab] = useState(
-    (tabs.map((t) => t.id).includes(searchParams.get("tab"))
+    (filteredTabs.map((t) => t.id).includes(searchParams.get("tab"))
       ? searchParams.get("tab")
-      : undefined) ?? "designation",
+      : undefined) ?? filteredTabs?.[0]?.id,
   );
+
+  useEffect(() => {
+    if (!filteredTabs.some((s) => s.id == tab)) {
+      setTab(filteredTabs?.[0]?.id || "");
+    }
+  }, [filteredTabs]);
 
   return (
     <PortalLayout role="superadmin">
@@ -34,7 +70,7 @@ export default function MasterData() {
         />
 
         <div className="flex flex-wrap gap-2">
-          {tabs.map((t) => {
+          {filteredTabs.map((t) => {
             const Icon = t.icon;
             return (
               <button

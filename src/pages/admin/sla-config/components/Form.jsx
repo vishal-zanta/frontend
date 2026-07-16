@@ -14,7 +14,7 @@ export default function Form({
   return (
     <div className="space-y-4">
       <div>
-        <Label className="mb-1.5 block">Sub-Service *</Label>
+        <Label className="mb-1.5 block">Sub-Service <span className="text-red-500">*</span></Label>
         {editItem ? (
           <Input
             disabled

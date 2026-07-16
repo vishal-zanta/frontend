@@ -10,7 +10,7 @@ const DemographyForm = ({ formData, setErrors, setFormData, errors }) => {
   return (
     <div className="space-y-4">
       <div>
-        <Label className="mb-1.5 block">District Name (English) *</Label>
+        <Label className="mb-1.5 block">District Name (English) <span className="text-red-500">*</span></Label>
         <Input
           value={formData.name}
           onChange={(e) => {
@@ -25,7 +25,7 @@ const DemographyForm = ({ formData, setErrors, setFormData, errors }) => {
         )}
       </div>
       <div>
-        <Label className="mb-1.5 block">जिला (Hindi) *</Label>
+        <Label className="mb-1.5 block">जिला (Hindi) <span className="text-red-500">*</span></Label>
         <Input
           value={formData.nameHindi}
           onChange={(e) => {
@@ -44,7 +44,7 @@ const DemographyForm = ({ formData, setErrors, setFormData, errors }) => {
         )}
       </div>
       <div>
-        <Label className="mb-1.5 block">Division *</Label>
+        <Label className="mb-1.5 block">Division <span className="text-red-500">*</span></Label>
         <Input
           value={formData.division}
           onChange={(e) => {
@@ -63,7 +63,7 @@ const DemographyForm = ({ formData, setErrors, setFormData, errors }) => {
         )}
       </div>
       <div>
-        <Label className="mb-1.5 block">Zone *</Label>
+        <Label className="mb-1.5 block">Zone <span className="text-red-500">*</span></Label>
         <Select
           value={formData.zone}
           onValueChange={(val) =>
@@ -80,7 +80,7 @@ const DemographyForm = ({ formData, setErrors, setFormData, errors }) => {
         </Select>
       </div>
       <div>
-        <Label className="mb-1.5 block">Population *</Label>
+        <Label className="mb-1.5 block">Population <span className="text-red-500">*</span></Label>
         <Input
           value={formData.population}
           onChange={(e) => {

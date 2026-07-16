@@ -8,6 +8,12 @@ export default function ComplaintLocationSection({
   addressLandmark,
   addressPinCode,
 }) {
+console.log({addressVillageOrWard,
+  addressSubdivision,
+  addressDistrict,
+  addressState,
+  addressLandmark,
+  addressPinCode})
   return (
     <div className="bg-muted/30 rounded-lg p-3 border border-border">
       <h4 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">Location & Address</h4>
@@ -22,7 +28,7 @@ export default function ComplaintLocationSection({
         </div>
         <div>
           <span className="text-muted-foreground block">District</span>
-          <span className="font-semibold text-foreground">{addressDistrict}</span>
+          <span className="font-semibold text-foreground">{addressDistrict?.name}</span>
         </div>
         <div>
           <span className="text-muted-foreground block">State</span>

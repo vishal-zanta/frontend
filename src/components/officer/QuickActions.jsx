@@ -200,7 +200,7 @@ export default function QuickActions({ officer }) {
           }
         >
           <div>
-            <Label className="mb-1.5 block">Select Complaint *</Label>
+            <Label className="mb-1.5 block">Select Complaint <span className="text-red-500">*</span></Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}
@@ -236,7 +236,7 @@ export default function QuickActions({ officer }) {
             </div>
           )}
           <div>
-            <Label className="mb-1.5 block">New Status *</Label>
+            <Label className="mb-1.5 block">New Status <span className="text-red-500">*</span></Label>
             <Select value={newStatus} onValueChange={setNewStatus}>
               <SelectTrigger>
                 <SelectValue placeholder="Select new status" />
@@ -296,7 +296,7 @@ export default function QuickActions({ officer }) {
           }
         >
           <div>
-            <Label className="mb-1.5 block">Link to Complaint *</Label>
+            <Label className="mb-1.5 block">Link to Complaint <span className="text-red-500">*</span></Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}
@@ -373,7 +373,7 @@ export default function QuickActions({ officer }) {
           }
         >
           <div>
-            <Label className="mb-1.5 block">Complaint Visited *</Label>
+            <Label className="mb-1.5 block">Complaint Visited <span className="text-red-500">*</span></Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}
@@ -391,7 +391,7 @@ export default function QuickActions({ officer }) {
             </Select>
           </div>
           <div>
-            <Label className="mb-1.5 block">Visit Findings *</Label>
+            <Label className="mb-1.5 block">Visit Findings <span className="text-red-500">*</span></Label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -475,7 +475,7 @@ export default function QuickActions({ officer }) {
             </span>
           </div>
           <div>
-            <Label className="mb-1.5 block">Complaint to Escalate *</Label>
+            <Label className="mb-1.5 block">Complaint to Escalate <span className="text-red-500">*</span></Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}

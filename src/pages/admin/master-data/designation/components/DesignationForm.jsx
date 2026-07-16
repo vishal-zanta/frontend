@@ -10,7 +10,7 @@ const DesignationForm = ({formData,setFormData,errors,setErrors}) => {
   return (
     <>
      <div>
-            <Label className="mb-1.5 block">Designation (English) *</Label>
+            <Label className="mb-1.5 block">Designation (English) <span className="text-red-500">*</span></Label>
             <Input
               value={formData.designationEnglish}
               onChange={(e) => {
@@ -32,7 +32,7 @@ const DesignationForm = ({formData,setFormData,errors,setErrors}) => {
             )}
           </div>
           <div>
-            <Label className="mb-1.5 block">पदनाम (Hindi) *</Label>
+            <Label className="mb-1.5 block">पदनाम (Hindi) <span className="text-red-500">*</span></Label>
             <Input
               value={formData.designationHindi}
               onChange={(e) => {
@@ -54,7 +54,7 @@ const DesignationForm = ({formData,setFormData,errors,setErrors}) => {
             )}
           </div>
           <div>
-            <Label className="mb-1.5 block">Level *</Label>
+            <Label className="mb-1.5 block">Level <span className="text-red-500">*</span></Label>
             <Select
               value={formData.level}
               onValueChange={(val) =>
