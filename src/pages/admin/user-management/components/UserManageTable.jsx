@@ -58,8 +58,8 @@ export default function UserManageTable({
                   </Badge>}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{u.district}</td>
-                <td className="px-2  ">
-                  <div className="flex flex-wrap gap-1 px-2 py-3 max-h-20 overflow-y-auto ">
+                <td className="px-2 py-1 ">
+                  <div className="flex flex-wrap gap-1 px-2 py-2 max-h-20 overflow-y-auto ">
                     {u.permissions.map((p)=> apiPermissionOptions.find(a=>a.value ===p)?.label).map((p, pi) => (
                       <Badge
                         key={pi}
