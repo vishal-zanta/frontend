@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { X, MessageSquareDot } from "lucide-react";
 import { useSockets } from "@/context/SocketContext";
+import notiSound from "@/assets/notification.wav";
 
 export default function FloatingChatButton({ isOpen, onClick }) {
   const { subscribe } = useSockets();
@@ -8,16 +9,25 @@ export default function FloatingChatButton({ isOpen, onClick }) {
 
   useEffect(() => {
     const unSub = subscribe("newMessage", (data) => {
-   
-      if (!isOpen) setIsUnreadPresent(true);
+      if (!isOpen) {
+        setIsUnreadPresent(true);
+    
+      }
     });
     return () => unSub();
   }, [subscribe, isOpen]);
 
   const handleClick = useCallback(() => {
-    setIsUnreadPresent(false); 
+    setIsUnreadPresent(false);
     onClick?.();
   }, [onClick]);
+
+  useEffect(()=> {
+    if(!isOpen && isUnreadPresent){
+          const audio = new Audio(notiSound);
+        audio.play();
+    }
+  },[isUnreadPresent, isOpen])
 
   return (
     <button
@@ -27,9 +37,16 @@ export default function FloatingChatButton({ isOpen, onClick }) {
         text-white transition-all duration-300 active:scale-90 relative
         ${isOpen ? "rotate-[360deg]" : "rotate-0"}`}
       title={isOpen ? "Close chat" : "Open chat"}
-      style={{ transition: "transform 0.4s cubic-bezier(0.34,1.56,0.64,1), background 0.2s" }}
+      style={{
+        transition:
+          "transform 0.4s cubic-bezier(0.34,1.56,0.64,1), background 0.2s",
+      }}
     >
-      {isOpen ? <X className="w-6 h-6" /> : <MessageSquareDot className="w-6 h-6" />}
+      {isOpen ? (
+        <X className="w-6 h-6" />
+      ) : (
+        <MessageSquareDot className="w-6 h-6" />
+      )}
 
       {/* Unread badge */}
       {isUnreadPresent && !isOpen && (
@@ -43,4 +60,3 @@ export default function FloatingChatButton({ isOpen, onClick }) {
     </button>
   );
 }
-
