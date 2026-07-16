@@ -5,6 +5,7 @@ import Chatbot from "@/components/Chatbot";
 import ChatWidget from "@/components/chats";
 import { usePortalProfile } from "@/hooks/usePortalProfile";
 import clsx from "clsx";
+import { SocketProvider } from "@/context/SocketContext";
 
 export default function PortalLayout({ children, role = "superadmin", isHideOverflow = false }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -21,7 +22,10 @@ export default function PortalLayout({ children, role = "superadmin", isHideOver
         </main>
       </div>
       {role === "citizen" && <Chatbot role={role} />}
+      <SocketProvider>
+
       <ChatWidget />
+      </SocketProvider>
     </div>
   );
 }

@@ -26,7 +26,7 @@ const buildMessageFormData = ({ conversationId, text, file }) => {
   return formData;
 };
 
-export default function MessageInput({ selectedUser }) {
+export default function MessageInput({ selectedUser, setAllMessages }) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const textareaRef = useRef(null);
@@ -36,7 +36,8 @@ export default function MessageInput({ selectedUser }) {
   const postMessageMutation = useMutation({
     mutationFn: postChatMessage,
     onSuccess: (data, variables) => {
-      qc.invalidateQueries({ queryKey: ["chat-messages"] });
+      setAllMessages((prev)=> [...prev, data?.data?.data]);
+      // qc.invalidateQueries({ queryKey: ["chat-messages"] });
       
     },
   });

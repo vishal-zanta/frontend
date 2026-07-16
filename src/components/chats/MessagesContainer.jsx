@@ -1,99 +1,127 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MessageSquareDot, Loader2 } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import { formatDate } from "@/utils/helpers";
-import {
-  useGetChatsMessagesInfinite,
-  usePutMarkMessagesAsRead,
-} from "@/hooks/query/useGetChats";
+import { usePutMarkMessagesAsRead } from "@/hooks/query/useGetChats";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/utils/constants";
-import socketIOClient from "socket.io-client";
 import { normalizeMessage } from "./useChatData";
-const token =
-  localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
-const link = `${import.meta.env.VITE_BASE_URL}?token=${token}`;
+import { useSockets } from "@/context/SocketContext";
+import { getConversationMessages } from "@/api/chats.api";
 
-const socket = socketIOClient(link);
+const LIMIT = 10;
 
-export default function MessagesContainer({ currentUserId, selectedUser }) {
+export default function MessagesContainer({
+  currentUserId,
+  selectedUser,
+  allMessages,
+  setAllMessages,
+}) {
   const conversationId = selectedUser?.conversationId;
+  const { subscribe } = useSockets();
+
+  // ── Pagination state ────────────────────────────────────────────────────────
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  // Guard against concurrent fetches for the same page
+  const fetchingPageRef = useRef(null);
+
+  // ── Socket messages (real-time additions) ──────────────────────────────────
   const [socketMessages, setSocketMessages] = useState([]);
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useGetChatsMessagesInfinite(
-      conversationId,
-      {},
-      {
-        enabled:
-          !!conversationId && !conversationId.includes("new_") ? true : false,
-      },
-    );
+  // ── Fetch a single page of messages ────────────────────────────────────────
+  const fetchMessages = async (page) => {
+    if (!conversationId || conversationId.includes("new_")) return;
+    if (fetchingPageRef.current === page) return;
+    fetchingPageRef.current = page;
 
-  // Flatten all pages — API returns oldest→newest per page, pages go 1→N (oldest first loaded)
-  // We reverse page order so older pages (higher page numbers) come first in the list
+    if (page === 1) {
+      setIsLoading(true);
+    } else {
+      setIsFetchingMore(true);
+    }
 
-  const allMessagesFromApi =
-    data?.pages
-      ?.slice()
-      .reverse()
-      .flatMap((page) => {
-        const arr = Array.isArray(page?.data?.data)
-          ? page.data.data
-          : page?.data?.data?.docs || page?.data?.docs || [];
-        return arr;
-      }) || [];
-  const messages = [
-    ...allMessagesFromApi,
-    ...socketMessages.filter(
-      (socketMsg) =>
-        !allMessagesFromApi.find((all) => all._id == socketMsg._id),
-    ),
-  ].map((m) => normalizeMessage(m, currentUserId));
+    try {
+      const res = await getConversationMessages(conversationId, {
+        page,
+        limit: LIMIT,
+      });
 
-  // ─── Mark as read after messages load ────────────────────────────────────
-  const queryClient = useQueryClient();
-  const readMutation = usePutMarkMessagesAsRead({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHATS_INFINTE] });
-    },
-  });
+      const rawDocs = res?.data?.data?.docs;
+
+      const pagination = res?.data?.data?.pagination;
+
+      const totalPages = pagination?.totalPages ?? null;
+      const isLast =
+        (pagination?.isLastPage ?? totalPages !== null)
+          ? page >= totalPages
+          : rawDocs.length < LIMIT;
+
+      setHasMore(!isLast);
+      setCurrentPage(page);
+
+      // Older pages are prepended; page-1 replaces everything
+      setAllMessages((prev) => (page === 1 ? rawDocs : [...rawDocs, ...prev]));
+    } catch (err) {
+      console.error("fetchMessages error", err);
+    } finally {
+      fetchingPageRef.current = null;
+      setIsLoading(false);
+      setIsFetchingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!conversationId) return;
+
+    setAllMessages([]);
+    setSocketMessages([]);
+    setCurrentPage(1);
+    setHasMore(false);
+    fetchingPageRef.current = null;
+    fetchMessages(1);
+  }, [conversationId]);
+
+  // ── Load next (older) page ─────────────────────────────────────────────────
+  const handleLoadOlder = () => {
+    if (!hasMore || isFetchingMore || isLoading) return;
+    fetchMessages(currentPage + 1);
+  };
+
+
+  const readMutation = usePutMarkMessagesAsRead();
 
   useEffect(() => {
     const handleNewMessage = (data) => {
-      setSocketMessages((prev) => [...prev, data.message]);
-      readMutation.mutate(selectedUser?.conversationId);
+      if (data.message.conversation === selectedUser?.conversationId) {
+        setSocketMessages((prev) => [...prev, data.message]);
+        readMutation.mutate(selectedUser?.conversationId);
+      }
     };
-    socket.onAny((event, ...args) => {
-      console.log(`New Event eventname -> ${event}`);
-    });
+    const unSub = subscribe("newMessage", handleNewMessage);
+    return () => unSub();
+  }, [readMutation, selectedUser?.conversationId, subscribe]);
 
-    socket.on("newMessage", handleNewMessage);
+  const messages = [
+    ...allMessages,
+    ...socketMessages.filter(
+      (sm) => !allMessages.find((m) => m._id === sm._id),
+    ),
+  ]
+    .map((m) => normalizeMessage(m, currentUserId))
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-    return () => {
-      socket.off("newMessage", handleNewMessage);
-    };
-  }, [readMutation, selectedUser?.conversationId]);
-
-  // console.log({ messages, socketMessages, allMessagesFromApi });
-
-  // useEffect(() => {
-  //   if (!isLoading && messages.length > 0 && conversationId) {
-  //     readMutation.mutate(conversationId);
-  //   }
-  // }, [isLoading, messages.length, conversationId]);
-
-  // Refs for scroll management
   const containerRef = useRef(null);
-  const topSentinelRef = useRef(null); // triggers load-more when visible
-  const bottomRef = useRef(null); // scroll anchor on initial load / conversation change
+  const topSentinelRef = useRef(null);
+  const bottomRef = useRef(null);
   const isInitialLoad = useRef(true);
   const prevScrollHeight = useRef(0);
 
-  // Auto-scroll to bottom on first load / conversation switch
   useEffect(() => {
     isInitialLoad.current = true;
-    setSocketMessages([]);
   }, [conversationId]);
 
   useEffect(() => {
@@ -103,64 +131,58 @@ export default function MessagesContainer({ currentUserId, selectedUser }) {
     }
   }, [isLoading, messages.length]);
 
-  // Smooth scroll to bottom when a new message is received / posted
   const lastMessageId = messages[messages.length - 1]?.id;
   const lastMessageIdRef = useRef(lastMessageId);
-
   useEffect(() => {
     if (
       conversationId &&
       lastMessageId &&
       lastMessageId !== lastMessageIdRef.current
     ) {
-      if (!isInitialLoad.current && !isFetchingNextPage) {
+      if (!isInitialLoad.current && !isFetchingMore) {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       }
       lastMessageIdRef.current = lastMessageId;
     } else if (lastMessageId) {
       lastMessageIdRef.current = lastMessageId;
     }
-  }, [lastMessageId, conversationId, isFetchingNextPage]);
+  }, [lastMessageId, conversationId, isFetchingMore]);
 
-  // Preserve scroll position when loading older messages
   useEffect(() => {
-    if (isFetchingNextPage && containerRef.current) {
+    if (isFetchingMore && containerRef.current) {
       prevScrollHeight.current = containerRef.current.scrollHeight;
     }
-  }, [isFetchingNextPage]);
+  }, [isFetchingMore]);
 
   useEffect(() => {
-    if (
-      !isFetchingNextPage &&
-      prevScrollHeight.current &&
-      containerRef.current
-    ) {
+    if (!isFetchingMore && prevScrollHeight.current && containerRef.current) {
       const newScrollHeight = containerRef.current.scrollHeight;
       containerRef.current.scrollTop =
         newScrollHeight - prevScrollHeight.current;
       prevScrollHeight.current = 0;
     }
-  }, [isFetchingNextPage, messages.length]);
+  }, [isFetchingMore, messages.length]);
 
-  // IntersectionObserver on top sentinel to trigger loading older messages
   useEffect(() => {
-    if (!hasNextPage || isFetchingNextPage) return;
+    if (!hasMore || isFetchingMore) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          fetchNextPage();
+          handleLoadOlder();
         }
       },
       { threshold: 0.1 },
     );
+
     const el = topSentinelRef.current;
     if (el) observer.observe(el);
     return () => {
       if (el) observer.unobserve(el);
     };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasMore, isFetchingMore, currentPage]);
 
-  // ─── Empty state (no conversation selected handled above in ChatArea) ─────
+  // ── Render ─────────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-3 text-slate-400">
@@ -196,18 +218,16 @@ export default function MessagesContainer({ currentUserId, selectedUser }) {
     grouped.push({ type: "message", data: msg, id: msg.id });
   });
 
-  // console.log({messages, grouped});
-
   return (
     <div
       ref={containerRef}
       className="flex-1 overflow-y-auto overscroll-contain scrollbar-thin px-4 py-4 space-y-2"
     >
-      {/* Top sentinel — 0 opacity trigger for IntersectionObserver */}
+      {/* Top sentinel — triggers IntersectionObserver to load older messages */}
       <div ref={topSentinelRef} className="h-1 opacity-0 w-full" />
 
       {/* Loading older messages spinner */}
-      {isFetchingNextPage && (
+      {isFetchingMore && (
         <div className="flex justify-center items-center py-3 gap-2 text-blue-900">
           <Loader2 className="w-4 h-4 animate-spin" />
           <span className="text-xs font-semibold">

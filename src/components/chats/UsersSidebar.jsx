@@ -1,12 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import SearchDebounced from "@/components/debounced/SearchDebounced";
 import UserItem from "./UserItem";
-import {
-  useGetChatsInfinte,
-  usePutMarkMessagesAsRead,
-} from "@/hooks/query/useGetChats";
-import { useGetProfile } from "@/hooks/query/useGetProfile";
-import { normalizedUserList } from "./useChatData";
+import { usePutMarkMessagesAsRead } from "@/hooks/query/useGetChats";
 import { Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/utils/constants";
@@ -17,13 +12,16 @@ export default function UsersSidebar({
   onSelect,
   visible,
   currentUserId,
+  // lifted conversation props
+  conversations = [],
+  isLoading = false,
+  isFetchingMore = false,
+  hasMore = false,
+  onLoadMore,
+  search = "",
+  onSearchChange,
 }) {
   const qc = useQueryClient();
-  const [search, setSearch] = useState("");
-
-  // Use useGetChatsInfinte query hook
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useGetChatsInfinte([search], { search, limit: 10 });
 
   const readMutation = usePutMarkMessagesAsRead({
     onSuccess: () => {
@@ -31,45 +29,28 @@ export default function UsersSidebar({
     },
   });
 
-  // Flatten infinite query pages and map to user info
-  const conversations =
-    data?.pages?.flatMap((page) => {
-      const docs = Array.isArray(page?.data?.data)
-        ? page?.data?.data
-        : page?.data?.data?.docs || page?.data?.docs || page?.docs || [];
-      return docs.filter(Boolean);
-    }) || [];
-
-  // De-duplicate by user ID
-  const uniqueConversations = normalizedUserList(conversations, currentUserId);
-  console.log({ currentUserId, conversations, uniqueConversations });
-
-  // IntersectionObserver trigger ref
-  const observerRef = useRef(null);
+  // ── IntersectionObserver: fires onLoadMore when the sentinel scrolls into view
+  const sentinelRef = useRef(null);
 
   useEffect(() => {
-    if (!hasNextPage || isFetchingNextPage) return;
+    if (!hasMore || isFetchingMore || isLoading) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          fetchNextPage();
+          onLoadMore?.();
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.1 }
     );
 
-    const currentTarget = observerRef.current;
-    if (currentTarget) {
-      observer.observe(currentTarget);
-    }
+    const el = sentinelRef.current;
+    if (el) observer.observe(el);
 
     return () => {
-      if (currentTarget) {
-        observer.unobserve(currentTarget);
-      }
+      if (el) observer.unobserve(el);
     };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasMore, isFetchingMore, isLoading, onLoadMore]);
 
   return (
     <div
@@ -82,7 +63,7 @@ export default function UsersSidebar({
         <h3 className="text-sm font-bold text-slate-800 mb-3">Conversations</h3>
         <SearchDebounced
           initialValue={search}
-          handleDebouncedChange={setSearch}
+          handleDebouncedChange={onSearchChange}
           placeholder="Search by name or email..."
         />
       </div>
@@ -104,15 +85,15 @@ export default function UsersSidebar({
               </div>
             ))}
           </div>
-        ) : uniqueConversations.length === 0 ? (
+        ) : conversations.length === 0 ? (
           <div className="p-8 text-center">
             <p className="text-sm text-slate-500">No users found</p>
           </div>
         ) : (
           <>
-            {uniqueConversations.map((user) => (
+            {conversations.map((user) => (
               <UserItem
-                key={user.id}
+                key={user._id}
                 user={user?.user}
                 selected={selectedUser?.conversationId === user?._id}
                 onClick={(clickedUser) => {
@@ -124,17 +105,16 @@ export default function UsersSidebar({
                   if ((user?.unreadCounts ?? 0) > 0) {
                     readMutation.mutate(user?._id);
                   }
-                  // }
                 }}
                 unreadCounts={user?.unreadCounts ?? 0}
               />
             ))}
 
-            {/* Observer trigger */}
-            <div ref={observerRef} className="h-1 opacity-0 w-full" />
+            {/* Sentinel — opacity-0, triggers IntersectionObserver */}
+            <div ref={sentinelRef} className="h-1 opacity-0 w-full" />
 
             {/* Loading next page spinner */}
-            {isFetchingNextPage && (
+            {isFetchingMore && (
               <div className="flex justify-center items-center py-4 text-blue-900 gap-2 text-xs font-semibold">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span>Loading more...</span>

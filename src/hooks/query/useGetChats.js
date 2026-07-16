@@ -88,9 +88,7 @@ export const useGetChatsMessagesInfinite = (
       return undefined;
     },
     initialPageParam: 1,
-    // maxPages: 1,                  // only ever cache/refetch 1 page at a time
-    // staleTime: 1000 * 60,         // 1 min — prevent refetch on every conversation switch
-    // refetchOnWindowFocus: false,
+
     enabled: !!conversationId,
     ...options,
   });
