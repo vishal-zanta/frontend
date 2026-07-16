@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { apiPermissionOptions } from "@/utils/constants";
 
 export default function UserManageTable({
   users = [],
@@ -57,9 +58,9 @@ export default function UserManageTable({
                   </Badge>}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{u.district}</td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap gap-1">
-                    {u.permissions.map((p, pi) => (
+                <td className="px-2  ">
+                  <div className="flex flex-wrap gap-1 px-2 py-3 max-h-20 overflow-y-auto ">
+                    {u.permissions.map((p)=> apiPermissionOptions.find(a=>a.value ===p)?.label).map((p, pi) => (
                       <Badge
                         key={pi}
                         variant="outline"
