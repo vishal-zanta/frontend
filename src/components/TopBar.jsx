@@ -329,7 +329,7 @@ export default function TopBar({
         )}
 
         {/* Profile switcher for officer and CRM */}
-        {profiles && (
+        {/* {profiles && (
           <div className="relative" ref={switcherRef}>
             <button
               onClick={() => setShowSwitcher(!showSwitcher)}
@@ -369,7 +369,7 @@ export default function TopBar({
               </div>
             )}
           </div>
-        )}
+        )} */}
 
         {!isSuperAdmin && (
           <div className="relative" ref={notifRef}>

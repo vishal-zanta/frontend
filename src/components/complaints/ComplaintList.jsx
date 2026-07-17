@@ -159,7 +159,7 @@ export default function ComplaintList({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-thin max-h-[600px] divide-y divide-border">
+      <div className="flex-1 overflow-y-auto scrollbar-thin max-h-[600px] divide-y divide-border overscroll-contain">
         <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
           {complaints.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-muted-foreground">

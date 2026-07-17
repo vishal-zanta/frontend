@@ -4,7 +4,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
 
 const DesignationTable = ({ designations = [], setDialog }) => {
-  const nonEditable = ["Call Centre Supervisor", "Call Centre Executive", "Admin"];
+  const nonEditable = [
+    "Call Centre Supervisor", "Call Centre Executive", "Admin"
+  ];
   return (
     <table className="w-full text-sm">
       <thead className="bg-muted/50">

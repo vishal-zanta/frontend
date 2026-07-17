@@ -33,6 +33,7 @@ export const QUERY_KEYS = {
   QUERY_KEY_OFFICER_DASHBOARD: "officer-dashboard",
   MIS_REPORTS: "mis-reports",
   MIS_STATS: "mis-stats",
+  SHIFTS: "shifts",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
