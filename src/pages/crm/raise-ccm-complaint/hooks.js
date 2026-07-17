@@ -44,7 +44,7 @@ export const useRaiseComplaintData = (lang) => {
     }));
 
   const affectedBeneficiaryOptions = allNatures
-    .filter((n) => n.type === "Public Impact")
+    .filter((n) => n.type === "Affected Beneficiaries")
     .map((n) => ({
       label: lang === "hi" && n.titleHindi ? n.titleHindi : n.title,
       value: n._id,
