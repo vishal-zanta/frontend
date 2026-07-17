@@ -2,11 +2,34 @@ import React from "react";
 import { Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CRM_AGENTS } from "@/lib/biharData";
+import { useAuth } from "@/context/AuthContext";
 
-export default function MyShiftDetails() {
-  const myAgent =
-    CRM_AGENTS.find((a) => a.name === "Priya Sharma") || CRM_AGENTS[0];
-    
+export default function MyShiftDetails({ agentViewShift }) {
+
+  const { profile } = useAuth();
+
+  const formatShift = (shift) => {
+    if (!shift) return "-";
+    let datePart = "";
+    if (shift.date) {
+      const d = new Date(shift.date);
+      if (!isNaN(d.getTime())) {
+        datePart = d.toLocaleDateString("en-IN");
+      } else {
+        datePart = shift.date;
+      }
+    }
+    const timePart = shift.time || "";
+    if (datePart && timePart) return `${datePart} | ${timePart}`;
+    return datePart || timePart || "-";
+  };
+
+  const agentName = profile?.name || "-";
+  const agentId = profile?.userCode ||"-";
+  const shiftText = agentViewShift ? formatShift(agentViewShift) : "-";
+  const currentStatus = agentViewShift ? "-" : "-";
+  const callsToday = agentViewShift ? 0 : 0;
+  const resolvedToday = agentViewShift ? 0 : 0;
 
   return (
     <>
@@ -26,39 +49,39 @@ export default function MyShiftDetails() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">Agent Name</div>
-            <div className="font-medium">{myAgent.name}</div>
+            <div className="font-medium">{agentName}</div>
           </div>
           <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">Agent ID</div>
-            <div className="font-mono text-sm font-medium">{myAgent.id}</div>
+            <div className="font-mono text-sm font-medium">{agentId}</div>
           </div>
           <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">Shift</div>
-            <div className="font-medium">{myAgent.shift}</div>
+            <div className="font-medium">{shiftText}</div>
           </div>
           <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">Current Status</div>
             <Badge
               variant="outline"
               className={`text-xs ${
-                myAgent.status === "Available"
+                currentStatus === "Available"
                   ? "bg-emerald-50 text-emerald-700"
-                  : myAgent.status === "On Call"
+                  : currentStatus === "On Call"
                     ? "bg-amber-50 text-amber-700"
                     : "bg-slate-50 text-slate-500"
               }`}
             >
-              {myAgent.status}
+              {currentStatus}
             </Badge>
           </div>
           <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">Calls Today</div>
-            <div className="font-medium">{myAgent.callsToday}</div>
+            <div className="font-medium">{callsToday}</div>
           </div>
           <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">Resolved Today</div>
             <div className="font-medium text-emerald-600">
-              {myAgent.resolvedToday}
+              {resolvedToday}
             </div>
           </div>
         </div>

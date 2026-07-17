@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import MyShiftDetails from "./MyShiftDetails";
 import AgentStatusBoard from "./AgentStatusBoard";
 
 export default function AgentViewShift() {
+  const [agentViewShift, setAgentView] = useState(null);
   return (
     <div className="p-6 space-y-6">
       <div>
@@ -13,9 +14,9 @@ export default function AgentViewShift() {
         </p>
       </div>
 
-      <MyShiftDetails />
+      <MyShiftDetails agentViewShift={agentViewShift} />
 
-      <AgentStatusBoard isSupervisor={false} />
+      <AgentStatusBoard isSupervisor={false} setAgentView={setAgentView} />
     </div>
   );
 }
