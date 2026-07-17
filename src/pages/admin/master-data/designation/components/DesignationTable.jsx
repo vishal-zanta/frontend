@@ -26,25 +26,27 @@ const DesignationTable = ({ designations = [], setDialog }) => {
                 {d.level}
               </Badge>
             </td>
-            <td className="px-4 py-2.5 text-center">
-              <div className="flex gap-1 justify-center">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setDialog({ type: "edit", item: d })}
-                >
-                  <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-red-600 hover:text-red-700"
-                  onClick={() => setDialog({ type: "delete", item: d })}
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </Button>
-              </div>
-            </td>
+            {d.designationEnglish !== "Admin" && (
+              <td className="px-4 py-2.5 text-center">
+                <div className="flex gap-1 justify-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setDialog({ type: "edit", item: d })}
+                  >
+                    <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-600 hover:text-red-700"
+                    onClick={() => setDialog({ type: "delete", item: d })}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
