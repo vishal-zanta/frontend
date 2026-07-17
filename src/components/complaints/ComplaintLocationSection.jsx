@@ -28,7 +28,7 @@ console.log({addressVillageOrWard,
         </div>
         <div>
           <span className="text-muted-foreground block">District</span>
-          <span className="font-semibold text-foreground">{addressDistrict?.name}</span>
+          <span className="font-semibold text-foreground">{addressDistrict}</span>
         </div>
         <div>
           <span className="text-muted-foreground block">State</span>
