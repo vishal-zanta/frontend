@@ -13,7 +13,7 @@ const LoaderErrWrapper = ({ isLoading, error, children }) => {
   if (error) {
     return (
       <div className="flex items-center justify-center h-full min-h-40">
-        <p className="text-red-500 text-lg font-semibold">{error?.message || error}</p>
+        <p className="text-red-500 text-lg font-semibold">{ error?.response?.data?.message  ||error?.message || error}</p>
       </div>
     );
   }

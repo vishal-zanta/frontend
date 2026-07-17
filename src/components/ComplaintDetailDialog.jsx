@@ -131,6 +131,7 @@ function getServiceName(serviceId) {
 
 export function ComplaintId({ id, className = "", complaint }) {
   const [open, setOpen] = useState(false);
+  // console.log({complaint, id})
   return (
     <>
       <button
@@ -235,7 +236,7 @@ export function ComplaintDetailDialog({
         source: activeComplaint.source || "online",
         citizenName: activeComplaint.citizenInfo?.fullName || "-",
         mobile: activeComplaint.citizenInfo?.mobile || "-",
-        districtName: activeComplaint.address?.district || "-",
+        districtName: activeComplaint.address?.district?.name || "-",
         ulbName: activeComplaint.address?.subdivision || "-",
         ward: activeComplaint.address?.villageOrWard || "-",
         createdDate: activeComplaint.createdAt,
