@@ -15,6 +15,7 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import RhfWrapper from "@/components/RhfWrapper";
+import { officerTaggingSchema } from "./schema";
 
 import { useGetOfficerTag } from "./hooks";
 import { useGetSubservices } from "../master-data/hooks";
@@ -245,6 +246,8 @@ export default function OfficerTagging() {
             title={editItem ? "Edit Tagging" : "Tag New Officer"}
           >
             <RhfWrapper
+              isValidation={true}
+              validationSchema={officerTaggingSchema}
               initialValues={
                 editItem
                   ? {

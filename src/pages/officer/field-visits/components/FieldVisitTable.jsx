@@ -1,9 +1,9 @@
 import React from "react";
-import { MapPin, Camera, Calendar, CheckCircle2, Eye, Pencil } from "lucide-react";
+import { MapPin, Camera, Calendar, Pencil } from "lucide-react";
 import { FieldVisitId, ComplaintId } from "@/components/ComplaintDetailDialog";
 import { PriorityBadge } from "@/components/Badges";
 import { Badge } from "@/components/ui/badge";
-import { getFieldVisitStatusClass } from "@/utils/constants";
+import { getFieldVisitStatusClass, IMG_BASE_URL } from "@/utils/constants";
 
 export default function FieldVisitTable({ filtered = [], onEdit, onView , isHideAction = false}) {
   return (
@@ -13,7 +13,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
           <tr className="text-left text-xs text-muted-foreground">
             <th className="px-4 py-3 font-medium">Visit ID</th>
             <th className="px-4 py-3 font-medium">Complaint ID</th>
-            <th className="px-4 py-3 font-medium">Service</th>
+            <th className="px-4 py-3 font-medium min-w-40">Service</th>
             <th className="px-4 py-3 font-medium">Location</th>
             <th className="px-4 py-3 font-medium">Scheduled</th>
             <th className="px-4 py-3 font-medium">Priority</th>
@@ -58,7 +58,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                   {fv?.grievance?.address?.state || fv?.grievance?.address?.district ? (
                     <>
                       <MapPin className="w-3 h-3 inline mr-1" />
-                      {fv?.grievance?.address?.district || "-"},{" "}
+                      {fv?.grievance?.address?.district?.name || "-"},{" "}
                       {fv?.grievance?.address?.state || "-"}
                     </>
                   ) : (
@@ -86,10 +86,20 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                 </td>
                 <td className="px-4 py-3">
                   {fv.grievance?.geotaggedImages && fv.grievance.geotaggedImages.length > 0 ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    (() => {
+                      const img = fv.grievance.geotaggedImages[0];
+                      const url = typeof img === "string" ? img : (img?.url || img?.path || "");
+                      const displayUrl = url.startsWith("http") ? url : (IMG_BASE_URL + url);
+                      return (
+                        <a href={displayUrl} target="_blank" rel="noopener noreferrer" className="hover:opacity-80 inline-block">
+                          <Camera className="w-4 h-4 text-emerald-500" />
+                        </a>
+                      );
+                    })()
                   ) : (
-                    <Camera className="w-4 h-4 text-muted-foreground" />
+                    <span>-</span>
                   )}
+                  
                 </td>
                 <td className="px-4 py-3">
                   <Badge

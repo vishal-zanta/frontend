@@ -37,7 +37,7 @@ export default function Form({
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-h-[400px]">
       <RhfInput
         label="Name"
         name="name"

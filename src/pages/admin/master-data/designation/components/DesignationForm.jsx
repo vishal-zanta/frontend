@@ -66,7 +66,7 @@ const DesignationForm = ({formData,setFormData,errors,setErrors}) => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {["L1", "L2", "Zone", "ULB", "Division", "SUDA"].map((l) => (
+                {["L1", "L2", "Zone", "ULB", "Division", "SUDA", "CCE", "Supervisor", "Admin"].map((l) => (
                   <SelectItem key={l} value={l}>
                     {l}
                   </SelectItem>

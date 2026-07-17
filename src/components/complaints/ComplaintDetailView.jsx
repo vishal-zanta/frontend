@@ -221,7 +221,7 @@ export default function ComplaintDetailView({
   const preferredLanguage = c.citizenInfo?.preferredLanguage || "-";
 
   const addressState = c.address?.state || "-";
-  const addressDistrict = c.address?.district || c.districtName || "-";
+  const addressDistrict = c.address?.district?.name || c.address?.district || c.districtName || "-";
   const addressSubdivision = c.address?.subdivision || "-";
   const addressVillageOrWard = c.address?.villageOrWard || c.ward || "-";
   const addressPinCode = c.address?.pinCode || "-";

@@ -622,7 +622,7 @@ export function FieldVisitDetailDialog({
         "-"
       : rawVisit.ward || "-",
     district: isApiObject
-      ? rawVisit.address?.district ||
+      ? rawVisit.address?.district?.name ||rawVisit.address?.district || 
         rawVisit.grievance?.address?.district ||
         "-"
       : rawVisit.district || "-",

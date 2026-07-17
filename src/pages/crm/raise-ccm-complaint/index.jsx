@@ -378,7 +378,7 @@ function FormWizard({
       </div>
 
       {/* Buttons Footer */}
-      <div className="flex justify-between items-center mt-6 pt-4 border-t border-border">
+      <div className="flex justify-center gap-4 items-center mt-6 pt-4 border-t border-border">
         <div>
           {step > 1 && (
             <Button
