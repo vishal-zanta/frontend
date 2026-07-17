@@ -42,8 +42,8 @@ export function SocketProvider({ children, url }) {
 
       // single onAny dispatcher fans out to all subscribers, registered once
       socket.onAny((eventType, payload) => {
-        console.log(`[socket] event -> ${eventType}`, payload);
         const callbacks = listenersRef.current.get(eventType);
+        console.log(`[socket] event -> ${eventType}`, payload, callbacks);
         if (!callbacks) return;
         callbacks.forEach((cb) => {
           try {
@@ -82,6 +82,7 @@ export function SocketProvider({ children, url }) {
   }, []);
 
   const subscribe = useCallback((eventType, callback) => {
+    // console.log("Subcribe : ", eventType , callback);
     if (!listenersRef.current.has(eventType)) {
       listenersRef.current.set(eventType, new Set());
     }

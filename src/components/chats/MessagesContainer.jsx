@@ -96,6 +96,7 @@ export default function MessagesContainer({
 
   useEffect(() => {
     const handleNewMessage = (data) => {
+      // console.log("New Message Arrived ", data, selectedUser);
       if (data.message.conversation === selectedUser?.conversationId) {
         setSocketMessages((prev) => [...prev, data.message]);
         readMutation.mutate(selectedUser?.conversationId);
@@ -181,6 +182,8 @@ export default function MessagesContainer({
       if (el) observer.unobserve(el);
     };
   }, [hasMore, isFetchingMore, currentPage]);
+
+  // console.log("CONVERSATION", {allMessages, socketMessages});
 
   // ── Render ─────────────────────────────────────────────────────────────────
   if (isLoading) {

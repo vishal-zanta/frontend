@@ -10,6 +10,7 @@ export default function ChatArea({
   onBack,
   sharedState,
   setSharedState,
+  setSelectedUser,
 }) {
   const [allMessages, setAllMessages] = useState([]);
   if (!selectedUser) {
@@ -41,6 +42,7 @@ export default function ChatArea({
       />
       <MessageInput
         selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
         // allMessages={allMessages}
         setAllMessages={setAllMessages}
       />

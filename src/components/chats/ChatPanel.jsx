@@ -84,11 +84,24 @@ export default function ChatPanel({ onClose, currentUserId }) {
   }, [hasMore, isFetchingMore, isLoading, currentPage, fetchConversations]);
 
   const uniqueConversations = normalizedUserList(conversations, currentUserId);
+  // console.log("CONVERSATION",{currentUserId, conversations, uniqueConversations})
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleSelectUser = (user) => {
+    // console.log({conversations, user});
     setSelectedUser(user);
     setMobileView("chat");
+    // set conversation unread count to 0
+    setConversations((prev) =>
+      prev.map((item) =>
+        item._id === user.conversationId
+          ? {
+              ...item,
+              unreadCounts: { ...item.unreadCounts, [currentUserId]: 0 },
+            }
+          : item,
+      ),
+    );
   };
 
   const handleBack = () => {
@@ -147,6 +160,7 @@ export default function ChatPanel({ onClose, currentUserId }) {
         >
           <ChatArea
             selectedUser={selectedUser}
+            setSelectedUser={setSelectedUser}
             currentUserId={currentUserId}
             onBack={handleBack}
             sharedState={sharedState}
