@@ -5,7 +5,7 @@ import CreatableSelect from "react-select/creatable";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-const buildStyles = (hasError, disabled, colors) => ({
+const buildStyles = (hasError, disabled, colors, isMulti) => ({
   control: (provided, state) => ({
     ...provided,
     borderColor: hasError
@@ -20,7 +20,6 @@ const buildStyles = (hasError, disabled, colors) => ({
       : "none",
     borderRadius: "var(--radius)",
     minHeight: "36px",
-    height: "36px",
     backgroundColor: disabled ? "#f3f4f6" : "#FFFFFF",
     cursor: disabled ? "not-allowed" : "default",
     "&:hover": {
@@ -33,11 +32,13 @@ const buildStyles = (hasError, disabled, colors) => ({
   }),
   valueContainer: (provided) => ({
     ...provided,
-    padding: "0px 12px",
-    height: "34px",
+    padding: "4px 12px",
+    minHeight: "34px",
     display: "flex",
+    flexWrap: "wrap",
     alignItems: "center",
-    overflowY: "auto",
+    maxHeight: "120px",
+    overflowY: isMulti ? "auto" : "hidden",
   }),
   menu: (provided) => ({
     ...provided,
@@ -154,7 +155,11 @@ export default function RhfSelect({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => {
-        const styles = buildStyles(!!error, disabled, colors);
+        const styles = buildStyles(!!error, disabled, colors, isMulti);
+
+        const selectOptions = isMulti && options.length > 0
+          ? [{ label: "Select All", value: "SELECT_ALL" }, ...options]
+          : options;
 
         const toOption = (val) =>
           options.find((o) => o.value === val) ?? { label: val, value: val };
@@ -170,7 +175,18 @@ export default function RhfSelect({
         const handleChange = (selected) => {
           if (isMulti) {
             const arr = selected ?? [];
-            field.onChange(arr.map((o) => o.value));
+            const selectedValues = arr.map((o) => o.value);
+            if (selectedValues.includes("SELECT_ALL")) {
+              const allValues = options.map((o) => o.value);
+              const previouslySelectedCount = (field.value ?? []).length;
+              if (previouslySelectedCount === allValues.length) {
+                field.onChange([]);
+              } else {
+                field.onChange(allValues);
+              }
+            } else {
+              field.onChange(selectedValues);
+            }
           } else {
             field.onChange(selected?.value ?? "");
           }
@@ -178,7 +194,7 @@ export default function RhfSelect({
 
         const commonProps = {
           inputId: name,
-          options,
+          options: selectOptions,
           placeholder: placeholder ?? label ?? "Select...",
           isDisabled: disabled,
           isMulti: isMulti,

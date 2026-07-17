@@ -245,6 +245,7 @@ export function ComplaintDetailDialog({
           activeComplaint.classification?.subService?.service?.title || "-",
         subserviceName:
           activeComplaint.classification?.subService?.title || "-",
+        subject: activeComplaint.classification?.subject || "-",
         description: activeComplaint.evidence?.details || "-",
         l1OfficerName: activeComplaint.l1Officer?.name || "Unassigned",
         l1Officer:
@@ -331,6 +332,16 @@ export function ComplaintDetailDialog({
                   Description
                 </div>
                 <p className="text-sm">{unifiedComplaint.description}</p>
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground mb-1">
+                  Subject
+                </div>
+                <p className="text-sm">
+                  {unifiedComplaint.subject ||
+                    unifiedComplaint.classification?.subject ||
+                    "-"}
+                </p>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -405,7 +405,28 @@ export default function Sidebar({
 }) {
   const config = roleConfig[role] || roleConfig.superadmin;
   const overrides = profileLabelOverrides[role]?.[profile] || {};
-const { hasPermission} = useAuth();
+  const { hasPermission } = useAuth();
+
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedScrollTop = sessionStorage.getItem("sidebar-scroll-position");
+      if (savedScrollTop && navRef.current) {
+        requestAnimationFrame(() => {
+          if (navRef.current) {
+            navRef.current.scrollTop = parseInt(savedScrollTop, 10);
+          }
+        });
+      }
+    }
+  }, []);
+
+  const handleScroll = (e) => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("sidebar-scroll-position", e.currentTarget.scrollTop);
+    }
+  };
 
   return (
     <>
@@ -446,7 +467,11 @@ const { hasPermission} = useAuth();
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto scrollbar-thin py-3 px-3">
+          <nav
+            ref={navRef}
+            onScroll={handleScroll}
+            className="flex-1 overflow-y-auto scrollbar-thin py-3 px-3"
+          >
             {config.sections.map((section, si) => {
               const visibleItems = section.items.filter((item) =>
                 hasPermission(item.permissions)

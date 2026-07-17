@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import FormSection from "./FormSection";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
-// import { useGetUlbs } from "@/pages/admin/master-data/hooks";
 import { useFormContext, useWatch } from "react-hook-form";
+import subDivisionsData from "@/utils/sub-divisions.json";
 
 export default function AddressSection({
   t,
@@ -51,26 +51,24 @@ export default function AddressSection({
 }
 
 const District_SubDivision = ({ t, demographyLoading, allDemography }) => {
-  // const { resetField } = useFormContext();
-  // const district = useWatch({ name: "address.district" });
-  // const API_PARAMS = { page: 1, limit: 500, district, select:"name,nameHindi" };
-  // const { data, isLoading, isRefetching, isFetching, error } = useGetUlbs(
-  //   [API_PARAMS],
-  //   API_PARAMS,
-  //   !!district,
-  // );
-  // const options = (data?.data?.data?.docs || []).map((v) => ({
-  //   label: t(v.name, v.nameHindi),
-  //   value: v.name,
-  // }));
-  // // console.log({ options, district });
-  // const loading = isLoading || isFetching || isRefetching;
-  // useEffect(() => {
-  //   // console.log("District changed", district);
-  //   if (district) {
-  //     resetField("address.subdivision", "");
-  //   }
-  // }, [district]);
+  const { resetField } = useFormContext();
+  const districtValue = useWatch({ name: "address.district" });
+
+  useEffect(() => {
+    if (districtValue) {
+      resetField("address.subdivision", "");
+    }
+  }, [districtValue, resetField]);
+
+  const selectedDistrictObj = allDemography?.find((d) => d.value === districtValue);
+  const districtLabel = selectedDistrictObj?.name;
+
+  const rawSubdivisions = districtLabel ? subDivisionsData[districtLabel] || [] : [];
+  const subdivisionOptions = rawSubdivisions.map((sub) => ({
+    label: sub,
+    value: sub,
+  }));
+
   return (
     <>
       <RhfSelect
@@ -85,15 +83,17 @@ const District_SubDivision = ({ t, demographyLoading, allDemography }) => {
         options={allDemography}
         disabled={demographyLoading}
       />
-      <RhfInput
+      <RhfSelect
         name="address.subdivision"
         label={t("Subdivision", "उपखंड")}
         placeholder={
-          t("e.g. Danapur", "जैसे दानापुर")
+          !districtValue
+            ? t("Select District first", "पहले ज़िला चुनें")
+            : t("e.g. Danapur", "जैसे दानापुर")
         }
         required
-  
-  
+        options={subdivisionOptions}
+        disabled={!districtValue}
       />
     </>
   );

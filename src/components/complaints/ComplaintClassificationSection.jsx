@@ -1,16 +1,13 @@
 import React from "react";
 
-export default function ComplaintClassificationSection({ departmentText, subjectText, occurrenceDate }) {
+export default function ComplaintClassificationSection({ departmentText, occurrenceDate }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs bg-muted/20 p-3 rounded-lg border border-border">
       <div>
         <span className="text-muted-foreground block font-medium">Department</span>
         <span className="font-semibold text-foreground">{departmentText}</span>
       </div>
-      <div>
-        <span className="text-muted-foreground block font-medium">Subject</span>
-        <span className="font-semibold text-foreground truncate block">{subjectText}</span>
-      </div>
+     
       <div>
         <span className="text-muted-foreground block font-medium">Occurrence Date</span>
         <span className="font-semibold text-foreground">{occurrenceDate}</span>

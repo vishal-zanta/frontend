@@ -18,15 +18,20 @@ import RhfWrapper from "@/components/RhfWrapper";
 import { officerTaggingSchema } from "./schema";
 
 import { useGetOfficerTag } from "./hooks";
-import { useGetSubservices } from "../master-data/hooks";
+import { useGetDemographics } from "../master-data/hooks";
 import { useGetUsers } from "../user-management/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import subDivisionsData from "@/utils/sub-divisions.json";
 import {
   postOfficerTagging,
   putOfficerTagging,
   deleteOfficerTagging,
 } from "./api";
-import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import {
+  getErrorToast,
+  getSuccessToast,
+  USER_ROLES_EXECULDED,
+} from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 
 export default function OfficerTagging() {
@@ -50,38 +55,35 @@ export default function OfficerTagging() {
   const docs = taggingsApiData?.data?.data?.docs || [];
   const totalPages = taggingsApiData?.data?.data?.pagination?.totalPages || 1;
 
-  const { data: subservicesData } = useGetSubservices(
-    [1, 100],
-    { page: 1, limit: 100 },
-    true,
-  );
-  const subservicesOptions = (subservicesData?.data?.data?.docs || []).map(
-    (s) => ({
-      label: s.title || s.name || "",
-      value: s._id,
-    }),
-  );
+  const { data: demographyData } = useGetDemographics([], { page: 1, limit: 100 });
+  const demographyDocs = demographyData?.data?.data?.docs || [];
 
-  const { data: usersApiDataUntagged } = useGetUsers([1, 100, "untagged"], {
+  const { data: usersApiDataUntagged } = useGetUsers([1, 200, "untagged"], {
     page: 1,
-    limit: 100,
+    limit: 200,
     untagged: true,
   });
-  const userOptionsUnTagged = (
-    usersApiDataUntagged?.data?.data?.docs || []
-  ).map((u) => ({
-    label: `${u.name} (${u.role?.designationEnglish || ""})`,
-    value: u._id,
-  }));
-  const { data: usersApiData } = useGetUsers([1, 100], {
+  const userOptionsUnTagged = (usersApiDataUntagged?.data?.data?.docs || [])
+    .filter(
+      (u) => !USER_ROLES_EXECULDED.includes(u.role?.designationEnglish || ""),
+    )
+    .map((u) => ({
+      label: `${u.name} (${u.role?.designationEnglish || ""})`,
+      value: u._id,
+    }));
+  const { data: usersApiData } = useGetUsers([1, 200], {
     page: 1,
-    limit: 100,
+    limit: 200,
     // untagged: true,
   });
-  const userOptions = (usersApiData?.data?.data?.docs || []).map((u) => ({
-    label: `${u.name} (${u.role?.designationEnglish || ""})`,
-    value: u._id,
-  }));
+  const userOptions = (usersApiData?.data?.data?.docs || [])
+    .filter(
+      (u) => !USER_ROLES_EXECULDED.includes(u.role?.designationEnglish || ""),
+    )
+    .map((u) => ({
+      label: `${u.name} (${u.role?.designationEnglish || ""})`,
+      value: u._id,
+    }));
 
   const filtered = docs.filter(
     (t) =>
@@ -142,11 +144,10 @@ export default function OfficerTagging() {
   const handleFormSubmit = (formData) => {
     const payload = {
       officer: formData.officer,
+      service: formData.service,
       services: formData.services,
-      wards: formData.wards
-        .split(",")
-        .map((w) => w.trim())
-        .filter(Boolean),
+      district: formData.district,
+      wards: formData.wards,
     };
 
     if (editItem) {
@@ -231,7 +232,6 @@ export default function OfficerTagging() {
         {/* Add tagging form */}
         <QuickTagOfficer
           officers={userOptionsUnTagged}
-          subservices={subservicesOptions}
           handleSaveTagging={handleQuickSave}
         />
 
@@ -250,17 +250,52 @@ export default function OfficerTagging() {
               validationSchema={officerTaggingSchema}
               initialValues={
                 editItem
-                  ? {
-                      officer: editItem.officer?._id || editItem.officer || "",
-                      services: (editItem.services || []).map(
-                        (s) => s._id || s,
-                      ),
-                      wards: (editItem.wards || []).join(", "),
-                    }
+                  ? (() => {
+                      const firstSubservice = editItem.services?.[0];
+                      let initialServiceId = [];
+                      if (editItem.service) {
+                        initialServiceId = Array.isArray(editItem.service)
+                          ? editItem.service.map((s) => s._id || s)
+                          : [editItem.service?._id || editItem.service];
+                      } else if (editItem.services?.length > 0) {
+                        const parentIds = editItem.services.map((s) =>
+                          typeof s?.service === "object" ? s.service?._id : s?.service
+                        ).filter(Boolean);
+                        initialServiceId = [...new Set(parentIds)];
+                      }
+
+                      let initialDistrictId = editItem.district?._id || editItem.district || "";
+                      if (!initialDistrictId) {
+                        const firstWard = editItem.wards?.[0];
+                        if (firstWard) {
+                          const districtName = Object.keys(subDivisionsData).find(districtKey =>
+                            subDivisionsData[districtKey].includes(firstWard)
+                          );
+                          if (districtName) {
+                            const matchingDoc = demographyDocs.find(
+                              (d) => d.name?.toLowerCase() === districtName.toLowerCase()
+                            );
+                            if (matchingDoc) {
+                              initialDistrictId = matchingDoc._id;
+                            }
+                          }
+                        }
+                      }
+
+                      return {
+                        officer: editItem.officer?._id || editItem.officer || "",
+                        service: initialServiceId,
+                        services: (editItem.services || []).map((s) => s._id || s),
+                        district: initialDistrictId,
+                        wards: editItem.wards || [],
+                      };
+                    })()
                   : {
                       officer: "",
+                      service: [],
                       services: [],
-                      wards: "",
+                      district: "",
+                      wards: [],
                     }
               }
               onSubmit={handleFormSubmit}
@@ -269,7 +304,6 @@ export default function OfficerTagging() {
                 isEdit={!!editItem}
                 isLoading={postMutation.isPending || putMutation.isPending}
                 userOptions={userOptions}
-                subservicesOptions={subservicesOptions}
                 onCancel={() => {
                   setDialogOpen(false);
                   setEditItem(null);

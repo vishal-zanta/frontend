@@ -25,6 +25,7 @@ export default function ComplaintList({
 }) {
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedFeedback, setSelectedFeedback] = useState("");
   const {
     data,
     isLoading,
@@ -32,7 +33,12 @@ export default function ComplaintList({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGetComplaintsOfOfiicer({ limit: 10, search, status: selectedStatus || undefined });
+  } = useGetComplaintsOfOfiicer({
+    limit: 10,
+    search,
+    status: selectedStatus || undefined,
+    feedback: selectedFeedback !== "" ? selectedFeedback : undefined,
+  });
   // console.log({selected})
   const complaints = useMemo(() => {
     return (
@@ -105,7 +111,7 @@ export default function ComplaintList({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="relative h-8 w-8 p-0 cursor-pointer">
                 <Filter className="w-4 h-4" />
-                {selectedStatus && (
+                {(selectedStatus || selectedFeedback !== "") && (
                   <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
                 )}
               </Button>
@@ -137,14 +143,40 @@ export default function ComplaintList({
                   })}
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
-              {selectedStatus && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <span>Feedback</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="w-44">
+                  <DropdownMenuItem
+                    onClick={() => setSelectedFeedback("")}
+                    className={selectedFeedback === "" ? "font-semibold bg-accent text-accent-foreground" : ""}
+                  >
+                    All
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => setSelectedFeedback("true")}
+                    className={selectedFeedback === "true" ? "font-semibold bg-accent text-accent-foreground" : ""}
+                  >
+                    Feedback Done
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setSelectedFeedback("false")}
+                    className={selectedFeedback === "false" ? "font-semibold bg-accent text-accent-foreground" : ""}
+                  >
+                    Feedback Left
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              {(selectedStatus || selectedFeedback !== "") && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => setSelectedStatus("")}
+                    onClick={() => { setSelectedStatus(""); setSelectedFeedback(""); }}
                     className="text-destructive focus:text-destructive cursor-pointer"
                   >
-                    Clear Filter
+                    Clear Filters
                   </DropdownMenuItem>
                 </>
               )}

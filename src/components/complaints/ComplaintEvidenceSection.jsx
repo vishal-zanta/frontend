@@ -1,7 +1,7 @@
 import React from "react";
 import { IMG_BASE_URL } from "@/utils/constants";
 
-export default function ComplaintEvidenceSection({ description, attachments, geotaggedImages }) {
+export default function ComplaintEvidenceSection({ description, attachments, geotaggedImages, subjectText }) {
   return (
     <>
       {/* Description */}
@@ -9,6 +9,11 @@ export default function ComplaintEvidenceSection({ description, attachments, geo
         <div className="text-xs text-muted-foreground mb-1 font-semibold">Description / Details</div>
         <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{description}</p>
       </div>
+      <div className="bg-muted/50 rounded-lg p-3">
+        <div className="text-xs text-muted-foreground mb-1 font-semibold">Subject</div>
+        <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{subjectText}</p>
+      </div>
+
 
       {/* Attachments */}
       {attachments.length > 0 && (

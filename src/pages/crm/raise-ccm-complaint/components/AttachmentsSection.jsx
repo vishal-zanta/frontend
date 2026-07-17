@@ -12,6 +12,9 @@ export default function AttachmentsSection({
 }) {
   return (
     <FormSection title={t("Attachments", "संलग्नक")}>
+       <p className="text-xs text-muted-foreground mb-3">
+        Allowed file types: Images, Videos, Audio. Max size: 10MB per file.
+      </p>
       <input
         ref={fileInputRef}
         type="file"

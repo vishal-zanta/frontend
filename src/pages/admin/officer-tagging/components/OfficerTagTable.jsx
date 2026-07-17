@@ -11,8 +11,8 @@ export default function OfficerTagTable({ tagging = [], setEditItem, setDialog, 
           <tr className="text-left text-xs text-muted-foreground">
             <th className="px-4 py-3 font-medium">Officer</th>
             <th className="px-4 py-3 font-medium">Designation</th>
-            <th className="px-4 py-3 font-medium">Sub-services</th>
-            <th className="px-4 py-3 font-medium">Wards</th>
+            <th className="px-4 py-3 font-medium min-w-60">Sub-services</th>
+            <th className="px-4 py-3 font-medium min-w-48">Wards</th>
             <th className="px-4 py-3 font-medium text-center">Active</th>
             <th className="px-4 py-3 font-medium text-center">SLA</th>
             <th className="px-4 py-3 font-medium text-center">Actions</th>
@@ -24,14 +24,14 @@ export default function OfficerTagTable({ tagging = [], setEditItem, setDialog, 
               <td className="px-4 py-3 font-medium">{o.officer?.name}</td>
               <td className="px-4 py-3 text-muted-foreground">{o.officer?.role?.designationEnglish}</td>
               <td className="px-4 py-3">
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
                   {(o.services || []).map((s, si) => (
                     <Badge key={si} variant="outline" className="text-[10px] bg-blue-50 text-blue-700">{s.title}</Badge>
                   ))}
                 </div>
               </td>
               <td className="px-4 py-3">
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
                   {(o.wards || []).map((w, wi) => (
                     <Badge key={wi} variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700">{w}</Badge>
                   ))}

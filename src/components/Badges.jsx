@@ -6,7 +6,7 @@ export function StatusBadge({ status }) {
   const meta = getStatusBadgeMeta(status);
   return (
     <Badge variant="outline" className={`text-[10px] font-medium tracking-wide ${meta.badgeClass}`}>
-      {meta.badgeLabel}
+     Status :  {meta.badgeLabel}
     </Badge>
   );
 }
@@ -15,7 +15,7 @@ export function PriorityBadge({ priority }) {
   const meta = getPriorityBadgeMeta(priority);
   return (
     <Badge variant="outline" className={`text-[10px] font-medium tracking-wide ${meta.badgeClass}`}>
-      {meta.badgeLabel}
+    Priority :   {meta.badgeLabel}
     </Badge>
   );
 }

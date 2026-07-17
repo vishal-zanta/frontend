@@ -55,7 +55,8 @@ export const useRaiseComplaintData = (lang) => {
     })); 
     allDemography = allDemography.map((v)=> ({
       label :lang === "hi" && v.nameHindi ? v.nameHindi : v.name ,
-      value : v._id
+      value : v._id,
+      name: v.name
     }))
 
   return {

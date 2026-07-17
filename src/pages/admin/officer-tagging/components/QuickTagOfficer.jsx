@@ -1,27 +1,75 @@
 import React, { useState } from "react";
-import { UserCog, MapPin, Save } from "lucide-react";
+import { UserCog, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import MySelect from "@/components/inputs/MySelect";
+import { useGetServices, useGetSubservices, useGetDemographics } from "../../master-data/hooks";
+import subDivisionsData from "@/utils/sub-divisions.json";
 
-export default function QuickTagOfficer({ officers = [], subservices = [], handleSaveTagging }) {
+export default function QuickTagOfficer({ officers = [], handleSaveTagging }) {
   const [selectedOfficer, setSelectedOfficer] = useState("");
+  const [selectedService, setSelectedService] = useState("");
   const [selectedSubservices, setSelectedSubservices] = useState([]);
-  const [wards, setWards] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedSubdivisions, setSelectedSubdivisions] = useState([]);
+
+  // Fetch Services
+  const { data: servicesData } = useGetServices([], { page: 1, limit: 100 });
+  const servicesOptions = (servicesData?.data?.data?.docs || []).map((s) => ({
+    label: s.title || s.name || "",
+    value: s._id,
+  }));
+
+  // Fetch Subservices based on selectedService
+  const { data: subservicesData } = useGetSubservices(
+    [selectedService],
+    {
+      serviceId: Array.isArray(selectedService)
+        ? selectedService.join(",")
+        : selectedService || "",
+      page: 1,
+      limit: 500,
+    },
+    !!(selectedService && selectedService.length > 0)
+  );
+  const subservicesOptions = (subservicesData?.data?.data?.docs || []).map((s) => ({
+    label: s.title || s.name || "",
+    value: s._id,
+  }));
+
+  // Fetch Districts (Demographics)
+  const { data: demographyData } = useGetDemographics([], { page: 1, limit: 100 });
+  const districtOptions = (demographyData?.data?.data?.docs || []).map((d) => ({
+    label: d.name,
+    value: d._id,
+    name: d.name,
+  }));
+
+  // Map Subdivisions options based on selectedDistrict
+  const selectedDistrictObj = districtOptions.find((d) => d.value === selectedDistrict);
+  const districtLabel = selectedDistrictObj?.name;
+  const rawSubdivisions = districtLabel ? subDivisionsData[districtLabel] || [] : [];
+  const subdivisionOptions = rawSubdivisions.map((sub) => ({
+    label: sub,
+    value: sub,
+  }));
 
   const handleSubmit = () => {
-    if (!selectedOfficer || selectedSubservices.length === 0 || !wards.trim()) {
+    if (!selectedOfficer || selectedSubservices.length === 0 || selectedSubdivisions.length === 0) {
       return;
     }
     handleSaveTagging({
       officer: selectedOfficer,
+      service: selectedService,
       services: selectedSubservices,
-      wards: wards.split(",").map((w) => w.trim()).filter(Boolean),
+      district: selectedDistrict,
+      wards: selectedSubdivisions,
     });
     // Clear state
     setSelectedOfficer("");
+    setSelectedService("");
     setSelectedSubservices([]);
-    setWards("");
+    setSelectedDistrict("");
+    setSelectedSubdivisions([]);
   };
 
   return (
@@ -29,7 +77,7 @@ export default function QuickTagOfficer({ officers = [], subservices = [], handl
       <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
         <UserCog className="w-5 h-5 text-blue-500" /> Quick Tag Officer
       </h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div>
           <MySelect
             label="Select Officer *"
@@ -41,24 +89,58 @@ export default function QuickTagOfficer({ officers = [], subservices = [], handl
         </div>
         <div>
           <MySelect
-            label="Sub-services (Multi-select) *"
+            label="Service (Multi-select) *"
             isMultiple
-            options={subservices}
-            value={selectedSubservices}
-            onValueChange={setSelectedSubservices}
-            placeholder="Select sub-services..."
+            options={servicesOptions}
+            value={selectedService}
+            onValueChange={(val) => {
+              setSelectedService(val);
+              setSelectedSubservices([]);
+            }}
+            placeholder="Select services..."
           />
         </div>
         <div>
-          <label className="text-sm font-medium mb-1.5 block">Wards (Comma-separated) <span className="text-red-500">*</span></label>
-          <Input
-            value={wards}
-            onChange={(e) => setWards(e.target.value)}
-            placeholder="e.g., Patna Ward-12, Patna Ward-13"
+          <MySelect
+            label="Sub-services (Multi-select) *"
+            isMultiple
+            options={subservicesOptions}
+            value={selectedSubservices}
+            onValueChange={setSelectedSubservices}
+            placeholder={
+              !selectedService || selectedService.length === 0
+                ? "Select service first"
+                : "Select sub-services..."
+            }
+            disabled={!selectedService || selectedService.length === 0}
           />
-          <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-            <MapPin className="w-3 h-3" /> Manual entry due to location restriction
-          </div>
+        </div>
+        <div>
+          <MySelect
+            label="District *"
+            options={districtOptions}
+            value={selectedDistrict}
+            onValueChange={(val) => {
+              setSelectedDistrict(val);
+              setSelectedSubdivisions([]);
+            }}
+            placeholder="Select district..."
+          />
+        </div>
+        <div>
+          <MySelect
+            label="Subdivision (Multi-select) *"
+            isMultiple
+            options={subdivisionOptions}
+            value={selectedSubdivisions}
+            onValueChange={setSelectedSubdivisions}
+            placeholder={
+              !selectedDistrict
+                ? "Select district first"
+                : "Select subdivisions..."
+            }
+            disabled={!selectedDistrict}
+          />
         </div>
       </div>
       <Button className="mt-4 bg-blue-600 hover:bg-blue-700" onClick={handleSubmit}>

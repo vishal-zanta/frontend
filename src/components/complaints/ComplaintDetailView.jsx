@@ -194,6 +194,7 @@ export default function ComplaintDetailView({
 
   const detail = data?.data || data;
   const c = detail || selected;
+  // console.log({c})
 
   const displayId = c.grievanceId || c.id || "-";
   const displayStatus = c.status || "OPEN";
@@ -205,7 +206,7 @@ export default function ComplaintDetailView({
     c.classification?.subService?.title || c.subserviceName || "-";
   const departmentText =
     c.classification?.subService?.service?.department || "-";
-  const subjectText = c.classification?.subject || "-";
+  const subjectText = (c.classification?.subject || "").trim() || "-";
 
   const formattedDate =
     c.createdAt || c.createdDate
@@ -253,7 +254,7 @@ export default function ComplaintDetailView({
           {/* Classification details */}
           <ComplaintClassificationSection
             departmentText={departmentText}
-            subjectText={subjectText}
+            
             occurrenceDate={occurrenceDate}
           />
 
@@ -280,6 +281,7 @@ export default function ComplaintDetailView({
             description={description}
             attachments={attachments}
             geotaggedImages={geotaggedImages}
+            subjectText={subjectText}
           />
 
           {/* Actions (Status change, Priority change, Geotag upload) */}

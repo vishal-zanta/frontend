@@ -19,7 +19,7 @@ import {
   deleteWorkflowLevel,
   reorderWorkflowLevels,
 } from "./api";
-import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast, USER_ROLES_EXECULDED } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
@@ -182,7 +182,7 @@ export default function WorkflowConfig() {
     }
   };
 
-  const roleOptions = (rolesApiData?.data?.docs || []).map((r) => ({
+  const roleOptions = (rolesApiData?.data?.docs || []).filter((r)=> !USER_ROLES_EXECULDED.includes(r?.designationEnglish)).map((r) => ({
     label: r.designationEnglish,
     value: r._id,
   }));

@@ -170,3 +170,5 @@ export const checkPermissionManual = (validPermissions , permission)=> {
     }
     return validPermissions.includes(permission);
 }
+
+export const USER_ROLES_EXECULDED = ["Admin", "Call Centre Executive", "Call Centre Supervisor"]

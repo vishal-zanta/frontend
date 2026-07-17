@@ -148,8 +148,12 @@ export default function MySelect({
   const isMulti = isCreatable ? true : isMultiple;
   const styles = buildStyles(!!error, disabled, colors, isMulti);
 
+  const selectOptions = isMulti && options.length > 0
+    ? [{ label: "Select All", value: "SELECT_ALL" }, ...options]
+    : options;
+
   const toOption = (val) =>
-    options.find((o) => o.value === val) ?? { label: val, value: val };
+    selectOptions.find((o) => o.value === val) ?? { label: val, value: val };
 
   const selectValue = isMulti
     ? Array.isArray(value)
@@ -162,14 +166,25 @@ export default function MySelect({
   const handleChange = (selected) => {
     if (isMulti) {
       const arr = selected ?? [];
-      onValueChange(arr.map((o) => o.value));
+      const selectedValues = arr.map((o) => o.value);
+      if (selectedValues.includes("SELECT_ALL")) {
+        const allValues = options.map((o) => o.value);
+        const previouslySelectedCount = (value ?? []).length;
+        if (previouslySelectedCount === allValues.length) {
+          onValueChange([]);
+        } else {
+          onValueChange(allValues);
+        }
+      } else {
+        onValueChange(selectedValues);
+      }
     } else {
       onValueChange(selected?.value ?? "");
     }
   };
 
   const commonProps = {
-    options,
+    options: selectOptions,
     placeholder: placeholder ?? label ?? "Select...",
     isDisabled: disabled,
     isMulti: isMulti,
