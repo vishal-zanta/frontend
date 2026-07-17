@@ -78,6 +78,7 @@ export default function Login() {
     let timer = null;
     const token = localStorage.getItem("usertoken");
     if (!!token) {
+      console.log("Login profile")
       setFullScreenLoader(true);
       getProfile()
         .then((res) => {

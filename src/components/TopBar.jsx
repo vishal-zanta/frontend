@@ -15,7 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getBreakStatus, postToggleBreak, postPulse } from "@/api/breaks.api";
 import { getErrorToast } from "@/utils/helpers";
 import BreakOverlay from "./break-timer/BreakOverlay";
@@ -163,7 +163,7 @@ export default function TopBar({
   onToggleSidebar,
   sidebarOpen,
 }) {
-  const {profile: profileData} = useAuth();
+  const {profile: profileData, setProfile : setProfileData} = useAuth();
   const baseInfo = roleInfo[role] || roleInfo.superadmin;
   const navigate = useNavigate();
   const isCitizen = role === "citizen";
@@ -247,12 +247,15 @@ export default function TopBar({
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+  const qc = useQueryClient();
 
   const logoutMutation = useMutation({
     mutationFn: postLogout,
     onSuccess: () => {
       localStorage.removeItem("usertoken");
       sessionStorage.removeItem("usertoken");
+      setProfileData(null);
+      qc.removeQueries();
       navigate("/");
     },
     onError: (err) => {
@@ -260,11 +263,15 @@ export default function TopBar({
       // Revert/proceed on failure to avoid blocking users
       localStorage.removeItem("usertoken");
       sessionStorage.removeItem("usertoken");
+      setProfileData(null);
+      qc.removeQueries();
       navigate("/");
+
     },
   });
 
   const handleLogout = () => {
+      setProfileData(null);
     logoutMutation.mutate();
   };
 

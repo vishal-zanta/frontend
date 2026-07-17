@@ -11,6 +11,7 @@ export default function PermissionChecker({ permission, children }) {
   }
 
   const isAllowed = hasPermission(permission);
+  console.log({isAllowed, permission, profile})
   if (!isAllowed) {
     return <Navigate to="/unauthorized" replace />;
   }

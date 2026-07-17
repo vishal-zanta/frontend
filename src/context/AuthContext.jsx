@@ -5,6 +5,7 @@ const authContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
+  console.log({profile})
 
   const hasPermission = (permission) => {
     // console.log("CHECKING PERMISSION", {permission, profile})

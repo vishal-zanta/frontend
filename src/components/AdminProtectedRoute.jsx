@@ -20,6 +20,8 @@ const AdminProtectedRoute = ({ children }) => {
     queryKey: ["auth-profile"],
     queryFn: getProfile,
     retry: false,
+    gcTime: 0,
+    staleTime : 0
   });
 
   useEffect(() => {
