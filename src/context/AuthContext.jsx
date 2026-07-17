@@ -1,3 +1,4 @@
+import { checkPermissionManual } from "@/utils/helpers";
 import { createContext, useState, useContext } from "react";
 
 const authContext = createContext(null);
@@ -8,13 +9,9 @@ export const AuthProvider = ({ children }) => {
   const hasPermission = (permission) => {
     // console.log("CHECKING PERMISSION", {permission, profile})
     const validPermissions = profile?.role?.permissions || [];
-    if (validPermissions.includes("ALL") || permission == undefined)
-      return true;
-    if (!permission) return false;
-    if (Array.isArray(permission)) {
-      return permission.some((p) => validPermissions.includes(p));
-    }
-    return validPermissions.includes(permission);
+
+
+   return checkPermissionManual(validPermissions, permission)
   };
   return (
     <authContext.Provider value={{ profile, setProfile, hasPermission }}>

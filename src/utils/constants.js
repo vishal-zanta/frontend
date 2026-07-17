@@ -222,23 +222,135 @@ export const apiPermissionOptions = [
   { label: "View Active Users", value: "VIEW_ACTIVE_USERS" },
   { label: "Logout Users", value: "LOGOUT_USERS" }, //custom
 
-  { label: "Source Management", value: "SOURCE_MANAGEMENT" },//custom
+  { label: "Source Management", value: "SOURCE_MANAGEMENT" }, //custom
 
-  { label: "Demography Management", value: "DEMOGRAPHY_MANAGEMENT" },//custom
+  { label: "Demography Management", value: "DEMOGRAPHY_MANAGEMENT" }, //custom
 
   { label: "MIS Report", value: "MIS_REPORT" },
 
   { label: "Officer Tagging", value: "OFFICER_TAGGING" },
 
-  { label: "Option Management", value: "OPTION_MANAGEMENT" },//custom
+  { label: "Option Management", value: "OPTION_MANAGEMENT" }, //custom
 
-  { label: "Role Management", value: "ROLE_MANAGEMENT" },//custom
+  { label: "Role Management", value: "ROLE_MANAGEMENT" }, //custom
 
-  { label: "Service Management", value: "SERVICE_MANAGEMENT" },//custom
+  { label: "Service Management", value: "SERVICE_MANAGEMENT" }, //custom
 
   { label: "SLA Configuration", value: "SLA_CONFIGURATION" },
 
   { label: "User Management", value: "USER_MANAGEMENT" },
 
   { label: "Workflow Management", value: "WORKFLOW_MANAGEMENT" },
+
+  // Dashboards
+  { label: "Admin Dashboard", value: "ADMIN_DASHBOARD" },
+  { label: "Officer Dashboard", value: "OFFICER_DASHBOARD" },
+  { label: "CCE Dashboard", value: "CCE_DASHBOARD" },
+
+  // Operations
+  { label: "Operational Dashboard", value: "OPERATIONAL_DASHBOARD" },
+  {
+    label: "Operational - Call Volume & Traffic",
+    value: "OPERATIONAL_CALL_VOLUME",
+  },
+  {
+    label: "Operational - CCE Performance",
+    value: "OPERATIONAL_CCE_PERFORMANCE",
+  },
+  {
+    label: "Operational - SLA Performance",
+    value: "OPERATIONAL_SLA_PERFORMANCE",
+  },
+  {
+    label: "Operational - Grievance Management",
+    value: "OPERATIONAL_GRIEVANCE",
+  },
+  {
+    label: "Operational - Citizen Interaction",
+    value: "OPERATIONAL_CITIZEN_INTERACTION",
+  },
+  { label: "Operational - System Monitoring", value: "OPERATIONAL_SYSTEM" },
+
+  // Call Centre
+  { label: "Incoming Call", value: "INCOMING_CALL" },
+  { label: "Call Tracker", value: "CALL_TRACKER" },
+  { label: "Call History Log", value: "CALL_HISTORY_LOG" },
+  { label: "Shift & Agent", value: "SHIFT_AGENT" },
+
+  // Administration
+  { label: "Call History (Admin)", value: "CALL_HISTORY" },
+  { label: "Manage Officers", value: "MANAGE_OFFICERS" },
+  { label: "Manage CCE Agents", value: "MANAGE_AGENTS" },
+  { label: "Audit Trail", value: "AUDIT_TRAIL" },
+  { label: "AI Analytical Reports", value: "AI_REPORTS" },
+  { label: "Performance Dashboard", value: "PERFORMANCE_DASHBOARD" },
+  { label: "Chat", value: "CHAT" },
 ];
+
+export const PERMISSIONS = {
+  RAISE_COMPLAINTS: ["CREATE_GRIEVANCE", "ALL_GRIEVANCE"],
+  TRACK_COMPLAINTS: ["ALL_GRIEVANCE"],
+  FIELD_VISITS: ["ALL_GRIEVANCE", "UPDATE_GRIEVANCE"],
+  MY_COMPLAINTS: ["ALL_GRIEVANCE"],
+  MIS_REPORTS: ["MIS_REPORT"],
+  WORKFLOW_MANAGEMENT: ["WORKFLOW_MANAGEMENT"],
+  SLA_CONFIGURATION: ["SLA_CONFIGURATION"],
+  OFFICER_TAGGING: ["OFFICER_TAGGING"],
+  MASTER_DATA: [
+    "ROLE_MANAGEMENT",
+    "OPTION_MANAGEMENT",
+    "SERVICE_MANAGEMENT",
+    "DEMOGRAPHY_MANAGEMENT",
+    "SOURCE_MANAGEMENT",
+  ],
+  USER_MANAGEMENT: ["USER_MANAGEMENT"],
+  MANAGE_LINKS: ["ROLE_MANAGEMENT"],
+
+  ROLE_MANAGEMENT: ["ROLE_MANAGEMENT"],
+  SERVICE_MANAGEMENT: ["SERVICE_MANAGEMENT"],
+  SOURCE_MANAGEMENT: ["SOURCE_MANAGEMENT"],
+  DEMOGRAPHY_MANAGEMENT: ["DEMOGRAPHY_MANAGEMENT"],
+  OPTION_MANAGEMENT: ["OPTION_MANAGEMENT"],
+  LOGOUT_USERS: ["LOGOUT_USERS"],
+  ASSIGN_GRIEVANCE: ["ASSIGN_GRIEVANCE"],
+
+  // New ones
+  ADMIN_DASHBOARD: ["ADMIN_DASHBOARD"],
+  OFFICER_DASHBOARD: ["OFFICER_DASHBOARD"],
+  CCE_DASHBOARD: ["CCE_DASHBOARD"],
+  OPERATIONAL_DASHBOARD: [
+    "OPERATIONAL_DASHBOARD",
+    "OPERATIONAL_CALL_VOLUME",
+    "OPERATIONAL_CCE_PERFORMANCE",
+    "OPERATIONAL_SLA_PERFORMANCE",
+    "OPERATIONAL_GRIEVANCE",
+    "OPERATIONAL_CITIZEN_INTERACTION",
+    "OPERATIONAL_SYSTEM",
+  ],
+  OPERATIONAL_CALL_VOLUME: ["OPERATIONAL_DASHBOARD", "OPERATIONAL_CALL_VOLUME"],
+  OPERATIONAL_CCE_PERFORMANCE: [
+    "OPERATIONAL_DASHBOARD",
+    "OPERATIONAL_CCE_PERFORMANCE",
+  ],
+  OPERATIONAL_SLA_PERFORMANCE: [
+    "OPERATIONAL_DASHBOARD",
+    "OPERATIONAL_SLA_PERFORMANCE",
+  ],
+  OPERATIONAL_GRIEVANCE: ["OPERATIONAL_DASHBOARD", "OPERATIONAL_GRIEVANCE"],
+  OPERATIONAL_CITIZEN_INTERACTION: [
+    "OPERATIONAL_DASHBOARD",
+    "OPERATIONAL_CITIZEN_INTERACTION",
+  ],
+  OPERATIONAL_SYSTEM: ["OPERATIONAL_DASHBOARD", "OPERATIONAL_SYSTEM"],
+  AI_REPORTS: ["AI_REPORTS"],
+  PERFORMANCE_DASHBOARD: ["PERFORMANCE_DASHBOARD"],
+  INCOMING_CALL: ["INCOMING_CALL"],
+  CALL_TRACKER: ["CALL_TRACKER"],
+  CALL_HISTORY_LOG: ["CALL_HISTORY_LOG"],
+  SHIFT_AGENT: ["SHIFT_AGENT"],
+  CALL_HISTORY: ["CALL_HISTORY"],
+  MANAGE_OFFICERS: ["MANAGE_OFFICERS"],
+  MANAGE_AGENTS: ["MANAGE_AGENTS"],
+  AUDIT_TRAIL: ["AUDIT_TRAIL"],
+  CHAT: ["CHAT"],
+};

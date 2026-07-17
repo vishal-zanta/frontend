@@ -43,6 +43,7 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
   const qc = useQueryClient();
+  
 
   const postMessageMutation = useMutation({
     mutationFn: postChatMessage,
@@ -143,56 +144,66 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
 
   const canSend = (text.trim().length > 0 || files.length > 0) && !isSending;
 
+  const isInactive = selectedUser?.status === "INACTIVE";
+
   return (
     <div className="border-t border-slate-100 bg-white">
-      <AttachmentPreview files={files} onRemove={removeFile} />
-      <div className="flex items-end gap-2 px-3 py-2.5">
-        {/* Attachment */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp,video/mp4,audio/mpeg"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="shrink-0 p-2.5 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-          title="Attach file"
-        >
-          <Paperclip className="w-[18px] h-[18px]" />
-        </button>
+      {isInactive ? (
+        <div className="flex items-center justify-center py-5 px-3 text-sm font-medium text-slate-500 bg-slate-50/50">
+          This user is no longer active.
+        </div>
+      ) : (
+        <>
+          <AttachmentPreview files={files} onRemove={removeFile} />
+          <div className="flex items-end gap-2 px-3 py-2.5">
+            {/* Attachment */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,video/mp4,audio/mpeg"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="shrink-0 p-2.5 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+              title="Attach file"
+            >
+              <Paperclip className="w-[18px] h-[18px]" />
+            </button>
 
-        {/* Textarea */}
-        <textarea
-          ref={textareaRef}
-          rows={2}
-          value={text}
-          onChange={handleTextChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          className="flex-1 resize-none bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 scrollbar-thin transition-all leading-relaxed max-h-[120px] overflow-y-auto"
-          // style={{ height: "46px !important" }}
-        />
+            {/* Textarea */}
+            <textarea
+              ref={textareaRef}
+              rows={2}
+              value={text}
+              onChange={handleTextChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Type a message..."
+              className="flex-1 resize-none bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 scrollbar-thin transition-all leading-relaxed max-h-[120px] overflow-y-auto"
+              // style={{ height: "46px !important" }}
+            />
 
-        {/* Send */}
-        <button
-          onClick={handleSend}
-          disabled={!canSend}
-          className={`shrink-0 p-2.5 rounded-xl transition-all ${
-            canSend
-              ? "bg-blue-900 text-white hover:bg-blue-800 shadow-md shadow-blue-900/20 active:scale-95"
-              : "bg-slate-100 text-slate-400 cursor-not-allowed"
-          }`}
-          title="Send message"
-        >
-          {isSending ? (
-            <Loader2 className="w-[18px] h-[18px] animate-spin" />
-          ) : (
-            <Send className="w-[18px] h-[18px]" />
-          )}
-        </button>
-      </div>
+            {/* Send */}
+            <button
+              onClick={handleSend}
+              disabled={!canSend}
+              className={`shrink-0 p-2.5 rounded-xl transition-all ${
+                canSend
+                  ? "bg-blue-900 text-white hover:bg-blue-800 shadow-md shadow-blue-900/20 active:scale-95"
+                  : "bg-slate-100 text-slate-400 cursor-not-allowed"
+              }`}
+              title="Send message"
+            >
+              {isSending ? (
+                <Loader2 className="w-[18px] h-[18px] animate-spin" />
+              ) : (
+                <Send className="w-[18px] h-[18px]" />
+              )}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

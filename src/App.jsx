@@ -52,6 +52,8 @@ import { useEffect } from "react";
 import { useAuth } from "./context/AuthContext";
 import PermissionChecker from "./components/PermissionChecker";
 import NotAuthorized from "./pages/NotAuthorized";
+import { PERMISSIONS } from "./utils/constants";
+import AdminProtectedRoute from "./components/AdminProtectedRoute";
 
 const RootLayout = () => {
   return (
@@ -62,40 +64,6 @@ const RootLayout = () => {
   );
 };
 
-const AdminProtectedRoute = ({ children }) => {
-  const {setProfile} = useAuth();
-  const token =
-    localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
-
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["auth-profile"],
-    queryFn: getProfile,
-    retry: false,
-  });
-
-  useEffect(()=> {
-    if (isLoading || error || !data) return;
-    setProfile(data?.data?.data);
-    
-  },[isLoading, error, data, setProfile])
-
-  if (isLoading) {
-    return <FullScreenLoader />;
-  }
-
-  if (error || !data) {
-    localStorage.removeItem("usertoken");
-    sessionStorage.removeItem("usertoken");
-
-    return <Navigate to="/login" replace state={{ redirect: false }} />;
-  }
-
-  return children;
-};
 
 const RouteErrorPage = () => {
   const err = useRouteError();
@@ -114,7 +82,7 @@ const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: <Login />,
+        element: <Navigate to={"/"} replace />,
       },
       {
         path: "unauthorized",
@@ -132,12 +100,16 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "",
-                element: <OfficerDashboard />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.OFFICER_DASHBOARD}>
+                    <OfficerDashboard />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "complaints",
                 element: (
-                  <PermissionChecker permission={["ALL_GRIEVANCE"]}>
+                  <PermissionChecker permission={PERMISSIONS.MY_COMPLAINTS}>
                     <OfficerComplaints />
                   </PermissionChecker>
                 ),
@@ -145,7 +117,7 @@ const router = createBrowserRouter([
               {
                 path: "field-visits",
                 element: (
-                  <PermissionChecker permission={["ALL_GRIEVANCE", "UPDATE_GRIEVANCE"]}>
+                  <PermissionChecker permission={PERMISSIONS.FIELD_VISITS}>
                     <FieldVisits />
                   </PermissionChecker>
                 ),
@@ -161,36 +133,56 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "",
-                element: <CRMDashboard />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.CCE_DASHBOARD}>
+                    <CRMDashboard />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "raise",
                 element: (
-                  <PermissionChecker permission={["CREATE_GRIEVANCE", "ALL_GRIEVANCE"]}>
+                  <PermissionChecker permission={PERMISSIONS.RAISE_COMPLAINTS}>
                     <CRMRaiseComplaint />
                   </PermissionChecker>
                 ),
               },
               {
                 path: "calls",
-                element: <CallTracker />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.CALL_TRACKER}>
+                    <CallTracker />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "shift",
-                element: <ShiftManagement />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.SHIFT_AGENT}>
+                    <ShiftManagement />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "incoming-call",
-                element: <IncomingCall />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.INCOMING_CALL}>
+                    <IncomingCall />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "history",
-                element: <CallHistoryLog />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.CALL_HISTORY_LOG}>
+                    <CallHistoryLog />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "track-complaint",
                 element: (
-                  <PermissionChecker permission={["ALL_GRIEVANCE"]}>
+                  <PermissionChecker permission={PERMISSIONS.TRACK_COMPLAINTS}>
                     <TrackCCMComplaint />
                   </PermissionChecker>
                 ),
@@ -206,16 +198,26 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "",
-                element: <AdminDashboard />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.ADMIN_DASHBOARD}>
+                    <AdminDashboard />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "operational",
-                element: <OperationalDashboards />,
+                element: (
+                  <PermissionChecker
+                    permission={PERMISSIONS.OPERATIONAL_DASHBOARD}
+                  >
+                    <OperationalDashboards />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "ai-reports",
                 element: (
-                  <PermissionChecker permission={["ALL"]}>
+                  <PermissionChecker permission={PERMISSIONS.AI_REPORTS}>
                     <AIReports />
                   </PermissionChecker>
                 ),
@@ -223,7 +225,9 @@ const router = createBrowserRouter([
               {
                 path: "performance",
                 element: (
-                  <PermissionChecker permission={["ALL"]}>
+                  <PermissionChecker
+                    permission={PERMISSIONS.PERFORMANCE_DASHBOARD}
+                  >
                     <PerformanceDashboard />
                   </PermissionChecker>
                 ),
@@ -231,7 +235,7 @@ const router = createBrowserRouter([
               {
                 path: "mis",
                 element: (
-                  <PermissionChecker permission={["MIS_REPORT"]}>
+                  <PermissionChecker permission={PERMISSIONS.MIS_REPORTS}>
                     <MISReports />
                   </PermissionChecker>
                 ),
@@ -239,7 +243,9 @@ const router = createBrowserRouter([
               {
                 path: "workflow",
                 element: (
-                  <PermissionChecker permission={["WORKFLOW_MANAGEMENT"]}>
+                  <PermissionChecker
+                    permission={PERMISSIONS.WORKFLOW_MANAGEMENT}
+                  >
                     <WorkflowConfig />
                   </PermissionChecker>
                 ),
@@ -247,7 +253,7 @@ const router = createBrowserRouter([
               {
                 path: "sla",
                 element: (
-                  <PermissionChecker permission={["SLA_CONFIGURATION"]}>
+                  <PermissionChecker permission={PERMISSIONS.SLA_CONFIGURATION}>
                     <SLAConfig />
                   </PermissionChecker>
                 ),
@@ -255,7 +261,7 @@ const router = createBrowserRouter([
               {
                 path: "officer-tagging",
                 element: (
-                  <PermissionChecker permission={["OFFICER_TAGGING"]}>
+                  <PermissionChecker permission={PERMISSIONS.OFFICER_TAGGING}>
                     <OfficerTagging />
                   </PermissionChecker>
                 ),
@@ -263,7 +269,7 @@ const router = createBrowserRouter([
               {
                 path: "master-data",
                 element: (
-                  <PermissionChecker permission={["ROLE_MANAGEMENT", "OPTION_MANAGEMENT", "SERVICE_MANAGEMENT", "DEMOGRAPHY_MANAGEMENT", "SOURCE_MANAGEMENT"]}>
+                  <PermissionChecker permission={PERMISSIONS.MASTER_DATA}>
                     <MasterData />
                   </PermissionChecker>
                 ),
@@ -271,7 +277,7 @@ const router = createBrowserRouter([
               {
                 path: "users",
                 element: (
-                  <PermissionChecker permission={["USER_MANAGEMENT"]}>
+                  <PermissionChecker permission={PERMISSIONS.USER_MANAGEMENT}>
                     <UserManagement />
                   </PermissionChecker>
                 ),
@@ -279,26 +285,42 @@ const router = createBrowserRouter([
               {
                 path: "manage-links",
                 element: (
-                  <PermissionChecker permission={["ROLE_MANAGEMENT"]}>
+                  <PermissionChecker permission={PERMISSIONS.MANAGE_LINKS}>
                     <ManageLinks />
                   </PermissionChecker>
                 ),
               },
               {
                 path: "audit",
-                element: <AuditTrail />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.AUDIT_TRAIL}>
+                    <AuditTrail />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "call-history",
-                element: <AdminCallHistory />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.CALL_HISTORY}>
+                    <AdminCallHistory />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "officers",
-                element: <ManageOfficers />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.MANAGE_OFFICERS}>
+                    <ManageOfficers />
+                  </PermissionChecker>
+                ),
               },
               {
                 path: "agents",
-                element: <ManageAgents />,
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.MANAGE_AGENTS}>
+                    <ManageAgents />
+                  </PermissionChecker>
+                ),
               },
             ],
           },

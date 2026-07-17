@@ -8,7 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { apiPermissionOptions } from "@/utils/constants";
+import { apiPermissionOptions, PERMISSIONS } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 
 export default function UserManageTable({
@@ -134,7 +134,7 @@ export default function UserManageTable({
                 >
                   <Trash2 className="w-4 h-4 text-red-500" />
                 </Button>
-                {hasPermission("LOGOUT_USERS") && (
+                {hasPermission(PERMISSIONS.LOGOUT_USERS) && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">

@@ -17,6 +17,8 @@ import {
 } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import TimeRangeFilter from "@/components/TimeRangeFilter";
+import { useAuth } from "@/context/AuthContext";
+import { PERMISSIONS } from "@/utils/constants";
 
 import CallVolumeTab from "./components/CallVolumeTab";
 import CcePerformanceTab from "./components/CcePerformanceTab";
@@ -26,23 +28,56 @@ import CitizenInteractionTab from "./components/CitizenInteractionTab";
 import SystemTab from "./components/SystemTab";
 
 const tabs = [
-  { id: "call-volume", label: "Call Volume & Traffic", icon: Phone },
-  { id: "cce-performance", label: "CCE Performance", icon: Users },
-  { id: "sla-performance", label: "Service Level Performance", icon: Clock },
-  { id: "grievance", label: "Grievance & Ticket Management", icon: Activity },
+  {
+    id: "call-volume",
+    label: "Call Volume & Traffic",
+    icon: Phone,
+    permissions: PERMISSIONS.OPERATIONAL_CALL_VOLUME,
+  },
+  {
+    id: "cce-performance",
+    label: "CCE Performance",
+    icon: Users,
+    permissions: PERMISSIONS.OPERATIONAL_CCE_PERFORMANCE,
+  },
+  {
+    id: "sla-performance",
+    label: "Service Level Performance",
+    icon: Clock,
+    permissions: PERMISSIONS.OPERATIONAL_SLA_PERFORMANCE,
+  },
+  {
+    id: "grievance",
+    label: "Grievance & Ticket Management",
+    icon: Activity,
+    permissions: PERMISSIONS.OPERATIONAL_GRIEVANCE,
+  },
   {
     id: "citizen-interaction",
     label: "Citizen Interaction Analytics",
     icon: BarChart3,
+    permissions: PERMISSIONS.OPERATIONAL_CITIZEN_INTERACTION,
   },
-  { id: "system", label: "System & Infrastructure", icon: Server },
+  {
+    id: "system",
+    label: "System & Infrastructure",
+    icon: Server,
+    permissions: PERMISSIONS.OPERATIONAL_SYSTEM,
+  },
 ];
 
 export default function OperationalDashboard() {
+  const { hasPermission } = useAuth();
   const [searchParams] = useSearchParams();
-  const tab = searchParams.get("tab") || "call-volume";
   const [period, setPeriod] = useState("daily");
-  const activeTab = tabs.find((t) => t.id === tab);
+
+  const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
+
+  const tab = (filteredTabs.map((t) => t.id).includes(searchParams.get("tab"))
+    ? searchParams.get("tab")
+    : undefined) ?? filteredTabs?.[0]?.id ?? "call-volume";
+
+  const activeTab = filteredTabs.find((t) => t.id === tab);
 
   const periodData = {
     daily: {

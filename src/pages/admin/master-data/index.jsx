@@ -9,37 +9,38 @@ import DemographyTab from "./demography";
 import GrievenceNatureTab from "./grievence-nature";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { PERMISSIONS } from "@/utils/constants";
 
 const tabs = [
   {
     id: "designation",
     label: "Designations",
     icon: Tag,
-    permissions: ["ROLE_MANAGEMENT"],
+    permissions: PERMISSIONS.ROLE_MANAGEMENT,
   },
   {
     id: "service",
     label: "Services & Sub-services",
     icon: Building2,
-    permissions: ["SERVICE_MANAGEMENT"],
+    permissions: PERMISSIONS.SERVICE_MANAGEMENT,
   },
   {
     id: "source",
     label: "Complaint Sources",
     icon: Globe,
-    permissions: ["SOURCE_MANAGEMENT"],
+    permissions: PERMISSIONS.SOURCE_MANAGEMENT,
   },
   {
     id: "demography",
     label: "Demography & ULBs",
     icon: MapPin,
-    permissions: ["DEMOGRAPHY_MANAGEMENT"],
+    permissions: PERMISSIONS.DEMOGRAPHY_MANAGEMENT,
   },
   {
     id: "grievances-nature",
     label: "Grievance Nature",
     icon: FileHeart,
-    permissions: ["OPTION_MANAGEMENT"],
+    permissions: PERMISSIONS.OPTION_MANAGEMENT,
   },
 ];
 

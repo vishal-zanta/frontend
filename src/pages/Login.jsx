@@ -6,12 +6,14 @@ import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { postLogin } from "@/api/auth.api";
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { sidebarSections } from "@/components/Sidebar";
+import { checkPermissionManual } from "@/utils/helpers";
+// import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function Login() {
-  const {state} = useLocation();
-  const afterLoginPath = state?.afterLoginPath || "/admin";
-  const {executeRecaptcha} = useGoogleReCaptcha();
+
+  
+  // const {executeRecaptcha} = useGoogleReCaptcha();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,41 +21,59 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const getRouteAfterLogin = (permission) => {
+    const allPaths = sidebarSections.map((s) => s.items).flat();
+    let path = null;
+    for (let i = 0; i < allPaths.length; i++) {
+      if (checkPermissionManual(permission, allPaths[i].permissions)) {
+        path = allPaths[i];
+        break;
+      }
+    }
+
+    return path.path;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    if(!executeRecaptcha){
-      console.log("reCAPTCHA has not loaded yet");
-    }
+    // if(!executeRecaptcha){
+    //   console.log("reCAPTCHA has not loaded yet");
+    // }
     try {
-      // const captchaToken = await executeRecaptcha("submit_login_form");
-      const res = await postLogin({ email, password  });
-      // console.log("Login response:", res);
-      const token =  res?.data?.data?.token;
+      const res = await postLogin({ email, password });
+
+      const token = res?.data?.data?.token;
       if (token) {
         localStorage.setItem("usertoken", token);
-        sessionStorage.setItem("usertoken", token);
-        // localStorage.setItem("userstoken", token);
-        // sessionStorage.setItem("userstoken", token);
-        navigate(afterLoginPath);
-      }
-      else{
+        const path = getRouteAfterLogin(
+          res?.data?.data?.role?.permissions || [],
+        );
+        // sessionStorage.setItem("usertoken", token);
+        console.log("After login path : ",path);
+
+        navigate(path);
+      } else {
         throw new Error("token not found");
       }
     } catch (err) {
-      setError(err.response?.data?.message || err.message || "Invalid email or password");
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Invalid email or password",
+      );
     } finally {
       setLoading(false);
     }
   };
-  useEffect(()=> {
-    const token = localStorage.getItem("usertoken");
-    // console.log({token});
-    if(!!token && state?.redirect!== false){
-      navigate(afterLoginPath);
-    }
-  },[])
+  // useEffect(() => {
+  //   const token = localStorage.getItem("usertoken");
+  //   // console.log({token});
+  //   if (!!token && state?.redirect !== false) {
+  //     navigate(afterLoginPath);
+  //   }
+  // }, []);
 
   return (
     <AuthLayout

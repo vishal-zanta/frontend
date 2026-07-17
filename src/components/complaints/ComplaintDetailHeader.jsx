@@ -1,6 +1,7 @@
 import React from "react";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
 import { useAuth } from "@/context/AuthContext";
+import { PERMISSIONS } from "@/utils/constants";
 
 export default function ComplaintDetailHeader({
   c,
@@ -35,7 +36,7 @@ export default function ComplaintDetailHeader({
         )}
       </div>
 
-      {hasPermission("ASSIGN_GRIEVANCE") ? (
+      {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) ? (
         <div className="w-56 text-left">
           <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
             Assign Officer

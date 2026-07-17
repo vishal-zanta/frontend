@@ -423,12 +423,12 @@ export default function TopBar({
           </button>
         )}
 
-        <Link
+        {/* <Link
           to="/"
           className="px-3 py-1.5 text-xs font-medium text-primary bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
         >
           Switch Portal
-        </Link>
+        </Link> */}
 
         {breakStatus?.isBreak && (
           <BreakOverlay

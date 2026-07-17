@@ -9,67 +9,68 @@ import {
   Zap,
 } from "lucide-react";
 import { PORTAL_META, DASHBOARD_KPIS } from "@/lib/biharData";
+import Login from "./Login";
 
-const portals = [
-  {
-    role: "superadmin",
-    path: "/login",
-    afterLoginPath: "/admin",
-    title: "Super Admin Console",
-    desc: "Full system control - workflow config, SLA, master data, dashboards, MIS reports, user management & audit trail",
-    icon: ShieldCheck,
-    gradient: "from-blue-900 to-blue-600",
-    stats: [
-      "Dynamic Form Config",
-      "SLA & Workflow",
-      "AI Analytics",
-      "MIS Reports",
-    ],
-    user: "Ramanuj Prasad",
-    title2: "SUDA Administrator",
-  },
-  {
-    role: "officer",
-    path: "/login",
-    afterLoginPath: "/officer",
+// const portals = [
+//   {
+//     role: "superadmin",
+//     path: "/",
+//     afterLoginPath: "/admin",
+//     title: "Super Admin Console",
+//     desc: "Full system control - workflow config, SLA, master data, dashboards, MIS reports, user management & audit trail",
+//     icon: ShieldCheck,
+//     gradient: "from-blue-900 to-blue-600",
+//     stats: [
+//       "Dynamic Form Config",
+//       "SLA & Workflow",
+//       "AI Analytics",
+//       "MIS Reports",
+//     ],
+//     user: "Ramanuj Prasad",
+//     title2: "SUDA Administrator",
+//   },
+//   {
+//     role: "officer",
+//     path: "/",
+//     afterLoginPath: "/officer",
 
-    title: "Officer Portal",
-    desc: "View & action assigned complaints, geo-tag photos, update status, field visit documentation, SLA tracking",
-    icon: UserCog,
-    gradient: "from-blue-800 to-blue-500",
-    stats: ["Complaint Queue", "Field Visit", "Geo-Tag Photo", "Status Update"],
-    user: "Rajesh Kumar Singh",
-    title2: "L1 Field Officer - Patna",
-  },
-  {
-    role: "crm",
-    path: "/login",
-    afterLoginPath: "/crm",
-    title: "CRM / Call Centre",
-    desc: "Raise complaints on behalf of citizens, call tracking, shift management, agent performance, officer contact",
-    icon: Headphones,
-    gradient: "from-blue-700 to-sky-500",
-    stats: [
-      "Call Tracker",
-      "Raise Complaint",
-      "Shift Timing",
-      "Agent Dashboard",
-    ],
-    user: "Priya Sharma",
-    title2: "CCE Agent - Morning Shift",
-  },
-  // {
-  //   role: "citizen",
-  //   path: "/citizen",
-  //   title: "Citizen Portal",
-  //   desc: "Raise grievances via 3-step form, track complaint with full timeline, AI chatbot assistance, print complaint",
-  //   icon: Users,
-  //   gradient: "from-blue-600 to-sky-400",
-  //   stats: ["Raise Complaint", "Track Status", "AI Assistant", "Timeline View"],
-  //   user: "Ramesh Prasad",
-  //   title2: "Citizen - Patna",
-  // },
-];
+//     title: "Officer Portal",
+//     desc: "View & action assigned complaints, geo-tag photos, update status, field visit documentation, SLA tracking",
+//     icon: UserCog,
+//     gradient: "from-blue-800 to-blue-500",
+//     stats: ["Complaint Queue", "Field Visit", "Geo-Tag Photo", "Status Update"],
+//     user: "Rajesh Kumar Singh",
+//     title2: "L1 Field Officer - Patna",
+//   },
+//   {
+//     role: "crm",
+//     path: "/",
+//     afterLoginPath: "/crm",
+//     title: "CRM / Call Centre",
+//     desc: "Raise complaints on behalf of citizens, call tracking, shift management, agent performance, officer contact",
+//     icon: Headphones,
+//     gradient: "from-blue-700 to-sky-500",
+//     stats: [
+//       "Call Tracker",
+//       "Raise Complaint",
+//       "Shift Timing",
+//       "Agent Dashboard",
+//     ],
+//     user: "Priya Sharma",
+//     title2: "CCE Agent - Morning Shift",
+//   },
+//   // {
+//   //   role: "citizen",
+//   //   path: "/citizen",
+//   //   title: "Citizen Portal",
+//   //   desc: "Raise grievances via 3-step form, track complaint with full timeline, AI chatbot assistance, print complaint",
+//   //   icon: Users,
+//   //   gradient: "from-blue-600 to-sky-400",
+//   //   stats: ["Raise Complaint", "Track Status", "AI Assistant", "Timeline View"],
+//   //   user: "Ramesh Prasad",
+//   //   title2: "Citizen - Patna",
+//   // },
+// ];
 
 export default function PortalHome() {
   return (
@@ -129,68 +130,8 @@ export default function PortalHome() {
 
       {/* Main content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Unified Citizen Grievance Portal
-          </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Select your portal below to continue. Each portal provides
-            role-specific dashboards, tools, and workflows - all integrated
-            within a single unified platform.
-          </p>
-        </div>
-
-        {/* Portal cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {portals.map((p) => {
-            const Icon = p.icon;
-            return (
-              <Link
-                key={p.role}
-                to={p.path}
-                state={{afterLoginPath: p.afterLoginPath}}
-                className="group bg-white rounded-2xl border border-border hover:border-primary hover:shadow-xl transition-all overflow-hidden"
-              >
-                <div className={`h-2 bg-gradient-to-r ${p.gradient}`}></div>
-                <div className="p-6">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div
-                      className={`w-14 h-14 rounded-xl bg-gradient-to-br ${p.gradient} text-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform`}
-                    >
-                      <Icon className="w-7 h-7" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-foreground">
-                        {p.title}
-                      </h3>
-                      <div className="text-xs text-muted-foreground mt-0.5">
-                        Logged in as:{" "}
-                        <span className="font-medium text-foreground">
-                          {p.user}
-                        </span>{" "}
-                        - {p.title2}
-                      </div>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                    {p.desc}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {p.stats.map((s, i) => (
-                      <span
-                        key={i}
-                        className="text-[11px] px-2.5 py-1 bg-muted rounded-full text-muted-foreground font-medium"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+    
+        <Login/>
 
         <div className="text-center mt-8 text-xs text-muted-foreground">
           {PORTAL_META.name} - {PORTAL_META.version} - Government of Bihar - All

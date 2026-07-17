@@ -1,3 +1,4 @@
+import { sidebarSections } from "@/components/Sidebar";
 import { toast } from "react-hot-toast"
 
 export const getSuccessToast = ( description) => {
@@ -154,3 +155,14 @@ export const getTrendProps = (current, previous, reverseColor = false) => {
 
   return { trend: "neutral", trendValue: "0% vs last week" };
 };
+
+
+export const checkPermissionManual = (validPermissions , permission)=> {
+   if (validPermissions.includes("ALL") )
+      return true;
+    if (!permission) return false;
+    if (Array.isArray(permission)) {
+      return permission.some((p) => validPermissions.includes(p));
+    }
+    return validPermissions.includes(permission);
+}
