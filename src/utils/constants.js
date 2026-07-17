@@ -218,6 +218,9 @@ export const apiPermissionOptions = [
   { label: "Create Grievance", value: "CREATE_GRIEVANCE" },
   { label: "Update Grievance", value: "UPDATE_GRIEVANCE" },
   { label: "Assign Grievance", value: "ASSIGN_GRIEVANCE" }, //custom
+  {label : "My Complaints", value : "MY_COMPLAINT"},
+  {label : "Field Visit", value : "FIELD_VISIT"},
+
 
   { label: "View Active Users", value: "VIEW_ACTIVE_USERS" },
   { label: "Logout Users", value: "LOGOUT_USERS" }, //custom
@@ -290,8 +293,8 @@ export const apiPermissionOptions = [
 export const PERMISSIONS = {
   RAISE_COMPLAINTS: ["CREATE_GRIEVANCE"],
   TRACK_COMPLAINTS: ["ALL_GRIEVANCE"],
-  FIELD_VISITS: ["ALL_GRIEVANCE", "UPDATE_GRIEVANCE"],
-  MY_COMPLAINTS: ["ALL_GRIEVANCE"],
+  FIELD_VISITS: ["FIELD_VISIT"],
+  MY_COMPLAINTS: ["MY_COMPLAINT"],
   MIS_REPORTS: ["MIS_REPORT"],
   WORKFLOW_MANAGEMENT: ["WORKFLOW_MANAGEMENT"],
   SLA_CONFIGURATION: ["SLA_CONFIGURATION"],

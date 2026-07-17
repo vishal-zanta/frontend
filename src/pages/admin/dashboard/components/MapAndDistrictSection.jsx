@@ -56,7 +56,7 @@ export default function MapAndDistrictSection({ districtData }) {
             <tbody className="divide-y divide-border">
               {dataList.map((d, i) => (
                 <tr key={i} className="hover:bg-muted/30">
-                  <td className="px-3 py-2 font-medium">{d._id || "-"}</td>
+                  <td className="px-3 py-2 font-medium">{d.name || "-"}</td>
                   <td className="px-3 py-2 text-right font-semibold">
                     {(d.total || 0).toLocaleString("en-IN")}
                   </td>

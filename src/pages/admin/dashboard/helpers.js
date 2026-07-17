@@ -58,7 +58,7 @@ export const transformCategoryDistribution = (mainData) => {
   ];
 
   return mainData.map((item, idx) => ({
-    name: item._id,
+    name: item.name,
     value: item.count || 0,
     color: COLORS[idx % COLORS.length]
   }));
