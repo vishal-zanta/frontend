@@ -162,7 +162,7 @@ export const sidebarSections = [
         permissions: PERMISSIONS.CALL_HISTORY_LOG,
       },
       {
-        label: "Shift & Agent",
+        label: "Shift Management",
         path: "/crm/shift",
         icon: Users,
         permissions: PERMISSIONS.SHIFT_AGENT,
@@ -267,30 +267,30 @@ export const sidebarSections = [
         icon: Users,
         permissions: PERMISSIONS.USER_MANAGEMENT,
       },
-      {
-        label: "Manage Officers",
-        path: "/admin/officers",
-        icon: HardHat,
-        permissions: PERMISSIONS.MANAGE_OFFICERS,
-      },
-      {
-        label: "Manage CCE Agents",
-        path: "/admin/agents",
-        icon: Headphones,
-        permissions: PERMISSIONS.MANAGE_AGENTS,
-      },
-      {
-        label: "Manage Links",
-        path: "/admin/manage-links",
-        icon: Network,
-        permissions: PERMISSIONS.MANAGE_LINKS,
-      },
-      {
-        label: "Audit Trail",
-        path: "/admin/audit",
-        icon: ScrollText,
-        permissions: PERMISSIONS.AUDIT_TRAIL,
-      },
+      // {
+      //   label: "Manage Officers",
+      //   path: "/admin/officers",
+      //   icon: HardHat,
+      //   permissions: PERMISSIONS.MANAGE_OFFICERS,
+      // },
+      // {
+      //   label: "Manage CCE Agents",
+      //   path: "/admin/agents",
+      //   icon: Headphones,
+      //   permissions: PERMISSIONS.MANAGE_AGENTS,
+      // },
+      // {
+      //   label: "Manage Links",
+      //   path: "/admin/manage-links",
+      //   icon: Network,
+      //   permissions: PERMISSIONS.MANAGE_LINKS,
+      // },
+      // {
+      //   label: "Audit Trail",
+      //   path: "/admin/audit",
+      //   icon: ScrollText,
+      //   permissions: PERMISSIONS.AUDIT_TRAIL,
+      // },
     ],
   },
 ];

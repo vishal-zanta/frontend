@@ -1,10 +1,10 @@
-import { useGetComplaintSources, useGetDemographics, useGetOptions, useGetSubservices } from "../../admin/master-data/hooks";
+import { useGetComplaintSources, useGetDemographics, useGetOptions, useGetServices } from "../../admin/master-data/hooks";
 
 export const useRaiseComplaintData = (lang) => {
   const API_PARAMS = { page: 1, limit: 500, select : "title,titleHindi,name,nameHindi" };
 
-  const { data: subServicesData, isLoading: subServicesLoading } =
-    useGetSubservices([], API_PARAMS, true);
+  const { data: servicesData, isLoading: servicesLoading } =
+    useGetServices([], API_PARAMS);
 
   const { data: naturesData, isLoading: naturesLoading } =
     useGetOptions([], API_PARAMS);
@@ -17,7 +17,6 @@ export const useRaiseComplaintData = (lang) => {
 
 
 
-  const allSubServices = subServicesData?.data?.data?.docs ?? [];
   const allNatures = naturesData?.data?.data?.docs ?? [];
   let allChannels = complaintSourcesData?.data?.data?.docs ?? [];
   let allDemography = demographicSourceData?.data?.data?.docs ?? [];
@@ -31,7 +30,7 @@ export const useRaiseComplaintData = (lang) => {
       value: n._id,
     }));
 
-  const subServiceOptions = allSubServices.map((s) => ({
+  const servicesOptions = (servicesData?.data?.data?.docs ?? []).map((s) => ({
     label: lang === "hi" && s.titleHindi ? s.titleHindi : s.title,
     value: s._id,
   }));
@@ -60,9 +59,9 @@ export const useRaiseComplaintData = (lang) => {
     }))
 
   return {
-    subServicesLoading,
+    servicesLoading,
     naturesLoading,
-    subServiceOptions,
+    servicesOptions,
     grievanceNatureOptions,
     frequencyOptions,
     affectedBeneficiaryOptions,

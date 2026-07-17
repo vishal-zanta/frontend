@@ -1,10 +1,20 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Filter, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ComplaintId } from "@/components/ComplaintDetailDialog";
 import { StatusBadge } from "@/components/Badges";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import SearchDebounced from "../debounced/SearchDebounced";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { STATUS_ACTIONS } from "@/utils/constants";
 
 export default function ComplaintList({
   selected,
@@ -14,6 +24,7 @@ export default function ComplaintList({
   useGetComplaintsOfOfiicer,
 }) {
   const [search, setSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const {
     data,
     isLoading,
@@ -21,7 +32,7 @@ export default function ComplaintList({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGetComplaintsOfOfiicer({ limit: 10, search });
+  } = useGetComplaintsOfOfiicer({ limit: 10, search, status: selectedStatus || undefined });
   // console.log({selected})
   const complaints = useMemo(() => {
     return (
@@ -33,10 +44,17 @@ export default function ComplaintList({
 
   const lastStatsRef = useRef(null);
 
-  // Automatically select the first complaint when the list loads
+  // Automatically select the first complaint when the list loads or when current selection is filtered out
   useEffect(() => {
-    if (complaints.length > 0 && !selected) {
-      onSelect(complaints[0]);
+    if (complaints.length > 0) {
+      const isSelectedInList = complaints.some(
+        (c) => (c._id || c.id) === (selected?._id || selected?.id)
+      );
+      if (!selected || !isSelectedInList) {
+        onSelect(complaints[0]);
+      }
+    } else {
+      onSelect(null);
     }
   }, [complaints, selected, onSelect]);
 
@@ -83,9 +101,55 @@ export default function ComplaintList({
           <h3 className="font-bold text-foreground text-sm">
             My Complaints ({complaints.length})
           </h3>
-          <Button variant="ghost" size="sm">
-            <Filter className="w-4 h-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="relative h-8 w-8 p-0 cursor-pointer">
+                <Filter className="w-4 h-4" />
+                {selectedStatus && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <span>Status</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="w-40">
+                  <DropdownMenuItem
+                    onClick={() => setSelectedStatus("")}
+                    className={!selectedStatus ? "font-semibold bg-accent text-accent-foreground" : ""}
+                  >
+                    All Statuses
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {STATUS_ACTIONS.map((action) => {
+                    const isSelected = selectedStatus === action.value;
+                    return (
+                      <DropdownMenuItem
+                        key={action.value}
+                        onClick={() => setSelectedStatus(action.value)}
+                        className={isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}
+                      >
+                        {action.badgeLabel || action.label}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              {selectedStatus && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => setSelectedStatus("")}
+                    className="text-destructive focus:text-destructive cursor-pointer"
+                  >
+                    Clear Filter
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className="mt-2">
           <SearchDebounced

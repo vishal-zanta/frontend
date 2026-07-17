@@ -4,6 +4,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
 
 const DesignationTable = ({ designations = [], setDialog }) => {
+  const nonEditable = ["Call Centre Supervisor", "Call Centre Executive", "Admin"];
   return (
     <table className="w-full text-sm">
       <thead className="bg-muted/50">
@@ -26,7 +27,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
                 {d.level}
               </Badge>
             </td>
-            {d.designationEnglish !== "Admin" && (
+            {!nonEditable.includes(d.designationEnglish)  && (
               <td className="px-4 py-2.5 text-center">
                 <div className="flex gap-1 justify-center">
                   <Button

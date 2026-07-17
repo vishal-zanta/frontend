@@ -38,11 +38,11 @@ export default function CRMRaiseComplaint() {
   const qc = useQueryClient();
 
   const {
-    subServiceOptions,
+    servicesOptions,
     grievanceNatureOptions,
     frequencyOptions,
     affectedBeneficiaryOptions,
-    subServicesLoading,
+    servicesLoading,
     naturesLoading,
     allChannels,
     complaintSourcesLoading,
@@ -67,14 +67,16 @@ export default function CRMRaiseComplaint() {
       "audio/mpeg",
     ];
 
-    const invalidTypeFile = files.find((f) => !allowedMimeTypes.includes(f.type));
+    const invalidTypeFile = files.find(
+      (f) => !allowedMimeTypes.includes(f.type),
+    );
     if (invalidTypeFile) {
       const errMsg = t(
         "Invalid file type. Only JPEG, PNG, WEBP, MP4, and MPEG files are allowed.",
-        "अमान्य फ़ाइल प्रकार। केवल JPEG, PNG, WEBP, MP4 और MPEG फ़ाइलें ही स्वीकृत हैं।"
+        "अमान्य फ़ाइल प्रकार। केवल JPEG, PNG, WEBP, MP4 और MPEG फ़ाइलें ही स्वीकृत हैं।",
       );
       setFileError(errMsg);
-      getErrorToast({message : errMsg});
+      getErrorToast({ message: errMsg });
       return;
     }
 
@@ -82,10 +84,10 @@ export default function CRMRaiseComplaint() {
     if (oversized) {
       const errMsg = t(
         "File too large. Max 10 MB.",
-        "फ़ाइल बहुत बड़ी है। अधिकतम 10 MB।"
+        "फ़ाइल बहुत बड़ी है। अधिकतम 10 MB।",
       );
       setFileError(errMsg);
-      getErrorToast({message : errMsg});
+      getErrorToast({ message: errMsg });
       return;
     }
 
@@ -170,9 +172,10 @@ export default function CRMRaiseComplaint() {
         >
           <FormWizard
             t={t}
-            subServiceOptions={subServiceOptions}
+            lang={lang}
+            servicesOptions={servicesOptions}
             grievanceNatureOptions={grievanceNatureOptions}
-            subServicesLoading={subServicesLoading}
+            servicesLoading={servicesLoading}
             naturesLoading={naturesLoading}
             frequencyOptions={frequencyOptions}
             affectedBeneficiaryOptions={affectedBeneficiaryOptions}
@@ -195,9 +198,10 @@ export default function CRMRaiseComplaint() {
 
 function FormWizard({
   t,
-  subServiceOptions,
+  lang,
+  servicesOptions,
   grievanceNatureOptions,
-  subServicesLoading,
+  servicesLoading,
   naturesLoading,
   frequencyOptions,
   affectedBeneficiaryOptions,
@@ -210,7 +214,7 @@ function FormWizard({
   allChannels,
   complaintSourcesLoading,
   allDemography,
-  demographyLoading
+  demographyLoading,
 }) {
   const { trigger } = useFormContext();
   const [step, setStep] = useState(1);
@@ -346,19 +350,23 @@ function FormWizard({
 
         {step === 2 && (
           <div className="space-y-6">
-            <AddressSection t={t}   allDemography ={allDemography}
-  demographyLoading={demographyLoading} />
+            <AddressSection
+              t={t}
+              allDemography={allDemography}
+              demographyLoading={demographyLoading}
+            />
           </div>
         )}
 
         {step === 3 && (
           <div className="space-y-6">
             <ClassificationSection
-              subServiceOptions={subServiceOptions}
+              servicesOptions={servicesOptions}
               grievanceNatureOptions={grievanceNatureOptions}
-              subServicesLoading={subServicesLoading}
+              servicesLoading={servicesLoading}
               naturesLoading={naturesLoading}
               t={t}
+              lang={lang}
             />
             <EvidenceSection frequencyOptions={frequencyOptions} t={t} />
             <ImpactSection
