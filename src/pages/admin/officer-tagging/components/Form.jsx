@@ -27,7 +27,11 @@ export default function Form({
   }));
 
   // Fetch Subservices based on selectedService
-  const { data: subservicesData } = useGetSubservices(
+  const {
+    data: subservicesData,
+    isLoading: isSubservicesLoading,
+    isFetching: isSubservicesFetching,
+  } = useGetSubservices(
     [selectedService],
     {
       serviceId: Array.isArray(selectedService)
@@ -47,19 +51,24 @@ export default function Form({
 
   // When new sub-services options load after service change,
   // keep only the selected sub-services that exist in the new options.
+  // Guard: skip if still loading to avoid wiping selection on in-flight empty response.
   const isFirstRenderService = useRef(true);
   useEffect(() => {
     if (isFirstRenderService.current) {
       isFirstRenderService.current = false;
       return;
     }
+    // Don't run while subservices are being fetched — the options array is
+    // temporarily empty during the request, which would incorrectly clear
+    // the user's existing selection.
+    if (isSubservicesLoading || isSubservicesFetching) return;
     const currentSubservices = getValues("services") || [];
     if (currentSubservices.length === 0) return;
     const validIds = new Set(subservicesOptions.map((o) => o.value));
     const filtered = currentSubservices.filter((id) => validIds.has(id));
     setValue("services", filtered, { shouldValidate: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subservicesOptions.length, selectedService]);
+  }, [isSubservicesLoading, isSubservicesFetching, subservicesOptions.length, selectedService]);
 
   // Fetch Districts (Demographics)
   const { data: demographyData } = useGetDemographics([], {
@@ -92,8 +101,8 @@ export default function Form({
       isFirstRenderDistrict.current = false;
       return;
     }
-    resetField("wards", []);
-  }, [selectedDistrict, resetField]);
+    setValue("wards", [], { shouldValidate: true });
+  }, [selectedDistrict]);
 
   return (
     <div className="space-y-4">
@@ -144,7 +153,7 @@ export default function Form({
         }
         disabled={!selectedDistrict}
       />
-      <div className="flex justify-end gap-2 py-4">
+      <div className="flex justify-end gap-2 py-4 sticky bottom-0 bg-white">
         <Button
           type="button"
           variant="outline"

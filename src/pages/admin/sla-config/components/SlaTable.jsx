@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
+  console.log({roles});
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">

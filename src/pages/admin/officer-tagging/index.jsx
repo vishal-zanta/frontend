@@ -244,10 +244,12 @@ export default function OfficerTagging() {
               setEditItem(null);
             }}
             title={editItem ? "Edit Tagging" : "Tag New Officer"}
+
           >
             <RhfWrapper
               isValidation={true}
               validationSchema={officerTaggingSchema}
+              className={"max-h-[450px] "}
               initialValues={
                 editItem
                   ? (() => {

@@ -13,7 +13,7 @@ import { useGetSubservices } from "../master-data/hooks";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSlaConfig, putSlaConfig, deleteSlaConfig } from "./api";
-import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast, USER_ROLES_EXECULDED } from "@/utils/helpers";
 import { QUERY_KEYS } from "@/utils/constants";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
@@ -47,7 +47,9 @@ export default function SLAConfig() {
     isLoading: isRolesLoading,
     error: rolesError,
   } = useGetRoles([], { page: 1, limit: 100 });
-  const roles = rolesApiData?.data?.docs || [];
+  const roles = (rolesApiData?.data?.docs || []).filter(
+    (r) => !USER_ROLES_EXECULDED.includes(r.designationEnglish)
+  );
 
   // 3. Fetch subservices for selection dropdown
   const { data: subservicesData } = useGetSubservices(
