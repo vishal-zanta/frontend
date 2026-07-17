@@ -5,14 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
-import { postLogin } from "@/api/auth.api";
+import { postLogin, getProfile } from "@/api/auth.api";
 import { sidebarSections } from "@/components/Sidebar";
 import { checkPermissionManual } from "@/utils/helpers";
 // import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function Login() {
+  const { state } = useLocation();
 
-  
   // const {executeRecaptcha} = useGoogleReCaptcha();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -20,18 +20,19 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [fullScreenLoader, setFullScreenLoader] = useState(false);
 
   const getRouteAfterLogin = (permission) => {
     const allPaths = sidebarSections.map((s) => s.items).flat();
     let path = null;
     for (let i = 0; i < allPaths.length; i++) {
-      if (checkPermissionManual(permission, allPaths[i].permissions)) {
+      if (checkPermissionManual(permission, allPaths[i]?.permissions)) {
         path = allPaths[i];
         break;
       }
     }
 
-    return path.path;
+    return path?.path || null;
   };
 
   const handleSubmit = async (e) => {
@@ -51,9 +52,15 @@ export default function Login() {
           res?.data?.data?.role?.permissions || [],
         );
         // sessionStorage.setItem("usertoken", token);
-        console.log("After login path : ",path);
-
-        navigate(path);
+        console.log("After login path : ", path, {
+          permission: res?.data?.data?.role?.permissions || [],
+        });
+        if (!path) {
+          throw new Error("Ask admin to give some permissions for this role");
+        }
+        setTimeout(() => {
+          navigate(path);
+        }, 0);
       } else {
         throw new Error("token not found");
       }
@@ -67,13 +74,32 @@ export default function Login() {
       setLoading(false);
     }
   };
-  // useEffect(() => {
-  //   const token = localStorage.getItem("usertoken");
-  //   // console.log({token});
-  //   if (!!token && state?.redirect !== false) {
-  //     navigate(afterLoginPath);
-  //   }
-  // }, []);
+  useEffect(() => {
+    let timer = null;
+    const token = localStorage.getItem("usertoken");
+    if (!!token) {
+      setFullScreenLoader(true);
+      getProfile()
+        .then((res) => {
+          const path = getRouteAfterLogin(
+            res?.data?.data?.role?.permissions || [],
+          );
+          setFullScreenLoader(false);
+          console.log("After login path : ", path);
+          if (!path) {
+            throw new Error("Ask admin to give some permissions for this role");
+          }
+          timer = setTimeout(() => {
+            navigate(path);
+          }, 0);
+        })
+        .catch((err) => {
+          console.error("Failed to auto-login from profile API: ", err);
+          setFullScreenLoader(false);
+        });
+    }
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   return (
     <AuthLayout

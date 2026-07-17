@@ -168,7 +168,8 @@ export default function CallTracker() {
                       {c.duration}
                     </td>
                     <td className="px-4 py-3">
-                      {c.complaintId ? <ComplaintId id={c.complaintId} /> : "-"}
+                      {/* {c.complaintId ? <ComplaintId id={c.complaintId} /> : "-"} */}
+                      {c.complaintId}
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">
                       {c.disposition}

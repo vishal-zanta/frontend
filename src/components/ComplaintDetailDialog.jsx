@@ -191,6 +191,7 @@ export function OfficerId({ id, className = "" }) {
 export function FieldVisitId({ id, className = "", visit: propVisit }) {
   const [open, setOpen] = useState(false);
   const visit = propVisit || FIELD_VISIT_DATA.find((v) => v.id === id);
+  console.log({visit});
   return (
     <>
       <button
@@ -432,7 +433,8 @@ export function CallDetailDialog({ callId, open, onClose }) {
                 <span className="text-xs text-muted-foreground">
                   Linked Complaint:{" "}
                 </span>
-                <ComplaintId id={call.complaintId} />
+                {/* <ComplaintId id={call.complaintId} /> */}
+                {call.complaintId}
               </div>
             )}
           </div>
@@ -623,7 +625,7 @@ export function FieldVisitDetailDialog({
       : rawVisit.ward || "-",
     district: isApiObject
       ? rawVisit.address?.district?.name ||rawVisit.address?.district || 
-        rawVisit.grievance?.address?.district ||
+       rawVisit?.grievance?.address?.district?.name||  rawVisit?.grievance?.address?.district ||
         "-"
       : rawVisit.district || "-",
     scheduledDate:
@@ -662,6 +664,7 @@ export function FieldVisitDetailDialog({
       : rawVisit.geoTag || "-",
     notes: isApiObject ? rawVisit.remarks || "-" : rawVisit.notes || "-",
   };
+  console.log({visit, rawVisit}, "asdf")
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

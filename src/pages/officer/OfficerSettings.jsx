@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Settings as SettingsIcon, Bell, Globe, Smartphone, Save, Check } from "lucide-react";
+import { Bell, Globe, Save, Check } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function OfficerSettings() {
@@ -48,7 +47,7 @@ export default function OfficerSettings() {
                   onClick={() => setSettings(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
                   className={`relative w-11 h-6 rounded-full transition-colors ${settings[item.key] ? "bg-blue-600" : "bg-muted"}`}
                 >
-                  <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${settings[item.key] ? "translate-x-5" : "translate-x-0.5"}`} />
+                  <span className={`absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${settings[item.key] ? "translate-x-5" : "translate-x-0"}`} />
                 </button>
               </div>
             ))}

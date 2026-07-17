@@ -158,7 +158,11 @@ export const getTrendProps = (current, previous, reverseColor = false) => {
 
 
 export const checkPermissionManual = (validPermissions , permission)=> {
-   if (validPermissions.includes("ALL") )
+  const IGNORE_ALL  = ["MY_COMPLAINT", "FIELD_VISIT", "OFFICER_DASHBOARD"];
+  const isIgnoreAll = [...(permission || [])].some((p) => IGNORE_ALL.includes(p));
+  // console.log({validPermissions, IGNORE_ALL, isIgnoreAll});
+
+   if (  validPermissions.includes("ALL") && !isIgnoreAll )
       return true;
     if (!permission) return false;
     if (Array.isArray(permission)) {

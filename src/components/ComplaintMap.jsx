@@ -13,8 +13,8 @@ const wardPolygon = [
 
 export default function ComplaintMap({ height = 320, showHotspots = true, highlightWard = false, center = [25.61, 85.13], zoom = 12 }) {
   return (
-    <div style={{ height }} className="rounded-lg overflow-hidden border border-border">
-      <MapContainer center={center} zoom={zoom} style={{ height: "100%", width: "100%" }} scrollWheelZoom={false}>
+    <div style={{ height }} className="rounded-lg overflow-hidden border border-border relative z-0">
+      <MapContainer center={center} zoom={zoom} style={{ height: "100%", width: "100%", zIndex: 0 }} scrollWheelZoom={false}>
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; OpenStreetMap &copy; CARTO'

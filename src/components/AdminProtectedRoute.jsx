@@ -7,8 +7,8 @@ import { useEffect } from "react";
 
 const AdminProtectedRoute = ({ children }) => {
   const { setProfile } = useAuth();
-//   const path = window.location;
-//   console.log({path});
+  //   const path = window.location;
+  //   console.log({path});
   const token =
     localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
 
@@ -41,4 +41,4 @@ const AdminProtectedRoute = ({ children }) => {
   return children;
 };
 
-export default AdminProtectedRoute
+export default AdminProtectedRoute;
