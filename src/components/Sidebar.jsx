@@ -124,7 +124,7 @@ export const sidebarSections = [
         label: "Field Visits",
         path: "/officer/field-visits",
         icon: ClipboardList,
-        permissions: PERMISSIONS.FIELD_VISITS, 
+        permissions: PERMISSIONS.FIELD_VISITS,
       },
       {
         label: "Raise Complaint",
@@ -136,7 +136,7 @@ export const sidebarSections = [
         label: "Track Complaint",
         path: "/crm/track-complaint",
         icon: Search,
-        permissions: PERMISSIONS.TRACK_COMPLAINTS ,
+        permissions: PERMISSIONS.TRACK_COMPLAINTS,
       },
     ],
   },
@@ -187,7 +187,6 @@ export const sidebarSections = [
             label: "Officer Ranking",
             path: "/admin/mis?report=officer",
             permissions: PERMISSIONS.MIS_REPORTS,
-            
           },
           {
             label: "Service Performance",
@@ -326,9 +325,9 @@ function NavItem({ item, onNavigate, overrideLabel }) {
   const location = useLocation();
   const label = overrideLabel || item.label;
   const isActive = location.pathname === item.path;
-  
+
   const visibleChildren = (item.children || []).filter((child) =>
-    hasPermission(child.permissions)
+    hasPermission(child.permissions),
   );
 
   const hasChildren = visibleChildren.length > 0;
@@ -424,7 +423,10 @@ export default function Sidebar({
 
   const handleScroll = (e) => {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("sidebar-scroll-position", e.currentTarget.scrollTop);
+      sessionStorage.setItem(
+        "sidebar-scroll-position",
+        e.currentTarget.scrollTop,
+      );
     }
   };
 
@@ -438,11 +440,15 @@ export default function Sidebar({
       )}
       <aside
         className={`
-        bg-sidebar text-sidebar-foreground flex flex-col h-screen sticky top-0 border-r border-sidebar-border
-        transition-all duration-300 overflow-hidden
-        ${open ? "w-64" : "w-0"}
-        lg:sticky fixed z-50 lg:z-auto
-      `}
+          bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border
+          transition-all duration-300 ease-in-out z-50
+
+          fixed top-0 left-0 h-full w-64
+          ${open ? "translate-x-0" : "-translate-x-full"}
+
+          lg:translate-x-0 lg:relative lg:sticky lg:top-0 lg:h-screen lg:z-auto
+          ${open ? "lg:w-64" : "lg:w-0 lg:overflow-hidden lg:border-r-0"}
+        `}
       >
         <div className="w-64 flex flex-col h-full">
           <div className="px-5 py-4 border-b border-sidebar-border flex items-center justify-between">
@@ -474,7 +480,7 @@ export default function Sidebar({
           >
             {config.sections.map((section, si) => {
               const visibleItems = section.items.filter((item) =>
-                hasPermission(item.permissions)
+                hasPermission(item.permissions),
               );
 
               if (visibleItems.length === 0) return null;

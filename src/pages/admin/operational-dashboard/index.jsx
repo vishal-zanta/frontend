@@ -161,7 +161,7 @@ export default function OperationalDashboard() {
               and infrastructure
             </p>
           </div>
-          <TimeRangeFilter period={period} setPeriod={setPeriod} />
+          {/* <TimeRangeFilter period={period} setPeriod={setPeriod} /> */}
         </div>
 
         {tab === "call-volume" && <CallVolumeTab pd={pd} />}

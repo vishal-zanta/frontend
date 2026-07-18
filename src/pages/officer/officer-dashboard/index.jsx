@@ -23,6 +23,7 @@ import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import WelcomeComponent from "./components/WelcomeComponent";
 import StatsCards from "./components/StatsCards";
+import { useGetDashboardData } from "./query";
 
 const officerProfiles = {
   l1: { officer: OFFICERS[0], label: "L1 Field Officer" },
@@ -37,6 +38,8 @@ export default function OfficerDashboard() {
   const profile = officerProfiles[profileId] || officerProfiles.l1;
   const officer = profile.officer;
   const [search, setSearch] = useState("");
+
+  const { data: analyticsData, isLoading: statsLoading, error: statsError } = useGetDashboardData({ role: profileId });
 
   const myComplaints = COMPLAINTS.filter(
     (c) => c.l1Officer === officer.id || c.l2Officer === officer.id,
@@ -64,7 +67,7 @@ export default function OfficerDashboard() {
   ) {
     return (
       <PortalLayout role="officer">
-        <div className="p-6 space-y-6">
+      <div className="p-3 lg:p-6 space-y-4 lg:space-y-6">
           <WelcomeComponent
             officer={officer}
             profileId={profileId}
@@ -72,8 +75,10 @@ export default function OfficerDashboard() {
           />
 
           <StatsCards
-            profileId={profileId}
             officer={officer}
+            analyticsData={analyticsData}
+            isLoading={statsLoading}
+            error={statsError}
           />
 
           <div className="bg-white rounded-xl border border-border overflow-hidden">
@@ -131,7 +136,7 @@ export default function OfficerDashboard() {
 
   return (
     <PortalLayout role="officer">
-      <div className="p-6 space-y-6">
+      <div className="p-3 lg:p-6 space-y-4 lg:space-y-6">
         <WelcomeComponent
           officer={officer}
           profileId={profileId}
@@ -139,21 +144,23 @@ export default function OfficerDashboard() {
         />
 
         <StatsCards
-          profileId={profileId}
           officer={officer}
+          analyticsData={analyticsData}
+          isLoading={statsLoading}
+          error={statsError}
         />
 
         {/* Department / Services */}
-        <div className="bg-white rounded-xl border border-border p-4">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-bold text-foreground text-sm">
-              Department & Services Assigned
+        <div className="bg-white rounded-xl border border-border p-3 lg:p-4">
+          <div className="flex items-center justify-between mb-2 gap-2">
+            <h3 className="font-bold text-foreground text-xs lg:text-sm">
+              Department &amp; Services Assigned
             </h3>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-[10px] lg:text-xs text-muted-foreground shrink-0">
               Officer ID: <OfficerId id={officer.id} />
             </span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 lg:gap-2">
             {officer.services.length > 0 ? (
               officer.services.map((sId) => {
                 const svc = SERVICES.find((s) => s.id === sId);
@@ -161,7 +168,7 @@ export default function OfficerDashboard() {
                   <Badge
                     key={sId}
                     variant="outline"
-                    className="text-xs bg-blue-50 text-primary"
+                    className="text-[10px] lg:text-xs bg-blue-50 text-primary"
                   >
                     {svc?.name || sId}
                     {svc ? ` - ${svc.dept}` : ""}
@@ -169,7 +176,7 @@ export default function OfficerDashboard() {
                 );
               })
             ) : (
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs lg:text-sm text-muted-foreground">
                 All services (admin level)
               </span>
             )}
@@ -185,12 +192,12 @@ export default function OfficerDashboard() {
 
         {/* Field Visits Table */}
         <div className="bg-white rounded-xl border border-border">
-          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground flex items-center gap-2">
-              <Navigation className="w-4 h-4" /> Field Visits
+          <div className="px-3 lg:px-5 py-3 lg:py-4 border-b border-border flex items-center justify-between gap-2">
+            <h3 className="font-bold text-foreground text-xs lg:text-sm flex items-center gap-1.5 lg:gap-2">
+              <Navigation className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> Field Visits
             </h3>
             <Link to="/officer/field-visits">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="text-xs h-7 lg:h-9">
                 View All
               </Button>
             </Link>
@@ -212,7 +219,7 @@ export default function OfficerDashboard() {
           </LoaderErrWrapper>
         </div>
 
-        <QuickActions officer={officer} />
+        {/* <QuickActions officer={officer} /> */}
       </div>
     </PortalLayout>
   );

@@ -18,7 +18,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
 
             <th className="px-4 py-3 font-medium min-w-40">Service</th>
             <th className="px-4 py-3 font-medium">Location</th>
-            <th className="px-4 py-3 font-medium">Scheduled</th>
+            {/* <th className="px-4 py-3 font-medium">Scheduled</th> */}
             <th className="px-4 py-3 font-medium">Priority</th>
             <th className="px-4 py-3 font-medium min-w-32 text-center">Geo-Tag</th>
             <th className="px-4 py-3 font-medium">Photo</th>
@@ -86,10 +86,10 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                     "-"
                   )}
                 </td>
-                <td className="px-4 py-3 text-xs text-muted-foreground">
+                {/* <td className="px-4 py-3 text-xs text-muted-foreground">
                   <Calendar className="w-3 h-3 inline mr-1" />
                   {scheduledDateVal}
-                </td>
+                </td> */}
                 <td className="px-4 py-3">
                   {fv.grievance?.assignedPriority ? (
                     <PriorityBadge priority={fv.grievance.assignedPriority} />

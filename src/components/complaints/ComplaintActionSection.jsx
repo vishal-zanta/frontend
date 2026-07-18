@@ -104,7 +104,7 @@ export default function ComplaintActionSection({
     <>
       {/* Status actions */}
       <div className="border-t border-border pt-4">
-        <div className="text-sm font-medium text-foreground mb-2">
+        <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
           Update Status
         </div>
         <div className="flex gap-2 items-center">
@@ -162,7 +162,7 @@ export default function ComplaintActionSection({
 
       {/* Priority actions */}
       <div className="border-t border-border pt-4">
-        <div className="text-sm font-medium text-foreground mb-2">
+        <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
           Update Priority
         </div>
         <div className="flex gap-2 items-center">
@@ -197,7 +197,7 @@ export default function ComplaintActionSection({
       {/* Geo-tag upload */}
       {!isCCE && (
         <div className="border-t border-border pt-4 mt-4">
-          <div className="text-sm font-medium text-foreground mb-2">
+          <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
             Geo-Tag Photo Upload
           </div>
           <input

@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as HotToaster } from "react-hot-toast";
+import { Toaster as SonnerToaster } from "sonner";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClientInstance } from "@/lib/query-client";
 import {
@@ -341,8 +341,8 @@ function App() {
       <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
         <QueryClientProvider client={queryClientInstance}>
           <RouterProvider router={router} />
-          <Toaster />
-          <HotToaster />
+          {/* <Toaster /> */}
+          <SonnerToaster richColors position="top-center" />
         </QueryClientProvider>
       </GoogleReCaptchaProvider>
     </AuthProvider>

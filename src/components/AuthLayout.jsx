@@ -22,7 +22,7 @@ export default function AuthLayout({
           </h1>
           {subtitle && <p className="text-muted-foreground mt-2">{subtitle}</p>}
         </div>
-        <div className="bg-card rounded-2xl shadow-sm border border-border p-8">
+        <div className="bg-card rounded-2xl shadow-sm border border-border p-4 sm:p-8">
           {children}
         </div>
         {footer && (

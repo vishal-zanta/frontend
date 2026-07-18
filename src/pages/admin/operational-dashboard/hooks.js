@@ -6,10 +6,11 @@ export const useGetSystemHealth = (params = {}, options = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SYSTEM_HEALTH, params],
     queryFn: () => getSystemHealth(params),
+   
     ...options,
   });
 };
 
-export const useGetsystemHeath = useGetSystemHealth;
+
 
 

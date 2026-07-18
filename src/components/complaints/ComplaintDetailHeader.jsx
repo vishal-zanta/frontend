@@ -54,7 +54,10 @@ function SLATimer({ createdAt, slaHours }) {
   }
 
   return (
-    <Badge variant="outline" className={`text-[10px] font-medium tracking-wide flex items-center gap-1 ${badgeClass}`}>
+    <Badge
+      variant="outline"
+      className={`text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 ${badgeClass}`}
+    >
       <Clock className="w-3 h-3" />
       SLA Timer: {timeLeft}
     </Badge>
@@ -74,30 +77,34 @@ export default function ComplaintDetailHeader({
   assignOfficerMutation,
   selectedId,
 }) {
-  const {hasPermission} = useAuth();
+  const { hasPermission } = useAuth();
   return (
-    <div className="flex items-start justify-between border-b border-border pb-3">
-      <div>
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <h2 className="text-lg font-bold text-primary font-mono">{displayId}</h2>
+    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3">
+      <div className="min-w-0">
+        <div className="flex items-center gap-1.5 lg:gap-2 mb-1 flex-wrap">
+          <h2 className="text-base lg:text-lg font-bold text-primary font-mono">
+            {displayId}
+          </h2>
           <StatusBadge status={displayStatus} />
           <PriorityBadge priority={displayPriority} />
         </div>
-        <p className="text-sm font-semibold text-foreground">
+        <p className="text-xs lg:text-sm font-semibold text-foreground">
           {serviceText} &rarr; {subServiceText}
         </p>
-        {isCCE && (
-          <div className="flex gap-4 text-xs text-muted-foreground mt-1 items-center">
-            <span>Filed: {formattedDate}</span>
-            {/* <span>SLA: {c.classification?.subService?.sla || c.slaHours || "24"}h</span> */}
-          <SLATimer createdAt={c.createdAt} slaHours={c.classification?.subService?.sla || c.slaHours} />
 
+        {isCCE && (
+          <div className="flex gap-3 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
+            <span >Filed: {formattedDate}</span>
+            <SLATimer
+              createdAt={c.createdAt}
+              slaHours={c.classification?.subService?.sla || c.slaHours}
+            />
           </div>
         )}
       </div>
 
       {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) ? (
-        <div className="w-56 text-left">
+        <div className="w-full sm:w-44 lg:w-56 text-left shrink-0">
           <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
             Assign Officer
           </label>
@@ -106,7 +113,10 @@ export default function ComplaintDetailHeader({
             onChange={(e) => {
               const officerId = e.target.value;
               if (officerId) {
-                assignOfficerMutation.mutate({ id: selectedId, assignedOfficer: officerId });
+                assignOfficerMutation.mutate({
+                  id: selectedId,
+                  assignedOfficer: officerId,
+                });
               }
             }}
             disabled={assignOfficerMutation.isPending}
@@ -119,12 +129,26 @@ export default function ComplaintDetailHeader({
               </option>
             ))}
           </select>
+          {isCCE && (
+            <div className="flex items-center gap-1.5 mt-2">
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide shrink-0">
+                Current:
+              </span>
+              <span className="inline-flex items-center text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5 truncate">
+                {c?.assignedOfficer?.name
+                  ? `${c.assignedOfficer.name}${c?.assignedOfficer?.role?.designationEnglish ? ` · ${c.assignedOfficer.role.designationEnglish}` : ""}`
+                  : "Not assigned"}
+              </span>
+            </div>
+          )}
         </div>
       ) : (
         <div className="text-right text-xs text-muted-foreground space-y-1">
-          <div>Filed: {formattedDate}</div>
-                    <SLATimer createdAt={c.createdAt} slaHours={c.classification?.subService?.sla || c.slaHours} />
-
+          <div className="text-left sm:text-right">Filed: {formattedDate}</div>
+          <SLATimer
+            createdAt={c.createdAt}
+            slaHours={c.classification?.subService?.sla || c.slaHours}
+          />
         </div>
       )}
     </div>

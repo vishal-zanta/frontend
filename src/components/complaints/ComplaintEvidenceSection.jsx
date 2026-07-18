@@ -5,20 +5,20 @@ export default function ComplaintEvidenceSection({ description, attachments, geo
   return (
     <>
       {/* Description */}
-      <div className="bg-muted/50 rounded-lg p-3">
-        <div className="text-xs text-muted-foreground mb-1 font-semibold">Description / Details</div>
-        <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{description}</p>
+      <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
+        <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">Description / Details</div>
+        <p className="text-xs lg:text-sm leading-relaxed text-foreground whitespace-pre-wrap">{description}</p>
       </div>
-      <div className="bg-muted/50 rounded-lg p-3">
-        <div className="text-xs text-muted-foreground mb-1 font-semibold">Subject</div>
-        <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{subjectText}</p>
+      <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
+        <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">Subject</div>
+        <p className="text-xs lg:text-sm leading-relaxed text-foreground whitespace-pre-wrap">{subjectText}</p>
       </div>
 
 
       {/* Attachments */}
       {attachments.length > 0 && (
         <div className="mb-4">
-          <div className="text-xs text-muted-foreground mb-2 font-semibold">Evidence Attachments ({attachments.length})</div>
+          <div className="text-[10px] lg:text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wide">Evidence Attachments ({attachments.length})</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {attachments.map((att, idx) => {
               const isImage = att.type === "IMAGE" || att.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
@@ -46,7 +46,7 @@ export default function ComplaintEvidenceSection({ description, attachments, geo
       {/* Geotagged Images */}
       {geotaggedImages.length > 0 && (
         <div className="mb-4">
-          <div className="text-xs text-muted-foreground mb-2 font-semibold">Geo-Tagged Field Photos ({geotaggedImages.length})</div>
+          <div className="text-[10px] lg:text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wide">Geo-Tagged Field Photos ({geotaggedImages.length})</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {geotaggedImages.map((img, idx) => {
               const url = typeof img === "string" ? img : (img?.url || img?.path || "");

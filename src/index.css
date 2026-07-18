@@ -118,3 +118,6 @@ body.high-contrast {
 .grecaptcha-badge{
   display: none;
 }
+th{
+  text-wrap: nowrap;
+}

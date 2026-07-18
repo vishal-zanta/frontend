@@ -114,7 +114,7 @@ export default function PortalHome() {
 
       {/* Tagline banner */}
       <div className="bg-blue-50 border-b border-blue-100">
-        <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between text-sm">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex flex-wrap sm:flex-nowrap items-center justify-between text-sm">
           <span className="text-blue-800 font-medium">
             {PORTAL_META.tagline}
           </span>
@@ -123,7 +123,7 @@ export default function PortalHome() {
               <Zap className="w-3 h-3 text-green-600" /> All systems operational
             </span>
             <span>-</span>
-            <span>Last synced: {PORTAL_META.lastSync}</span>
+            <span>Last synced: {(new Date()).toISOString().split("T")?.[0]}</span>
           </div>
         </div>
       </div>

@@ -7,11 +7,11 @@ export default function ComplaintComplainantSection({
   preferredLanguage,
 }) {
   return (
-    <div className="bg-muted/30 rounded-lg p-3 border border-border">
-      <h4 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">
+    <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border">
+      <h4 className="text-[10px] lg:text-xs font-bold text-foreground uppercase tracking-wider mb-2">
         Complainant Details
       </h4>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 lg:gap-3 text-[10px] lg:text-xs">
         <div>
           <span className="text-muted-foreground block">Full Name</span>
           <span className="font-semibold text-foreground">{citizenName}</span>

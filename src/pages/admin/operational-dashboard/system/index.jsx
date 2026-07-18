@@ -17,7 +17,9 @@ import StatCard from "@/components/StatCard";
 import ResourceUsageChart from "./components/ResourceUsageChart";
 import { Badge } from "@/components/ui/badge";
 import ExportButton from "@/components/ExportButton";
+import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import { SYSTEM_HEALTH } from "@/lib/biharData";
+import { useGetSystemHealth } from "../hooks";
 
 const API_ENDPOINTS = [
   {
@@ -135,16 +137,19 @@ export default function SystemTab() {
     },
     {
       name: "DB Conn",
-      usage: Math.round(
-        (SYSTEM_HEALTH.dbConnections / 100) * 100,
-      ),
+      usage: Math.round((SYSTEM_HEALTH.dbConnections / 100) * 100),
       limit: 100,
     },
   ];
-
+  const { data, isLoading, error } = useGetSystemHealth(
+    {},
+    { refetchInterval: 60 * 1000 },
+  );
+  const systemStats = data?.data?.data;
+  console.log({ systemStats });
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <StatCard
           icon={Server}
           label="Uptime"
@@ -186,8 +191,8 @@ export default function SystemTab() {
           color="purple"
           sublabel="Pool: 100"
         />
-      </div>
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      </div> */}
+      {/* <div className="bg-white rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground flex items-center gap-2">
             <Activity className="w-5 h-5 text-blue-500" /> API Endpoint Health
@@ -245,8 +250,8 @@ export default function SystemTab() {
             </tbody>
           </table>
         </div>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      </div> */}
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ResourceUsageChart data={chartData} xKey="name" />
         <div className="bg-white rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-3">
@@ -297,91 +302,134 @@ export default function SystemTab() {
             })}
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="bg-white rounded-xl border border-border p-5">
-        <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-          <Server className="w-5 h-5 text-blue-500" /> Infrastructure Details
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="p-3 bg-muted/50 rounded-lg">
-            <div className="text-xs text-muted-foreground">
-              Storage Used
-            </div>
-            <div className="text-lg font-bold text-foreground">
-              {SYSTEM_HEALTH.storageUsed}
-            </div>
-            <div className="mt-1 w-full bg-border rounded-full h-1.5">
-              <div
-                className="bg-amber-500 h-1.5 rounded-full"
-                style={{ width: "48%" }}
-              ></div>
-            </div>
-          </div>
-          <div className="p-3 bg-muted/50 rounded-lg">
-            <div className="text-xs text-muted-foreground">CPU Usage</div>
-            <div className="text-lg font-bold text-foreground">
-              {SYSTEM_HEALTH.cpuUsage}%
-            </div>
-            <div className="mt-1 w-full bg-border rounded-full h-1.5">
-              <div
-                className="bg-blue-500 h-1.5 rounded-full"
-                style={{ width: `${SYSTEM_HEALTH.cpuUsage}%` }}
-              ></div>
-            </div>
-          </div>
-          <div className="p-3 bg-muted/50 rounded-lg">
-            <div className="text-xs text-muted-foreground">
-              Memory Usage
-            </div>
-            <div className="text-lg font-bold text-foreground">
-              {SYSTEM_HEALTH.memoryUsage}%
-            </div>
-            <div className="mt-1 w-full bg-border rounded-full h-1.5">
-              <div
-                className="bg-purple-500 h-1.5 rounded-full"
-                style={{ width: `${SYSTEM_HEALTH.memoryUsage}%` }}
-              ></div>
-            </div>
-          </div>
-          <div className="p-3 bg-muted/50 rounded-lg">
-            <div className="text-xs text-muted-foreground">
-              DB Connection Pool
-            </div>
-            <div className="text-lg font-bold text-foreground">
-              {SYSTEM_HEALTH.dbConnections} / 100
-            </div>
-            <div className="mt-1 w-full bg-border rounded-full h-1.5">
-              <div
-                className="bg-emerald-500 h-1.5 rounded-full"
-                style={{ width: `${SYSTEM_HEALTH.dbConnections}%` }}
-              ></div>
-            </div>
-          </div>
-          <div className="p-3 bg-muted/50 rounded-lg">
-            <div className="text-xs text-muted-foreground">
-              API Avg Response
-            </div>
-            <div className="text-lg font-bold text-foreground">
-              {SYSTEM_HEALTH.apiResponseTime}
-            </div>
-            <div className="text-xs text-emerald-600 mt-1">
-              Within target (&lt;200ms)
-            </div>
-          </div>
-          <div className="p-3 bg-muted/50 rounded-lg">
-            <div className="text-xs text-muted-foreground">
-              System Uptime (30d)
-            </div>
-            <div className="text-lg font-bold text-foreground">
-              {SYSTEM_HEALTH.uptime}
-            </div>
-            <div className="text-xs text-emerald-600 mt-1">
-              Exceeds target (99.9%)
-            </div>
-          </div>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h3 className="font-bold text-foreground flex items-center gap-2">
+            <Server className="w-5 h-5 text-blue-500" /> Infrastructure Details
+          </h3>
+          {/* {systemStats?.time && (
+            <span className="text-xs text-muted-foreground font-mono">
+              Checked: {systemStats.time}
+            </span>
+          )} */}
         </div>
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* CPU Card */}
+            <div className="p-6 bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg">
+                    <Cpu className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-muted-foreground">
+                      CPU Usage
+                    </h4>
+                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
+                      {systemStats?.cpu?.cores}{" "}
+                      {systemStats?.cpu?.cores === 1 ? "Core" : "Cores"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-3xl font-extrabold text-foreground tracking-tight">
+                    {systemStats?.cpu?.usagePercentage?.toFixed(2) ?? "0.00"}%
+                  </span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${systemStats?.cpu?.usagePercentage ?? 0}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Memory Card */}
+            <div className="p-6 bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-purple-50 text-purple-600 rounded-lg">
+                    <HardDrive className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-muted-foreground">
+                      Memory (RAM)
+                    </h4>
+                    <p className="text-[10px] text-purple-700 font-mono mt-0.5 bg-purple-50 px-1.5 py-0.5 rounded">
+                      {systemStats?.ram?.free?.toFixed(2) ?? "0.00"} GB free
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-3xl font-extrabold text-foreground tracking-tight">
+                    {systemStats?.ram?.usagePercentage?.toFixed(2) ?? "0.00"}%
+                  </span>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {systemStats?.ram?.used?.toFixed(2) ?? "0.00"} /{" "}
+                    {systemStats?.ram?.total?.toFixed(2) ?? "0.00"} GB
+                  </span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2">
+                  <div
+                    className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${systemStats?.ram?.usagePercentage ?? 0}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Storage Card */}
+            <div className="p-6 bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-amber-50 text-amber-600 rounded-lg">
+                    <Database className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-muted-foreground">
+                      Disk (Storage)
+                    </h4>
+                    <p className="text-[10px] text-amber-700 font-mono mt-0.5 bg-amber-50 px-1.5 py-0.5 rounded">
+                      {systemStats?.disk?.free?.toFixed(2) ?? "0.00"} GB free
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-3xl font-extrabold text-foreground tracking-tight">
+                    {systemStats?.disk?.usagePercentage?.toFixed(2) ?? "0.00"}%
+                  </span>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {systemStats?.disk?.used?.toFixed(2) ?? "0.00"} /{" "}
+                    {systemStats?.disk?.total?.toFixed(2) ?? "0.00"} GB
+                  </span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2">
+                  <div
+                    className="bg-amber-500 h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${systemStats?.disk?.usagePercentage ?? 0}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </LoaderErrWrapper>
       </div>
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      {/* <div className="bg-white rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border">
           <h3 className="font-bold text-foreground flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-amber-500" /> Recent System Errors &amp; Alerts
@@ -452,7 +500,7 @@ export default function SystemTab() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

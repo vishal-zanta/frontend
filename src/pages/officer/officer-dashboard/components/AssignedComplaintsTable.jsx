@@ -25,8 +25,8 @@ export default function AssignedComplaintsTable({}) {
 
   return (
     <div className="bg-white rounded-xl border border-border">
-      <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-        <h3 className="font-bold text-foreground">My Assigned Complaints</h3>
+      <div className="px-3 lg:px-5 py-3 lg:py-4 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <h3 className="font-bold text-foreground text-xs lg:text-sm">My Assigned Complaints</h3>
         <div className="flex gap-2">
           <div className="relative">
             <SearchDebounced
@@ -35,7 +35,7 @@ export default function AssignedComplaintsTable({}) {
             />
           </div>
           <Link to="/officer/complaints">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="text-xs h-7 lg:h-9">
               View All
             </Button>
           </Link>

@@ -235,9 +235,9 @@ export default function ComplaintDetailView({
   const fieldVisit = Array.isArray(c?.fieldVisits) ? c.fieldVisits?.[0] : (c?.fieldVisits || {});
 
   return (
-    <div className="lg:col-span-2 space-y-4">
+    <div className="md:col-span-2 space-y-4">
       <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
-        <div className="bg-white rounded-xl border border-border p-5 space-y-5">
+        <div className="bg-white rounded-xl border border-border p-3 lg:p-5 space-y-4 lg:space-y-5">
           {/* Header Section */}
           <ComplaintDetailHeader
             c={c}
@@ -307,8 +307,8 @@ export default function ComplaintDetailView({
         </div>
 
         {/* Timeline */}
-        <div className="bg-white rounded-xl border border-border p-5">
-          <h3 className="font-bold text-foreground mb-4">Complaint Timeline</h3>
+        <div className="bg-white rounded-xl border border-border p-3 lg:p-5">
+          <h3 className="font-bold text-foreground text-xs lg:text-sm mb-3 lg:mb-4">Complaint Timeline</h3>
           <ComplaintTimeline events={c.timeline || []} />
         </div>
       </LoaderErrWrapper>

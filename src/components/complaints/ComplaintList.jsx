@@ -22,6 +22,7 @@ export default function ComplaintList({
   setStatusUpdate,
   onStatsChange,
   useGetComplaintsOfOfiicer,
+  autoSelect = true,
 }) {
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -52,17 +53,18 @@ export default function ComplaintList({
 
   // Automatically select the first complaint when the list loads or when current selection is filtered out
   useEffect(() => {
+    if (!autoSelect) return;
     if (complaints.length > 0) {
       const isSelectedInList = complaints.some(
         (c) => (c._id || c.id) === (selected?._id || selected?.id)
       );
       if (!selected || !isSelectedInList) {
-        onSelect(complaints[0]);
+        onSelect(complaints[0], true);
       }
     } else {
       onSelect(null);
     }
-  }, [complaints, selected, onSelect]);
+  }, [complaints, selected, onSelect, autoSelect]);
 
   // Compute and report stats up
   useEffect(() => {

@@ -67,7 +67,6 @@
     "react-error-boundary": "^6.1.2",
     "react-google-recaptcha-v3": "^1.11.0",
     "react-hook-form": "^7.81.0",
-    "react-hot-toast": "^2.6.0",
     "react-leaflet": "^4.2.1",
     "react-markdown": "^9.0.1",
     "react-quill": "^2.0.0",

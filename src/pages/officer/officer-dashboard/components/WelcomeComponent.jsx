@@ -1,16 +1,8 @@
 import React from "react";
-import { useGetDashboardData } from "../query";
-import LoaderErrWrapper from "@/components/LoaderErrWrapper";
-import {useAuth} from "@/context/AuthContext"
+import { useAuth } from "@/context/AuthContext";
 
 export default function WelcomeComponent({ officer, profileId, profileLabel }) {
-  // Call the useGetDashboardData hook
-  const {profile} = useAuth();
-  // console.log({profile});
-  // const { data: analyticsData, isLoading, error } = useGetDashboardData({ role: profileId });
-
-  // const apiData = analyticsData?.data?.data || {};
-  // const current = apiData.currentPeriod || {};
+  const { profile } = useAuth();
 
   const isStateLevel =
     profileId === "suda" || profileId === "division" || profileId === "zone";
@@ -23,29 +15,25 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
   ) : (
     <>
       {displayRole} • Officer ID:{" "}
-      <span className="font-mono text-white">{officer.id}</span> •{" "}
-      {officer.wards?.join(", ") || "All wards"}
+      <span className="font-mono text-white">{profile?.userCode}</span> •{" "}
+      {profile?.district?.name || profile?.district}
     </>
   );
 
-  // const activeCount = isStateLevel
-  //   ? (current.active ?? apiData.active ?? 0)
-  //   : officer.pending;
-
   return (
-    <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-6 text-white">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold mb-1">Welcome, {displayName}</h1>
-          <p className="text-white/80 text-sm">{subtitle}</p>
+    <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-4 lg:p-6 text-white">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-lg lg:text-2xl font-bold mb-0.5 truncate">
+            Welcome, {displayName}
+          </h1>
+          <p className="text-white/80 text-xs lg:text-sm line-clamp-2">{subtitle}</p>
         </div>
-        <div className="text-right min-w-[120px]">
-          {/* <LoaderErrWrapper isLoading={isLoading} error={error?.message}> */}
-            <div className="text-3xl font-bold">
-              {(0).toLocaleString("en-IN")}
-            </div>
-            <div className="text-sm text-white/80">Active Complaints</div>
-          {/* </LoaderErrWrapper> */}
+        <div className="text-right shrink-0">
+          <div className="text-2xl lg:text-3xl font-bold">
+            {(0).toLocaleString("en-IN")}
+          </div>
+          <div className="text-xs lg:text-sm text-white/80 whitespace-nowrap">Active Complaints</div>
         </div>
       </div>
     </div>
