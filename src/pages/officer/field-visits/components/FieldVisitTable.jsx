@@ -14,6 +14,8 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
             <th className="px-4 py-3 font-medium">Visit ID</th>
             <th className="px-4 py-3 font-medium">Complaint ID</th>
             <th className="px-4 py-3 font-medium text-nowrap">Date of Complaint</th>
+            <th className="px-4 py-3 font-medium text-nowrap">Scheduled Visit</th>
+
             <th className="px-4 py-3 font-medium min-w-40">Service</th>
             <th className="px-4 py-3 font-medium">Location</th>
             <th className="px-4 py-3 font-medium">Scheduled</th>
@@ -54,6 +56,16 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                     year: "numeric",
                   })}
                 </td>
+                 <td className="px-4 py-3 text-nowrap">
+                {fv?.schedule ?   <>
+                  {new Date(fv?.schedule).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                  </> : "-"}
+                </td>
+                
 
                 <td className="px-4 py-3 text-muted-foreground text-xs">
                   {fv.serviceDetails?.title || "-"}

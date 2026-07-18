@@ -639,10 +639,10 @@ export function FieldVisitDetailDialog({
        rawVisit?.grievance?.address?.district?.name||  rawVisit?.grievance?.address?.district ||
         "-"
       : rawVisit.district || "-",
-    scheduledDate:
-      rawVisit.schedule || rawVisit.scheduledDate
+    schedule:
+      rawVisit.schedule 
         ? (() => {
-            const dateStr = rawVisit.schedule || rawVisit.scheduledDate;
+            const dateStr = rawVisit.schedule;
             return dateStr.includes("-") || dateStr.includes("T")
               ? new Date(dateStr).toLocaleDateString("en-IN", {
                   day: "2-digit",
@@ -721,10 +721,10 @@ export function FieldVisitDetailDialog({
               <Calendar className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">Scheduled:</span>
               <span className="font-medium">
-                {visit.scheduledDate
-                  ? visit.scheduledDate.includes("-") ||
-                    visit.scheduledDate.includes("T")
-                    ? new Date(visit.scheduledDate).toLocaleDateString(
+                {visit.schedule
+                  ? visit.schedule.includes("-") ||
+                    visit.schedule.includes("T")
+                    ? new Date(visit.schedule).toLocaleDateString(
                         "en-IN",
                         {
                           day: "2-digit",
@@ -732,7 +732,7 @@ export function FieldVisitDetailDialog({
                           year: "numeric",
                         },
                       )
-                    : visit.scheduledDate
+                    : visit.schedule
                   : "-"}
               </span>
             </div>

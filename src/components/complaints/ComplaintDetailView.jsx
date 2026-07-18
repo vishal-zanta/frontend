@@ -232,6 +232,8 @@ export default function ComplaintDetailView({
   const attachments = c.evidence?.attachments || [];
   const geotaggedImages = c.geotaggedImages || [];
 
+  const fieldVisit = Array.isArray(c?.fieldVisits) ? c.fieldVisits?.[0] : (c?.fieldVisits || {});
+
   return (
     <div className="lg:col-span-2 space-y-4">
       <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
@@ -299,6 +301,8 @@ export default function ComplaintDetailView({
             postMutation={postMutation}
             currentStatus={displayStatus}
             currentPriority={displayPriority}
+            fieldVisit={fieldVisit}
+            geotaggedImages={geotaggedImages}
           />
         </div>
 

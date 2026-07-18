@@ -24,9 +24,12 @@ export default function ComplaintActionSection({
   postMutation,
   currentStatus,
   currentPriority,
+  fieldVisit,
+  geotaggedImages,
 }) {
   const { profiledata } = useAuth();
   const [remark, setRemark] = useState(initialRemark);
+  const [statusErr, setStatusErr] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(currentStatus || "");
   const [selectedPriority, setSelectedPriority] = useState(
     currentPriority || "",
@@ -73,6 +76,23 @@ export default function ComplaintActionSection({
       });
     }
   };
+  const handleStatusChange = (e, statusObj) => {
+    setStatusErr(null);
+    if (statusObj?.requireFieldVisit) {
+      console.log({ fieldVisit, geotaggedImages });
+      if (fieldVisit?.status == "COMPLETED" && !!geotaggedImages?.[0]?.url) {
+        setSelectedStatus(e.target.value);
+      } else {
+        getErrorToast(
+          fieldVisit?.status !== "COMPLETED"
+            ? "Field visit not completed"
+            : "Geo-tag photo not uploaded",
+        );
+      }
+    } else {
+      setSelectedStatus(e.target.value);
+    }
+  };
 
   const handleSavePriority = () => {
     updatePriorityMutation.mutate({
@@ -90,7 +110,12 @@ export default function ComplaintActionSection({
         <div className="flex gap-2 items-center">
           <select
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
+            onChange={(e) =>
+              handleStatusChange(
+                e,
+                STATUS_ACTIONS.find((s) => s.value === e.target.value),
+              )
+            }
             disabled={updateStatusMutation.isPending}
             className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -110,6 +135,7 @@ export default function ComplaintActionSection({
               </option>
             ))}
           </select>
+
           {selectedStatus !== currentStatus && (
             <Button
               onClick={handleSaveStatus}
@@ -121,6 +147,11 @@ export default function ComplaintActionSection({
             </Button>
           )}
         </div>
+        {statusErr && (
+          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            {statusErr}
+          </div>
+        )}
 
         {statusUpdate && (
           <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-700">

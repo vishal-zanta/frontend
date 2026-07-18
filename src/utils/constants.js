@@ -53,7 +53,8 @@ export const STATUS_ACTIONS = [
     badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
-    roleHidden : ["Call Centre Supervisor", "Call Centre Executive", "Admin"]
+    roleHidden : ["Call Centre Supervisor", "Call Centre Executive", "Admin"],
+    requireFieldVisit : true
   },
   {
     label: "Closed",
