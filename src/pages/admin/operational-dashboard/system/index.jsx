@@ -14,7 +14,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import StatCard from "@/components/StatCard";
-import ResourceUsageChart from "./charts/ResourceUsageChart";
+import ResourceUsageChart from "./components/ResourceUsageChart";
 import { Badge } from "@/components/ui/badge";
 import ExportButton from "@/components/ExportButton";
 import { SYSTEM_HEALTH } from "@/lib/biharData";

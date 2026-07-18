@@ -1,7 +1,7 @@
 import React from "react";
 import { Clock, Activity, TrendingUp, BarChart3 } from "lucide-react";
 import StatCard from "@/components/StatCard";
-import SlaComplianceChart from "./charts/SlaComplianceChart";
+import SlaComplianceChart from "./components/SlaComplianceChart";
 import ExportButton from "@/components/ExportButton";
 import { SLA_PERFORMANCE } from "@/lib/biharData";
 

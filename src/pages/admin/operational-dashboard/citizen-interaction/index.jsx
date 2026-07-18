@@ -1,8 +1,8 @@
 import React from "react";
 import { Users, Activity, TrendingUp } from "lucide-react";
 import StatCard from "@/components/StatCard";
-import ChannelSatisfactionChart from "./charts/ChannelSatisfactionChart";
-import TopIssuesChart from "./charts/TopIssuesChart";
+import ChannelSatisfactionChart from "./components/ChannelSatisfactionChart";
+import TopIssuesChart from "./components/TopIssuesChart";
 import { CITIZEN_INTERACTION } from "@/lib/biharData";
 
 export default function CitizenInteractionTab() {

@@ -1,8 +1,8 @@
 import React from "react";
 import { Users, Clock, TrendingUp, Activity } from "lucide-react";
 import StatCard from "@/components/StatCard";
-import AgentPerformanceChart from "./charts/AgentPerformanceChart";
-import AgentStatusChart from "./charts/AgentStatusChart";
+import AgentPerformanceChart from "./components/AgentPerformanceChart";
+import AgentStatusChart from "./components/AgentStatusChart";
 import { Badge } from "@/components/ui/badge";
 import ExportButton from "@/components/ExportButton";
 import { OfficerId } from "@/components/ComplaintDetailDialog";

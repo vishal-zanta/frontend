@@ -1,9 +1,9 @@
 import React from "react";
 import { PhoneCall, PhoneMissed, Clock, TrendingUp } from "lucide-react";
 import StatCard from "@/components/StatCard";
-import CallTrafficChart from "./charts/CallTrafficChart";
-import IvrFunnelChart from "./charts/IvrFunnelChart";
-import PeakHourChart from "./charts/PeakHourChart";
+import CallTrafficChart from "./components/CallTrafficChart";
+import IvrFunnelChart from "./components/IvrFunnelChart";
+import PeakHourChart from "./components/PeakHourChart";
 
 export default function CallVolumeTab({ pd }) {
   const funnelData = [

@@ -34,6 +34,7 @@ export const QUERY_KEYS = {
   MIS_REPORTS: "mis-reports",
   MIS_STATS: "mis-stats",
   SHIFTS: "shifts",
+  SYSTEM_HEALTH: "system-health",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [

@@ -1,7 +1,7 @@
 import React from "react";
 import { Activity, Clock, TrendingUp } from "lucide-react";
 import StatCard from "@/components/StatCard";
-import GrievanceFlowChart from "./charts/GrievanceFlowChart";
+import GrievanceFlowChart from "./components/GrievanceFlowChart";
 
 export default function GrievanceTab({ pd }) {
   return (

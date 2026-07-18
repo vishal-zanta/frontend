@@ -20,12 +20,12 @@ import TimeRangeFilter from "@/components/TimeRangeFilter";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/utils/constants";
 
-import CallVolumeTab from "./components/CallVolumeTab";
-import CcePerformanceTab from "./components/CcePerformanceTab";
-import SlaPerformanceTab from "./components/SlaPerformanceTab";
-import GrievanceTab from "./components/GrievanceTab";
-import CitizenInteractionTab from "./components/CitizenInteractionTab";
-import SystemTab from "./components/SystemTab";
+import CallVolumeTab from "./call-volume";
+import CcePerformanceTab from "./cce-performance";
+import SlaPerformanceTab from "./sla-performance";
+import GrievanceTab from "./grievance";
+import CitizenInteractionTab from "./citizen-interaction";
+import SystemTab from "./system";
 
 const tabs = [
   {
