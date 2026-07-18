@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PortalLayout from "@/components/PortalLayout";
 
 // Imported modular components
-import StatsCards from "./components/StatsCards";
+import StatsCards from "../officer-dashboard/components/StatsCards";
 import ComplaintList from "@/components/complaints/ComplaintList";
 import ComplaintDetailView from "@/components/complaints/ComplaintDetailView";
 import { useGetComplaintsOfOfiicer } from "@/hooks/query/useGetComplaints";
@@ -21,12 +21,7 @@ export default function OfficerComplaints() {
     <PortalLayout role="officer" isHideOverflow={true}>
       <div className="p-6 space-y-6 relative">
         {/* Stats */}
-        <StatsCards
-          totalAssigned={stats.totalAssigned}
-          pendingAction={stats.pendingAction}
-          resolved={stats.resolved}
-          slaBreachRisk={stats.slaBreachRisk}
-        />
+        <StatsCards />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0 items-start">
           {/* Complaint list */}

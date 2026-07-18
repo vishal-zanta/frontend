@@ -14,8 +14,11 @@ export const AuthProvider = ({ children }) => {
 
    return checkPermissionManual(validPermissions, permission)
   };
+  const profiledata = {
+    role : profile?.role?.designationEnglish,
+  }
   return (
-    <authContext.Provider value={{ profile, setProfile, hasPermission }}>
+    <authContext.Provider value={{ profile, setProfile, hasPermission, profiledata }}>
       {children}
     </authContext.Provider>
   );

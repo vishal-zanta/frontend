@@ -52,6 +52,8 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Resolved",
     badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
     isRemark: true,
+    disabled: ["RESOLVED", "CLOSED"],
+    roleHidden : ["Call Centre Supervisor", "Call Centre Executive", "Admin"]
   },
   {
     label: "Closed",
@@ -61,6 +63,8 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Closed",
     badgeClass: "bg-slate-50 text-slate-500 border-slate-200",
     isRemark: true,
+    disabled: ["RESOLVED", "CLOSED"]
+
   },
   {
     label: "In Progress",
@@ -69,6 +73,8 @@ export const STATUS_ACTIONS = [
     color: "bg-amber-600 hover:bg-amber-700",
     badgeLabel: "In Progress",
     badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+    disabled: ["RESOLVED", "CLOSED"]
+
   },
   {
     label: "Reopen",
@@ -87,6 +93,8 @@ export const STATUS_ACTIONS = [
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Pending",
     badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+    disabled: ["RESOLVED", "CLOSED"]
+
   },
   {
     label: "Escalate",
@@ -95,6 +103,8 @@ export const STATUS_ACTIONS = [
     color: "bg-red-600 hover:bg-red-700",
     badgeLabel: "Escalated",
     badgeClass: "bg-red-100 text-red-800 border-red-300",
+    disabled: ["RESOLVED", "CLOSED"]
+
   },
 ];
 

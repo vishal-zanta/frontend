@@ -13,14 +13,15 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
           <tr className="text-left text-xs text-muted-foreground">
             <th className="px-4 py-3 font-medium">Visit ID</th>
             <th className="px-4 py-3 font-medium">Complaint ID</th>
+            <th className="px-4 py-3 font-medium text-nowrap">Date of Complaint</th>
             <th className="px-4 py-3 font-medium min-w-40">Service</th>
             <th className="px-4 py-3 font-medium">Location</th>
             <th className="px-4 py-3 font-medium">Scheduled</th>
             <th className="px-4 py-3 font-medium">Priority</th>
-            <th className="px-4 py-3 font-medium min-w-32">Geo-Tag</th>
+            <th className="px-4 py-3 font-medium min-w-32 text-center">Geo-Tag</th>
             <th className="px-4 py-3 font-medium">Photo</th>
             <th className="px-4 py-3 font-medium">Status</th>
-           {!isHideAction &&  <th className="px-4 py-3 font-medium text-center">Actions</th>}
+           {!isHideAction &&  <th className="px-4 py-3 font-medium text-center sticky right-0 bg-[#F4F7FA]">Actions</th>}
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -46,6 +47,14 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                     "-"
                   )}
                 </td>
+                 <td className="px-4 py-3 text-nowrap">
+                  {new Date(fv.grievance?.createdAt).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </td>
+
                 <td className="px-4 py-3 text-muted-foreground text-xs">
                   {fv.serviceDetails?.title || "-"}
                   {fv.subServiceDetails?.title && (
@@ -76,11 +85,11 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                     "-"
                   )}
                 </td>
-                <td className="px-4 py-3 font-mono text-[10px] text-muted-foreground">
+                <td className="px-4 py-3 font-mono text-[10px] text-muted-foreground text-nowrap">
                   {(() => {
                     const coords = fv.grievance?.geotaggedImages?.[0]?.coordinates;
                     return coords?.latitude && coords?.longitude
-                      ? `${String(coords.latitude).slice(0, 6)} | ${String(coords.longitude).slice(0, 6)}`
+                      ? `${String(coords.latitude).slice(0, 7)} | ${String(coords.longitude).slice(0, 7)}`
                       : "-";
                   })()}
                 </td>
@@ -109,7 +118,7 @@ export default function FieldVisitTable({ filtered = [], onEdit, onView , isHide
                     {fv.status || "-"}
                   </Badge>
                 </td>
-               {!isHideAction &&  <td className="px-4 py-3 text-center">
+               {!isHideAction &&  <td className="px-4 py-3 text-center sticky right-0 bg-[#fff]">
                   <div className="flex gap-2 justify-center">
                     
                     <button

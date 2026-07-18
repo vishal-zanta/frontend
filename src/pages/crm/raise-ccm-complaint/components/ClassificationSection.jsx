@@ -82,6 +82,7 @@ export default function ClassificationSection({
           placeholder={t("Brief subject of your complaint", "शिकायत का संक्षिप्त विषय")}
           required
           className="md:col-span-2"
+          isLettersAllowed
         />
       </div>
     </FormSection>

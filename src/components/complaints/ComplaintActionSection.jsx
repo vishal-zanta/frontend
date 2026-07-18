@@ -6,6 +6,7 @@ import EditDialog from "../EditDialog";
 import { Textarea } from "../ui/textarea";
 import { getErrorToast } from "@/utils/helpers";
 import { Label } from "../ui/label";
+import { useAuth } from "@/context/AuthContext";
 
 const initialRemark = { isOpen: false, value: "", id: null, status: null };
 
@@ -24,9 +25,12 @@ export default function ComplaintActionSection({
   currentStatus,
   currentPriority,
 }) {
+  const { profiledata } = useAuth();
   const [remark, setRemark] = useState(initialRemark);
   const [selectedStatus, setSelectedStatus] = useState(currentStatus || "");
-  const [selectedPriority, setSelectedPriority] = useState(currentPriority || "");
+  const [selectedPriority, setSelectedPriority] = useState(
+    currentPriority || "",
+  );
 
   useEffect(() => {
     if (currentStatus) {
@@ -90,9 +94,18 @@ export default function ComplaintActionSection({
             disabled={updateStatusMutation.isPending}
             className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <option value="" disabled>Select Status</option>
+            <option value="" disabled>
+              Select Status
+            </option>
             {STATUS_ACTIONS.map((a, i) => (
-              <option key={i} value={a.value}>
+              <option
+                key={i}
+                value={a.value}
+                disabled={
+                  (a.disabled && a.disabled.includes(currentStatus)) ||
+                  (a.roleHidden && a.roleHidden.includes(profiledata?.role))
+                }
+              >
                 {a.badgeLabel || a.label}
               </option>
             ))}
@@ -128,7 +141,9 @@ export default function ComplaintActionSection({
             disabled={updatePriorityMutation.isPending}
             className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <option value="" disabled>Select Priority</option>
+            <option value="" disabled>
+              Select Priority
+            </option>
             {PRIORITY_ACTIONS.map((a, i) => (
               <option key={i} value={a.value}>
                 {a.badgeLabel || a.label}

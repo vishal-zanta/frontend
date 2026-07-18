@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
-import { isValidNumber } from "@/utils/helpers";
+import { isAlpha, isValidNumber } from "@/utils/helpers";
 
 export default function RhfInput({
   name,
@@ -18,6 +18,7 @@ export default function RhfInput({
   disabled = false,
   isNumsOnly = false,
   isDisableFutureDates= false,
+  isLettersAllowed = false,
 
   
   ...props
@@ -58,6 +59,9 @@ export default function RhfInput({
               {...field}
               onChange={(e) => {
                 if (isNumsOnly && !isValidNumber(e.target.value)) {
+                  return;
+                }
+                if (isLettersAllowed && !isAlpha(e.target.value)) {
                   return;
                 }
                 field.onChange(e);

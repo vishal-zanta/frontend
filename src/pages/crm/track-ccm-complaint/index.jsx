@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PortalLayout from "@/components/PortalLayout";
 
 // Imported modular components from officer complaints
-import StatsCards from "../../officer/officer-complaints/components/StatsCards";
+import StatsCards from "./components/StatsCards";
 import ComplaintList from "@/components/complaints/ComplaintList";
 import ComplaintDetailView from "@/components/complaints/ComplaintDetailView";
 import { useGetComplaintsForCCEandAdminInfinite } from "@/hooks/query/useGetComplaints";
