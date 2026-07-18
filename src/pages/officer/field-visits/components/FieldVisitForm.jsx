@@ -20,12 +20,14 @@ export default function FieldVisitForm({ onCancel, isLoading }) {
         options={FIELD_VISIT_STATUS}
         placeholder="Select status..."
       />
-      <RhfInput
-        name="schedule"
-        label="Schedule Date"
-        type="date"
-        required
-      />
+      {status !== "CANCELLED" && (
+        <RhfInput
+          name="schedule"
+          label="Schedule Date"
+          type="date"
+          required
+        />
+      )}
       {status === "COMPLETED" && (
         <RhfTextarea
           name="remarks"

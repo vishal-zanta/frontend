@@ -77,6 +77,8 @@ export const STATUS_ACTIONS = [
     color: "bg-yellow-600 hover:bg-yellow-700",
     badgeLabel: "Reopened",
     badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-200",
+    isRemark: true,
+
   },
   {
     label: "Open",

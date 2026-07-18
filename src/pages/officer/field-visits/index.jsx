@@ -146,7 +146,10 @@ export default function FieldVisits() {
                   id: editVisit._id,
                   data: {
                     status: formData.status,
-                    schedule: formData.schedule,
+                    schedule:
+                      formData.status === "CANCELLED"
+                        ? undefined
+                        : formData.schedule,
                     remarks:
                       formData.status === "COMPLETED"
                         ? formData.remarks
