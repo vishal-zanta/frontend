@@ -121,9 +121,10 @@ export default function ComplaintDetailHeader({
           </select>
         </div>
       ) : (
-        <div className="text-right text-xs text-muted-foreground">
+        <div className="text-right text-xs text-muted-foreground space-y-1">
           <div>Filed: {formattedDate}</div>
-          <div>SLA: {c.classification?.subService?.sla || c.slaHours || "24"}h</div>
+                    <SLATimer createdAt={c.createdAt} slaHours={c.classification?.subService?.sla || c.slaHours} />
+
         </div>
       )}
     </div>
