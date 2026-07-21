@@ -48,6 +48,7 @@ export const QUERY_KEYS = {
   SHIFTS: "shifts",
   SYSTEM_HEALTH: "system-health",
   DEPARTMENTS: "departments",
+  SKILLS: "skills",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
@@ -312,7 +313,8 @@ export const apiPermissionOptions = [
   { label: "Chat", value: "CHAT" },
 
   { label: "Call statistics", value: "CALL_STATS" },
-  {label : "Department Management", value : "DEPARTMENT_MANAGEMENT"}
+  {label : "Department Management", value : "DEPARTMENT_MANAGEMENT"},
+  // {label : "Skill Management",value : "SKILL_SET_MANAGEMENT"}
 ];
 
 export const PERMISSIONS = {
@@ -383,5 +385,6 @@ export const PERMISSIONS = {
   CHAT: ["CHAT"],
 
   CALL_STATS: ["CALL_STATS"],
-  DEPARTMENT_MANAGEMENT : ["DEPARTMENT_MANAGEMENT"]
+  DEPARTMENT_MANAGEMENT : ["DEPARTMENT_MANAGEMENT"],
+  // SKILL_SET_MANAGEMENT: ["SKILL_SET_MANAGEMENT"]
 };

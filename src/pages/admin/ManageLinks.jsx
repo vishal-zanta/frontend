@@ -260,9 +260,9 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
     <div className="bg-white rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-muted/50">
+          <thead className="bg-[#F4F7FA]">
             <tr className="text-left text-xs text-muted-foreground">
-              <th className="px-3 py-3 font-medium sticky left-0 bg-muted/50 z-10">
+              <th className="px-3 py-3 font-medium sticky left-0 bg-[#F4F7FA] z-10">
                 Menu Item
               </th>
               {cols ? (
@@ -447,7 +447,7 @@ export default function ManageLinks() {
           </TabsContent>
         </Tabs>
 
-        <div className="bg-muted/50 border border-border rounded-xl p-4 text-sm text-muted-foreground">
+        <div className="bg-[#F4F7FA] border border-border rounded-xl p-4 text-sm text-muted-foreground">
           <strong>Note:</strong> Citizen Access uses a fundamentally different
           access model (public self-service with own-record-only visibility) vs.
           internal staff RBAC (role-based hierarchical permissions). They are

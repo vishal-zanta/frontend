@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ── Field Visit Data (shared across pages) ──
 export const FIELD_VISIT_DATA = [
@@ -191,7 +192,7 @@ export function OfficerId({ id, className = "" }) {
 export function FieldVisitId({ id, className = "", visit: propVisit }) {
   const [open, setOpen] = useState(false);
   const visit = propVisit || FIELD_VISIT_DATA.find((v) => v.id === id);
-  console.log({visit});
+  // console.log({visit});
   return (
     <>
       <button
@@ -215,6 +216,7 @@ export function ComplaintDetailDialog({
   onClose,
   complaintData,
 }) {
+  const { t } = useLanguage();
   const { pathname } = window.location;
   const isOfficer = pathname.startsWith("/officer");
 
@@ -234,7 +236,8 @@ export function ComplaintDetailDialog({
     ? {
         status: activeComplaint.status,
         priority: activeComplaint.assignedPriority,
-        source:  activeComplaint?.channel?.title || activeComplaint?.channel || "-",
+        source:
+          activeComplaint?.channel?.title || activeComplaint?.channel || "-",
         citizenName: activeComplaint.citizenInfo?.fullName || "-",
         mobile: activeComplaint.citizenInfo?.mobile || "-",
         districtName: activeComplaint.address?.district?.name || "-",
@@ -270,11 +273,13 @@ export function ComplaintDetailDialog({
       <DialogContent className="w-[95vw] max-w-2xl max-h-[88vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-sm lg:text-base">
-            Complaint Details
+            {t("Complaint Details", "शिकायत का विवरण")}
           </DialogTitle>
         </DialogHeader>
         <LoaderErrWrapper isLoading={query.isLoading} error={query.error}>
-          <span className="font-mono text-primary text-xs lg:text-sm">{displayId}</span>
+          <span className="font-mono text-primary text-xs lg:text-sm">
+            {displayId}
+          </span>
 
           {unifiedComplaint ? (
             <div className="space-y-3 lg:space-y-4">
@@ -290,26 +295,34 @@ export function ComplaintDetailDialog({
               <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">Mobile:</span><span className="font-medium">{unifiedComplaint.mobile}</span></div> */}
                 <div className="flex items-center gap-1.5">
                   <MapPin className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground">District:</span>
+                  <span className="text-muted-foreground">
+                    {t("District:", "जिला:")}
+                  </span>
                   <span className="font-medium truncate">
                     {unifiedComplaint.districtName}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Building2 className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground">Sub Division:</span>
+                  <span className="text-muted-foreground">
+                    {t("Sub Division:", "अनुमंडल:")}
+                  </span>
                   <span className="font-medium truncate">
                     {unifiedComplaint.ulbName}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Tag className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground">Village / Ward:</span>
+                  <span className="text-muted-foreground">
+                    {t("Village / Ward:", "ग्राम / वार्ड:")}
+                  </span>
                   <span className="font-medium">{unifiedComplaint.ward}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Calendar className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground">Filed:</span>
+                  <span className="text-muted-foreground">
+                    {t("Filed:", "दर्ज:")}
+                  </span>
                   <span className="font-medium">
                     {new Date(unifiedComplaint.createdDate).toLocaleDateString(
                       "en-IN",
@@ -318,9 +331,9 @@ export function ComplaintDetailDialog({
                   </span>
                 </div>
               </div>
-              <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
+              <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
                 <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-                  Service
+                  {t("Service", "सेवा")}
                 </div>
                 <div className="font-medium text-xs lg:text-sm">
                   {unifiedComplaint.serviceName} -{" "}
@@ -329,13 +342,15 @@ export function ComplaintDetailDialog({
               </div>
               <div>
                 <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-                  Description
+                  {t("Description", "विवरण")}
                 </div>
-                <p className="text-xs lg:text-sm">{unifiedComplaint.description}</p>
+                <p className="text-xs lg:text-sm">
+                  {unifiedComplaint.description}
+                </p>
               </div>
               <div>
                 <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-                  Subject
+                  {t("Subject", "विषय")}
                 </div>
                 <p className="text-xs lg:text-sm">
                   {unifiedComplaint.subject ||
@@ -345,10 +360,11 @@ export function ComplaintDetailDialog({
               </div>
               <div>
                 <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-                  Assigned Officer
+                  {t("Assigned Officer", "नियुक्त अधिकारी")}
                 </div>
                 <p className="text-xs lg:text-sm">
-                  {unifiedComplaint?.assignedOfficer || "Not Assigned"}
+                  {unifiedComplaint?.assignedOfficer ||
+                    t("Not Assigned", "असाइन नहीं किया गया")}
                 </p>
               </div>
               {/* <div className="flex gap-2 lg:gap-3">
@@ -377,7 +393,7 @@ export function ComplaintDetailDialog({
               </div> */}
               {unifiedComplaint.resolvedDate && (
                 <div className="text-xs lg:text-sm text-emerald-600">
-                  Resolved on{" "}
+                  {t("Resolved on", "समाधान की तारीख")}{" "}
                   {new Date(unifiedComplaint.resolvedDate).toLocaleDateString(
                     "en-IN",
                     { day: "2-digit", month: "short", year: "numeric" },
@@ -393,7 +409,7 @@ export function ComplaintDetailDialog({
             </div>
           ) : (
             <p className="text-muted-foreground text-xs lg:text-sm">
-              Complaint not found.
+              {t("Complaint not found.", "शिकायत नहीं मिली।")}
             </p>
           )}
         </LoaderErrWrapper>
@@ -403,42 +419,55 @@ export function ComplaintDetailDialog({
 }
 
 export function CallDetailDialog({ callId, open, onClose }) {
+  const { t } = useLanguage();
   const call = CALL_TRACKER.find((c) => c.id === callId);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Call Details - {callId}</DialogTitle>
+          <DialogTitle>
+            {t("Call Details", "कॉल विवरण")} - {callId}
+          </DialogTitle>
         </DialogHeader>
         {call ? (
           <div className="space-y-3 text-sm">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <span className="text-muted-foreground">Time:</span>{" "}
+                <span className="text-muted-foreground">
+                  {t("Time:", "समय:")}
+                </span>{" "}
                 <span className="font-medium">{call.time}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Duration:</span>{" "}
+                <span className="text-muted-foreground">
+                  {t("Duration:", "अवधि:")}
+                </span>{" "}
                 <span className="font-medium">{call.duration}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Agent:</span>{" "}
+                <span className="text-muted-foreground">
+                  {t("Agent:", "एजेंट:")}
+                </span>{" "}
                 <span className="font-medium">{call.agent}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Status:</span>{" "}
+                <span className="text-muted-foreground">
+                  {t("Status:", "स्थिति:")}
+                </span>{" "}
                 <span className="font-medium">{call.status}</span>
               </div>
               <div className="col-span-2">
-                <span className="text-muted-foreground">Disposition:</span>{" "}
+                <span className="text-muted-foreground">
+                  {t("Disposition:", "निपटान:")}
+                </span>{" "}
                 <span className="font-medium">{call.disposition}</span>
               </div>
             </div>
             {call.complaintId && (
-              <div className="bg-muted/50 rounded-lg p-3">
+              <div className="bg-[#F4F7FA] rounded-lg p-3">
                 <span className="text-xs text-muted-foreground">
-                  Linked Complaint:{" "}
+                  {t("Linked Complaint:", "संबद्ध शिकायत:")}{" "}
                 </span>
                 {/* <ComplaintId id={call.complaintId} /> */}
                 {call.complaintId}
@@ -446,7 +475,9 @@ export function CallDetailDialog({ callId, open, onClose }) {
             )}
           </div>
         ) : (
-          <p className="text-muted-foreground text-sm">Call not found.</p>
+          <p className="text-muted-foreground text-sm">
+            {t("Call not found.", "कॉल नहीं मिला।")}
+          </p>
         )}
       </DialogContent>
     </Dialog>
@@ -517,7 +548,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                 </Badge>
               </div>
             </div>
-            <div className="bg-muted/50 rounded-lg p-3">
+            <div className="bg-[#F4F7FA] rounded-lg p-3">
               <div className="text-xs text-muted-foreground mb-1">
                 Department / Services Assigned
               </div>
@@ -540,7 +571,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
               </div>
             </div>
             {officer.wards.length > 0 && (
-              <div className="bg-muted/50 rounded-lg p-3">
+              <div className="bg-[#F4F7FA] rounded-lg p-3">
                 <div className="text-xs text-muted-foreground mb-1">
                   Assigned Wards
                 </div>
@@ -604,7 +635,8 @@ export function FieldVisitDetailDialog({
   open,
   onClose,
 }) {
-  const rawVisit = propVisit ;
+  const { t } = useLanguage();
+  const rawVisit = propVisit;
   if (!rawVisit) return null;
 
   const isApiObject = !!(
@@ -631,23 +663,24 @@ export function FieldVisitDetailDialog({
         "-"
       : rawVisit.ward || "-",
     district: isApiObject
-      ? rawVisit.address?.district?.name ||rawVisit.address?.district || 
-       rawVisit?.grievance?.address?.district?.name||  rawVisit?.grievance?.address?.district ||
+      ? rawVisit.address?.district?.name ||
+        rawVisit.address?.district ||
+        rawVisit?.grievance?.address?.district?.name ||
+        rawVisit?.grievance?.address?.district ||
         "-"
       : rawVisit.district || "-",
-    schedule:
-      rawVisit.schedule 
-        ? (() => {
-            const dateStr = rawVisit.schedule;
-            return dateStr.includes("-") || dateStr.includes("T")
-              ? new Date(dateStr).toLocaleDateString("en-IN", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })
-              : dateStr;
-          })()
-        : "-",
+    schedule: rawVisit.schedule
+      ? (() => {
+          const dateStr = rawVisit.schedule;
+          return dateStr.includes("-") || dateStr.includes("T")
+            ? new Date(dateStr).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })
+            : dateStr;
+        })()
+      : "-",
     photoUploaded: isApiObject
       ? rawVisit.grievance?.geotaggedImages?.length > 0
       : rawVisit.photoUploaded,
@@ -671,15 +704,18 @@ export function FieldVisitDetailDialog({
       : rawVisit.geoTag || "-",
     notes: isApiObject ? rawVisit.remarks || "-" : rawVisit.notes || "-",
   };
-  console.log({visit, rawVisit}, "asdf")
+  // console.log({visit, rawVisit}, "asdf")
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="w-[95vw] max-w-lg max-h-[88vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-1.5 lg:gap-2 text-sm lg:text-base">
-            <Navigation className="w-4 h-4 lg:w-5 lg:h-5 text-primary" /> Field Visit Details
-            <span className="font-mono text-primary text-[10px] lg:text-sm">{visit.id}</span>
+            <Navigation className="w-4 h-4 lg:w-5 lg:h-5 text-primary" />{" "}
+            {t("Field Visit Details", "फील्ड विजिट विवरण")}
+            <span className="font-mono text-primary text-[10px] lg:text-sm">
+              {visit.id}
+            </span>
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 lg:space-y-4">
@@ -705,40 +741,50 @@ export function FieldVisitDetailDialog({
               </div> */}
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">Ward:</span>
+              <span className="text-muted-foreground">
+                {t("Ward:", "वार्ड:")}
+              </span>
               <span className="font-medium">{visit.ward || "-"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Building2 className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">District:</span>
+              <span className="text-muted-foreground">
+                {t("District:", "जिला:")}
+              </span>
               <span className="font-medium">{visit.district || "-"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Calendar className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">Scheduled:</span>
-              <span className="font-medium">
-                {visit?.schedule || "-"}
+              <span className="text-muted-foreground">
+                {t("Scheduled:", "निर्धारित:")}
               </span>
+              <span className="font-medium">{visit?.schedule || "-"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Camera className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">Photo:</span>
+              <span className="text-muted-foreground">
+                {t("Photo:", "फोटो:")}
+              </span>
               {visit.photoUploaded ? (
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
               ) : (
-                <span className="text-[10px] text-amber-600">Pending</span>
+                <span className="text-[10px] text-amber-600">
+                  {t("Pending", "लंबित")}
+                </span>
               )}
             </div>
           </div>
-          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
-            <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">Service</div>
+          <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
+            <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
+              {t("Service", "सेवा")}
+            </div>
             <div className="font-medium text-xs lg:text-sm">
               {visit.service || "-"} - {visit.subservice || "-"}
             </div>
           </div>
-          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
+          <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-              Complaint ID
+              {t("Complaint ID", "शिकायत आईडी")}
             </div>
             {visit.complaintId && visit.complaintId !== "-" ? (
               <ComplaintId id={visit.complaintId} complaint={visit.complaint} />
@@ -746,13 +792,17 @@ export function FieldVisitDetailDialog({
               "-"
             )}
           </div>
-          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
-            <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">Geo-Tag</div>
-            <div className="font-mono text-xs lg:text-sm">{visit.geoTag || "-"}</div>
+          <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
+            <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
+              {t("Geo-Tag", "जियो-टैग")}
+            </div>
+            <div className="font-mono text-xs lg:text-sm">
+              {visit.geoTag || "-"}
+            </div>
           </div>
           <div>
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-              Visit Notes
+              {t("Visit Notes", "विजिट टिप्पणी")}
             </div>
             <p className="text-xs lg:text-sm">{visit.notes || "-"}</p>
           </div>

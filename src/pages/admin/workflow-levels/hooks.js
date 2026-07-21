@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../../utils/constants";
-import { getWorkflowLevels } from "./api";
+import { getWorkflowLevels, getWorkflowLevelsByDepartment } from "./api";
 
 export const useGetWorkflow = (key = [], params = {}, enabled = true) => {
   return useQuery({
@@ -9,3 +9,12 @@ export const useGetWorkflow = (key = [], params = {}, enabled = true) => {
     enabled: !!enabled,
   });
 };
+
+export const useGetWorkflowByDepartment = (key = [], params = {}, enabled = true) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.WORKFLOW_LEVELS, "department" , ...key],
+    queryFn: () => getWorkflowLevelsByDepartment(params),
+    enabled: !!enabled,
+  });
+};
+

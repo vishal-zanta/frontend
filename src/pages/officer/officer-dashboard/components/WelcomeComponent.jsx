@@ -1,7 +1,9 @@
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function WelcomeComponent({ officer, profileId, profileLabel }) {
+  const { t } = useLanguage();
   const { profile } = useAuth();
 
   const isStateLevel =
@@ -11,10 +13,10 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
   const displayRole = profile?.role?.designationEnglish || "-";
 
   const subtitle = isStateLevel ? (
-    `${displayRole} • State-level overview • All districts`
+    `${displayRole} • ${t("State-level overview", "राज्य-स्तरीय अवलोकन")} • ${t("All districts", "सभी जिले")}`
   ) : (
     <>
-      {displayRole} • Officer ID:{" "}
+      {displayRole} • {t("Officer ID:", "अधिकारी आईडी:")}{" "}
       <span className="font-mono text-white">{profile?.userCode}</span> •{" "}
       {profile?.district?.name || profile?.district}
     </>
@@ -25,7 +27,7 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <h1 className="text-lg lg:text-2xl font-bold mb-0.5 truncate">
-            Welcome, {displayName}
+            {t("Welcome,", "स्वागत है,")} {displayName}
           </h1>
           <p className="text-white/80 text-xs lg:text-sm line-clamp-2">{subtitle}</p>
         </div>
@@ -33,7 +35,7 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
           <div className="text-2xl lg:text-3xl font-bold">
             {(0).toLocaleString("en-IN")}
           </div>
-          <div className="text-xs lg:text-sm text-white/80 whitespace-nowrap">Active Complaints</div>
+          <div className="text-xs lg:text-sm text-white/80 whitespace-nowrap">{t("Active Complaints", "सक्रिय शिकायतें")}</div>
         </div>
       </div>
     </div>

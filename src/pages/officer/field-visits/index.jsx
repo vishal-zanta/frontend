@@ -22,8 +22,10 @@ import { fieldVisitSchema } from "./components/schema";
 import { getSuccessToast, getErrorToast } from "@/utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { putFieldVisit } from "@/api/complaint.api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function FieldVisits() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(null);
   const [editVisit, setEditVisit] = useState(null);
@@ -48,7 +50,7 @@ export default function FieldVisits() {
   const updateMutation = useMutation({
     mutationFn: putFieldVisit,
     onSuccess: () => {
-      getSuccessToast("Field visit updated successfully");
+      getSuccessToast(t("Field visit updated successfully", "फील्ड विजिट सफलतापूर्वक अपडेट किया गया"));
       queryClient.invalidateQueries({ queryKey: ["field-visits"] });
       setEditVisit(null);
     },
@@ -64,10 +66,12 @@ export default function FieldVisits() {
     <PortalLayout role="officer">
       <div className="p-6 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Field Visits</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("Field Visits", "फील्ड विजिट")}</h1>
           <p className="text-sm text-muted-foreground">
-            Track all scheduled, in-progress, and completed field visits with
-            geo-tagged photo evidence.
+            {t(
+              "Track all scheduled, in-progress, and completed field visits with geo-tagged photo evidence.",
+              "भू-टैग की गई फोटो साक्ष्य के साथ सभी निर्धारित, प्रगति-पर और पूर्ण फील्ड विजिट को ट्रैक करें।"
+            )}
           </p>
         </div>
 
@@ -81,7 +85,7 @@ export default function FieldVisits() {
             }}
             delay={500}
             className="flex-1"
-            placeholder="Search by visit ID ..."
+            placeholder={t("Search by visit ID ...", "विजिट आईडी द्वारा खोजें ...")}
           />
 
           <SelectDebounced
@@ -91,9 +95,9 @@ export default function FieldVisits() {
               pageProps.setPage(1);
             }}
             options={FIELD_VISIT_STATUS}
-            placeholder="Select Status"
+            placeholder={t("Select Status", "स्थिति चुनें")}
             isAll={true}
-            allLabel="All Status"
+            allLabel={t("All Status", "सभी स्थिति")}
           />
         </div>
 
@@ -126,7 +130,7 @@ export default function FieldVisits() {
         {editVisit && (
           <EditDialog
             isHideFooter
-            title="Edit Field Visit"
+            title={t("Edit Field Visit", "फील्ड विजिट संपादित करें")}
             onClose={() => setEditVisit(null)}
           >
             <RhfWrapper

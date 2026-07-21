@@ -8,7 +8,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
   const nonEditable = USER_ROLES_EXECULDED;
   return (
     <table className="w-full text-sm">
-      <thead className="bg-muted/50">
+      <thead className="bg-[#F4F7FA]">
         <tr className="text-left text-xs text-muted-foreground">
           <th className="px-4 py-2 font-medium">Designation (English)</th>
           <th className="px-4 py-2 font-medium">पदनाम (Hindi)</th>
@@ -32,7 +32,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
                 {d.level}
               </Badge>
             </td>
-            {!nonEditable.includes(d.designationEnglish)  && (
+            {!nonEditable.includes(d.designationEnglish) && (
               <td className="px-4 py-2.5 text-center">
                 <div className="flex gap-1 justify-center">
                   <Button

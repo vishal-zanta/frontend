@@ -6,7 +6,7 @@ export default function ModeWiseComplaintsChart({  mainData=[] }) {
   // console.log({ data, mainData });
   return (
     <ChartCard
-      title="Mode-wise Complaints"
+      title="Source-wise Complaints"
       subtitle="Distribution by source channel"
     >
       <BarChartCard

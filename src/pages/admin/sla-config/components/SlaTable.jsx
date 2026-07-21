@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
-  console.log({roles});
+  console.log({ roles });
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-muted/50">
+        <thead className="bg-[#F4F7FA]">
           <tr className="text-left text-xs text-muted-foreground">
             <th className="px-3 py-3 font-medium min-w-40 sticky left-0 bg-[#F4F7FA]">
               Sub-Service

@@ -4,11 +4,13 @@ import { useGetShifts } from "../hooks";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import Pagination from "@/components/Pagination";
 import usePagination from "@/hooks/usePagination";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AgentStatusBoard({
   isSupervisor = false,
   setAgentView = () => {},
 }) {
+  const { t } = useLanguage();
   const pageProps = usePagination();
   const { data, isLoading, error } = useGetShifts({
     page: pageProps.page,
@@ -17,7 +19,6 @@ export default function AgentStatusBoard({
 
   const shiftsData = data?.data?.data?.docs || [];
   const totalPages = data?.data?.data?.pagination?.totalPages;
-  // console.log({ shiftsData });
 
   const formatShift = (shift) => {
     if (!shift) return "-";
@@ -46,27 +47,40 @@ export default function AgentStatusBoard({
       <div className="px-5 py-3 border-b border-border">
         <h3 className="font-bold text-foreground">
           {isSupervisor
-            ? "Agent Status Board"
-            : "Agent Status Board (Read-Only)"}
+            ? t("Agent Status Board", "एजेंट स्थिति बोर्ड")
+            : t(
+                "Agent Status Board (Read-Only)",
+                "एजेंट स्थिति बोर्ड (केवल-पठन)",
+              )}
         </h3>
       </div>
       <LoaderErrWrapper isLoading={isLoading} error={error}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50">
+            <thead className="bg-[#F4F7FA]">
               <tr className="text-left text-xs text-muted-foreground">
-                <th className="px-4 py-3 font-medium">Agent</th>
-                <th className="px-4 py-3 font-medium">Role</th>
-                <th className="px-4 py-3 font-medium">Shift</th>
-                <th className="px-4 py-3 font-medium">Calls Today</th>
+                <th className="px-4 py-3 font-medium">{t("Agent", "एजेंट")}</th>
+                <th className="px-4 py-3 font-medium">{t("Role", "भूमिका")}</th>
+                <th className="px-4 py-3 font-medium">{t("Shift", "शिफ्ट")}</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("Calls Today", "आज की कॉल")}
+                </th>
                 {isSupervisor && (
                   <>
-                    <th className="px-4 py-3 font-medium">Resolved</th>
-                    <th className="px-4 py-3 font-medium">Avg Talk Time</th>
-                    <th className="px-4 py-3 font-medium">CSAT</th>
+                    <th className="px-4 py-3 font-medium">
+                      {t("Resolved", "हल की गई")}
+                    </th>
+                    <th className="px-4 py-3 font-medium">
+                      {t("Avg Talk Time", "औसत बात करने का समय")}
+                    </th>
+                    <th className="px-4 py-3 font-medium">
+                      {t("CSAT", "सीएसएटी")}
+                    </th>
                   </>
                 )}
-                <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("Status", "स्थिति")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -114,7 +128,13 @@ export default function AgentStatusBoard({
                               : "bg-slate-50 text-slate-500"
                       }`}
                     >
-                      {a?.status || "-"}
+                      {a?.status === "On Call"
+                        ? t("On Call", "कॉल पर")
+                        : a?.status === "Available"
+                          ? t("Available", "उपलब्ध")
+                          : a?.status === "Break"
+                            ? t("Break", "ब्रेक")
+                            : a?.status || "-"}
                     </Badge>
                   </td>
                 </tr>

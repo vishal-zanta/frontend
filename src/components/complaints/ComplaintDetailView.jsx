@@ -15,6 +15,7 @@ import {
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Import sub-components
 import ComplaintDetailHeader from "./ComplaintDetailHeader";
@@ -30,6 +31,7 @@ export default function ComplaintDetailView({
   setStatusUpdate,
   isCCE = false,
 }) {
+  const { t } = useLanguage();
   const selectedId = selected?._id || selected?.id;
   const [selectedFiles, setSelectedFiles] = useState([]); // array of { file, preview }
   const fileInputRef = useRef(null);
@@ -48,7 +50,7 @@ export default function ComplaintDetailView({
   const postMutation = useMutation({
     mutationFn: uploadGeotaggedImage,
     onSuccess: () => {
-      getSuccessToast("Geo-tagged photo uploaded successfully");
+      getSuccessToast(t("Geo-tagged photo uploaded successfully", "जियो-टैग फोटो सफलतापूर्वक अपलोड की गई"));
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
         refetchType: "active",
@@ -71,7 +73,7 @@ export default function ComplaintDetailView({
   const assignOfficerMutation = useMutation({
     mutationFn: assignOfficer,
     onSuccess: () => {
-      getSuccessToast("Officer assigned/transferred successfully");
+      getSuccessToast(t("Officer assigned/transferred successfully", "अधिकारी सफलतापूर्वक नियुक्त/स्थानांतरित किया गया"));
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
         refetchType: "active",
@@ -93,7 +95,7 @@ export default function ComplaintDetailView({
   const updateStatusMutation = useMutation({
     mutationFn: updateComplaintStatus,
     onSuccess: (updatedData, variables) => {
-      getSuccessToast(`Status updated to ${variables.status} successfully`);
+      getSuccessToast(`${t("Status updated to", "स्थिति को अपडेट किया गया")} ${variables.status} ${t("successfully", "सफलतापूर्वक")}`);
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
         refetchType: "active",
@@ -117,7 +119,7 @@ export default function ComplaintDetailView({
     mutationFn: updateComplaintPriority,
     onSuccess: (updatedData, variables) => {
       getSuccessToast(
-        `Priority updated to ${variables.assignedPriority} successfully`,
+        `${t("Priority updated to", "प्राथमिकता को अपडेट किया गया")} ${variables.assignedPriority} ${t("successfully", "सफलतापूर्वक")}`,
       );
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.COMPLAINT_DETAIL],
@@ -186,15 +188,14 @@ export default function ComplaintDetailView({
 
   if (!selected) {
     return (
-      <div className="lg:col-span-2 bg-white rounded-xl border border-border p-8 text-center text-muted-foreground text-sm">
-        Select a complaint from the list to view details.
+      <div className="lg:col-span-2 bg-white rounded-xl border border-border p-8 text-center text-muted-foreground text-sm bg-white">
+        {t("Select a complaint from the list to view details.", "विवरण देखने के लिए सूची से एक शिकायत का चयन करें।")}
       </div>
     );
   }
 
   const detail = data?.data || data;
   const c = detail || selected;
-  // console.log({c})
 
   const displayId = c.grievanceId || c.id || "-";
   const displayStatus = c.status || "OPEN";
@@ -237,7 +238,7 @@ export default function ComplaintDetailView({
   return (
     <div className="md:col-span-2 space-y-4">
       <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
-        <div className="bg-white rounded-xl border border-border p-3 lg:p-5 space-y-4 lg:space-y-5">
+        <div className="bg-white rounded-xl border border-border p-3 lg:p-5 space-y-4 lg:space-y-5 bg-white">
           {/* Header Section */}
           <ComplaintDetailHeader
             c={c}
@@ -256,7 +257,6 @@ export default function ComplaintDetailView({
           {/* Classification details */}
           <ComplaintClassificationSection
             departmentText={departmentText}
-            
             occurrenceDate={occurrenceDate}
           />
 
@@ -307,8 +307,8 @@ export default function ComplaintDetailView({
         </div>
 
         {/* Timeline */}
-        <div className="bg-white rounded-xl border border-border p-3 lg:p-5">
-          <h3 className="font-bold text-foreground text-xs lg:text-sm mb-3 lg:mb-4">Complaint Timeline</h3>
+        <div className="bg-white rounded-xl border border-border p-3 lg:p-5 bg-white">
+          <h3 className="font-bold text-foreground text-xs lg:text-sm mb-3 lg:mb-4">{t("Complaint Timeline", "शिकायत समयरेखा")}</h3>
           <ComplaintTimeline events={c.timeline || []} />
         </div>
       </LoaderErrWrapper>

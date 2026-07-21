@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { STATUS_ACTIONS } from "@/utils/constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ComplaintList({
   selected,
@@ -24,6 +25,7 @@ export default function ComplaintList({
   useGetComplaintsOfOfiicer,
   autoSelect = true,
 }) {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState("");
@@ -40,7 +42,7 @@ export default function ComplaintList({
     status: selectedStatus || undefined,
     feedback: selectedFeedback !== "" ? selectedFeedback : undefined,
   });
-  // console.log({selected})
+
   const complaints = useMemo(() => {
     return (
       data?.pages?.flatMap(
@@ -51,12 +53,12 @@ export default function ComplaintList({
 
   const lastStatsRef = useRef(null);
 
-  // Automatically select the first complaint when the list loads or when current selection is filtered out
+  // Automatically select the first complaint when the list loads
   useEffect(() => {
     if (!autoSelect) return;
     if (complaints.length > 0) {
       const isSelectedInList = complaints.some(
-        (c) => (c._id || c.id) === (selected?._id || selected?.id)
+        (c) => (c._id || c.id) === (selected?._id || selected?.id),
       );
       if (!selected || !isSelectedInList) {
         onSelect(complaints[0], true);
@@ -87,7 +89,6 @@ export default function ComplaintList({
         slaBreachRisk,
       };
 
-      // Shallow equality check to prevent infinite loop on stats callback
       const hasChanged =
         !lastStatsRef.current ||
         lastStatsRef.current.totalAssigned !== currentStats.totalAssigned ||
@@ -103,32 +104,36 @@ export default function ComplaintList({
   }, [complaints, onStatsChange]);
 
   return (
-    <div className="bg-white rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full">
+    <div className="bg-white rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full bg-white">
       <div className="px-4 py-3 border-b border-border ">
         <div className="flex items-center justify-between shrink-0">
           <h3 className="font-bold text-foreground text-sm">
-            My Complaints ({complaints.length})
+            {t("My Complaints", "मेरी शिकायतें")} ({complaints.length})
           </h3>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="relative h-8 w-8 p-0 cursor-pointer">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="relative h-8 w-8 p-0 cursor-pointer"
+              >
                 <Filter className="w-4 h-4" />
                 {(selectedStatus || selectedFeedback !== "") && (
                   <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuContent align="end" className="w-48 bg-white">
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <span>Status</span>
+                <DropdownMenuSubTrigger className="cursor-pointer">
+                  <span>{t("Status", "स्थिति")}</span>
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-40">
+                <DropdownMenuSubContent className="w-40 bg-white">
                   <DropdownMenuItem
                     onClick={() => setSelectedStatus("")}
-                    className={!selectedStatus ? "font-semibold bg-accent text-accent-foreground" : ""}
+                    className={`cursor-pointer ${!selectedStatus ? "font-semibold bg-accent text-accent-foreground" : ""}`}
                   >
-                    All Statuses
+                    {t("All Statuses", "सभी स्थितियाँ")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {STATUS_ACTIONS.map((action) => {
@@ -137,7 +142,7 @@ export default function ComplaintList({
                       <DropdownMenuItem
                         key={action.value}
                         onClick={() => setSelectedStatus(action.value)}
-                        className={isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}
+                        className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
                       >
                         {action.badgeLabel || action.label}
                       </DropdownMenuItem>
@@ -146,28 +151,28 @@ export default function ComplaintList({
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <span>Feedback</span>
+                <DropdownMenuSubTrigger className="cursor-pointer">
+                  <span>{t("Feedback", "प्रतिक्रिया")}</span>
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-44">
+                <DropdownMenuSubContent className="w-44 bg-white">
                   <DropdownMenuItem
                     onClick={() => setSelectedFeedback("")}
-                    className={selectedFeedback === "" ? "font-semibold bg-accent text-accent-foreground" : ""}
+                    className={`cursor-pointer ${selectedFeedback === "" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
                   >
-                    All
+                    {t("All", "सभी")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => setSelectedFeedback("true")}
-                    className={selectedFeedback === "true" ? "font-semibold bg-accent text-accent-foreground" : ""}
+                    className={`cursor-pointer ${selectedFeedback === "true" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
                   >
-                    Feedback Done
+                    {t("Feedback Done", "प्रतिक्रिया समाप्त")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setSelectedFeedback("false")}
-                    className={selectedFeedback === "false" ? "font-semibold bg-accent text-accent-foreground" : ""}
+                    className={`cursor-pointer ${selectedFeedback === "false" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
                   >
-                    Feedback Left
+                    {t("Feedback Left", "प्रतिक्रिया शेष")}
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
@@ -175,10 +180,13 @@ export default function ComplaintList({
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => { setSelectedStatus(""); setSelectedFeedback(""); }}
+                    onClick={() => {
+                      setSelectedStatus("");
+                      setSelectedFeedback("");
+                    }}
                     className="text-destructive focus:text-destructive cursor-pointer"
                   >
-                    Clear Filters
+                    {t("Clear Filters", "फ़िल्टर हटाएं")}
                   </DropdownMenuItem>
                 </>
               )}
@@ -187,7 +195,7 @@ export default function ComplaintList({
         </div>
         <div className="mt-2">
           <SearchDebounced
-            placeholder="Search by id ..."
+            placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
             handleDebouncedChange={(val) => setSearch(val)}
           />
         </div>
@@ -197,14 +205,16 @@ export default function ComplaintList({
         <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
           {complaints.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-muted-foreground">
-              No complaints assigned to you.
+              {t(
+                "No complaints assigned to you.",
+                "आपको कोई शिकायत नहीं सौंपी गई है।",
+              )}
             </div>
           ) : (
             <>
               {complaints.map((c, i) => {
                 const id = c._id || c.id;
                 const isSelected = selected?._id == id;
-                // console.log({selected : selected?._id, id, isSelected})
                 return (
                   <button
                     key={id || i}
@@ -212,15 +222,11 @@ export default function ComplaintList({
                       onSelect(c);
                       setStatusUpdate(null);
                     }}
-                    className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors ${
+                    className={`w-full text-left px-4 py-3 hover:bg-[#F4F7FA] transition-colors cursor-pointer bg-white ${
                       isSelected ? "bg-blue-50 border-l-4 border-blue-600" : ""
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      {/* <ComplaintId
-                        id={c.grievanceId || c.id}
-                        className="text-xs font-semibold"
-                      /> */}
                       <h2 className="text-xs font-bold text-primary font-mono">
                         {c.grievanceId || c.id}
                       </h2>
@@ -250,9 +256,11 @@ export default function ComplaintList({
                     size="sm"
                     onClick={() => fetchNextPage()}
                     disabled={isFetchingNextPage}
-                    className="w-full text-xs"
+                    className="w-full text-xs cursor-pointer bg-white"
                   >
-                    {isFetchingNextPage ? "Loading more..." : "Load More"}
+                    {isFetchingNextPage
+                      ? t("Loading more...", "और लोड हो रहा है...")
+                      : t("Load More", "और लोड करें")}
                   </Button>
                 </div>
               )}

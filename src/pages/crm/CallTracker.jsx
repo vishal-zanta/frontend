@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Phone,
   Clock,
   CheckCircle2,
   PhoneCall,
@@ -10,7 +9,7 @@ import {
 import { CALL_TRACKER } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import StatCard from "@/components/StatCard";
-import { CallId, ComplaintId } from "@/components/ComplaintDetailDialog";
+import { CallId } from "@/components/ComplaintDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,21 +20,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ExportButton from "@/components/ExportButton";
-
-const exportColumns = [
-  { key: "id", label: "Call ID" },
-  { key: "time", label: "Time" },
-  { key: "agent", label: "Agent" },
-  { key: "duration", label: "Duration" },
-  { key: "complaintId", label: "Complaint ID" },
-  { key: "disposition", label: "Disposition" },
-  { key: "status", label: "Status" },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CallTracker() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [agentFilter, setAgentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const exportColumns = [
+    { key: "id", label: t("Call ID", "कॉल आईडी") },
+    { key: "time", label: t("Time", "समय") },
+    { key: "agent", label: t("Agent", "एजेंट") },
+    { key: "duration", label: t("Duration", "अवधि") },
+    { key: "complaintId", label: t("Complaint ID", "शिकायत आईडी") },
+    { key: "disposition", label: t("Disposition", "निपटान") },
+    { key: "status", label: t("Status", "स्थिति") },
+  ];
 
   const filtered = CALL_TRACKER.filter((c) => {
     if (
@@ -56,9 +57,14 @@ export default function CallTracker() {
       <div className="p-6 space-y-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Call Tracker</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              {t("Call Tracker", "कॉल ट्रैकर")}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Real-time call tracking with disposition details and agent status.
+              {t(
+                "Real-time call tracking with disposition details and agent status.",
+                "कॉल स्थिति और एजेंट स्थिति विवरण के साथ वास्तविक समय कॉल ट्रैकिंग।",
+              )}
             </p>
           </div>
           <ExportButton
@@ -71,7 +77,7 @@ export default function CallTracker() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             icon={PhoneCall}
-            label="Total Calls Today"
+            label={t("Total Calls Today", "आज की कुल कॉल")}
             value="3,420"
             color="blue"
             trend="up"
@@ -79,7 +85,7 @@ export default function CallTracker() {
           />
           <StatCard
             icon={CheckCircle2}
-            label="Answered"
+            label={t("Answered", "उत्तरित")}
             value="3,198"
             color="green"
             trend="up"
@@ -87,7 +93,7 @@ export default function CallTracker() {
           />
           <StatCard
             icon={PhoneMissed}
-            label="Missed"
+            label={t("Missed", "छूटी हुई")}
             value="222"
             color="red"
             trend="down"
@@ -95,7 +101,7 @@ export default function CallTracker() {
           />
           <StatCard
             icon={Clock}
-            label="Avg Talk Time"
+            label={t("Avg Talk Time", "औसत बात करने का समय")}
             value="4m 32s"
             color="amber"
           />
@@ -108,34 +114,46 @@ export default function CallTracker() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by call ID or complaint..."
+              placeholder={t(
+                "Search by call ID or complaint...",
+                "कॉल आईडी या शिकायत द्वारा खोजें...",
+              )}
               className="pl-8 max-w-xs"
             />
           </div>
           <Select value={agentFilter} onValueChange={setAgentFilter}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Agent" />
+            <SelectTrigger className="w-40 bg-white">
+              <SelectValue placeholder={t("Agent", "एजेंट")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Agents</SelectItem>
+              <SelectItem value="all">
+                {t("All Agents", "सभी एजेंट")}
+              </SelectItem>
               <SelectItem value="priya">Priya Sharma</SelectItem>
               <SelectItem value="amit">Amit Verma</SelectItem>
               <SelectItem value="neha">Neha Singh</SelectItem>
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Status" />
+            <SelectTrigger className="w-40 bg-white">
+              <SelectValue placeholder={t("Status", "स्थिति")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="resolved">Resolved</SelectItem>
-              <SelectItem value="missed">Missed</SelectItem>
-              <SelectItem value="escalated">Escalated</SelectItem>
+              <SelectItem value="all">
+                {t("All Status", "सभी स्थिति")}
+              </SelectItem>
+              <SelectItem value="resolved">
+                {t("Resolved", "हल की गई")}
+              </SelectItem>
+              <SelectItem value="missed">{t("Missed", "छूटी हुई")}</SelectItem>
+              <SelectItem value="escalated">
+                {t("Escalated", "बढ़ाया गया")}
+              </SelectItem>
             </SelectContent>
           </Select>
-          <div className="ml-auto text-sm text-muted-foreground">
-            Showing {filtered.length} of {CALL_TRACKER.length} calls
+          <div className="ml-auto text-sm text-muted-foreground self-center">
+            {t("Showing", "दिखा रहा है")} {filtered.length} {t("of", "का")}{" "}
+            {CALL_TRACKER.length} {t("calls", "कॉल")}
           </div>
         </div>
 
@@ -143,15 +161,27 @@ export default function CallTracker() {
         <div className="bg-white rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-[#F4F7FA]">
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">Call ID</th>
-                  <th className="px-4 py-3 font-medium">Time</th>
-                  <th className="px-4 py-3 font-medium">Agent</th>
-                  <th className="px-4 py-3 font-medium">Duration</th>
-                  <th className="px-4 py-3 font-medium">Complaint ID</th>
-                  <th className="px-4 py-3 font-medium">Disposition</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Call ID", "कॉल आईडी")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">{t("Time", "समय")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Agent", "एजेंट")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Duration", "अवधि")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Complaint ID", "शिकायत आईडी")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Disposition", "निपटान")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Status", "स्थिति")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -167,10 +197,7 @@ export default function CallTracker() {
                     <td className="px-4 py-3 text-muted-foreground">
                       {c.duration}
                     </td>
-                    <td className="px-4 py-3">
-                      {/* {c.complaintId ? <ComplaintId id={c.complaintId} /> : "-"} */}
-                      {c.complaintId}
-                    </td>
+                    <td className="px-4 py-3">{c.complaintId}</td>
                     <td className="px-4 py-3 text-muted-foreground">
                       {c.disposition}
                     </td>
@@ -187,7 +214,13 @@ export default function CallTracker() {
                                 : "bg-slate-50 text-slate-600"
                         }`}
                       >
-                        {c.status}
+                        {c.status === "Resolved"
+                          ? t("Resolved", "हल की गई")
+                          : c.status === "Missed"
+                            ? t("Missed", "छूटी हुई")
+                            : c.status === "Escalated"
+                              ? t("Escalated", "बढ़ाया गया")
+                              : c.status}
                       </Badge>
                     </td>
                   </tr>

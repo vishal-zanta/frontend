@@ -8,6 +8,8 @@ import ComplaintSourcesTab from "./complaint-sources";
 import DemographyTab from "./demography";
 import GrievenceNatureTab from "./grievence-nature";
 import DepartmentTab from "./departments";
+import SkillSetTab from "./skill-set";
+
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/utils/constants";
@@ -24,6 +26,12 @@ const tabs = [
     label: "Departments",
     icon: Tag,
     permissions: PERMISSIONS.DEPARTMENT_MANAGEMENT,
+  },
+   {
+    id: "skill-set",
+    label: "Skill Set",
+    icon: Tag,
+    permissions: PERMISSIONS.USER_MANAGEMENT,
   },
   {
     id: "service",
@@ -103,6 +111,8 @@ export default function MasterData() {
         {tab === "designation" && <DesignationsTab />}
         
         {tab === "departments" && <DepartmentTab />}
+        {tab === "skill-set" && <SkillSetTab />}
+
 
 
         {/* Services */}

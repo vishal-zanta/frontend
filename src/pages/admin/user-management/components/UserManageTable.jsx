@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Edit, Trash2, Eye, MoreVertical } from "lucide-react";
+import { Edit, Trash2, Eye, MoreVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -22,21 +22,23 @@ export default function UserManageTable({
   const { hasPermission } = useAuth();
   return (
     <table className="w-full text-sm">
-      <thead className="bg-muted/50">
+      <thead className="bg-[#F4F7FA]">
         <tr className="text-left text-xs text-muted-foreground">
-          <th className="px-4 py-3 font-medium">User</th>
+          <th className="px-4 py-3 font-medium bg-[#F4F7FA] sticky left-0">User</th>
           <th className="px-4 py-3 font-medium">Role</th>
           <th className="px-4 py-3 font-medium">District</th>
-          <th className="px-4 py-3 font-medium">Permissions</th>
+          <th className="px-4 py-3 font-medium min-w-[200px]">Skills</th>
+          <th className="px-4 py-3 font-medium min-w-[150px]">Languages</th>
+          <th className="px-4 py-3 font-medium min-w-[280px]">Permissions</th>
           <th className="px-4 py-3 font-medium">Last Login</th>
           <th className="px-4 py-3 font-medium">Status</th>
-          <th className="px-4 py-3 font-medium text-center">Actions</th>
+          <th className="px-4 py-3 font-medium text-center bg-[#F4F7FA] sticky right-0">Actions</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border">
         {users.map((u) => (
           <tr key={u.id} className="hover:bg-muted/30">
-            <td className="px-4 py-3">
+            <td className="px-4 py-3 bg-[#ffffff] sticky left-0">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
                   {u.name
@@ -59,8 +61,28 @@ export default function UserManageTable({
               )}
             </td>
             <td className="px-4 py-3 text-muted-foreground">{u.district}</td>
-            <td className="px-2 py-1 ">
-              <div className="flex flex-wrap gap-1 px-2 py-2 max-h-20 overflow-y-auto ">
+            <td className="px-4 py-3 min-w-[200px]">
+              <div className="flex flex-wrap gap-1 max-w-[300px] max-h-20 overflow-y-auto">
+                {(u.skills || []).map((sk) => (
+                  <Badge key={sk._id || sk} variant="secondary" className="text-[10px] bg-slate-100 text-slate-800 text-nowrap">
+                    {sk.name || sk}
+                  </Badge>
+                ))}
+                {(u.skills || []).length === 0 && "-"}
+              </div>
+            </td>
+            <td className="px-4 py-3 min-w-[150px]">
+              <div className="flex flex-wrap gap-1 max-w-[200px] max-h-20 overflow-y-auto">
+                {(u.preferredLanguages || []).map((lang) => (
+                  <Badge key={lang} variant="outline" className="text-[10px] text-nowrap">
+                    {lang}
+                  </Badge>
+                ))}
+                {(u.preferredLanguages || []).length === 0 && "-"}
+              </div>
+            </td>
+            <td className="px-2 py-1 min-w-[280px]">
+              <div className="flex flex-wrap gap-1 px-2 py-2 max-w-[350px] max-h-20 overflow-y-auto ">
                 {u.permissions
                   ?.map(
                     (p) =>
@@ -70,7 +92,7 @@ export default function UserManageTable({
                     <Badge
                       key={pi}
                       variant="outline"
-                      className="text-[10px] bg-blue-50 text-primary"
+                      className="text-[10px] bg-blue-50 text-primary text-nowrap"
                     >
                       {p}
                     </Badge>
@@ -94,7 +116,7 @@ export default function UserManageTable({
                 {u?.status?.toLowerCase()}
               </Badge>
             </td>
-            <td className="px-4 py-3 text-center">
+            <td className="px-4 py-3 text-center bg-[#ffffff] sticky right-0">
               <div className="flex gap-1 justify-center">
                 {/* <Button
                   variant="ghost"

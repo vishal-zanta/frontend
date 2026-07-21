@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
+import { LogIn, Mail, Lock, Loader2, Eye, EyeOff, User } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { postLogin, getProfile } from "@/api/auth.api";
 import { sidebarSections } from "@/components/Sidebar";
@@ -15,12 +15,22 @@ export default function Login() {
 
   // const {executeRecaptcha} = useGoogleReCaptcha();
   const navigate = useNavigate();
+  const [loginMode, setLoginMode] = useState("email"); // "email" or "loginId"
   const [email, setEmail] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [fullScreenLoader, setFullScreenLoader] = useState(false);
+
+  const handleModeChange = (mode) => {
+    setLoginMode(mode);
+    setEmail("");
+    setLoginId("");
+    setPassword("");
+    setError("");
+  };
 
   const getRouteAfterLogin = (permission) => {
     const allPaths = sidebarSections.map((s) => s.items).flat();
@@ -43,7 +53,8 @@ export default function Login() {
     //   console.log("reCAPTCHA has not loaded yet");
     // }
     try {
-      const res = await postLogin({ email, password });
+      const payload = loginMode === "email" ? { email, password } : { loginId, password };
+      const res = await postLogin(payload);
 
       const token = res?.data?.data?.token;
       if (token) {
@@ -142,26 +153,49 @@ export default function Login() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <div className="relative">
-            <Mail
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              autoFocus
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
+        {loginMode === "email" ? (
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Mail
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                autoFocus
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10 h-12"
+                required
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-2">
+            <Label htmlFor="loginId">User ID</Label>
+            <div className="relative">
+              <User
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                id="loginId"
+                type="text"
+                autoComplete="username"
+                autoFocus
+                placeholder="Enter your User ID"
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
+                className="pl-10 h-12"
+                required
+              />
+            </div>
+          </div>
+        )}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
@@ -211,6 +245,15 @@ export default function Login() {
             "Log in"
           )}
         </Button>
+        <div className="text-center mt-4">
+          <button
+            type="button"
+            onClick={() => handleModeChange(loginMode === "email" ? "loginId" : "email")}
+            className="text-sm font-medium text-primary hover:underline focus:outline-none cursor-pointer bg-transparent border-0"
+          >
+            {loginMode === "email" ? "Login with user id" : "Login with email"}
+          </button>
+        </div>
       </form>
     </AuthLayout>
   );

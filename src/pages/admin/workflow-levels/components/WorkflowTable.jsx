@@ -22,10 +22,11 @@ export default function WorkflowTable({
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-muted/50">
+        <thead className="bg-[#F4F7FA]">
           <tr className="text-left text-xs text-muted-foreground">
             <th className="w-10 px-4 py-3"></th>
             <th className="px-4 py-3 font-medium">Level </th>
+            <th className="px-4 py-3 font-medium">Department</th>
             <th className="px-4 py-3 font-medium">Role</th>
             <th className="px-4 py-3 font-medium">Description</th>
             <th className="px-4 py-3 font-medium text-center">Actions</th>
@@ -46,7 +47,7 @@ export default function WorkflowTable({
           {docs.length === 0 ? (
             <tr>
               <td
-                colSpan={5}
+                colSpan={6}
                 className="text-center py-8 text-muted-foreground"
               >
                 No workflow levels found.
@@ -62,6 +63,9 @@ export default function WorkflowTable({
                 </td>
                 <td className="px-4 py-3 font-medium">
                   {level.role?.level || "-"}
+                </td>
+                <td className="px-4 py-3 font-medium text-muted-foreground">
+                  {level.department?.title || level.department || "-"}
                 </td>
                 <td className="px-4 py-3 font-medium">
                   {level.role?.designationEnglish || "-"}

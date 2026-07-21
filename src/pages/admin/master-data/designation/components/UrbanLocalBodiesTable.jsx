@@ -185,7 +185,7 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50">
+                <thead className="bg-[#F4F7FA]">
                   <tr className="text-left text-xs text-muted-foreground">
                     <th className="px-4 py-2.5 font-medium">ULB Name</th>
                     <th className="px-4 py-2.5 font-medium">Hindi</th>
@@ -289,7 +289,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
         >
           <div className="space-y-4">
             <div>
-              <Label className="mb-1.5 block">ULB Name (English) <span className="text-red-500">*</span></Label>
+              <Label className="mb-1.5 block">
+                ULB Name (English) <span className="text-red-500">*</span>
+              </Label>
               <Input
                 value={formData.name}
                 onChange={(e) => {
@@ -304,7 +306,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
               )}
             </div>
             <div>
-              <Label className="mb-1.5 block">नगर निगम (Hindi) <span className="text-red-500">*</span></Label>
+              <Label className="mb-1.5 block">
+                नगर निगम (Hindi) <span className="text-red-500">*</span>
+              </Label>
               <Input
                 value={formData.nameHindi}
                 onChange={(e) => {
@@ -323,7 +327,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
               )}
             </div>
             <div>
-              <Label className="mb-1.5 block">District <span className="text-red-500">*</span></Label>
+              <Label className="mb-1.5 block">
+                District <span className="text-red-500">*</span>
+              </Label>
               <Select
                 value={formData.district}
                 onValueChange={(val) => {
@@ -348,7 +354,9 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
               )}
             </div>
             <div>
-              <Label className="mb-1.5 block">Wards <span className="text-red-500">*</span></Label>
+              <Label className="mb-1.5 block">
+                Wards <span className="text-red-500">*</span>
+              </Label>
               <Input
                 value={formData.wards}
                 onChange={(e) => {

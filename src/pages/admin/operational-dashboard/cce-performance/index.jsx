@@ -6,11 +6,7 @@ import AgentStatusChart from "./components/AgentStatusChart";
 import { Badge } from "@/components/ui/badge";
 import ExportButton from "@/components/ExportButton";
 import { OfficerId } from "@/components/ComplaintDetailDialog";
-import {
-  IVR_STATS,
-  AGENT_PERFORMANCE,
-  HELPDESK_STATUS,
-} from "@/lib/biharData";
+import { IVR_STATS, AGENT_PERFORMANCE, HELPDESK_STATUS } from "@/lib/biharData";
 
 const HELPDESK_AGENTS = [
   {
@@ -183,7 +179,7 @@ export default function CcePerformanceTab({ pd }) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50">
+            <thead className="bg-[#F4F7FA]">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-2 font-medium">Agent</th>
                 <th className="px-4 py-2 font-medium">ID</th>
@@ -211,9 +207,7 @@ export default function CcePerformanceTab({ pd }) {
                     </Badge>
                   </td>
                   <td className="px-4 py-2.5">{a.calls}</td>
-                  <td className="px-4 py-2.5 text-emerald-600">
-                    {a.resolved}
-                  </td>
+                  <td className="px-4 py-2.5 text-emerald-600">{a.resolved}</td>
                   <td className="px-4 py-2.5 text-muted-foreground">
                     {a.avgTalk}
                   </td>
@@ -242,7 +236,7 @@ export default function CcePerformanceTab({ pd }) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50">
+            <thead className="bg-[#F4F7FA]">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-2 font-medium">Agent</th>
                 <th className="px-4 py-2 font-medium">Calls</th>
@@ -259,9 +253,7 @@ export default function CcePerformanceTab({ pd }) {
                 <tr key={i} className="hover:bg-muted/30">
                   <td className="px-4 py-2.5 font-medium">{a.agent}</td>
                   <td className="px-4 py-2.5">{a.calls}</td>
-                  <td className="px-4 py-2.5 text-emerald-600">
-                    {a.resolved}
-                  </td>
+                  <td className="px-4 py-2.5 text-emerald-600">{a.resolved}</td>
                   <td className="px-4 py-2.5 text-muted-foreground">
                     {a.avgTalkTime}
                   </td>
@@ -269,9 +261,7 @@ export default function CcePerformanceTab({ pd }) {
                     ★ {a.csat}/5
                   </td>
                   <td className="px-4 py-2.5">{a.slaCompliance}%</td>
-                  <td className="px-4 py-2.5 text-amber-600">
-                    ★ {a.csat}/5
-                  </td>
+                  <td className="px-4 py-2.5 text-amber-600">★ {a.csat}/5</td>
                   <td className="px-4 py-2.5">
                     <Badge
                       variant="outline"

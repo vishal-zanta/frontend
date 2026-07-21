@@ -15,6 +15,8 @@ const baseObject = z.object({
   district: z.string(),
   // .min(1, "District is required"),
   status: z.string().optional(),
+  skills: z.array(z.string()).optional(),
+  preferredLanguages: z.array(z.string()).optional(),
 });
 
 const addObject = baseObject.extend({

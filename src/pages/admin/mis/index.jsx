@@ -27,7 +27,6 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import { jsPDF } from "jspdf";
 import { useGetMisReports, useGetMisStats } from "./hooks";
 
-
 const reports = [
   {
     id: "summary",
@@ -177,10 +176,16 @@ function getReportColumns(reportId) {
 function normalizeIvrRows(ivrStats) {
   if (!ivrStats || typeof ivrStats !== "object") return [];
   return [
-    { label: "Total Calls", value: ivrStats.totalCalls ?? ivrStats.totalCallsToday },
+    {
+      label: "Total Calls",
+      value: ivrStats.totalCalls ?? ivrStats.totalCallsToday,
+    },
     { label: "Calls Answered", value: ivrStats.callsAnswered },
     { label: "Calls Missed", value: ivrStats.callsMissed },
-    { label: "Success Rate", value: ivrStats.successRate != null ? `${ivrStats.successRate}%` : "-" },
+    {
+      label: "Success Rate",
+      value: ivrStats.successRate != null ? `${ivrStats.successRate}%` : "-",
+    },
     { label: "Avg Talk Time", value: ivrStats.avgTalkTime ?? "-" },
     { label: "Avg Wait Time", value: ivrStats.avgWaitTime ?? "-" },
     { label: "Peak Hour", value: ivrStats.peakHour ?? "-" },
@@ -206,15 +211,25 @@ function formatCell(reportId, key, row) {
   if (value == null) return "-";
 
   if (
-    ["total", "resolved", "pending", "escalated", "withinSLA", "beyondSLA", "complaints", "calls"].includes(
-      key,
-    ) &&
+    [
+      "total",
+      "resolved",
+      "pending",
+      "escalated",
+      "withinSLA",
+      "beyondSLA",
+      "complaints",
+      "calls",
+    ].includes(key) &&
     typeof value === "number"
   ) {
     return value.toLocaleString("en-IN");
   }
 
-  if (["slaCompliance", "compliance"].includes(key) && typeof value === "number") {
+  if (
+    ["slaCompliance", "compliance"].includes(key) &&
+    typeof value === "number"
+  ) {
     return `${value}%`;
   }
 
@@ -255,8 +270,7 @@ export default function MISReports() {
     return next;
   }, [selectedReport, district, dateRange, fromDate, toDate]);
 
-  const queryEnabled =
-    dateRange !== "custom" || (!!fromDate && !!toDate);
+  const queryEnabled = dateRange !== "custom" || (!!fromDate && !!toDate);
 
   const { data, isLoading, error } = useGetMisReports(
     [selectedReport, district, dateRange, fromDate, toDate],
@@ -474,7 +488,7 @@ export default function MISReports() {
           >
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50">
+                <thead className="bg-[#F4F7FA]">
                   <tr className="text-left text-xs text-muted-foreground">
                     {reportColumns.map((col) => (
                       <th

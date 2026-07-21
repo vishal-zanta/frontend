@@ -150,7 +150,7 @@ export default function AdminCallHistory() {
         <div className="bg-white rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-[#F4F7FA]">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-3 py-3 font-medium">Call ID</th>
                   <th className="px-3 py-3 font-medium">Type</th>

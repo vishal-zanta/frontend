@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PortalLayout from "@/components/PortalLayout";
 
 // Imported modular components
@@ -10,10 +10,12 @@ import { useGetDashboardData } from "../officer-dashboard/query";
 import { usePortalProfile } from "@/hooks/usePortalProfile";
 import { ArrowLeft } from "lucide-react";
 import useIsMobile from "@/hooks/useIsMobile";
+import { useLanguage } from "@/context/LanguageContext";
 
 
 
 export default function OfficerComplaints() {
+  const { t } = useLanguage();
   const [profileId] = usePortalProfile("officer");
   const [selected, setSelected] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState(null);
@@ -64,7 +66,7 @@ export default function OfficerComplaints() {
                 className="text-primary font-medium hover:underline cursor-pointer text-xs"
               >
                 <ArrowLeft className="w-3 h-3 inline mr-1" />
-                Back to Complaints
+                {t("Back to Complaints", "शिकायतों पर वापस जाएं")}
               </div>
               <ComplaintDetailView
                 selected={selected}

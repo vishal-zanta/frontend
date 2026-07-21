@@ -7,12 +7,9 @@ import {
   Clock,
   AlertTriangle,
   Users,
-  ArrowRight,
   CheckCircle2,
-  Headphones,
   Building2,
   PhoneForwarded,
-  Volume2,
   Pause,
   Mic,
   MicOff,
@@ -21,98 +18,17 @@ import {
   Circle,
   PhoneCall,
 } from "lucide-react";
-import { CRM_AGENTS, COMPLAINTS, CALL_TRACKER } from "@/lib/biharData";
+import { CRM_AGENTS } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ComplaintId } from "@/components/ComplaintDetailDialog";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
-
-// Past complaints for the repeat caller
-const callerComplaints = [
-  {
-    id: "BH-2026-047824",
-    service: "Drainage & Sewerage",
-    subservice: "Drain overflow",
-    status: "In Progress",
-    priority: "High",
-    filedDate: "02 Jul 2026",
-    ward: "Patna Ward-07",
-    notes:
-      "Complaint filed via call. Drain near house overflowing. Field visit done - pipe replacement pending.",
-  },
-  {
-    id: "BH-2026-039102",
-    service: "Street Lighting",
-    subservice: "Street light not working",
-    status: "Resolved",
-    priority: "Normal",
-    filedDate: "15 Jun 2026",
-    ward: "Patna Ward-07",
-    notes: "Street light pole repaired. Citizen satisfied with resolution.",
-  },
-];
-
-const departments = [
-  { id: "energy", name: "Energy Dept", icon: "Lightbulb" },
-  { id: "urban-dev", name: "Urban Dev Dept", icon: "Building2" },
-  { id: "phed", name: "PHED (Water)", icon: "Waves" },
-  { id: "rcd", name: "Roads & RCD", icon: "Road" },
-  { id: "forest", name: "Forest (Animal)", icon: "PawPrint" },
-  { id: "sanitation", name: "Sanitation", icon: "Trash2" },
-];
-
-const repeatCaller = {
-  name: "Sunita Devi",
-  mobile: "+91 98350 44567",
-  district: "Patna",
-  ward: "Patna Ward-07",
-  previousCalls: [
-    {
-      id: "CALL-2026-08214",
-      time: "02 Jul, 10:15 AM",
-      agent: "Priya Sharma",
-      duration: "6m 30s",
-      disposition: "Complaint Registered",
-      complaintId: "BH-2026-047824",
-    },
-    {
-      id: "CALL-2026-08356",
-      time: "03 Jul, 02:20 PM",
-      agent: "Amit Verma",
-      duration: "4m 10s",
-      disposition: "Status Update",
-      complaintId: "BH-2026-047824",
-    },
-    {
-      id: "CALL-2026-08489",
-      time: "04 Jul, 09:45 AM",
-      agent: "Neha Singh",
-      duration: "8m 25s",
-      disposition: "Escalation Request",
-      complaintId: "BH-2026-047824",
-    },
-    {
-      id: "CALL-2026-08512",
-      time: "05 Jul, 04:10 PM",
-      agent: "Priya Sharma",
-      duration: "5m 45s",
-      disposition: "Status Update",
-      complaintId: "BH-2026-047824",
-    },
-    {
-      id: "CALL-2026-08588",
-      time: "06 Jul, 08:30 AM",
-      agent: "Rohit Kumar",
-      duration: "7m 20s",
-      disposition: "Supervisor Request",
-      complaintId: "BH-2026-047824",
-    },
-  ],
-};
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function IncomingCall() {
+  const { t } = useLanguage();
   const [callState, setCallState] = useState("ringing"); // ringing -> connected -> rerouting -> ended
   const [callDuration, setCallDuration] = useState(0);
   const [rerouteTarget, setRerouteTarget] = useState(null); // { type: "agent"|"dept", id }
@@ -122,6 +38,105 @@ export default function IncomingCall() {
   const [isRecording, setIsRecording] = useState(true);
   const [showOutbound, setShowOutbound] = useState(false);
   const [outboundNumber, setOutboundNumber] = useState("");
+
+  // Past complaints for the repeat caller
+  const callerComplaints = [
+    {
+      id: "BH-2026-047824",
+      service: t("Drainage & Sewerage", "जल निकासी और सीवरेज"),
+      subservice: t("Drain overflow", "नाली ओवरफ्लो"),
+      status: "In Progress",
+      priority: "High",
+      filedDate: "02 Jul 2026",
+      ward: t("Patna Ward-07", "पटना वार्ड -07"),
+      notes: t(
+        "Complaint filed via call. Drain near house overflowing. Field visit done - pipe replacement pending.",
+        "कॉल के माध्यम से शिकायत दर्ज की गई। घर के पास नाली ओवरफ्लो हो रही है। फील्ड विजिट किया गया - पाइप बदलना लंबित है।",
+      ),
+    },
+    {
+      id: "BH-2026-039102",
+      service: t("Street Lighting", "स्ट्रीट लाइटिंग"),
+      subservice: t(
+        "Street light not working",
+        "स्ट्रीट लाइट काम नहीं कर रही है",
+      ),
+      status: "Resolved",
+      priority: "Normal",
+      filedDate: "15 Jun 2026",
+      ward: t("Patna Ward-07", "पटना वार्ड -07"),
+      notes: t(
+        "Street light pole repaired. Citizen satisfied with resolution.",
+        "स्ट्रीट लाइट पोल की मरम्मत की गई। नागरिक समाधान से संतुष्ट है।",
+      ),
+    },
+  ];
+
+  const departments = [
+    { id: "energy", name: t("Energy Dept", "ऊर्जा विभाग"), icon: "Lightbulb" },
+    {
+      id: "urban-dev",
+      name: t("Urban Dev Dept", "नगर विकास विभाग"),
+      icon: "Building2",
+    },
+    {
+      id: "phed",
+      name: t("PHED (Water)", "लोक स्वास्थ्य अभियंत्रण (जल)"),
+      icon: "Waves",
+    },
+    { id: "rcd", name: t("Roads & RCD", "सड़क और आरसीडी"), icon: "Road" },
+    { id: "forest", name: t("Forest (Animal)", "वन (पशु)"), icon: "PawPrint" },
+    { id: "sanitation", name: t("Sanitation", "स्वच्छता"), icon: "Trash2" },
+  ];
+
+  const repeatCaller = {
+    name: "Sunita Devi",
+    mobile: "+91 98350 44567",
+    district: t("Patna", "पटना"),
+    ward: t("Patna Ward-07", "पटना वार्ड -07"),
+    previousCalls: [
+      {
+        id: "CALL-2026-08214",
+        time: "02 Jul, 10:15 AM",
+        agent: "Priya Sharma",
+        duration: "6m 30s",
+        disposition: t("Complaint Registered", "शिकायत दर्ज की गई"),
+        complaintId: "BH-2026-047824",
+      },
+      {
+        id: "CALL-2026-08356",
+        time: "03 Jul, 02:20 PM",
+        agent: "Amit Verma",
+        duration: "4m 10s",
+        disposition: t("Status Update", "स्थिति अपडेट"),
+        complaintId: "BH-2026-047824",
+      },
+      {
+        id: "CALL-2026-08489",
+        time: "04 Jul, 09:45 AM",
+        agent: "Neha Singh",
+        duration: "8m 25s",
+        disposition: t("Escalation Request", "तीव्रता अनुरोध"),
+        complaintId: "BH-2026-047824",
+      },
+      {
+        id: "CALL-2026-08512",
+        time: "05 Jul, 04:10 PM",
+        agent: "Priya Sharma",
+        duration: "5m 45s",
+        disposition: t("Status Update", "स्थिति अपडेट"),
+        complaintId: "BH-2026-047824",
+      },
+      {
+        id: "CALL-2026-08588",
+        time: "06 Jul, 08:30 AM",
+        agent: "Rohit Kumar",
+        duration: "7m 20s",
+        disposition: t("Supervisor Request", "पर्यवेक्षक अनुरोध"),
+        complaintId: "BH-2026-047824",
+      },
+    ],
+  };
 
   useEffect(() => {
     if (callState === "connected") {
@@ -159,11 +174,13 @@ export default function IncomingCall() {
       <div className="p-6 space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            Incoming Call - Agent Desktop
+            {t("Incoming Call - Agent Desktop", "आगमन कॉल - एजेंट डेस्कटॉप")}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Live call handling with hold, mute, transfer, conference, recording,
-            caller complaint history & outbound dial
+            {t(
+              "Live call handling with hold, mute, transfer, conference, recording, caller complaint history & outbound dial",
+              "होल्ड, म्यूट, ट्रांसफर, कॉन्फ्रेंस, रिकॉर्डिंग, कॉलर शिकायत इतिहास और आउटबाउंड डायल के साथ लाइव कॉल हैंडलिंग",
+            )}
           </p>
         </div>
 
@@ -194,13 +211,16 @@ export default function IncomingCall() {
                     REC
                   </div>
                   <span className="text-xs text-white/70">
-                    Call recording in progress
+                    {t(
+                      "Call recording in progress",
+                      "कॉल रिकॉर्डिंग प्रगति पर है",
+                    )}
                   </span>
                   <button
                     onClick={() => setIsRecording(false)}
                     className="ml-auto text-xs text-white/60 hover:text-white underline"
                   >
-                    Stop
+                    {t("Stop", "रोकें")}
                   </button>
                 </div>
               )}
@@ -210,12 +230,14 @@ export default function IncomingCall() {
                 <AlertTriangle className="w-5 h-5 text-amber-300 shrink-0" />
                 <div className="text-sm">
                   <div className="font-semibold">
-                    Repeat Caller - {repeatCaller.previousCalls.length} previous
-                    calls
+                    {t("Repeat Caller", "पुनरावृत्ति कॉलर")} -{" "}
+                    {repeatCaller.previousCalls.length}{" "}
+                    {t("previous calls", "पिछली कॉल")}
                   </div>
                   <div className="text-white/70 text-xs">
-                    Citizen has called {repeatCaller.previousCalls.length} times
-                    about the same issue
+                    {t("Citizen has called", "नागरिक ने कॉल किया है")}{" "}
+                    {repeatCaller.previousCalls.length}{" "}
+                    {t("times about the same issue", "बार इसी मुद्दे पर")}
                   </div>
                 </div>
               </div>
@@ -228,10 +250,11 @@ export default function IncomingCall() {
                       <Phone className="w-10 h-10 animate-bounce" />
                     </div>
                     <div className="text-lg font-semibold">
-                      Incoming Call...
+                      {t("Incoming Call...", "आगमन कॉल...")}
                     </div>
                     <div className="text-sm text-white/70">
-                      Call from {repeatCaller.district}, {repeatCaller.ward}
+                      {t("Call from", "कॉल से")} {repeatCaller.district},{" "}
+                      {repeatCaller.ward}
                     </div>
                   </>
                 )}
@@ -244,7 +267,11 @@ export default function IncomingCall() {
                       {formatDuration(callDuration)}
                     </div>
                     <div className="text-sm text-white/70">
-                      {isHold ? "On Hold" : isMuted ? "Muted" : "Connected"}
+                      {isHold
+                        ? t("On Hold", "होल्ड पर")
+                        : isMuted
+                          ? t("Muted", "म्यूट")
+                          : t("Connected", "जुड़ा हुआ")}
                     </div>
                   </>
                 )}
@@ -254,10 +281,14 @@ export default function IncomingCall() {
                       <PhoneForwarded className="w-8 h-8 animate-pulse" />
                     </div>
                     <div className="text-lg font-semibold">
-                      Rerouting call...
+                      {t(
+                        "Rerouting call...",
+                        "कॉल पुनः निर्देशित किया जा रहा है...",
+                      )}
                     </div>
                     <div className="text-sm text-white/70">
-                      Transferring to {rerouteTarget?.name}
+                      {t("Transferring to", "स्थानांतरित किया जा रहा है")}{" "}
+                      {rerouteTarget?.name}
                     </div>
                   </>
                 )}
@@ -266,11 +297,13 @@ export default function IncomingCall() {
                     <div className="flex justify-center mb-3">
                       <PhoneOff className="w-8 h-8" />
                     </div>
-                    <div className="text-lg font-semibold">Call Ended</div>
+                    <div className="text-lg font-semibold">
+                      {t("Call Ended", "कॉल समाप्त")}
+                    </div>
                     <div className="text-sm text-white/70">
                       {rerouteTarget
-                        ? `Transferred to ${rerouteTarget.name}`
-                        : "Completed"}
+                        ? `${t("Transferred to", "स्थानांतरित किया गया")} ${rerouteTarget.name}`
+                        : t("Completed", "पूरा हुआ")}
                     </div>
                   </>
                 )}
@@ -283,7 +316,8 @@ export default function IncomingCall() {
                     onClick={acceptCall}
                     className="bg-white text-emerald-600 hover:bg-white/90"
                   >
-                    <Phone className="w-4 h-4 mr-1" /> Accept
+                    <Phone className="w-4 h-4 mr-1" />{" "}
+                    {t("Accept", "स्वीकार करें")}
                   </Button>
                 )}
                 {callState === "connected" && (
@@ -292,14 +326,14 @@ export default function IncomingCall() {
                       <button
                         onClick={() => setIsHold(!isHold)}
                         className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isHold ? "bg-amber-400 text-white" : "bg-white/20 hover:bg-white/30 text-white"}`}
-                        title="Hold"
+                        title={t("Hold", "होल्ड")}
                       >
                         <Pause className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setIsMuted(!isMuted)}
                         className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-red-500 text-white" : "bg-white/20 hover:bg-white/30 text-white"}`}
-                        title="Mute"
+                        title={t("Mute", "म्यूट")}
                       >
                         {isMuted ? (
                           <MicOff className="w-4 h-4" />
@@ -310,28 +344,32 @@ export default function IncomingCall() {
                       <button
                         onClick={() => setShowReroutePanel(!showReroutePanel)}
                         className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all"
-                        title="Transfer / Conference"
+                        title={t(
+                          "Transfer / Conference",
+                          "स्थानांतरण / सम्मेलन",
+                        )}
                       >
                         <PhoneForwarded className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setShowOutbound(!showOutbound)}
                         className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all"
-                        title="Outbound Dial"
+                        title={t("Outbound Dial", "आउटबाउंड डायल")}
                       >
                         <PhoneOutgoing className="w-4 h-4" />
                       </button>
                       <button
                         onClick={endCall}
                         className="w-10 h-10 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all"
-                        title="End Call"
+                        title={t("End Call", "कॉल समाप्त करें")}
                       >
                         <PhoneOff className="w-4 h-4" />
                       </button>
                     </div>
                     <Link to="/crm/raise" className="block">
                       <Button className="w-full bg-white text-primary hover:bg-white/90">
-                        <FileText className="w-4 h-4 mr-1" /> Raise Complaint
+                        <FileText className="w-4 h-4 mr-1" />{" "}
+                        {t("Raise Complaint", "शिकायत दर्ज करें")}
                       </Button>
                     </Link>
                   </div>
@@ -345,7 +383,8 @@ export default function IncomingCall() {
                     }}
                     className="bg-white text-primary hover:bg-white/90"
                   >
-                    <Phone className="w-4 h-4 mr-1" /> Simulate New Call
+                    <Phone className="w-4 h-4 mr-1" />{" "}
+                    {t("Simulate New Call", "नया कॉल अनुकरण करें")}
                   </Button>
                 )}
               </div>
@@ -354,21 +393,29 @@ export default function IncomingCall() {
             {/* Quick info */}
             <div className="bg-white rounded-xl border border-border p-4 mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">District:</span>
+                <span className="text-muted-foreground">
+                  {t("District", "जिला")}:
+                </span>
                 <span className="font-medium">{repeatCaller.district}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Ward:</span>
+                <span className="text-muted-foreground">
+                  {t("Ward", "वार्ड")}:
+                </span>
                 <span className="font-medium">{repeatCaller.ward}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Previous Calls:</span>
+                <span className="text-muted-foreground">
+                  {t("Previous Calls", "पिछली कॉल")}:
+                </span>
                 <span className="font-medium text-amber-600">
-                  {repeatCaller.previousCalls.length} times
+                  {repeatCaller.previousCalls.length} {t("times", "बार")}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Last Call:</span>
+                <span className="text-muted-foreground">
+                  {t("Last Call", "आखरी कॉल")}:
+                </span>
                 <span className="font-medium">
                   {repeatCaller.previousCalls[0]?.time}
                 </span>
@@ -383,19 +430,34 @@ export default function IncomingCall() {
               <div className="px-5 py-3 border-b border-border flex items-center gap-2">
                 <Clock className="w-4 h-4 text-muted-foreground" />
                 <h3 className="font-bold text-foreground">
-                  Caller History - Previous Interactions
+                  {t(
+                    "Caller History - Previous Interactions",
+                    "कॉलर इतिहास - पिछला संवाद",
+                  )}
                 </h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-muted/50">
+                  <thead className="bg-[#F4F7FA]">
                     <tr className="text-left text-xs text-muted-foreground">
-                      <th className="px-4 py-2 font-medium">Call ID</th>
-                      <th className="px-4 py-2 font-medium">Date / Time</th>
-                      <th className="px-4 py-2 font-medium">Agent</th>
-                      <th className="px-4 py-2 font-medium">Duration</th>
-                      <th className="px-4 py-2 font-medium">Disposition</th>
-                      <th className="px-4 py-2 font-medium">Complaint</th>
+                      <th className="px-4 py-2 font-medium">
+                        {t("Call ID", "कॉल आईडी")}
+                      </th>
+                      <th className="px-4 py-2 font-medium">
+                        {t("Date / Time", "दिनांक / समय")}
+                      </th>
+                      <th className="px-4 py-2 font-medium">
+                        {t("Agent", "एजेंट")}
+                      </th>
+                      <th className="px-4 py-2 font-medium">
+                        {t("Duration", "अवधि")}
+                      </th>
+                      <th className="px-4 py-2 font-medium">
+                        {t("Disposition", "निपटान")}
+                      </th>
+                      <th className="px-4 py-2 font-medium">
+                        {t("Complaint", "शिकायत")}
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -434,10 +496,10 @@ export default function IncomingCall() {
               <div className="px-5 py-3 border-b border-border flex items-center gap-2">
                 <FileText className="w-4 h-4 text-muted-foreground" />
                 <h3 className="font-bold text-foreground">
-                  Caller's Complaint History
+                  {t("Caller's Complaint History", "कॉलर का शिकायत इतिहास")}
                 </h3>
                 <Badge variant="outline" className="text-[10px] ml-auto">
-                  {callerComplaints.length} complaints
+                  {callerComplaints.length} {t("complaints", "शिकायतें")}
                 </Badge>
               </div>
               <div className="divide-y divide-border">
@@ -463,9 +525,9 @@ export default function IncomingCall() {
                     <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                       <Building2 className="w-3 h-3" /> {c.ward}
                     </div>
-                    <div className="mt-2 bg-muted/50 rounded-lg p-2 text-xs text-muted-foreground">
+                    <div className="mt-2 bg-[#F4F7FA] rounded-lg p-2 text-xs text-muted-foreground">
                       <span className="font-medium text-foreground">
-                        Notes:{" "}
+                        {t("Notes:", "टिप्पणी:")}{" "}
                       </span>
                       {c.notes}
                     </div>
@@ -478,26 +540,32 @@ export default function IncomingCall() {
             {showOutbound && callState === "connected" && (
               <div className="bg-white rounded-xl border-2 border-primary p-5">
                 <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                  <PhoneOutgoing className="w-5 h-5 text-primary" /> Outbound
-                  Dial
+                  <PhoneOutgoing className="w-5 h-5 text-primary" />{" "}
+                  {t("Outbound Dial", "आउटबाउंड डायल")}
                 </h3>
                 <div className="flex gap-2">
                   <Input
                     value={outboundNumber}
                     onChange={(e) => setOutboundNumber(e.target.value)}
-                    placeholder="Enter phone number to dial..."
-                    className="flex-1"
+                    placeholder={t(
+                      "Enter phone number to dial...",
+                      "डायल करने के लिए फोन नंबर दर्ज करें...",
+                    )}
+                    className="flex-1 bg-white"
                   />
                   <Button
                     className="bg-primary hover:bg-primary/90"
                     disabled={!outboundNumber}
                   >
-                    <PhoneCall className="w-4 h-4 mr-1" /> Dial
+                    <PhoneCall className="w-4 h-4 mr-1" /> {t("Dial", "डायल")}
                   </Button>
                 </div>
                 <div className="mt-3">
                   <div className="text-xs text-muted-foreground mb-2">
-                    Quick Callback - Recent Citizen Numbers:
+                    {t(
+                      "Quick Callback - Recent Citizen Numbers:",
+                      "त्वरित कॉलबैक - हाल के नागरिक नंबर:",
+                    )}
                   </div>
                   <div className="space-y-1">
                     {[
@@ -508,7 +576,7 @@ export default function IncomingCall() {
                       <button
                         key={i}
                         onClick={() => setOutboundNumber(num.split(" (")[0])}
-                        className="w-full text-left px-3 py-2 text-sm rounded-lg border border-border hover:border-primary hover:bg-muted/50 transition-all"
+                        className="w-full text-left px-3 py-2 text-sm rounded-lg border border-border hover:border-primary hover:bg-[#F4F7FA] transition-all bg-white"
                       >
                         <PhoneOutgoing className="w-3.5 h-3.5 inline mr-2 text-muted-foreground" />{" "}
                         {num}
@@ -523,15 +591,15 @@ export default function IncomingCall() {
             {showReroutePanel && callState === "connected" && (
               <div className="bg-white rounded-xl border-2 border-primary p-5">
                 <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                  <PhoneForwarded className="w-5 h-5 text-primary" /> Reroute
-                  Call
+                  <PhoneForwarded className="w-5 h-5 text-primary" />{" "}
+                  {t("Reroute Call", "कॉल पुनः निर्देशित करें")}
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Reroute to department */}
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground mb-3">
-                      Transfer to Department
+                      {t("Transfer to Department", "विभाग को ट्रांसफर करें")}
                     </h4>
                     <div className="space-y-2">
                       {departments.map((dept) => (
@@ -544,7 +612,7 @@ export default function IncomingCall() {
                               name: dept.name,
                             })
                           }
-                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left ${rerouteTarget?.id === dept.id ? "border-primary bg-blue-50" : "border-border hover:bg-muted/50"}`}
+                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left bg-white ${rerouteTarget?.id === dept.id ? "border-primary bg-blue-50" : "border-border hover:bg-[#F4F7FA]"}`}
                         >
                           <Building2 className="w-4 h-4 text-muted-foreground" />
                           <span className="text-sm font-medium">
@@ -561,7 +629,7 @@ export default function IncomingCall() {
                   {/* Reroute to agent */}
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground mb-3">
-                      Transfer to Agent
+                      {t("Transfer to Agent", "एजेंट को ट्रांसफर करें")}
                     </h4>
                     <div className="space-y-2 max-h-[300px] overflow-y-auto scrollbar-thin">
                       {availableAgents.map((agent) => (
@@ -574,7 +642,7 @@ export default function IncomingCall() {
                               name: agent.name,
                             })
                           }
-                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left ${rerouteTarget?.id === agent.id ? "border-primary bg-blue-50" : "border-border hover:bg-muted/50"}`}
+                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left bg-white ${rerouteTarget?.id === agent.id ? "border-primary bg-blue-50" : "border-border hover:bg-[#F4F7FA]"}`}
                         >
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
                             {agent.name
@@ -612,14 +680,14 @@ export default function IncomingCall() {
                       className="flex-1"
                       onClick={() => setRerouteTarget(null)}
                     >
-                      Cancel
+                      {t("Cancel", "रद्द करें")}
                     </Button>
                     <Button
                       className="flex-1 bg-primary hover:bg-primary/90"
                       onClick={confirmReroute}
                     >
-                      <PhoneForwarded className="w-4 h-4 mr-1" /> Transfer to{" "}
-                      {rerouteTarget.name}
+                      <PhoneForwarded className="w-4 h-4 mr-1" />{" "}
+                      {t("Transfer to", "ट्रांसफर करें")} {rerouteTarget.name}
                     </Button>
                   </div>
                 )}
@@ -631,7 +699,7 @@ export default function IncomingCall() {
               <div className="px-5 py-3 border-b border-border flex items-center gap-2">
                 <Users className="w-4 h-4 text-muted-foreground" />
                 <h3 className="font-bold text-foreground">
-                  Agent Board - Live Status
+                  {t("Agent Board - Live Status", "एजेंट बोर्ड - लाइव स्थिति")}
                 </h3>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
@@ -664,7 +732,7 @@ export default function IncomingCall() {
                         {agent.status}
                       </Badge>
                       <span className="text-[10px] text-muted-foreground">
-                        {agent.callsToday} calls
+                        {agent.callsToday} {t("calls", "कॉल")}
                       </span>
                     </div>
                   </div>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDemographics } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
-import { MAX_LIMIT } from "@/utils/constants";
+import { MAX_LIMIT, LANGUAGES } from "@/utils/constants";
 
 
 export default function Form({
@@ -14,6 +14,7 @@ export default function Form({
   submitLabel = "Save",
   isLoading = false,
   disabledKeys = [],
+  skillsOptions = [],
 }) {
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
   const { data: demographyData } = useGetDemographics([], {
@@ -100,6 +101,22 @@ export default function Form({
           placeholder="Select status"
         />
       )}
+
+      <RhfSelect
+        name="skills"
+        label="Skills"
+        options={skillsOptions}
+        placeholder="Select skills"
+        isMultiple={true}
+      />
+
+      <RhfSelect
+        name="preferredLanguages"
+        label="Preferred Languages"
+        options={LANGUAGES}
+        placeholder="Select preferred languages"
+        isMultiple={true}
+      />
 
       <div className="flex gap-2 pt-2  mt-4 sticky bottom-0 bg-white pb-4">
         <Button

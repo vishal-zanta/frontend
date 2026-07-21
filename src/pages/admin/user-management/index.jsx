@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Shield, UserPlus, Mail, Phone, MapPin, Flame } from "lucide-react";
+import { Shield, UserPlus } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
@@ -22,12 +22,16 @@ import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import ViewDialog from "./components/ViewDialog";
 import { postAdminLogout } from "@/api/auth.api";
+import { useGetSkills } from "../master-data/hooks";
 
 export default function UserManagement() {
   const [filterRole, setFilterRole] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
+  const {data : skillsApiData} = useGetSkills([1,MAX_LIMIT], {page:1, limit : MAX_LIMIT});
+  const skillsOptions = (skillsApiData?.data?.data?.docs || []).map(s=> ({label : s.name, value : s._id}));
+  
   const { page, limit, ...pageProps } = usePagination();
 
   const { data, isLoading, error } = useGetUsers(
@@ -54,6 +58,8 @@ export default function UserManagement() {
     confirmPassword: "",
     role: "",
     district: "",
+    skills: [],
+    preferredLanguages: [],
   });
 
   const queryClient = useQueryClient();
@@ -150,6 +156,8 @@ export default function UserManagement() {
       district: districtDisplay,
       status: user?.status || "",
       permissions: user?.role?.permissions || [],
+      skills: user?.skills || [],
+      preferredLanguages: user?.preferredLanguages || [],
       apiData: user,
       lastLogin: user?.lastLogin
         ? new Date(user?.lastLogin).toLocaleString() || ""
@@ -235,10 +243,11 @@ export default function UserManagement() {
           />
         </div>
 
+
         {/* Users table */}
         <div className="bg-white rounded-xl border border-border overflow-hidden">
-          <div className="overflow-x-auto">
             <LoaderErrWrapper isLoading={isLoading} error={error}>
+          <div className="overflow-x-auto">
               <UserManageTable
                 users={tableData}
                 handleToggleStatus={handleToggleStatus}
@@ -247,8 +256,8 @@ export default function UserManagement() {
                 handleView={handleView}
                 handleLogoutClick={handleLogoutClick}
               />
-            </LoaderErrWrapper>
           </div>
+            </LoaderErrWrapper>
           <Pagination
             page={page}
             limit={limit}
@@ -276,6 +285,8 @@ export default function UserManagement() {
                   editUser?.apiData?.district ||
                   "",
                 status: editUser?.apiData?.status || "",
+                skills: (editUser?.apiData?.skills || []).map(s => s._id || s),
+                preferredLanguages: editUser?.apiData?.preferredLanguages || [],
               }}
               isValidation={true}
               validationSchema={editSchema}
@@ -291,6 +302,7 @@ export default function UserManagement() {
                 isEdit={true}
                 isLoading={putMutation.isPending}
                 onCancel={() => setEditUser(null)}
+                skillsOptions={skillsOptions}
               />
             </RhfWrapper>
           </EditDialog>
@@ -319,6 +331,7 @@ export default function UserManagement() {
                   ...(!!addInitialValues.role ? ["role"] : []),
                 ].flat()}
                 onCancel={() => setAddUserOpen(false)}
+                skillsOptions={skillsOptions}
               />
             </RhfWrapper>
           </EditDialog>

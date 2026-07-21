@@ -20,7 +20,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
   const { page, limit, ...paginationProps } = usePagination();
   const [subservices, setSubservices] = useState(service.subservices || []);
   const [anyMutationDone, setAnyMutationDone] = useState(false);
-  const { data: subservicesData , isLoading} = useGetSubservices(
+  const { data: subservicesData, isLoading } = useGetSubservices(
     [page, limit],
     { serviceId: service?._id, page, limit },
     anyMutationDone,
@@ -179,7 +179,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50">
+            <thead className="bg-[#F4F7FA]">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-3 py-2.5 font-medium">
                   Sub-Service (English)

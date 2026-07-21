@@ -3,8 +3,10 @@ import { Inbox, Clock, AlertTriangle, CheckCircle2 } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import { getTrendProps } from "@/utils/helpers";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function StatsCards({ officer, analyticsData, isLoading, error }) {
+  const { t } = useLanguage();
   const apiData = analyticsData?.data?.data || {};
   const current = apiData.currentPeriod || {};
   const previous = apiData.previousPeriod || {};
@@ -24,28 +26,28 @@ export default function StatsCards({ officer, analyticsData, isLoading, error })
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={Inbox}
-          label="Total Assigned"
+          label={t("Total Assigned", "कुल आवंटित")}
           value={total}
           color="blue"
           {...totalTrend}
         />
         <StatCard
           icon={Clock}
-          label="Pending"
+          label={t("Pending", "लंबित")}
           value={pending}
           color="amber"
           {...pendingTrend}
         />
         <StatCard
           icon={CheckCircle2}
-          label="Resolved"
+          label={t("Resolved", "हल की गई")}
           value={resolved}
           color="green"
           {...resolvedTrend}
         />
         <StatCard
           icon={AlertTriangle}
-          label="SLA Breached"
+          label={t("SLA Breached", "एसएलए उल्लंघन")}
           value={slaBreached}
           color="red"
           {...slaTrend}

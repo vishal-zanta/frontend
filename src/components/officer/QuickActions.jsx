@@ -200,7 +200,9 @@ export default function QuickActions({ officer }) {
           }
         >
           <div>
-            <Label className="mb-1.5 block">Select Complaint <span className="text-red-500">*</span></Label>
+            <Label className="mb-1.5 block">
+              Select Complaint <span className="text-red-500">*</span>
+            </Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}
@@ -218,7 +220,7 @@ export default function QuickActions({ officer }) {
             </Select>
           </div>
           {selectedComplaint && (
-            <div className="bg-muted/50 rounded-lg p-3 text-sm">
+            <div className="bg-[#F4F7FA] rounded-lg p-3 text-sm">
               <div className="flex items-center gap-2 mb-1">
                 <ComplaintId id={selectedComplaint} className="text-xs" />
                 <StatusBadge
@@ -236,7 +238,9 @@ export default function QuickActions({ officer }) {
             </div>
           )}
           <div>
-            <Label className="mb-1.5 block">New Status <span className="text-red-500">*</span></Label>
+            <Label className="mb-1.5 block">
+              New Status <span className="text-red-500">*</span>
+            </Label>
             <Select value={newStatus} onValueChange={setNewStatus}>
               <SelectTrigger>
                 <SelectValue placeholder="Select new status" />
@@ -296,7 +300,9 @@ export default function QuickActions({ officer }) {
           }
         >
           <div>
-            <Label className="mb-1.5 block">Link to Complaint <span className="text-red-500">*</span></Label>
+            <Label className="mb-1.5 block">
+              Link to Complaint <span className="text-red-500">*</span>
+            </Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}
@@ -373,7 +379,9 @@ export default function QuickActions({ officer }) {
           }
         >
           <div>
-            <Label className="mb-1.5 block">Complaint Visited <span className="text-red-500">*</span></Label>
+            <Label className="mb-1.5 block">
+              Complaint Visited <span className="text-red-500">*</span>
+            </Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}
@@ -391,7 +399,9 @@ export default function QuickActions({ officer }) {
             </Select>
           </div>
           <div>
-            <Label className="mb-1.5 block">Visit Findings <span className="text-red-500">*</span></Label>
+            <Label className="mb-1.5 block">
+              Visit Findings <span className="text-red-500">*</span>
+            </Label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -475,7 +485,9 @@ export default function QuickActions({ officer }) {
             </span>
           </div>
           <div>
-            <Label className="mb-1.5 block">Complaint to Escalate <span className="text-red-500">*</span></Label>
+            <Label className="mb-1.5 block">
+              Complaint to Escalate <span className="text-red-500">*</span>
+            </Label>
             <Select
               value={selectedComplaint}
               onValueChange={setSelectedComplaint}
@@ -498,7 +510,7 @@ export default function QuickActions({ officer }) {
             </Select>
           </div>
           {selectedComplaint && (
-            <div className="bg-muted/50 rounded-lg p-3 text-sm space-y-1">
+            <div className="bg-[#F4F7FA] rounded-lg p-3 text-sm space-y-1">
               <div className="flex items-center gap-2">
                 <ComplaintId id={selectedComplaint} className="text-xs" />
                 <StatusBadge

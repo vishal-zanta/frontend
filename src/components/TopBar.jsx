@@ -50,7 +50,11 @@ export default function TopBar({
   onToggleSidebar,
   sidebarOpen,
 }) {
-  const {profile: profileData, setProfile : setProfileData, profiledata : profileMetaData} = useAuth();
+  const {
+    profile: profileData,
+    setProfile: setProfileData,
+    profiledata: profileMetaData,
+  } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const isSuperAdmin = profileMetaData?.isAdmin;
@@ -146,12 +150,11 @@ export default function TopBar({
       setProfileData(null);
       qc.removeQueries();
       navigate("/");
-
     },
   });
 
   const handleLogout = () => {
-      setProfileData(null);
+    setProfileData(null);
     logoutMutation.mutate();
   };
 
@@ -177,7 +180,11 @@ export default function TopBar({
         <button
           onClick={onToggleSidebar}
           className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
-          title={sidebarOpen ? t("Collapse sidebar", "साइडबार छोटा करें") : t("Expand sidebar", "साइडबार बढ़ाएं")}
+          title={
+            sidebarOpen
+              ? t("Collapse sidebar", "साइडबार छोटा करें")
+              : t("Expand sidebar", "साइडबार बढ़ाएं")
+          }
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -192,28 +199,29 @@ export default function TopBar({
       </div>
 
       <div className="flex items-center gap-3">
-      
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-muted rounded-lg text-muted-foreground">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <input
-              type="text"
-              placeholder={t("Search complaints, officers...", "शिकायतें, अधिकारी खोजें...")}
-              className="bg-transparent text-sm w-40 lg:w-56 outline-none placeholder:text-muted-foreground/60"
+        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-muted rounded-lg text-muted-foreground">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
-          </div>
-        
+          </svg>
+          <input
+            type="text"
+            placeholder={t(
+              "Search complaints, officers...",
+              "शिकायतें, अधिकारी खोजें...",
+            )}
+            className="bg-transparent text-sm w-40 lg:w-56 outline-none placeholder:text-muted-foreground/60"
+          />
+        </div>
 
         {/* Profile switcher for officer and CRM */}
         {/* {profiles && (
@@ -228,7 +236,7 @@ export default function TopBar({
             </button>
             {showSwitcher && (
               <div className="absolute right-0 top-11 w-64 bg-white border border-border rounded-xl shadow-xl overflow-hidden z-50">
-                <div className="px-4 py-2.5 border-b border-border bg-muted/50">
+                <div className="px-4 py-2.5 border-b border-border bg-[#F4F7FA]">
                   <span className="text-xs font-semibold text-muted-foreground">
                     Switch Profile View
                   </span>
@@ -282,7 +290,7 @@ export default function TopBar({
                   {notifications.map((n) => (
                     <div
                       key={n.id}
-                      className="px-4 py-3 border-b border-border last:border-0 hover:bg-muted/50 flex items-start gap-3"
+                      className="px-4 py-3 border-b border-border last:border-0 hover:bg-[#F4F7FA] flex items-start gap-3"
                     >
                       <div className="mt-0.5">{notifIcon(n.type)}</div>
                       <div className="flex-1 min-w-0">
@@ -299,16 +307,16 @@ export default function TopBar({
           </div>
         )}
 
-      
-          <button
-            onClick={() => toggleBreakMutation.mutate()}
-            disabled={toggleBreakMutation.isPending}
-            className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
-          >
-            {toggleBreakMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
-            {t("Start Break", "ब्रेक शुरू करें")}
-          </button>
-       
+        <button
+          onClick={() => toggleBreakMutation.mutate()}
+          disabled={toggleBreakMutation.isPending}
+          className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
+        >
+          {toggleBreakMutation.isPending && (
+            <Loader2 className="w-3 h-3 animate-spin" />
+          )}
+          {t("Start Break", "ब्रेक शुरू करें")}
+        </button>
 
         {/* <Link
           to="/"
@@ -332,14 +340,19 @@ export default function TopBar({
             className="flex items-center gap-2 pl-3 border-l border-border"
           >
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
-              {profileData?.name?.slice(0,2)?.toUpperCase()}
+              {profileData?.name?.slice(0, 2)?.toUpperCase()}
             </div>
             <div className="hidden sm:block text-left">
               <div className="text-sm font-semibold text-foreground leading-tight">
                 {profileData?.name}
               </div>
               <div className="text-[11px] text-muted-foreground leading-tight">
-                {t(profileData?.role?.designationEnglish ?? profileData?.role, profileData?.role?.designationHindi ?? (profileData?.role?.designationEnglish || profileData?.role))}
+                {t(
+                  profileData?.role?.designationEnglish ?? profileData?.role,
+                  profileData?.role?.designationHindi ??
+                    (profileData?.role?.designationEnglish ||
+                      profileData?.role),
+                )}
               </div>
             </div>
             <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />
@@ -347,9 +360,17 @@ export default function TopBar({
           {showProfile && (
             <div className="absolute right-0 top-12 w-56 bg-white border border-border rounded-xl shadow-xl overflow-hidden z-50">
               <div className="px-4 py-3 border-b border-border">
-                <div className="font-semibold text-sm"> {profileData?.name}</div>
+                <div className="font-semibold text-sm">
+                  {" "}
+                  {profileData?.name}
+                </div>
                 <div className="text-xs text-muted-foreground">
-                  {t(profileData?.role?.designationEnglish ?? profileData?.role, profileData?.role?.designationHindi ?? (profileData?.role?.designationEnglish || profileData?.role))}
+                  {t(
+                    profileData?.role?.designationEnglish ?? profileData?.role,
+                    profileData?.role?.designationHindi ??
+                      (profileData?.role?.designationEnglish ||
+                        profileData?.role),
+                  )}
                 </div>
               </div>
               {settingsPath && (
@@ -368,7 +389,8 @@ export default function TopBar({
                   onClick={() => setShowProfile(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted"
                 >
-                  <Shield className="w-4 h-4 text-muted-foreground" /> {t("Manage Access", "पहुंच प्रबंधित करें")}
+                  <Shield className="w-4 h-4 text-muted-foreground" />{" "}
+                  {t("Manage Access", "पहुंच प्रबंधित करें")}
                 </Link>
               )}
               <button
@@ -381,7 +403,9 @@ export default function TopBar({
                 ) : (
                   <LogOut className="w-4 h-4" />
                 )}
-                {logoutMutation.isPending ? t("Logging out...", "लॉग आउट हो रहा है...") : t("Logout", "लॉगआउट")}
+                {logoutMutation.isPending
+                  ? t("Logging out...", "लॉग आउट हो रहा है...")
+                  : t("Logout", "लॉगआउट")}
               </button>
             </div>
           )}

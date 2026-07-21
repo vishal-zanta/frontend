@@ -16,8 +16,10 @@ import { assignShift } from "../api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SetShiftTiming() {
+  const { t } = useLanguage();
   const qc = useQueryClient();
   const { data, isLoading } = useGetShifts({ page: 1, limit: MAX_LIMIT });
   const [selectedAgent, setSelectedAgent] = useState("");
@@ -33,7 +35,7 @@ export default function SetShiftTiming() {
   const assignShiftMutation = useMutation({
     mutationFn: assignShift,
     onSuccess: () => {
-      getSuccessToast("Shift assigned successfully");
+      getSuccessToast(t("Shift assigned successfully", "शिफ्ट सफलतापूर्वक आवंटित किया गया"));
       qc.invalidateQueries({ queryKey: [QUERY_KEYS.SHIFTS] });
     },
     onError: (err) => {
@@ -43,7 +45,7 @@ export default function SetShiftTiming() {
 
   const handleSave = () => {
     if (!selectedAgent) {
-      getErrorToast({ message: "Please select an agent" });
+      getErrorToast({ message: t("Please select an agent", "कृपया एक एजेंट चुनें") });
       return;
     }
     assignShiftMutation.mutate({
@@ -54,13 +56,13 @@ export default function SetShiftTiming() {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-border p-5 ">
-      <h3 className="font-bold text-foreground mb-4">Set Shift Timing</h3>
+    <div className="bg-white rounded-xl border border-border p-5">
+      <h3 className="font-bold text-foreground mb-4">{t("Set Shift Timing", "शिफ्ट समय निर्धारित करें")}</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
         <div>
           <MySelect
-            label="Agent Name"
-            placeholder={isLoading ? "Loading..." : "Select agent..."}
+            label={t("Agent Name", "एजेंट का नाम")}
+            placeholder={isLoading ? t("Loading...", "लोड हो रहा है...") : t("Select agent...", "एजेंट चुनें...")}
             options={agentOptions}
             value={selectedAgent}
             onValueChange={setSelectedAgent}
@@ -69,7 +71,7 @@ export default function SetShiftTiming() {
           />
         </div>
         <div>
-          <Label className="mb-1.5 block">Shift</Label>
+          <Label className="mb-1.5 block">{t("Shift", "शिफ्ट")}</Label>
           <Select
             value={selectedShift}
             onValueChange={setSelectedShift}
@@ -80,22 +82,22 @@ export default function SetShiftTiming() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Morning (07:00–14:00)">
-                Morning (07:00–14:00)
+                {t("Morning (07:00–14:00)", "सुबह (07:00–14:00)")}
               </SelectItem>
               <SelectItem value="Afternoon (14:00–22:00)">
-                Afternoon (14:00–22:00)
+                {t("Afternoon (14:00–22:00)", "दोपहर (14:00–22:00)")}
               </SelectItem>
               <SelectItem value="Night (22:00–06:00)">
-                Night (22:00–06:00)
+                {t("Night (22:00–06:00)", "रात (22:00–06:00)")}
               </SelectItem>
               <SelectItem value="Full Day (08:00–20:00)">
-                Full Day (08:00–20:00)
+                {t("Full Day (08:00–20:00)", "पूरा दिन (08:00–20:00)")}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div>
-          <Label className="mb-1.5 block">Date</Label>
+          <Label className="mb-1.5 block">{t("Date", "दिनांक")}</Label>
           <Input
             type="date"
             value={selectedDate}
@@ -114,7 +116,7 @@ export default function SetShiftTiming() {
         ) : (
           <Save className="w-4 h-4 mr-1" />
         )}
-        {assignShiftMutation.isPending ? "Saving Shift..." : "Save Shift"}
+        {assignShiftMutation.isPending ? t("Saving Shift...", "शिफ्ट सहेजा जा रहा है...") : t("Save Shift", "शिफ्ट सहेजें")}
       </Button>
     </div>
   );

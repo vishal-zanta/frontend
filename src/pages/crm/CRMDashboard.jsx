@@ -7,12 +7,9 @@ import {
   Users,
   TrendingUp,
   Headphones,
-  ArrowRight,
   BarChart3,
-  Activity,
   Star,
-  AlertTriangle,
-  Inbox,
+  Activity,
   Ticket,
   PhoneMissed,
 } from "lucide-react";
@@ -31,6 +28,7 @@ import { BarChartCard, PieChartCard } from "@/components/Charts";
 import { ComplaintId, CallId } from "@/components/ComplaintDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 const CCE_SCORECARD = {
   daily: {
@@ -43,6 +41,7 @@ const CCE_SCORECARD = {
     csat: 4.5,
     sla: 96.2,
     label: "Today",
+    labelHindi: "आज",
     sub: "vs yesterday",
   },
   weekly: {
@@ -55,6 +54,7 @@ const CCE_SCORECARD = {
     csat: 4.4,
     sla: 95.8,
     label: "This Week",
+    labelHindi: "इस सप्ताह",
     sub: "vs last week",
   },
   monthly: {
@@ -67,6 +67,7 @@ const CCE_SCORECARD = {
     csat: 4.5,
     sla: 96.0,
     label: "This Month",
+    labelHindi: "इस महीने",
     sub: "vs last month",
   },
 };
@@ -74,6 +75,7 @@ const CCE_SCORECARD = {
 const agentName = "Priya Sharma";
 
 export default function CRMDashboard() {
+  const { t } = useLanguage();
   const [profile] = usePortalProfile("crm");
   const isSupervisor = profile === "supervisor";
   const [scorecardPeriod, setScorecardPeriod] = useState("daily");
@@ -86,22 +88,26 @@ export default function CRMDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold mb-1">
-                  Supervisor Dashboard
+                  {t("Supervisor Dashboard", "पर्यवेक्षक डैशबोर्ड")}
                 </h1>
                 <p className="text-white/80 text-sm">
-                  Call centre performance overview • Shift: Full Day
-                  (08:00-20:00) • Supervisor: Sneha Gupta
+                  {t(
+                    "Call centre performance overview • Shift: Full Day (08:00-20:00) • Supervisor: Sneha Gupta",
+                    "कॉल सेंटर प्रदर्शन अवलोकन • शिफ्ट: पूरा दिन (08:00-20:00) • पर्यवेक्षक: स्नेहा गुप्ता",
+                  )}
                 </p>
               </div>
               <div className="flex gap-2">
                 <Link to="/admin/performance">
                   <Button className="bg-white text-primary hover:bg-white/90">
-                    <BarChart3 className="w-4 h-4 mr-1" /> Performance Dashboard
+                    <BarChart3 className="w-4 h-4 mr-1" />{" "}
+                    {t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
                   </Button>
                 </Link>
                 <Link to="/crm/shift">
                   <Button className="bg-amber-500 hover:bg-amber-600 text-white">
-                    <Users className="w-4 h-4 mr-1" /> Manage Agents
+                    <Users className="w-4 h-4 mr-1" />{" "}
+                    {t("Manage Agents", "एजेंटों का प्रबंधन करें")}
                   </Button>
                 </Link>
               </div>
@@ -111,7 +117,7 @@ export default function CRMDashboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard
               icon={Phone}
-              label="Calls Today"
+              label={t("Calls Today", "आज की कॉल")}
               value={IVR_STATS.totalCallsToday}
               color="blue"
               trend="up"
@@ -119,7 +125,7 @@ export default function CRMDashboard() {
             />
             <StatCard
               icon={CheckCircle2}
-              label="Calls Answered"
+              label={t("Calls Answered", "उत्तरित कॉल")}
               value={IVR_STATS.callsAnswered}
               color="green"
               trend="up"
@@ -127,52 +133,59 @@ export default function CRMDashboard() {
             />
             <StatCard
               icon={Users}
-              label="Active Agents"
+              label={t("Active Agents", "सक्रिय एजेंट")}
               value={`${IVR_STATS.activeAgents}/${IVR_STATS.totalAgents}`}
               color="purple"
             />
             <StatCard
               icon={TrendingUp}
-              label="SLA Compliance"
+              label={t("SLA Compliance", "एसएलए अनुपालन")}
               value="95.1%"
               color="green"
               trend="up"
               trendValue="+0.5% vs yesterday"
-              sublabel="Target: 95%"
+              sublabel={t("Target: 95%", "लक्ष्य: 95%")}
             />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard
-              title="Hourly Call Disposition"
-              subtitle="Calls received vs answered (today)"
+              title={t("Hourly Call Disposition", "प्रति घंटा कॉल निपटान")}
+              subtitle={t(
+                "Calls received vs answered (today)",
+                "प्राप्त बनाम उत्तरित कॉल (आज)",
+              )}
             >
               <BarChartCard
                 data={HOURLY_DISPOSITION}
                 xKey="hour"
                 bars={[
-                  { key: "calls", label: "Calls Received", color: "#f59e0b" },
+                  {
+                    key: "calls",
+                    label: t("Calls Received", "प्राप्त कॉल"),
+                    color: "#f59e0b",
+                  },
                   {
                     key: "answered",
-                    label: "Calls Answered",
+                    label: t("Calls Answered", "उत्तरित कॉल"),
                     color: "#22c55e",
                   },
                 ]}
               />
             </ChartCard>
             <ChartCard
-              title="IVR Success Rate"
-              subtitle={`Overall: ${IVR_STATS.successRate}%`}
+              title={t("IVR Success Rate", "आईवीआर सफलता दर")}
+              subtitle={`${t("Overall", "कुल")}: ${IVR_STATS.successRate}%`}
             >
               <PieChartCard
                 data={[
                   {
-                    name: "Answered",
+                    name: t("Answered", "उत्तरित"),
                     value: IVR_STATS.callsAnswered,
                     color: "#22c55e",
                   },
                   {
-                    name: "Missed",
+                    name: t("Missed", "छूटी हुई"),
                     value: IVR_STATS.callsMissed,
                     color: "#ef4444",
                   },
@@ -185,31 +198,43 @@ export default function CRMDashboard() {
           <div className="bg-white rounded-xl border border-border overflow-hidden">
             <div className="px-5 py-3 border-b border-border flex items-center justify-between">
               <h3 className="font-bold text-foreground">
-                Agent Performance Overview
+                {t("Agent Performance Overview", "एजेंट प्रदर्शन अवलोकन")}
               </h3>
               <Link
                 to="/admin/agents"
                 className="text-sm text-blue-600 hover:underline"
               >
-                Manage All Agents →
+                {t("Manage All Agents →", "सभी एजेंटों का प्रबंधन करें →")}
               </Link>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50">
+                <thead className="bg-[#F4F7FA]">
                   <tr className="text-left text-xs text-muted-foreground">
-                    <th className="px-4 py-2 font-medium">Agent</th>
-                    <th className="px-4 py-2 font-medium">Role</th>
-                    <th className="px-4 py-2 font-medium">Shift</th>
-                    <th className="px-4 py-2 font-medium text-center">
-                      Calls Today
+                    <th className="px-4 py-2 font-medium">
+                      {t("Agent", "एजेंट")}
+                    </th>
+                    <th className="px-4 py-2 font-medium">
+                      {t("Role", "भूमिका")}
+                    </th>
+                    <th className="px-4 py-2 font-medium">
+                      {t("Shift", "शिफ्ट")}
                     </th>
                     <th className="px-4 py-2 font-medium text-center">
-                      Resolved
+                      {t("Calls Today", "आज की कॉल")}
                     </th>
-                    <th className="px-4 py-2 font-medium">Avg Talk</th>
-                    <th className="px-4 py-2 font-medium text-center">CSAT</th>
-                    <th className="px-4 py-2 font-medium">Status</th>
+                    <th className="px-4 py-2 font-medium text-center">
+                      {t("Resolved", "हल की गई")}
+                    </th>
+                    <th className="px-4 py-2 font-medium">
+                      {t("Avg Talk", "औसत बात")}
+                    </th>
+                    <th className="px-4 py-2 font-medium text-center">
+                      {t("CSAT", "सीएसएटी")}
+                    </th>
+                    <th className="px-4 py-2 font-medium">
+                      {t("Status", "स्थिति")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -257,7 +282,9 @@ export default function CRMDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white rounded-xl border border-border">
               <div className="px-5 py-3 border-b border-border">
-                <h3 className="font-bold text-foreground">Agent Leaderboard</h3>
+                <h3 className="font-bold text-foreground">
+                  {t("Agent Leaderboard", "एजेंट लीडरबोर्ड")}
+                </h3>
               </div>
               <div className="divide-y divide-border max-h-[350px] overflow-y-auto scrollbar-thin">
                 {AGENT_PERFORMANCE.map((a, i) => (
@@ -274,7 +301,8 @@ export default function CRMDashboard() {
                       <div>
                         <div className="font-medium text-sm">{a.agent}</div>
                         <div className="text-xs text-muted-foreground">
-                          {a.calls} calls • CSAT {a.csat} • {a.avgTalkTime}
+                          {a.calls} {t("calls", "कॉल")} • CSAT {a.csat} •{" "}
+                          {a.avgTalkTime}
                         </div>
                       </div>
                     </div>
@@ -287,12 +315,14 @@ export default function CRMDashboard() {
             </div>
             <div className="bg-white rounded-xl border border-border">
               <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-                <h3 className="font-bold text-foreground">Recent Calls</h3>
+                <h3 className="font-bold text-foreground">
+                  {t("Recent Calls", "हाल की कॉल")}
+                </h3>
                 <Link
                   to="/crm/history"
                   className="text-sm text-blue-600 hover:underline"
                 >
-                  View All →
+                  {t("View All →", "सभी देखें →")}
                 </Link>
               </div>
               <div className="divide-y divide-border max-h-[350px] overflow-y-auto scrollbar-thin">
@@ -328,9 +358,6 @@ export default function CRMDashboard() {
   // ── CCE Agent personal scorecard ──
   const sc = CCE_SCORECARD[scorecardPeriod];
   const myCalls = CALL_TRACKER.filter((c) => c.agent === agentName);
-  const myTickets = CALL_TRACKER.filter(
-    (c) => c.agent === agentName && c.complaintId,
-  );
 
   return (
     <PortalLayout role="crm">
@@ -338,7 +365,9 @@ export default function CRMDashboard() {
         <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold mb-1">My Scorecard</h1>
+              <h1 className="text-2xl font-bold mb-1">
+                {t("My Scorecard", "मेरा स्कोरकार्ड")}
+              </h1>
               <p className="text-white/80 text-sm">
                 {agentName} • CCE Agent • Morning Shift (06:00–14:00) • Agent
                 ID: cce-001
@@ -347,12 +376,14 @@ export default function CRMDashboard() {
             <div className="flex gap-2">
               <Link to="/crm/incoming-call">
                 <Button className="bg-amber-500 hover:bg-amber-600 text-white">
-                  <Phone className="w-4 h-4 mr-1" /> Incoming Call
+                  <Phone className="w-4 h-4 mr-1" />{" "}
+                  {t("Incoming Call", "आगमन कॉल")}
                 </Button>
               </Link>
               <Link to="/crm/raise">
                 <Button className="bg-white text-primary hover:bg-white/90">
-                  <Headphones className="w-4 h-4 mr-1" /> Raise Complaint
+                  <Headphones className="w-4 h-4 mr-1" />{" "}
+                  {t("Raise Complaint", "शिकायत दर्ज करें")}
                 </Button>
               </Link>
             </div>
@@ -367,7 +398,7 @@ export default function CRMDashboard() {
               onClick={() => setScorecardPeriod(key)}
               className={`px-4 py-1.5 rounded-md text-xs font-medium transition-all ${scorecardPeriod === key ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:bg-muted"}`}
             >
-              {val.label}
+              {t(val.label, val.labelHindi)}
             </button>
           ))}
         </div>
@@ -376,7 +407,7 @@ export default function CRMDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <StatCard
             icon={Phone}
-            label={`Calls (${sc.label})`}
+            label={`${t("Calls", "कॉल")} (${t(sc.label, sc.labelHindi)})`}
             value={sc.calls}
             color="blue"
             trend="up"
@@ -384,7 +415,7 @@ export default function CRMDashboard() {
           />
           <StatCard
             icon={CheckCircle2}
-            label="Answered"
+            label={t("Answered", "उत्तरित")}
             value={sc.answered}
             color="green"
             trend="up"
@@ -392,13 +423,13 @@ export default function CRMDashboard() {
           />
           <StatCard
             icon={PhoneMissed}
-            label="Missed"
+            label={t("Missed", "छूटी हुई")}
             value={sc.missed}
             color="red"
           />
           <StatCard
             icon={Ticket}
-            label="Tickets Raised"
+            label={t("Tickets Raised", "टिकट उठाए गए")}
             value={sc.ticketsRaised}
             color="purple"
             trend="up"
@@ -406,13 +437,13 @@ export default function CRMDashboard() {
           />
           <StatCard
             icon={Clock}
-            label="Avg Talk Time"
+            label={t("Avg Talk Time", "औसत बात करने का समय")}
             value={sc.avgTalk}
             color="amber"
           />
           <StatCard
             icon={Star}
-            label="CSAT"
+            label={t("CSAT", "सीएसएटी")}
             value={`${sc.csat}/5`}
             color="green"
             sublabel={`SLA: ${sc.sla}%`}
@@ -422,32 +453,39 @@ export default function CRMDashboard() {
         {/* Performance summary card */}
         <div className="bg-white rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-4">
-            Performance Summary ({sc.label})
+            {t("Performance Summary", "प्रदर्शन सारांश")} (
+            {t(sc.label, sc.labelHindi)})
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-3 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">{sc.calls}</div>
-              <div className="text-xs text-muted-foreground">Total Calls</div>
+              <div className="text-xs text-muted-foreground">
+                {t("Total Calls", "कुल कॉल")}
+              </div>
             </div>
             <div className="text-center p-3 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
                 {sc.ticketsRaised}
               </div>
               <div className="text-xs text-muted-foreground">
-                Tickets Raised
+                {t("Tickets Raised", "टिकट उठाए गए")}
               </div>
             </div>
             <div className="text-center p-3 bg-emerald-50 rounded-lg">
               <div className="text-2xl font-bold text-emerald-600">
                 {sc.resolved}
               </div>
-              <div className="text-xs text-muted-foreground">Resolved</div>
+              <div className="text-xs text-muted-foreground">
+                {t("Resolved", "हल की गई")}
+              </div>
             </div>
             <div className="text-center p-3 bg-amber-50 rounded-lg">
               <div className="text-2xl font-bold text-amber-600">
                 {sc.csat}/5
               </div>
-              <div className="text-xs text-muted-foreground">CSAT Rating</div>
+              <div className="text-xs text-muted-foreground">
+                {t("CSAT Rating", "सीएसएटी रेटिंग")}
+              </div>
             </div>
           </div>
         </div>
@@ -455,17 +493,19 @@ export default function CRMDashboard() {
         {/* My recent calls */}
         <div className="bg-white rounded-xl border border-border">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground">My Recent Calls</h3>
+            <h3 className="font-bold text-foreground">
+              {t("My Recent Calls", "मेरी हाल की कॉल")}
+            </h3>
             <Link
               to="/crm/history"
               className="text-sm text-blue-600 hover:underline"
             >
-              View All →
+              {t("View All →", "सभी देखें →")}
             </Link>
           </div>
           {myCalls.length === 0 ? (
             <div className="px-5 py-8 text-center text-sm text-muted-foreground">
-              No recent calls found.
+              {t("No recent calls found.", "कोई हाल की कॉल नहीं मिली।")}
             </div>
           ) : (
             <div className="divide-y divide-border max-h-[400px] overflow-y-auto scrollbar-thin">
@@ -504,11 +544,13 @@ export default function CRMDashboard() {
           <Activity className="w-5 h-5 text-blue-600 flex-shrink-0" />
           <div>
             <div className="font-medium text-sm text-primary">
-              Agent View - Read Only
+              {t("Agent View - Read Only", "एजेंट दृश्य - केवल पठन")}
             </div>
             <p className="text-xs text-muted-foreground">
-              You are viewing your personal scorecard. Shift management and
-              agent administration are available to supervisors only.
+              {t(
+                "You are viewing your personal scorecard. Shift management and agent administration are available to supervisors only.",
+                "आप अपना व्यक्तिगत स्कोरकार्ड देख रहे हैं। शिफ्ट प्रबंधन और एजेंट प्रशासन केवल पर्यवेक्षकों के लिए उपलब्ध हैं।",
+              )}
             </p>
           </div>
         </div>

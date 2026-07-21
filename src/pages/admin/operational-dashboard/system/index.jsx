@@ -212,7 +212,7 @@ export default function SystemTab() {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50">
+            <thead className="bg-[#F4F7FA]">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-2 font-medium">Service</th>
                 <th className="px-4 py-2 font-medium">Endpoint</th>

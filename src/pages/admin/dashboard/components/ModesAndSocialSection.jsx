@@ -6,10 +6,10 @@ import { ChartCard } from "@/components/ChartCard";
 import ModeWiseComplaintsChart from "./charts/ModeWiseComplaintsChart";
 import { SOCIAL_COMPLAINTS } from "@/lib/biharData";
 
-export default function ModesAndSocialSection({modeData}) {
+export default function ModesAndSocialSection({ modeData }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <ModeWiseComplaintsChart  mainData={modeData} />
+      <ModeWiseComplaintsChart mainData={modeData} />
       <ChartCard
         title="Social Media Complaints"
         subtitle="Latest from Twitter, WhatsApp, Instagram & Newspaper"
@@ -23,7 +23,7 @@ export default function ModesAndSocialSection({modeData}) {
           {SOCIAL_COMPLAINTS.map((s, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50"
+              className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#F4F7FA]"
             >
               <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                 {s.platform.includes("Twitter") ? (

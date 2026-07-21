@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import {
-  Phone,
   Clock,
-  CheckCircle2,
   PhoneCall,
   PhoneMissed,
   Search,
   Tag,
-  Download,
   ShieldCheck,
-  Filter,
 } from "lucide-react";
-import { CALL_TRACKER, CRM_AGENTS } from "@/lib/biharData";
+import { CALL_TRACKER } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import StatCard from "@/components/StatCard";
 import { CallId, ComplaintId } from "@/components/ComplaintDetailDialog";
@@ -26,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ExportButton from "@/components/ExportButton";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Extend call tracker with recording metadata and evidence tags
 const callHistoryLog = CALL_TRACKER.map((c, i) => ({
@@ -40,29 +37,33 @@ const callHistoryLog = CALL_TRACKER.map((c, i) => ({
   callType: i % 3 === 0 ? "Outbound" : "Inbound",
 }));
 
-const exportColumns = [
-  { key: "id", label: "Call ID" },
-  { key: "callType", label: "Type" },
-  { key: "time", label: "Date/Time" },
-  { key: "citizenMobile", label: "Citizen Mobile" },
-  { key: "agent", label: "Agent" },
-  { key: "duration", label: "Duration" },
-  { key: "complaintId", label: "Complaint ID" },
-  { key: "disposition", label: "Disposition" },
-  { key: "status", label: "Status" },
-  {
-    key: (r) => (r.evidenceTagged ? "YES - " + (r.evidenceReason || "") : "No"),
-    label: "Evidence Tagged",
-  },
-];
-
 export default function CallHistoryLog() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [agentFilter, setAgentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [evidenceOnly, setEvidenceOnly] = useState(false);
   const [selected, setSelected] = useState([]);
   const [tagDialog, setTagDialog] = useState(null);
+
+  const exportColumns = [
+    { key: "id", label: t("Call ID", "कॉल आईडी") },
+    { key: "callType", label: t("Type", "प्रकार") },
+    { key: "time", label: t("Date/Time", "दिनांक/समय") },
+    { key: "citizenMobile", label: t("Citizen Mobile", "नागरिक मोबाइल") },
+    { key: "agent", label: t("Agent", "एजेंट") },
+    { key: "duration", label: t("Duration", "अवधि") },
+    { key: "complaintId", label: t("Complaint ID", "शिकायत आईडी") },
+    { key: "disposition", label: t("Disposition", "निपटान") },
+    { key: "status", label: t("Status", "स्थिति") },
+    {
+      key: (r) =>
+        r.evidenceTagged
+          ? t("Yes", "हाँ") + " - " + (r.evidenceReason || "")
+          : t("No", "नहीं"),
+      label: t("Evidence Tagged", "साक्ष्य चिह्नित"),
+    },
+  ];
 
   const filtered = callHistoryLog.filter((c) => {
     if (
@@ -92,7 +93,6 @@ export default function CallHistoryLog() {
   };
 
   const handleTagEvidence = () => {
-    // In a real app, this would persist; here we just close the dialog
     setTagDialog(null);
   };
 
@@ -104,18 +104,20 @@ export default function CallHistoryLog() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
-              Call History Log
+              {t("Call History Log", "कॉल इतिहास लॉग")}
             </h1>
             <p className="text-sm text-muted-foreground">
-              Complete call archive with recording metadata, bulk export, and
-              evidence-tagging for legal/audit purposes.
+              {t(
+                "Complete call archive with recording metadata, bulk export, and evidence-tagging for legal/audit purposes.",
+                "रिकॉर्डिंग मेटाडेटा, थोक निर्यात और कानूनी/लेखापरीक्षा उद्देश्यों के लिए साक्ष्य-टैगिंग के साथ पूर्ण कॉल संग्रह।",
+              )}
             </p>
           </div>
           <ExportButton
             data={filtered}
             columns={exportColumns}
             filename="call_history_log"
-            label="Export"
+            label={t("Export", "निर्यात")}
           />
         </div>
 
@@ -123,25 +125,25 @@ export default function CallHistoryLog() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             icon={PhoneCall}
-            label="Total Calls Logged"
+            label={t("Total Calls Logged", "कुल दर्ज कॉल")}
             value={callHistoryLog.length}
             color="blue"
           />
           <StatCard
             icon={ShieldCheck}
-            label="Evidence Tagged"
+            label={t("Evidence Tagged", "साक्ष्य चिह्नित")}
             value={evidenceCount}
             color="purple"
           />
           <StatCard
             icon={PhoneMissed}
-            label="Missed / Dropped"
+            label={t("Missed / Dropped", "छूटी हुई / गिरी हुई")}
             value={callHistoryLog.filter((c) => c.status === "Missed").length}
             color="red"
           />
           <StatCard
             icon={Clock}
-            label="Avg Duration"
+            label={t("Avg Duration", "औसत अवधि")}
             value="4m 32s"
             color="amber"
           />
@@ -154,30 +156,41 @@ export default function CallHistoryLog() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by call ID, complaint, or mobile..."
+              placeholder={t(
+                "Search by call ID, complaint, or mobile...",
+                "कॉल आईडी, शिकायत या मोबाइल द्वारा खोजें...",
+              )}
               className="pl-8 max-w-xs"
             />
           </div>
           <Select value={agentFilter} onValueChange={setAgentFilter}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Agent" />
+            <SelectTrigger className="w-40 bg-white">
+              <SelectValue placeholder={t("Agent", "एजेंट")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Agents</SelectItem>
+              <SelectItem value="all">
+                {t("All Agents", "सभी एजेंट")}
+              </SelectItem>
               <SelectItem value="priya">Priya Sharma</SelectItem>
               <SelectItem value="amit">Amit Verma</SelectItem>
               <SelectItem value="neha">Neha Singh</SelectItem>
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="Status" />
+            <SelectTrigger className="w-36 bg-white">
+              <SelectValue placeholder={t("Status", "स्थिति")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="resolved">Resolved</SelectItem>
-              <SelectItem value="missed">Missed</SelectItem>
-              <SelectItem value="escalated">Escalated</SelectItem>
+              <SelectItem value="all">
+                {t("All Status", "सभी स्थिति")}
+              </SelectItem>
+              <SelectItem value="resolved">
+                {t("Resolved", "हल की गई")}
+              </SelectItem>
+              <SelectItem value="missed">{t("Missed", "छूटी हुई")}</SelectItem>
+              <SelectItem value="escalated">
+                {t("Escalated", "बढ़ाया गया")}
+              </SelectItem>
             </SelectContent>
           </Select>
           <Button
@@ -187,7 +200,9 @@ export default function CallHistoryLog() {
             className="ml-auto"
           >
             <ShieldCheck className="w-4 h-4 mr-1" />{" "}
-            {evidenceOnly ? "Showing Evidence Only" : "Show Evidence Only"}
+            {evidenceOnly
+              ? t("Showing Evidence Only", "केवल साक्ष्य दिखा रहा है")
+              : t("Show Evidence Only", "केवल साक्ष्य दिखाएं")}
           </Button>
           {selected.length > 0 && (
             <Button
@@ -195,7 +210,8 @@ export default function CallHistoryLog() {
               onClick={() => setTagDialog({ ids: selected })}
               className="bg-purple-600 hover:bg-purple-700"
             >
-              <Tag className="w-4 h-4 mr-1" /> Tag {selected.length} as Evidence
+              <Tag className="w-4 h-4 mr-1" /> {t("Tag", "चिह्नित करें")}{" "}
+              {selected.length} {t("as Evidence", "साक्ष्य के रूप में")}
             </Button>
           )}
         </div>
@@ -204,7 +220,7 @@ export default function CallHistoryLog() {
         <div className="bg-white rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-[#F4F7FA]">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-3 py-3 font-medium">
                     <input
@@ -214,18 +230,36 @@ export default function CallHistoryLog() {
                         filtered.length > 0
                       }
                       onChange={toggleAll}
-                      className="rounded"
+                      className="rounded cursor-pointer"
                     />
                   </th>
-                  <th className="px-3 py-3 font-medium">Call ID</th>
-                  <th className="px-3 py-3 font-medium">Type</th>
-                  <th className="px-3 py-3 font-medium">Date / Time</th>
-                  <th className="px-3 py-3 font-medium">Citizen Mobile</th>
-                  <th className="px-3 py-3 font-medium">Agent</th>
-                  <th className="px-3 py-3 font-medium">Duration</th>
-                  <th className="px-3 py-3 font-medium">Complaint</th>
-                  <th className="px-3 py-3 font-medium">Status</th>
-                  <th className="px-3 py-3 font-medium">Evidence</th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Call ID", "कॉल आईडी")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Type", "प्रकार")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Date / Time", "दिनांक / समय")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Citizen Mobile", "नागरिक मोबाइल")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Agent", "एजेंट")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Duration", "अवधि")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Complaint", "शिकायत")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Status", "स्थिति")}
+                  </th>
+                  <th className="px-3 py-3 font-medium">
+                    {t("Evidence", "साक्ष्य")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -239,7 +273,7 @@ export default function CallHistoryLog() {
                         type="checkbox"
                         checked={selected.includes(c.id)}
                         onChange={() => toggleSelect(c.id)}
-                        className="rounded"
+                        className="rounded cursor-pointer"
                       />
                     </td>
                     <td className="px-3 py-3">
@@ -250,7 +284,9 @@ export default function CallHistoryLog() {
                         variant="outline"
                         className={`text-[10px] ${c.callType === "Outbound" ? "bg-sky-50 text-sky-700" : "bg-blue-50 text-primary"}`}
                       >
-                        {c.callType}
+                        {c.callType === "Outbound"
+                          ? t("Outbound", "आउटबाउंड")
+                          : t("Inbound", "इनबाउंड")}
                       </Badge>
                     </td>
                     <td className="px-3 py-3 text-muted-foreground">
@@ -271,7 +307,13 @@ export default function CallHistoryLog() {
                         variant="outline"
                         className={`text-xs ${c.status === "Resolved" ? "bg-emerald-50 text-emerald-700" : c.status === "Missed" ? "bg-red-50 text-red-700" : c.status === "Escalated" ? "bg-amber-50 text-amber-700" : "bg-slate-50 text-slate-600"}`}
                       >
-                        {c.status}
+                        {c.status === "Resolved"
+                          ? t("Resolved", "हल की गई")
+                          : c.status === "Missed"
+                            ? t("Missed", "छूटी हुई")
+                            : c.status === "Escalated"
+                              ? t("Escalated", "बढ़ाया गया")
+                              : c.status}
                       </Badge>
                     </td>
                     <td className="px-3 py-3">
@@ -279,15 +321,15 @@ export default function CallHistoryLog() {
                         <div className="flex items-center gap-1">
                           <ShieldCheck className="w-4 h-4 text-purple-600" />
                           <span className="text-xs text-purple-600 font-medium">
-                            Tagged
+                            {t("Tagged", "चिह्नित")}
                           </span>
                         </div>
                       ) : (
                         <button
                           onClick={() => setTagDialog({ ids: [c.id] })}
-                          className="text-xs text-muted-foreground hover:text-primary underline"
+                          className="text-xs text-muted-foreground hover:text-primary underline cursor-pointer"
                         >
-                          Tag
+                          {t("Tag", "चिह्नित")}
                         </button>
                       )}
                     </td>
@@ -298,17 +340,23 @@ export default function CallHistoryLog() {
           </div>
           {filtered.length === 0 && (
             <div className="text-center py-8 text-sm text-muted-foreground">
-              No calls match your filters.
+              {t(
+                "No calls match your filters.",
+                "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।",
+              )}
             </div>
           )}
         </div>
 
         {/* Bulk actions bar */}
-        <div className="bg-muted/50 rounded-xl border border-border p-4 flex items-center justify-between">
+        <div className="bg-[#F4F7FA] rounded-xl border border-border p-4 flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
             {selected.length > 0
-              ? `${selected.length} call(s) selected`
-              : "Click checkboxes to select calls for bulk actions"}
+              ? `${selected.length} ${t("call(s) selected", "कॉल चयनित")}`
+              : t(
+                  "Click checkboxes to select calls for bulk actions",
+                  "थोक कार्यों के लिए कॉल चुनने के लिए चेकबॉक्स पर क्लिक करें",
+                )}
           </div>
           <div className="flex gap-2">
             <ExportButton
@@ -323,6 +371,7 @@ export default function CallHistoryLog() {
                   ? "call_history_selected"
                   : "call_history_all"
               }
+              label={t("Export", "निर्यात")}
             />
           </div>
         </div>
@@ -341,36 +390,47 @@ export default function CallHistoryLog() {
             <div className="flex items-center gap-3 px-5 py-3 border-b border-border">
               <ShieldCheck className="w-5 h-5 text-purple-600" />
               <h3 className="font-bold text-foreground">
-                Tag {tagDialog.ids.length} Call(s) as Evidence
+                {t("Tag", "चिह्नित करें")} {tagDialog.ids.length}{" "}
+                {t("Call(s) as Evidence", "कॉल साक्ष्य के रूप में")}
               </h3>
             </div>
             <div className="p-5 space-y-4">
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm text-purple-700">
-                Evidence-tagged calls are preserved with enhanced retention (7
-                years) and flagged for legal/audit review. Recordings cannot be
-                deleted while tagged.
+                {t(
+                  "Evidence-tagged calls are preserved with enhanced retention (7 years) and flagged for legal/audit review. Recordings cannot be deleted while tagged.",
+                  "साक्ष्य-चिह्नित कॉल को बढ़ी हुई अवधारण (7 वर्ष) के साथ संरक्षित किया जाता है और कानूनी/लेखापरीक्षा समीक्षा के लिए चिह्नित किया जाता है। चिह्नित होने के दौरान रिकॉर्डिंग हटाई नहीं जा सकती।",
+                )}
               </div>
               <div>
                 <label className="text-sm font-medium block mb-1.5">
-                  Tagging Reason <span className="text-red-500">*</span></label>
-                <Input placeholder="e.g., Legal escalation, dispute case, citizen complaint against agent..." />
-              </div>
-              <div>
-                <label className="text-sm font-medium block mb-1.5">
-                  Case Reference (optional)
+                  {t("Tagging Reason", "टैगिंग का कारण")}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
-                <Input placeholder="e.g., LEGAL-2026-00472" />
+                <Input
+                  placeholder="e.g., Legal escalation, dispute case, citizen complaint against agent..."
+                  className="bg-white"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium block mb-1.5">
+                  {t("Case Reference (optional)", "मामला संदर्भ (वैकल्पिक)")}
+                </label>
+                <Input
+                  placeholder="e.g., LEGAL-2026-00472"
+                  className="bg-white"
+                />
               </div>
             </div>
             <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
               <Button variant="outline" onClick={() => setTagDialog(null)}>
-                Cancel
+                {t("Cancel", "रद्द करें")}
               </Button>
               <Button
                 onClick={handleTagEvidence}
                 className="bg-purple-600 hover:bg-purple-700"
               >
-                <ShieldCheck className="w-4 h-4 mr-1" /> Confirm Evidence Tag
+                <ShieldCheck className="w-4 h-4 mr-1" />{" "}
+                {t("Confirm Evidence Tag", "साक्ष्य टैग की पुष्टि करें")}
               </Button>
             </div>
           </div>

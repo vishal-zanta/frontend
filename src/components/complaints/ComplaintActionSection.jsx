@@ -7,6 +7,7 @@ import { Textarea } from "../ui/textarea";
 import { getErrorToast } from "@/utils/helpers";
 import { Label } from "../ui/label";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 const initialRemark = { isOpen: false, value: "", id: null, status: null };
 
@@ -27,6 +28,7 @@ export default function ComplaintActionSection({
   fieldVisit,
   geotaggedImages,
 }) {
+  const { t } = useLanguage();
   const { profiledata } = useAuth();
   const [remark, setRemark] = useState(initialRemark);
   const [statusErr, setStatusErr] = useState(null);
@@ -49,7 +51,7 @@ export default function ComplaintActionSection({
 
   async function handleSaveRemark() {
     if (remark.value.trim() === "") {
-      getErrorToast("Remark is required");
+      getErrorToast(t("Remark is required", "टिप्पणी आवश्यक है"));
     } else {
       await updateStatusMutation.mutateAsync({
         id: remark.id,
@@ -85,8 +87,8 @@ export default function ComplaintActionSection({
       } else {
         getErrorToast(
           fieldVisit?.status !== "COMPLETED"
-            ? "Field visit not completed"
-            : "Geo-tag photo not uploaded",
+            ? t("Field visit not completed", "फील्ड विजिट पूरा नहीं हुआ")
+            : t("Geo-tag photo not uploaded", "जियो-टैग फोटो अपलोड नहीं की गई"),
         );
       }
     } else {
@@ -103,9 +105,9 @@ export default function ComplaintActionSection({
   return (
     <>
       {/* Status actions */}
-      <div className="border-t border-border pt-4">
+      <div className="border-t border-border pt-4 bg-white">
         <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
-          Update Status
+          {t("Update Status", "स्थिति अपडेट करें")}
         </div>
         <div className="flex gap-2 items-center">
           <select
@@ -117,10 +119,10 @@ export default function ComplaintActionSection({
               )
             }
             disabled={updateStatusMutation.isPending}
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
           >
             <option value="" disabled>
-              Select Status
+              {t("Select Status", "स्थिति चुनें")}
             </option>
             {STATUS_ACTIONS.map((a, i) => (
               <option
@@ -140,10 +142,10 @@ export default function ComplaintActionSection({
             <Button
               onClick={handleSaveStatus}
               disabled={updateStatusMutation.isPending}
-              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0"
+              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0 cursor-pointer"
               size="sm"
             >
-              {updateStatusMutation.isPending ? "Saving..." : "Save"}
+              {updateStatusMutation.isPending ? t("Saving...", "सहेज रहा है...") : t("Save", "सहेजें")}
             </Button>
           )}
         </div>
@@ -155,25 +157,25 @@ export default function ComplaintActionSection({
 
         {statusUpdate && (
           <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-700">
-            ✓ Status updated to <strong>{statusUpdate}</strong>.
+            ✓ {t("Status updated to", "स्थिति को अपडेट किया गया")} <strong>{statusUpdate}</strong>.
           </div>
         )}
       </div>
 
       {/* Priority actions */}
-      <div className="border-t border-border pt-4">
+      <div className="border-t border-border pt-4 bg-white">
         <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
-          Update Priority
+          {t("Update Priority", "प्राथमिकता अपडेट करें")}
         </div>
         <div className="flex gap-2 items-center">
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
             disabled={updatePriorityMutation.isPending}
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
           >
             <option value="" disabled>
-              Select Priority
+              {t("Select Priority", "प्राथमिकता चुनें")}
             </option>
             {PRIORITY_ACTIONS.map((a, i) => (
               <option key={i} value={a.value}>
@@ -185,10 +187,10 @@ export default function ComplaintActionSection({
             <Button
               onClick={handleSavePriority}
               disabled={updatePriorityMutation.isPending}
-              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0"
+              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0 cursor-pointer"
               size="sm"
             >
-              {updatePriorityMutation.isPending ? "Saving..." : "Save"}
+              {updatePriorityMutation.isPending ? t("Saving...", "सहेज रहा है...") : t("Save", "सहेजें")}
             </Button>
           )}
         </div>
@@ -196,9 +198,9 @@ export default function ComplaintActionSection({
 
       {/* Geo-tag upload */}
       {!isCCE && (
-        <div className="border-t border-border pt-4 mt-4">
+        <div className="border-t border-border pt-4 mt-4 bg-white">
           <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
-            Geo-Tag Photo Upload
+            {t("Geo-Tag Photo Upload", "जियो-टैग फोटो अपलोड")}
           </div>
           <input
             type="file"
@@ -215,12 +217,14 @@ export default function ComplaintActionSection({
             >
               <Camera className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">
-                Click to capture/upload field photo with geo-tag (multiple
-                allowed)
+                {t(
+                  "Click to capture/upload field photo with geo-tag (multiple allowed)",
+                  "जियो-टैग के साथ फील्ड फोटो कैप्चर/अपलोड करने के लिए क्लिक करें (एकाधिक अनुमत)"
+                )}
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3 bg-white">
               <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
                 {selectedFiles.map((item, idx) => (
                   <div
@@ -244,9 +248,9 @@ export default function ComplaintActionSection({
                     </div>
                     <button
                       onClick={() => removeFile(idx)}
-                      className="text-xs text-red-500 hover:underline px-2 py-1"
+                      className="text-xs text-red-500 hover:underline px-2 py-1 cursor-pointer"
                     >
-                      Remove
+                      {t("Remove", "हटाएं")}
                     </button>
                   </div>
                 ))}
@@ -255,18 +259,18 @@ export default function ComplaintActionSection({
                 <Button
                   onClick={() => fileInputRef.current?.click()}
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 cursor-pointer bg-white"
                 >
-                  Add More
+                  {t("Add More", "और जोड़ें")}
                 </Button>
                 <Button
                   onClick={handleUpload}
                   disabled={postMutation.isPending}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
                 >
                   {postMutation.isPending
-                    ? "Uploading..."
-                    : `Save ${selectedFiles.length} Image(s)`}
+                    ? t("Uploading...", "अपलोड हो रहा है...")
+                    : `${t("Save", "सहेजें")} ${selectedFiles.length} ${t("Image(s)", "छवि(याँ)")}`}
                 </Button>
               </div>
             </div>
@@ -276,23 +280,23 @@ export default function ComplaintActionSection({
 
       {remark.isOpen && (
         <EditDialog
-          title={"Add remark"}
+          title={t("Add remark", "टिप्पणी जोड़ें")}
           onClose={() => setRemark(initialRemark)}
           onSave={handleSaveRemark}
           saving={updateStatusMutation.isPending}
         >
           <div className="">
             <Label>
-              Remark <span className="text-red-500 mb-2">*</span>
+              {t("Remark", "टिप्पणी")} <span className="text-red-500 mb-2">*</span>
             </Label>
             <Textarea
               value={remark.value}
               onChange={(e) =>
                 setRemark((prev) => ({ ...prev, value: e.target.value }))
               }
-              placeholder="Enter remark..."
+              placeholder={t("Enter remark...", "टिप्पणी दर्ज करें...")}
               rows={5}
-              className="border border-border rounded-lg p-2.5 w-full"
+              className="border border-border rounded-lg p-2.5 w-full bg-white"
             />
           </div>
         </EditDialog>

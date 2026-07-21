@@ -123,4 +123,21 @@ export const deleteDepartment = async (departmentId) => {
   return instance.delete(`/departments/${departmentId}`);
 };
 
+// ---- skills ----
+export const getSkills = async (params = {}) => {
+  return instance.get("/skills", { params });
+};
+
+export const postSkill = async (skill) => {
+  return instance.post("/skills", skill);
+};
+
+export const putSkill = async ({ skillId, skill }) => {
+  return instance.put(`/skills/${skillId}`, skill);
+};
+
+export const deleteSkill = async (skillId) => {
+  return instance.delete(`/skills/${skillId}`);
+};
+
 

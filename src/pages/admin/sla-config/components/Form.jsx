@@ -14,24 +14,22 @@ export default function Form({
   return (
     <div className="space-y-4">
       <div>
-        <Label className="mb-1.5 block">Sub-Service <span className="text-red-500">*</span></Label>
+        <Label className="mb-1.5 block">
+          Sub-Service <span className="text-red-500">*</span>
+        </Label>
         {editItem ? (
           <Input
             disabled
             value={
-              editItem.subService?.title ||
-              editItem.subService?.name ||
-              ""
+              editItem.subService?.title || editItem.subService?.name || ""
             }
-            className="bg-muted/50"
+            className="bg-[#F4F7FA]"
           />
         ) : (
           <MySelect
             options={subServiceOptions}
             value={dialog.subService || ""}
-            onValueChange={(val) =>
-              setDialog({ ...dialog, subService: val })
-            }
+            onValueChange={(val) => setDialog({ ...dialog, subService: val })}
             placeholder="Select sub-service..."
           />
         )}
@@ -58,12 +56,11 @@ export default function Form({
                   onChange={(e) => {
                     const val = e.target.value;
                     const isValid = isValidNumber(val, 0, 24);
-                   
+
                     if (!isValid) return;
                     let newEsc = [...(dialog.escalations || [])];
                     const idx = newEsc.findIndex(
-                      (item) =>
-                        (item.role?._id || item.role) === role._id,
+                      (item) => (item.role?._id || item.role) === role._id,
                     );
                     if (val === "") {
                       if (idx > -1) {
@@ -96,9 +93,7 @@ export default function Form({
           type="checkbox"
           id="officer-assigned"
           checked={dialog.officer || false}
-          onChange={(e) =>
-            setDialog({ ...dialog, officer: e.target.checked })
-          }
+          onChange={(e) => setDialog({ ...dialog, officer: e.target.checked })}
           className="rounded text-blue-600 focus:ring-blue-500"
         />
         <Label htmlFor="officer-assigned" className="cursor-pointer">

@@ -157,7 +157,7 @@ export default function ManageOfficers() {
         <div className="bg-white rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-[#F4F7FA]">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Officer ID</th>
                   <th className="px-4 py-3 font-medium">Name</th>
@@ -289,7 +289,9 @@ export default function ManageOfficers() {
               </div>
               <div className="p-5 space-y-4">
                 <div>
-                  <Label className="mb-1.5 block">Officer Name <span className="text-red-500">*</span></Label>
+                  <Label className="mb-1.5 block">
+                    Officer Name <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     value={dialog.name || ""}
                     onChange={(e) =>

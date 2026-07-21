@@ -3,6 +3,9 @@ import instance from "../../../lib/axios";
 export const getWorkflowLevels = async (params) => {
   return instance.get("/workflow-levels", { params });
 };
+export const getWorkflowLevelsByDepartment = async (params) => {
+  return instance.get(`/workflow-levels/department/${params.department}`, { params });
+};
 
 export const postWorkflowLevel = async (level) => {
   return instance.post("/workflow-levels", level);

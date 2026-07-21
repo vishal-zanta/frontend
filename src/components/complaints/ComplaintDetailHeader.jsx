@@ -4,8 +4,10 @@ import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/utils/constants";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 function SLATimer({ createdAt, slaHours }) {
+  const { t } = useLanguage();
   const [timeLeft, setTimeLeft] = useState("");
   const [isExpired, setIsExpired] = useState(false);
   const [isUrgent, setIsUrgent] = useState(false);
@@ -24,7 +26,7 @@ function SLATimer({ createdAt, slaHours }) {
       if (diff <= 0) {
         setIsExpired(true);
         setIsUrgent(false);
-        setTimeLeft("Expired");
+        setTimeLeft(t("Expired", "समाप्त"));
         return;
       }
 
@@ -35,14 +37,14 @@ function SLATimer({ createdAt, slaHours }) {
       const hours = Math.floor(totalMinutes / 60);
       const minutes = totalMinutes % 60;
 
-      setTimeLeft(`${hours}h ${minutes}m left`);
+      setTimeLeft(`${hours}h ${minutes}m ${t("left", "शेष")}`);
     };
 
     calculate();
     const interval = setInterval(calculate, 60000); // update every minute
 
     return () => clearInterval(interval);
-  }, [createdAt, slaHours]);
+  }, [createdAt, slaHours, t]);
 
   if (!createdAt) return null;
 
@@ -59,7 +61,7 @@ function SLATimer({ createdAt, slaHours }) {
       className={`text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 ${badgeClass}`}
     >
       <Clock className="w-3 h-3" />
-      SLA Timer: {timeLeft}
+      {t("SLA Timer:", "एसएलए टाइमर:")} {timeLeft}
     </Badge>
   );
 }
@@ -77,9 +79,10 @@ export default function ComplaintDetailHeader({
   assignOfficerMutation,
   selectedId,
 }) {
+  const { t } = useLanguage();
   const { hasPermission } = useAuth();
   return (
-    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3">
+    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3 bg-white">
       <div className="min-w-0">
         <div className="flex items-center gap-1.5 lg:gap-2 mb-1 flex-wrap">
           <h2 className="text-base lg:text-lg font-bold text-primary font-mono">
@@ -94,7 +97,7 @@ export default function ComplaintDetailHeader({
 
         {isCCE && (
           <div className="flex gap-3 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
-            <span >Filed: {formattedDate}</span>
+            <span >{t("Filed:", "दर्ज:")} {formattedDate}</span>
             <SLATimer
               createdAt={c.createdAt}
               slaHours={c.classification?.subService?.sla || c.slaHours}
@@ -106,7 +109,7 @@ export default function ComplaintDetailHeader({
       {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) ? (
         <div className="w-full sm:w-44 lg:w-56 text-left shrink-0">
           <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
-            Assign Officer
+            {t("Assign Officer", "अधिकारी नियुक्त करें")}
           </label>
           <select
             value={c.assignedOfficer?._id || c.assignedOfficer || ""}
@@ -120,9 +123,9 @@ export default function ComplaintDetailHeader({
               }
             }}
             disabled={assignOfficerMutation.isPending}
-            className="w-full text-xs bg-background border border-border rounded-lg p-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none disabled:opacity-60"
+            className="w-full text-xs bg-background border border-border rounded-lg p-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none disabled:opacity-60 cursor-pointer"
           >
-            <option value="">Select Officer...</option>
+            <option value="">{t("Select Officer...", "अधिकारी चुनें...")}</option>
             {userOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -132,19 +135,19 @@ export default function ComplaintDetailHeader({
           {isCCE && (
             <div className="flex items-center gap-1.5 mt-2">
               <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide shrink-0">
-                Current:
+                {t("Current:", "वर्तमान:")}
               </span>
               <span className="inline-flex items-center text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5 truncate">
                 {c?.assignedOfficer?.name
                   ? `${c.assignedOfficer.name}${c?.assignedOfficer?.role?.designationEnglish ? ` · ${c.assignedOfficer.role.designationEnglish}` : ""}`
-                  : "Not assigned"}
+                  : t("Not assigned", "नियुक्त नहीं")}
               </span>
             </div>
           )}
         </div>
       ) : (
         <div className="text-right text-xs text-muted-foreground space-y-1">
-          <div className="text-left sm:text-right">Filed: {formattedDate}</div>
+          <div className="text-left sm:text-right">{t("Filed:", "दर्ज:")} {formattedDate}</div>
           <SLATimer
             createdAt={c.createdAt}
             slaHours={c.classification?.subService?.sla || c.slaHours}
