@@ -48,30 +48,30 @@ export default function MyShiftDetails({ agentViewShift }) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-border p-5 max-w-2xl">
+      <div className="bg-card rounded-xl border border-border p-5 max-w-2xl">
         <h3 className="font-bold text-foreground mb-4">
           {t("My Shift Details", "मेरा शिफ्ट विवरण")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div className="bg-[#F4F7FA] rounded-lg p-3">
+          <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">
               {t("Agent Name", "एजेंट का नाम")}
             </div>
             <div className="font-medium">{agentName}</div>
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-3">
+          <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">
               {t("Agent ID", "एजेंट आईडी")}
             </div>
             <div className="font-mono text-sm font-medium">{agentId}</div>
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-3">
+          <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">
               {t("Shift", "शिफ्ट")}
             </div>
             <div className="font-medium">{shiftText}</div>
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-3">
+          <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">
               {t("Current Status", "वर्तमान स्थिति")}
             </div>
@@ -88,13 +88,13 @@ export default function MyShiftDetails({ agentViewShift }) {
               {currentStatus}
             </Badge>
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-3">
+          <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">
               {t("Calls Today", "आज की कॉल")}
             </div>
             <div className="font-medium">{callsToday}</div>
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-3">
+          <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">
               {t("Resolved Today", "आज हल की गई")}
             </div>

@@ -101,7 +101,7 @@ export default function FieldVisits() {
           />
         </div>
 
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <LoaderErrWrapper isLoading={isLoading} error={error}>
             <FieldVisitTable
               filtered={fieldVisits || []}

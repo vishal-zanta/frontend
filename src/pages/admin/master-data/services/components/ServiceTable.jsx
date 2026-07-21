@@ -14,7 +14,7 @@ const ServiceTable = ({
       {services.map((s) => (
         <div
           key={s._id}
-          className="bg-white rounded-xl border border-border p-5 pb-0 shadow-sm hover:shadow-md transition-shadow duration-300"
+          className="bg-card rounded-xl border border-border p-5 pb-0 shadow-sm hover:shadow-md transition-shadow duration-300"
         >
           <div className="flex items-center justify-between mb-4 border-b border-border pb-3 flex-wrap gap-2">
             <div>
@@ -43,7 +43,7 @@ const ServiceTable = ({
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
                 onClick={() => setServiceDialog({ type: "delete", item: s })}
               >
                 <Trash2 className="w-3.5 h-3.5" />

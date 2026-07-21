@@ -11,8 +11,8 @@ export default function DeleteDialog({ title, onClose, onDelete, deleting }) {
     <div style={{
       margin: 0
     }} className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center" onClick={e => e.stopPropagation()}>
-        <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-3">
+      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center" onClick={e => e.stopPropagation()}>
+        <div className="w-12 h-12 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mx-auto mb-3">
           <Trash2 className="w-6 h-6" />
         </div>
         <h3 className="font-bold text-foreground mb-1">Delete "{title}"?</h3>

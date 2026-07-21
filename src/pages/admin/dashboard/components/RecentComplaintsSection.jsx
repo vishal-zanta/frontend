@@ -31,7 +31,7 @@ export default function RecentComplaintsSection() {
       <LoaderErrWrapper isLoading={isLoading} error={error}>
         <div className="overflow-x-auto max-h-[400px] overflow-y-auto scrollbar-thin">
           <table className="w-full text-sm">
-            <thead className="bg-[#F4F7FA] sticky top-0">
+            <thead className="bg-muted/50 sticky top-0">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-2 font-medium">Complaint ID</th>
                 <th className="px-4 py-2 font-medium">Citizen</th>

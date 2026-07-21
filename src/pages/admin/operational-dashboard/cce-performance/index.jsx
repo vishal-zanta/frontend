@@ -158,7 +158,7 @@ export default function CcePerformanceTab({ pd }) {
         <AgentPerformanceChart data={AGENT_PERFORMANCE} xKey="agent" />
         <AgentStatusChart data={HELPDESK_STATUS} />
       </div>
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground">
             Helpdesk Agent Status Board
@@ -179,7 +179,7 @@ export default function CcePerformanceTab({ pd }) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-[#F4F7FA]">
+            <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-2 font-medium">Agent</th>
                 <th className="px-4 py-2 font-medium">ID</th>
@@ -201,7 +201,7 @@ export default function CcePerformanceTab({ pd }) {
                   <td className="px-4 py-2.5">
                     <Badge
                       variant="outline"
-                      className={`text-xs ${a.status === "Available" ? "bg-emerald-50 text-emerald-700" : a.status === "On Call" ? "bg-amber-50 text-amber-700" : a.status === "Break" ? "bg-purple-50 text-purple-700" : "bg-slate-50 text-slate-500"}`}
+                      className={`text-xs ${a.status === "Available" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : a.status === "On Call" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : a.status === "Break" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400" : "bg-muted/50 text-muted-foreground"}`}
                     >
                       {a.status}
                     </Badge>
@@ -223,7 +223,7 @@ export default function CcePerformanceTab({ pd }) {
           </table>
         </div>
       </div>
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground">
             Agent Performance Detail
@@ -236,7 +236,7 @@ export default function CcePerformanceTab({ pd }) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-[#F4F7FA]">
+            <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-2 font-medium">Agent</th>
                 <th className="px-4 py-2 font-medium">Calls</th>
@@ -265,7 +265,7 @@ export default function CcePerformanceTab({ pd }) {
                   <td className="px-4 py-2.5">
                     <Badge
                       variant="outline"
-                      className={`text-xs ${a.status === "Online" ? "bg-emerald-50 text-emerald-700" : a.status === "On Break" ? "bg-amber-50 text-amber-700" : "bg-slate-50 text-slate-500"}`}
+                      className={`text-xs ${a.status === "Online" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : a.status === "On Break" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted/50 text-muted-foreground"}`}
                     >
                       {a.status}
                     </Badge>

@@ -14,7 +14,7 @@ const LangSelector = ({triggerClassName}) => {
   const { lang, setLang } = useLanguage();
   return (
     <Select  value={lang} onValueChange={(v) => setLang(v)}>
-      <SelectTrigger className={clsx("w-28 self-start sm:self-auto ", triggerClassName)}>
+      <SelectTrigger className={clsx("w-28 self-start sm:self-auto bg-background", triggerClassName)}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

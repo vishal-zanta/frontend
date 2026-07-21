@@ -115,7 +115,7 @@ export default function ComplaintSourcesTab() {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-border p-5">
+      <div className="bg-card rounded-xl border border-border p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-foreground">Complaint Sources</h3>
           <Button

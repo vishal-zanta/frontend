@@ -7,8 +7,8 @@ export default function SuccessScreen({ role, t, onReset }) {
   return (
     <PortalLayout role={role}>
       <div className="p-6 flex items-center justify-center min-h-[80vh]">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-border shadow-xl p-8 text-center">
-          <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+        <div className="max-w-md w-full bg-card rounded-2xl border border-border shadow-xl p-8 text-center">
+          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-10 h-10" />
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">
@@ -21,7 +21,7 @@ export default function SuccessScreen({ role, t, onReset }) {
             )}
           </p>
           <Button
-            className="bg-blue-600 hover:bg-blue-700 w-full"
+            className="bg-primary hover:bg-primary/90 w-full"
             onClick={onReset}
           >
             {t("File Another Complaint", "एक और शिकायत दर्ज करें")}

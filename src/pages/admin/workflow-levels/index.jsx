@@ -216,7 +216,7 @@ console.log({editLevel})
         <EscalationFlow levels={workflowList} />
 
         {/* Config table */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden mt-6">
+        <div className="bg-card rounded-xl border border-border overflow-hidden mt-6">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
             <h3 className="font-bold text-foreground">Workflow Levels</h3>
             <div className="flex items-center gap-2">
@@ -236,7 +236,7 @@ console.log({editLevel})
                 </LoaderErrWrapper>
               <Button
                 size="sm"
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-primary hover:bg-primary/90"
                 onClick={() => {
                   setEditLevel(null);
                   setDialog({ type: "add" });

@@ -12,6 +12,8 @@ import {
   X,
   Shield,
   Loader2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -21,6 +23,7 @@ import BreakOverlay from "./break-timer/BreakOverlay";
 import { postLogout } from "@/api/auth.api";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
 
 const STAFF_NOTIFICATIONS = [
   {
@@ -56,6 +59,7 @@ export default function TopBar({
     profiledata: profileMetaData,
   } = useAuth();
   const { t } = useLanguage();
+  const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const isSuperAdmin = profileMetaData?.isAdmin;
   const isCRM = profileMetaData?.isCRM;
@@ -181,7 +185,7 @@ export default function TopBar({
   };
 
   return (
-    <header className="h-14 bg-white border-b border-border flex items-center justify-between px-4 sticky top-0 z-30 shadow-sm">
+    <header className="h-14 bg-background border-b border-border flex items-center justify-between px-4 sticky top-0 z-30 shadow-sm">
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
@@ -242,7 +246,7 @@ export default function TopBar({
             </button>
             {showSwitcher && (
               <div className="absolute right-0 top-11 w-64 bg-white border border-border rounded-xl shadow-xl overflow-hidden z-50">
-                <div className="px-4 py-2.5 border-b border-border bg-[#F4F7FA]">
+                <div className="px-4 py-2.5 border-b border-border bg-muted/50">
                   <span className="text-xs font-semibold text-muted-foreground">
                     Switch Profile View
                   </span>
@@ -272,6 +276,19 @@ export default function TopBar({
           </div>
         )} */}
 
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
+          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? (
+            <Sun className="w-5 h-5" />
+          ) : (
+            <Moon className="w-5 h-5" />
+          )}
+        </button>
+
         {!isSuperAdmin && (
           <div className="relative" ref={notifRef}>
             <button
@@ -282,7 +299,7 @@ export default function TopBar({
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
             {showNotifs && (
-              <div className="absolute right-0 top-12 w-80 bg-white border border-border rounded-xl shadow-xl overflow-hidden z-50">
+              <div className="absolute right-0 top-12 w-80 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50">
                 <div className="px-4 py-3 border-b border-border flex items-center justify-between">
                   <span className="font-semibold text-sm">Notifications</span>
                   <button
@@ -296,7 +313,7 @@ export default function TopBar({
                   {notifications.map((n) => (
                     <div
                       key={n.id}
-                      className="px-4 py-3 border-b border-border last:border-0 hover:bg-[#F4F7FA] flex items-start gap-3"
+                      className="px-4 py-3 border-b border-border last:border-0 hover:bg-muted flex items-start gap-3"
                     >
                       <div className="mt-0.5">{notifIcon(n.type)}</div>
                       <div className="flex-1 min-w-0">
@@ -316,7 +333,7 @@ export default function TopBar({
         <button
           onClick={() => toggleBreakMutation.mutate()}
           disabled={toggleBreakMutation.isPending}
-          className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
+          className="px-3 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
         >
           {toggleBreakMutation.isPending && (
             <Loader2 className="w-3 h-3 animate-spin" />
@@ -364,7 +381,7 @@ export default function TopBar({
             <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />
           </button>
           {showProfile && (
-            <div className="absolute right-0 top-12 w-56 bg-white border border-border rounded-xl shadow-xl overflow-hidden z-50">
+            <div className="absolute right-0 top-12 w-56 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50">
               <div className="px-4 py-3 border-b border-border">
                 <div className="font-semibold text-sm">
                   {" "}

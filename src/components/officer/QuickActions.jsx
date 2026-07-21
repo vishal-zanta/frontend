@@ -220,7 +220,7 @@ export default function QuickActions({ officer }) {
             </Select>
           </div>
           {selectedComplaint && (
-            <div className="bg-[#F4F7FA] rounded-lg p-3 text-sm">
+            <div className="bg-muted/50 rounded-lg p-3 text-sm">
               <div className="flex items-center gap-2 mb-1">
                 <ComplaintId id={selectedComplaint} className="text-xs" />
                 <StatusBadge
@@ -510,7 +510,7 @@ export default function QuickActions({ officer }) {
             </Select>
           </div>
           {selectedComplaint && (
-            <div className="bg-[#F4F7FA] rounded-lg p-3 text-sm space-y-1">
+            <div className="bg-muted/50 rounded-lg p-3 text-sm space-y-1">
               <div className="flex items-center gap-2">
                 <ComplaintId id={selectedComplaint} className="text-xs" />
                 <StatusBadge

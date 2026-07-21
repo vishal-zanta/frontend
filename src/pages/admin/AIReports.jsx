@@ -182,7 +182,7 @@ export default function AIReports() {
               {HOTSPOTS.map((h, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-[#F4F7FA]"
+                  className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-muted/50"
                 >
                   <div
                     className={`w-2 h-12 rounded-full ${h.severity === "High" ? "bg-red-500" : h.severity === "Medium" ? "bg-amber-500" : "bg-green-500"}`}
@@ -232,7 +232,7 @@ export default function AIReports() {
               ? AI_PREDICTIONS.nextWeek
               : AI_PREDICTIONS.nextMonth
             ).map((p, i) => (
-              <div key={i} className="text-center p-3 bg-[#F4F7FA] rounded-lg">
+              <div key={i} className="text-center p-3 bg-muted/50 rounded-lg">
                 <div
                   className={`text-2xl font-bold ${p.trend === "up" ? "text-red-600" : p.trend === "down" ? "text-emerald-600" : "text-amber-600"}`}
                 >

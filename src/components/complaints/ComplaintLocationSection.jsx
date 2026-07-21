@@ -12,7 +12,7 @@ export default function ComplaintLocationSection({
   const { t } = useLanguage();
 
   return (
-    <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border bg-white">
+    <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border">
       <h4 className="text-[10px] lg:text-xs font-bold text-foreground uppercase tracking-wider mb-2">{t("Location & Address", "स्थान और पता")}</h4>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-3 text-[10px] lg:text-xs">
         <div>

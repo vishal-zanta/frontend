@@ -7,7 +7,7 @@ const ComplaintTable = ({ rawSources = [], setDialog }) => {
       {rawSources.map((s) => (
         <div
           key={s._id}
-          className="flex items-center gap-3 p-3 border border-border rounded-lg hover:bg-[#F4F7FA] group bg-card transition-all duration-200 shadow-sm"
+          className="flex items-center gap-3 p-3 border border-border rounded-lg hover:bg-muted/50 group bg-card transition-all duration-200 shadow-sm"
         >
           <Globe className="w-5 h-5 text-primary shrink-0" />
           <span className="text-sm font-medium flex-1 truncate">{s.title}</span>

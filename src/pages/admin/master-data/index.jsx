@@ -113,8 +113,8 @@ export default function MasterData() {
                         }}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                           tab === t.id
-                            ? "bg-primary text-white shadow-md"
-                            : "bg-white border border-border text-muted-foreground hover:bg-muted"
+                            ? "bg-primary text-primary-foreground shadow-md"
+                            : "bg-card border border-border text-muted-foreground hover:bg-muted"
                         }`}
                       >
                         <Icon className="w-4 h-4" /> {t.label}
@@ -145,8 +145,8 @@ export default function MasterData() {
                         }}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                           tab === t.id
-                            ? "bg-primary text-white shadow-md"
-                            : "bg-white border border-border text-muted-foreground hover:bg-muted"
+                            ? "bg-primary text-primary-foreground shadow-md"
+                            : "bg-card border border-border text-muted-foreground hover:bg-muted"
                         }`}
                       >
                         <Icon className="w-4 h-4" /> {t.label}

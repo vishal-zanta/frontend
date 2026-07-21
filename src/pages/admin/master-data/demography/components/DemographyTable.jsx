@@ -5,7 +5,7 @@ import React from "react";
 const DemographyTable = ({ districts = [], setDialog }) => {
   return (
     <table className="w-full text-sm">
-      <thead className="bg-[#F4F7FA]">
+      <thead className="bg-muted/50">
         <tr className="text-left text-xs text-muted-foreground">
           <th className="px-4 py-2.5 font-medium">District</th>
           <th className="px-4 py-2.5 font-medium">Hindi</th>
@@ -42,7 +42,7 @@ const DemographyTable = ({ districts = [], setDialog }) => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
                   onClick={() => setDialog({ type: "delete", item: d })}
                 >
                   <Trash2 className="w-3.5 h-3.5" />

@@ -23,7 +23,7 @@ export default function ModesAndSocialSection({ modeData }) {
           {SOCIAL_COMPLAINTS.map((s, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#F4F7FA]"
+              className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50"
             >
               <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                 {s.platform.includes("Twitter") ? (

@@ -18,7 +18,7 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
       )}
       <div className={`max-w-[75%] min-w-0 space-y-1 ${isOwn ? "items-end" : "items-start"} flex flex-col`}>
         {!isOwn && (
-          <p className="text-[11px] text-slate-500 font-medium px-1">{senderName}</p>
+          <p className="text-[11px] text-muted-foreground font-medium px-1">{senderName}</p>
         )}
 
         {/* Attachments */}
@@ -39,7 +39,7 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
                       <img
                         src={url}
                         alt={att.name}
-                        className="max-h-48 max-w-full rounded-xl object-contain border border-slate-200 shadow-sm"
+                        className="max-h-48 max-w-full rounded-xl object-contain border border-border shadow-sm"
                       />
                     </a>
                   </div>
@@ -50,7 +50,7 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
                     className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm border shadow-sm
                       ${isOwn
                         ? "bg-blue-700 text-white border-blue-600"
-                        : "bg-white text-slate-700 border-slate-200"
+                        : "bg-card text-foreground border-border"
                       }`}
                   >
                     <Paperclip className="w-4 h-4 shrink-0 opacity-70" />
@@ -74,14 +74,14 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
             className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm whitespace-pre-wrap break-words
               ${isOwn
                 ? "bg-blue-900 text-white rounded-br-sm"
-                : "bg-white text-slate-800 border border-slate-100 rounded-bl-sm"
+                : "bg-card text-foreground border border-border rounded-bl-sm"
               }`}
           >
             {msg.content}
           </div>
         )}
 
-        <p className={`text-[11px] text-slate-400 px-1 ${isOwn ? "text-right" : "text-left"}`}>
+        <p className={`text-[11px] text-muted-foreground/70 px-1 ${isOwn ? "text-right" : "text-left"}`}>
           {formatTime(msg.createdAt)}
         </p>
       </div>

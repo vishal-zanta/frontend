@@ -165,7 +165,7 @@ export default function DemographyTab() {
   return (
     <>
       <div className="space-y-6">
-        <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
+        <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
             <h3 className="font-bold text-foreground">
               Districts & Demography

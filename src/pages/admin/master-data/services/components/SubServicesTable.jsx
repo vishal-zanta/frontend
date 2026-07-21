@@ -179,7 +179,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-[#F4F7FA]">
+            <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-3 py-2.5 font-medium">
                   Sub-Service (English)
@@ -207,7 +207,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                   <td className="px-3 py-2.5 text-center">
                     <Badge
                       variant="outline"
-                      className="text-xs bg-amber-50 text-amber-700 font-semibold border-amber-200"
+                      className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/30"
                     >
                       {ss.sla}h
                     </Badge>
@@ -231,7 +231,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
                         onClick={() => setDialog({ type: "delete", item: ss })}
                       >
                         <Trash2 className="w-3.5 h-3.5" />

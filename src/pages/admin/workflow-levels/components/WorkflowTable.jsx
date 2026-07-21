@@ -22,7 +22,7 @@ export default function WorkflowTable({
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-[#F4F7FA]">
+        <thead className="bg-muted/50">
           <tr className="text-left text-xs text-muted-foreground">
             <th className="w-10 px-4 py-3"></th>
             <th className="px-4 py-3 font-medium">Level </th>

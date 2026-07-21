@@ -56,7 +56,7 @@ export default function SetShiftTiming() {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-border p-5">
+    <div className="bg-card rounded-xl border border-border p-5">
       <h3 className="font-bold text-foreground mb-4">{t("Set Shift Timing", "शिफ्ट समय निर्धारित करें")}</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
         <div>

@@ -74,7 +74,7 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging }) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-border p-5">
+    <div className="bg-card rounded-xl border border-border p-5">
       <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
         <UserCog className="w-5 h-5 text-blue-500" /> Quick Tag Officer
       </h3>
@@ -144,7 +144,7 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging }) {
           />
         </div>
       </div>
-      <Button className="mt-4 bg-blue-600 hover:bg-blue-700" onClick={handleSubmit}>
+      <Button className="mt-4 bg-primary hover:bg-primary/90" onClick={handleSubmit}>
         <Save className="w-4 h-4 mr-1" /> Save Tagging
       </Button>
     </div>

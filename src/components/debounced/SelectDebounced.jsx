@@ -47,7 +47,7 @@ const SelectDebounced = ({
         onValueChange={(val) => setValue(val)}
         {...selectProps}
       >
-        <SelectTrigger className={clsx("w-48 text-sm", selectTriggerClassName)}>
+        <SelectTrigger className={clsx("w-48 text-sm bg-background", selectTriggerClassName)}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

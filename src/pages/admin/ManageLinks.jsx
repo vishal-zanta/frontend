@@ -52,34 +52,34 @@ const citizenMenuItems = [
 ];
 
 const staffRoles = [
-  { name: "SUDA Admin", color: "bg-red-50 text-red-700" },
-  { name: "Division Admin", color: "bg-purple-50 text-purple-700" },
-  { name: "ULB Admin", color: "bg-blue-50 text-primary" },
-  { name: "L2 Officer", color: "bg-indigo-50 text-indigo-700" },
-  { name: "L1 Officer", color: "bg-emerald-50 text-emerald-700" },
-  { name: "CC Supervisor", color: "bg-amber-50 text-amber-700" },
-  { name: "CCE Agent", color: "bg-sky-50 text-sky-700" },
+  { name: "SUDA Admin", color: "bg-destructive/10 text-destructive" },
+  { name: "Division Admin", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
+  { name: "ULB Admin", color: "bg-primary/10 text-primary" },
+  { name: "L2 Officer", color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400" },
+  { name: "L1 Officer", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+  { name: "CC Supervisor", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
+  { name: "CCE Agent", color: "bg-sky-500/10 text-sky-600 dark:text-sky-400" },
 ];
 
 const permConfig = {
   edit: {
     icon: Edit,
-    color: "text-emerald-600 bg-emerald-50 hover:bg-emerald-100",
+    color: "text-emerald-600 bg-emerald-500/10 hover:bg-emerald-500/20",
     label: "Full Access",
   },
   view: {
     icon: Eye,
-    color: "text-primary bg-blue-50 hover:bg-blue-100",
+    color: "text-primary bg-primary/10 hover:bg-primary/20",
     label: "View Only",
   },
   none: {
     icon: Lock,
-    color: "text-slate-400 bg-slate-50 hover:bg-slate-100",
+    color: "text-muted-foreground bg-muted/50 hover:bg-muted",
     label: "No Access",
   },
   self: {
     icon: User,
-    color: "text-purple-600 bg-purple-50 hover:bg-purple-100",
+    color: "text-purple-600 dark:text-purple-400 bg-purple-500/10 hover:bg-purple-500/20",
     label: "Own Records Only",
   },
 };
@@ -257,12 +257,12 @@ const initialCitizenPermissions = {
 function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
   const cols = Array.isArray(roles) ? roles : null;
   return (
-    <div className="bg-white rounded-xl border border-border overflow-hidden">
+    <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-[#F4F7FA]">
+          <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
-              <th className="px-3 py-3 font-medium sticky left-0 bg-[#F4F7FA] z-10">
+              <th className="px-3 py-3 font-medium sticky left-0 bg-muted/50 z-10">
                 Menu Item
               </th>
               {cols ? (
@@ -283,7 +283,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
                 <th className="px-3 py-3 font-medium text-center min-w-[90px]">
                   <Badge
                     variant="outline"
-                    className="text-[10px] bg-slate-50 text-slate-700"
+                    className="text-[10px] bg-muted/50 text-muted-foreground"
                   >
                     Citizen
                   </Badge>
@@ -294,7 +294,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
           <tbody className="divide-y divide-border">
             {menuItems.map((menu, mi) => (
               <tr key={mi} className="hover:bg-muted/30">
-                <td className="px-3 py-2.5 font-medium sticky left-0 bg-white z-10">
+                <td className="px-3 py-2.5 font-medium sticky left-0 bg-card z-10">
                   {menu}
                 </td>
                 {cols ? (
@@ -431,7 +431,7 @@ export default function ManageLinks() {
           </TabsContent>
 
           <TabsContent value="citizen" className="space-y-3">
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-primary">
+            <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
               <strong>Citizen Access Model:</strong> This is a separate access
               model for public citizens - not internal staff. Citizens access
               the portal via a public-facing interface with limited,
@@ -447,7 +447,7 @@ export default function ManageLinks() {
           </TabsContent>
         </Tabs>
 
-        <div className="bg-[#F4F7FA] border border-border rounded-xl p-4 text-sm text-muted-foreground">
+        <div className="bg-muted/50 border border-border rounded-xl p-4 text-sm text-muted-foreground">
           <strong>Note:</strong> Citizen Access uses a fundamentally different
           access model (public self-service with own-record-only visibility) vs.
           internal staff RBAC (role-based hierarchical permissions). They are

@@ -43,7 +43,7 @@ export default function AgentStatusBoard({
   }, [data?.data?.data?.myShift]);
 
   return (
-    <div className="bg-white rounded-xl border border-border overflow-hidden">
+    <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="px-5 py-3 border-b border-border">
         <h3 className="font-bold text-foreground">
           {isSupervisor
@@ -57,7 +57,7 @@ export default function AgentStatusBoard({
       <LoaderErrWrapper isLoading={isLoading} error={error}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-[#F4F7FA]">
+            <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-3 font-medium">{t("Agent", "एजेंट")}</th>
                 <th className="px-4 py-3 font-medium">{t("Role", "भूमिका")}</th>

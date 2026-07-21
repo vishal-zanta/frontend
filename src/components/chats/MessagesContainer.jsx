@@ -188,7 +188,7 @@ export default function MessagesContainer({
   // ── Render ─────────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-3 text-slate-400">
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground">
         <Loader2 className="w-6 h-6 animate-spin" />
         <p className="text-sm">Loading messages...</p>
       </div>
@@ -197,12 +197,12 @@ export default function MessagesContainer({
 
   if (!messages.length) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50/20">
-        <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-3">
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-muted/20">
+        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
           <MessageSquareDot className="w-6 h-6 text-blue-400" />
         </div>
-        <p className="text-sm font-medium text-slate-700">No messages yet</p>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-sm font-medium text-foreground">No messages yet</p>
+        <p className="text-xs text-muted-foreground mt-1">
           Send a message to start the conversation
         </p>
       </div>
@@ -243,11 +243,11 @@ export default function MessagesContainer({
         if (item.type === "date") {
           return (
             <div key={item.id} className="flex items-center gap-3 py-2">
-              <div className="flex-1 h-px bg-slate-100" />
-              <span className="text-[11px] text-slate-400 font-medium bg-white px-2 whitespace-nowrap">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-[11px] text-muted-foreground font-medium bg-card px-2 whitespace-nowrap">
                 {item.label}
               </span>
-              <div className="flex-1 h-px bg-slate-100" />
+              <div className="flex-1 h-px bg-border" />
             </div>
           );
         }

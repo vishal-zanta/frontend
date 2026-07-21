@@ -9,7 +9,7 @@ export default function ComplaintComplainantSection({
 }) {
   const { t } = useLanguage();
   return (
-    <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border bg-white">
+    <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border">
       <h4 className="text-[10px] lg:text-xs font-bold text-foreground uppercase tracking-wider mb-2">
         {t("Complainant Details", "शिकायतकर्ता का विवरण")}
       </h4>

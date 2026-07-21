@@ -129,7 +129,7 @@ export default function GrievenceNatureTab() {
   return (
     <>
       {/* ── List card ────────────────────────────────────────────────────── */}
-      <div className="bg-white rounded-xl border border-border ">
+      <div className="bg-card rounded-xl border border-border">
         <div className="flex items-center justify-between p-5 py-3">
           <h3 className="font-bold text-foreground">Grievance Options</h3>
           <Button

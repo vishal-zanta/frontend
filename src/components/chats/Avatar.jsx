@@ -8,7 +8,7 @@ export default function Avatar({ initials, size = "md", online = false }) {
         {initials}
       </div>
       {online && (
-        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full" />
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-card rounded-full" />
       )}
     </div>
   );

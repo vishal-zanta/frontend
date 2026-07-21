@@ -15,14 +15,14 @@ export default function ChatArea({
   const [allMessages, setAllMessages] = useState([]);
   if (!selectedUser) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50/50">
-        <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
-          <MessageSquareDot className="w-8 h-8 text-blue-300" />
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-muted/30">
+        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+          <MessageSquareDot className="w-8 h-8 text-primary/50" />
         </div>
-        <p className="text-sm font-semibold text-slate-600">
+        <p className="text-sm font-semibold text-foreground">
           Select a conversation
         </p>
-        <p className="text-xs text-slate-400 mt-1.5">
+        <p className="text-xs text-muted-foreground mt-1.5">
           Choose a user from the list to start chatting
         </p>
       </div>

@@ -5,7 +5,7 @@ export default function EscalationFlow({ levels = [] }) {
   const sortedLevels = [...levels].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="bg-white rounded-xl border border-border p-6">
+    <div className="bg-card rounded-xl border border-border p-6">
       <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
         <GitBranch className="w-5 h-5 text-blue-500" /> Escalation Flow
       </h3>

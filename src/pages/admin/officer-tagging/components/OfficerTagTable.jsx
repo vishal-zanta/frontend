@@ -12,7 +12,7 @@ export default function OfficerTagTable({
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-[#F4F7FA]">
+        <thead className="bg-muted/50">
           <tr className="text-left text-xs text-muted-foreground">
             <th className="px-4 py-3 font-medium">Officer</th>
             <th className="px-4 py-3 font-medium">Designation</th>
@@ -36,7 +36,7 @@ export default function OfficerTagTable({
                     <Badge
                       key={si}
                       variant="outline"
-                      className="text-[10px] bg-blue-50 text-blue-700"
+                      className="text-[10px] bg-primary/10 text-primary"
                     >
                       {s.title}
                     </Badge>
@@ -49,7 +49,7 @@ export default function OfficerTagTable({
                     <Badge
                       key={wi}
                       variant="outline"
-                      className="text-[10px] bg-emerald-50 text-emerald-700"
+                      className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                     >
                       {w}
                     </Badge>
@@ -59,7 +59,7 @@ export default function OfficerTagTable({
               {/* <td className="px-4 py-3 text-center font-semibold">
                 <Badge
                   variant="outline"
-                  className={`text-xs ${o.active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"}`}
+                  className={`text-xs ${o.active ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-destructive/10 text-destructive border-destructive/20"}`}
                 >
                   {o.active ? "Active" : "Inactive"}
                 </Badge>

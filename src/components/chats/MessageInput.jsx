@@ -147,9 +147,9 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
   const isInactive = selectedUser?.status === "INACTIVE";
 
   return (
-    <div className="border-t border-slate-100 bg-white">
+    <div className="border-t border-border bg-card">
       {isInactive ? (
-        <div className="flex items-center justify-center py-5 px-3 text-sm font-medium text-slate-500 bg-slate-50/50">
+        <div className="flex items-center justify-center py-5 px-3 text-sm font-medium text-muted-foreground bg-muted/30">
           This user is no longer active.
         </div>
       ) : (
@@ -166,7 +166,7 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="shrink-0 p-2.5 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+              className="shrink-0 p-2.5 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
               title="Attach file"
             >
               <Paperclip className="w-[18px] h-[18px]" />
@@ -180,7 +180,7 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
               onChange={handleTextChange}
               onKeyDown={handleKeyDown}
               placeholder="Type a message..."
-              className="flex-1 resize-none bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 scrollbar-thin transition-all leading-relaxed max-h-[120px] overflow-y-auto"
+              className="flex-1 resize-none bg-muted/50 border border-border rounded-xl px-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-ring scrollbar-thin transition-all leading-relaxed max-h-[120px] overflow-y-auto"
               // style={{ height: "46px !important" }}
             />
 
@@ -191,7 +191,7 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
               className={`shrink-0 p-2.5 rounded-xl transition-all ${
                 canSend
                   ? "bg-blue-900 text-white hover:bg-blue-800 shadow-md shadow-blue-900/20 active:scale-95"
-                  : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
               title="Send message"
             >

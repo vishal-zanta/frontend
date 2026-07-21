@@ -100,7 +100,7 @@ const SubServiceForm = ({
       </div>
       <div>
         <Label className="mb-1.5 block">Parent Service</Label>
-        <Input disabled value={service.title} className="bg-[#F4F7FA]" />
+        <Input disabled value={service.title} className="bg-muted/50" />
       </div>
     </div>
   );

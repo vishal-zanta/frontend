@@ -84,19 +84,19 @@ export default function ManageOfficers() {
         )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-border p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-blue-600">
               {officers.length}
             </div>
             <div className="text-sm text-muted-foreground">Total Officers</div>
           </div>
-          <div className="bg-white rounded-xl border border-border p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-emerald-600">
               {officers.filter((o) => o.status === "active").length}
             </div>
             <div className="text-sm text-muted-foreground">Active</div>
           </div>
-          <div className="bg-white rounded-xl border border-border p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-purple-600">
               {
                 officers.filter(
@@ -108,7 +108,7 @@ export default function ManageOfficers() {
             </div>
             <div className="text-sm text-muted-foreground">Supervisory+</div>
           </div>
-          <div className="bg-white rounded-xl border border-border p-4">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-amber-600">
               {officers.filter((o) => o.slaBreached > 0).length}
             </div>
@@ -154,10 +154,10 @@ export default function ManageOfficers() {
           />
         </div>
 
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#F4F7FA]">
+              <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Officer ID</th>
                   <th className="px-4 py-3 font-medium">Name</th>
@@ -188,7 +188,7 @@ export default function ManageOfficers() {
                     <td className="px-4 py-3">
                       <Badge
                         variant="outline"
-                        className={`text-xs ${o.designation === "l1-officer" ? "bg-blue-50 text-blue-700" : o.designation === "l2-officer" ? "bg-purple-50 text-purple-700" : "bg-emerald-50 text-emerald-700"}`}
+                        className={`text-xs ${o.designation === "l1-officer" ? "bg-primary/10 text-primary" : o.designation === "l2-officer" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"}`}
                       >
                         {o.designationLabel}
                       </Badge>
@@ -202,7 +202,7 @@ export default function ManageOfficers() {
                               <Badge
                                 key={s}
                                 variant="outline"
-                                className="text-[10px] bg-blue-50 text-primary"
+                                className="text-[10px] bg-primary/10 text-primary"
                               >
                                 {svc?.name || s}
                               </Badge>
@@ -233,7 +233,7 @@ export default function ManageOfficers() {
                     <td className="px-4 py-3">
                       <Badge
                         variant="outline"
-                        className={`text-xs ${o.status === "active" ? "bg-emerald-50 text-emerald-700" : "bg-slate-50 text-slate-500"}`}
+                        className={`text-xs ${o.status === "active" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-muted/50 text-muted-foreground"}`}
                       >
                         {o.status === "active" ? "● Active" : "● Inactive"}
                       </Badge>
@@ -273,7 +273,7 @@ export default function ManageOfficers() {
             onClick={() => setDialog(null)}
           >
             <div
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
+              className="bg-card rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between px-5 py-3 border-b border-border">

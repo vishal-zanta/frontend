@@ -150,7 +150,7 @@ export default function CallHistoryLog() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl border border-border p-4 flex flex-wrap items-center gap-3">
+        <div className="bg-card rounded-xl border border-border p-4 flex flex-wrap items-center gap-3">
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -164,7 +164,7 @@ export default function CallHistoryLog() {
             />
           </div>
           <Select value={agentFilter} onValueChange={setAgentFilter}>
-            <SelectTrigger className="w-40 bg-white">
+            <SelectTrigger className="w-40 bg-background">
               <SelectValue placeholder={t("Agent", "एजेंट")} />
             </SelectTrigger>
             <SelectContent>
@@ -177,7 +177,7 @@ export default function CallHistoryLog() {
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-36 bg-white">
+            <SelectTrigger className="w-36 bg-background">
               <SelectValue placeholder={t("Status", "स्थिति")} />
             </SelectTrigger>
             <SelectContent>
@@ -217,10 +217,10 @@ export default function CallHistoryLog() {
         </div>
 
         {/* Call history table */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#F4F7FA]">
+              <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-3 py-3 font-medium">
                     <input
@@ -282,7 +282,7 @@ export default function CallHistoryLog() {
                     <td className="px-3 py-3">
                       <Badge
                         variant="outline"
-                        className={`text-[10px] ${c.callType === "Outbound" ? "bg-sky-50 text-sky-700" : "bg-blue-50 text-primary"}`}
+                        className={`text-[10px] ${c.callType === "Outbound" ? "bg-sky-500/10 text-sky-600 dark:text-sky-400" : "bg-primary/10 text-primary"}`}
                       >
                         {c.callType === "Outbound"
                           ? t("Outbound", "आउटबाउंड")
@@ -305,7 +305,7 @@ export default function CallHistoryLog() {
                     <td className="px-3 py-3">
                       <Badge
                         variant="outline"
-                        className={`text-xs ${c.status === "Resolved" ? "bg-emerald-50 text-emerald-700" : c.status === "Missed" ? "bg-red-50 text-red-700" : c.status === "Escalated" ? "bg-amber-50 text-amber-700" : "bg-slate-50 text-slate-600"}`}
+                        className={`text-xs ${c.status === "Resolved" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : c.status === "Missed" ? "bg-destructive/10 text-destructive" : c.status === "Escalated" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted/50 text-muted-foreground"}`}
                       >
                         {c.status === "Resolved"
                           ? t("Resolved", "हल की गई")
@@ -349,7 +349,7 @@ export default function CallHistoryLog() {
         </div>
 
         {/* Bulk actions bar */}
-        <div className="bg-[#F4F7FA] rounded-xl border border-border p-4 flex items-center justify-between">
+        <div className="bg-muted/50 rounded-xl border border-border p-4 flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
             {selected.length > 0
               ? `${selected.length} ${t("call(s) selected", "कॉल चयनित")}`
@@ -384,7 +384,7 @@ export default function CallHistoryLog() {
           onClick={() => setTagDialog(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md"
+            className="bg-card rounded-2xl shadow-2xl w-full max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 px-5 py-3 border-b border-border">
@@ -395,7 +395,7 @@ export default function CallHistoryLog() {
               </h3>
             </div>
             <div className="p-5 space-y-4">
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm text-purple-700">
+              <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 text-sm text-purple-600 dark:text-purple-400">
                 {t(
                   "Evidence-tagged calls are preserved with enhanced retention (7 years) and flagged for legal/audit review. Recordings cannot be deleted while tagged.",
                   "साक्ष्य-चिह्नित कॉल को बढ़ी हुई अवधारण (7 वर्ष) के साथ संरक्षित किया जाता है और कानूनी/लेखापरीक्षा समीक्षा के लिए चिह्नित किया जाता है। चिह्नित होने के दौरान रिकॉर्डिंग हटाई नहीं जा सकती।",
@@ -408,7 +408,7 @@ export default function CallHistoryLog() {
                 </label>
                 <Input
                   placeholder="e.g., Legal escalation, dispute case, citizen complaint against agent..."
-                  className="bg-white"
+                  className="bg-background"
                 />
               </div>
               <div>
@@ -417,7 +417,7 @@ export default function CallHistoryLog() {
                 </label>
                 <Input
                   placeholder="e.g., LEGAL-2026-00472"
-                  className="bg-white"
+                  className="bg-background"
                 />
               </div>
             </div>

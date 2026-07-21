@@ -22,7 +22,7 @@ const WorkflowFilter = ({ filterOptions = [], filter = {}, setFilter }) => {
             <select
               value={activeValue}
               onChange={(e) => handleChange(fOpt.filterKey, e.target.value)}
-              className="text-xs h-8 rounded-md border border-input bg-white px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-[#F4F7FA]"
+              className="text-xs h-8 rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
             >
               {fOpt.options.map((opt) => (
                 <option key={opt.value} value={opt.value}>

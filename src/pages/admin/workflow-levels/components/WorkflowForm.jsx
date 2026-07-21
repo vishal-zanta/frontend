@@ -16,7 +16,7 @@ const WorkflowForm = ({
 }) => {
   return (
     <div
-      className="bg-white rounded-2xl shadow-2xl w-full max-w-md"
+      className="bg-card rounded-2xl shadow-2xl w-full max-w-md"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between px-5 py-3 border-b border-border">

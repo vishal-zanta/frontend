@@ -105,7 +105,7 @@ export default function ComplaintActionSection({
   return (
     <>
       {/* Status actions */}
-      <div className="border-t border-border pt-4 bg-white">
+      <div className="border-t border-border pt-4">
         <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
           {t("Update Status", "स्थिति अपडेट करें")}
         </div>
@@ -142,7 +142,7 @@ export default function ComplaintActionSection({
             <Button
               onClick={handleSaveStatus}
               disabled={updateStatusMutation.isPending}
-              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0 cursor-pointer"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0 cursor-pointer"
               size="sm"
             >
               {updateStatusMutation.isPending ? t("Saving...", "सहेज रहा है...") : t("Save", "सहेजें")}
@@ -150,20 +150,20 @@ export default function ComplaintActionSection({
           )}
         </div>
         {statusErr && (
-          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <div className="mt-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-sm text-destructive">
             {statusErr}
           </div>
         )}
 
         {statusUpdate && (
-          <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-700">
+          <div className="mt-3 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-600 dark:text-emerald-400">
             ✓ {t("Status updated to", "स्थिति को अपडेट किया गया")} <strong>{statusUpdate}</strong>.
           </div>
         )}
       </div>
 
       {/* Priority actions */}
-      <div className="border-t border-border pt-4 bg-white">
+      <div className="border-t border-border pt-4">
         <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
           {t("Update Priority", "प्राथमिकता अपडेट करें")}
         </div>
@@ -187,7 +187,7 @@ export default function ComplaintActionSection({
             <Button
               onClick={handleSavePriority}
               disabled={updatePriorityMutation.isPending}
-              className="bg-blue-600 hover:bg-blue-700 text-white shrink-0 cursor-pointer"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0 cursor-pointer"
               size="sm"
             >
               {updatePriorityMutation.isPending ? t("Saving...", "सहेज रहा है...") : t("Save", "सहेजें")}
@@ -198,7 +198,7 @@ export default function ComplaintActionSection({
 
       {/* Geo-tag upload */}
       {!isCCE && (
-        <div className="border-t border-border pt-4 mt-4 bg-white">
+        <div className="border-t border-border pt-4 mt-4">
           <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
             {t("Geo-Tag Photo Upload", "जियो-टैग फोटो अपलोड")}
           </div>
@@ -213,7 +213,7 @@ export default function ComplaintActionSection({
           {selectedFiles.length === 0 ? (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer"
+              className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer"
             >
               <Camera className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">
@@ -224,7 +224,7 @@ export default function ComplaintActionSection({
               </p>
             </div>
           ) : (
-            <div className="space-y-3 bg-white">
+            <div className="space-y-3">
               <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
                 {selectedFiles.map((item, idx) => (
                   <div
@@ -259,7 +259,7 @@ export default function ComplaintActionSection({
                 <Button
                   onClick={() => fileInputRef.current?.click()}
                   variant="outline"
-                  className="flex-1 cursor-pointer bg-white"
+                  className="flex-1 cursor-pointer"
                 >
                   {t("Add More", "और जोड़ें")}
                 </Button>
@@ -296,7 +296,7 @@ export default function ComplaintActionSection({
               }
               placeholder={t("Enter remark...", "टिप्पणी दर्ज करें...")}
               rows={5}
-              className="border border-border rounded-lg p-2.5 w-full bg-white"
+              className="border border-border rounded-lg p-2.5 w-full bg-background"
             />
           </div>
         </EditDialog>

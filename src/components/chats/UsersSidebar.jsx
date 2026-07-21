@@ -54,13 +54,13 @@ export default function UsersSidebar({
 
   return (
     <div
-      className={`flex flex-col border-r border-slate-100 bg-white
+      className={`flex flex-col border-r border-border bg-card
         ${visible ? "flex" : "hidden"}
         w-full h-full`}
     >
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-slate-100 bg-white sticky top-0 z-10">
-        <h3 className="text-sm font-bold text-slate-800 mb-3">Conversations</h3>
+      <div className="px-4 pt-4 pb-3 border-b border-border bg-card sticky top-0 z-10">
+        <h3 className="text-sm font-bold text-foreground mb-3">Conversations</h3>
         <SearchDebounced
           initialValue={search}
           handleDebouncedChange={onSearchChange}
@@ -77,17 +77,17 @@ export default function UsersSidebar({
                 key={i}
                 className="flex items-center gap-3 p-3 rounded-xl animate-pulse"
               >
-                <div className="w-9 h-9 rounded-full bg-slate-200 shrink-0" />
+                <div className="w-9 h-9 rounded-full bg-muted shrink-0" />
                 <div className="flex-1 space-y-1.5">
-                  <div className="h-3 bg-slate-200 rounded w-3/4" />
-                  <div className="h-2.5 bg-slate-100 rounded w-1/2" />
+                  <div className="h-3 bg-muted rounded w-3/4" />
+                  <div className="h-2.5 bg-muted/60 rounded w-1/2" />
                 </div>
               </div>
             ))}
           </div>
         ) : conversations.length === 0 ? (
           <div className="p-8 text-center">
-            <p className="text-sm text-slate-500">No users found</p>
+            <p className="text-sm text-muted-foreground">No users found</p>
           </div>
         ) : (
           <>
@@ -115,7 +115,7 @@ export default function UsersSidebar({
 
             {/* Loading next page spinner */}
             {isFetchingMore && (
-              <div className="flex justify-center items-center py-4 text-blue-900 gap-2 text-xs font-semibold">
+              <div className="flex justify-center items-center py-4 text-primary gap-2 text-xs font-semibold">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span>Loading more...</span>
               </div>

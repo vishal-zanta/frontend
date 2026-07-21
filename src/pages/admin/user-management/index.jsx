@@ -251,7 +251,7 @@ export default function UserManagement() {
 
 
         {/* Users table */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
             <LoaderErrWrapper isLoading={isLoading} error={error}>
           <div className="overflow-x-auto">
               <UserManageTable
@@ -383,7 +383,7 @@ export default function UserManagement() {
         )}
 
         {/* RBAC info */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+        <div className="bg-primary/10 border border-primary/20 rounded-xl p-5">
           <h4 className="font-bold text-primary mb-2 text-sm flex items-center gap-2">
             <Shield className="w-4 h-4" /> Role-Based Access Control (RBAC)
           </h4>

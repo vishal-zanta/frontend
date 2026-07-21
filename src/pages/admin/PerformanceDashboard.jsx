@@ -161,7 +161,7 @@ export default function PerformanceDashboard() {
         </ChartCard>
 
         {/* Officer Ranking */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="px-5 py-3 border-b border-border">
             <h3 className="font-bold text-foreground flex items-center gap-2">
               <Award className="w-5 h-5 text-amber-500" /> Officer Ranking
@@ -170,7 +170,7 @@ export default function PerformanceDashboard() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#F4F7FA]">
+              <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-4 py-2 font-medium">Rank</th>
                   <th className="px-4 py-2 font-medium">Officer</th>
@@ -187,7 +187,7 @@ export default function PerformanceDashboard() {
                   <tr key={i} className="hover:bg-muted/30">
                     <td className="px-4 py-2.5">
                       <span
-                        className={`w-7 h-7 rounded-full inline-flex items-center justify-center text-xs font-bold ${o.rank <= 3 ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"}`}
+                        className={`w-7 h-7 rounded-full inline-flex items-center justify-center text-xs font-bold ${o.rank <= 3 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"}`}
                       >
                         #{o.rank}
                       </span>
@@ -219,7 +219,7 @@ export default function PerformanceDashboard() {
         </div>
 
         {/* ULB Intelligence */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="px-5 py-3 border-b border-border">
             <h3 className="font-bold text-foreground flex items-center gap-2">
               <MapPin className="w-5 h-5 text-blue-500" /> ULB Intelligence
@@ -228,7 +228,7 @@ export default function PerformanceDashboard() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#F4F7FA]">
+              <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-4 py-2 font-medium">ULB</th>
                   <th className="px-4 py-2 font-medium text-right">

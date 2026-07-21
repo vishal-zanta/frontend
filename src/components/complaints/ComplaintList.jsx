@@ -104,7 +104,7 @@ export default function ComplaintList({
   }, [complaints, onStatsChange]);
 
   return (
-    <div className="bg-white rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full bg-white">
+    <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full">
       <div className="px-4 py-3 border-b border-border ">
         <div className="flex items-center justify-between shrink-0">
           <h3 className="font-bold text-foreground text-sm">
@@ -123,12 +123,12 @@ export default function ComplaintList({
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 bg-white">
+            <DropdownMenuContent align="end" className="w-48 bg-card">
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger className="cursor-pointer">
                   <span>{t("Status", "स्थिति")}</span>
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-40 bg-white">
+                <DropdownMenuSubContent className="w-40 bg-card">
                   <DropdownMenuItem
                     onClick={() => setSelectedStatus("")}
                     className={`cursor-pointer ${!selectedStatus ? "font-semibold bg-accent text-accent-foreground" : ""}`}
@@ -154,7 +154,7 @@ export default function ComplaintList({
                 <DropdownMenuSubTrigger className="cursor-pointer">
                   <span>{t("Feedback", "प्रतिक्रिया")}</span>
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-44 bg-white">
+                <DropdownMenuSubContent className="w-44 bg-card">
                   <DropdownMenuItem
                     onClick={() => setSelectedFeedback("")}
                     className={`cursor-pointer ${selectedFeedback === "" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
@@ -222,8 +222,8 @@ export default function ComplaintList({
                       onSelect(c);
                       setStatusUpdate(null);
                     }}
-                    className={`w-full text-left px-4 py-3 hover:bg-[#F4F7FA] transition-colors cursor-pointer bg-white ${
-                      isSelected ? "bg-blue-50 border-l-4 border-blue-600" : ""
+                    className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors cursor-pointer ${
+                      isSelected ? "bg-primary/10 border-l-4 border-primary" : "bg-card"
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-1">
@@ -256,7 +256,7 @@ export default function ComplaintList({
                     size="sm"
                     onClick={() => fetchNextPage()}
                     disabled={isFetchingNextPage}
-                    className="w-full text-xs cursor-pointer bg-white"
+                    className="w-full text-xs cursor-pointer"
                   >
                     {isFetchingNextPage
                       ? t("Loading more...", "और लोड हो रहा है...")

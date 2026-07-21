@@ -99,7 +99,7 @@ export default function CRMDashboard() {
               </div>
               <div className="flex gap-2">
                 <Link to="/admin/performance">
-                  <Button className="bg-white text-primary hover:bg-white/90">
+                  <Button className="bg-card text-primary hover:bg-white/90">
                     <BarChart3 className="w-4 h-4 mr-1" />{" "}
                     {t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
                   </Button>
@@ -195,7 +195,7 @@ export default function CRMDashboard() {
             </ChartCard>
           </div>
 
-          <div className="bg-white rounded-xl border border-border overflow-hidden">
+          <div className="bg-card rounded-xl border border-border overflow-hidden">
             <div className="px-5 py-3 border-b border-border flex items-center justify-between">
               <h3 className="font-bold text-foreground">
                 {t("Agent Performance Overview", "एजेंट प्रदर्शन अवलोकन")}
@@ -209,7 +209,7 @@ export default function CRMDashboard() {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-[#F4F7FA]">
+                <thead className="bg-muted/50">
                   <tr className="text-left text-xs text-muted-foreground">
                     <th className="px-4 py-2 font-medium">
                       {t("Agent", "एजेंट")}
@@ -280,7 +280,7 @@ export default function CRMDashboard() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl border border-border">
+            <div className="bg-card rounded-xl border border-border">
               <div className="px-5 py-3 border-b border-border">
                 <h3 className="font-bold text-foreground">
                   {t("Agent Leaderboard", "एजेंट लीडरबोर्ड")}
@@ -313,7 +313,7 @@ export default function CRMDashboard() {
                 ))}
               </div>
             </div>
-            <div className="bg-white rounded-xl border border-border">
+            <div className="bg-card rounded-xl border border-border">
               <div className="px-5 py-3 border-b border-border flex items-center justify-between">
                 <h3 className="font-bold text-foreground">
                   {t("Recent Calls", "हाल की कॉल")}
@@ -381,7 +381,7 @@ export default function CRMDashboard() {
                 </Button>
               </Link>
               <Link to="/crm/raise">
-                <Button className="bg-white text-primary hover:bg-white/90">
+                <Button className="bg-card text-primary hover:bg-white/90">
                   <Headphones className="w-4 h-4 mr-1" />{" "}
                   {t("Raise Complaint", "शिकायत दर्ज करें")}
                 </Button>
@@ -391,7 +391,7 @@ export default function CRMDashboard() {
         </div>
 
         {/* Period selector */}
-        <div className="flex items-center gap-1 bg-white border border-border rounded-lg p-0.5 w-fit">
+        <div className="flex items-center gap-1 bg-card border border-border rounded-lg p-0.5 w-fit">
           {Object.entries(CCE_SCORECARD).map(([key, val]) => (
             <button
               key={key}
@@ -451,7 +451,7 @@ export default function CRMDashboard() {
         </div>
 
         {/* Performance summary card */}
-        <div className="bg-white rounded-xl border border-border p-5">
+        <div className="bg-card rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-4">
             {t("Performance Summary", "प्रदर्शन सारांश")} (
             {t(sc.label, sc.labelHindi)})
@@ -491,7 +491,7 @@ export default function CRMDashboard() {
         </div>
 
         {/* My recent calls */}
-        <div className="bg-white rounded-xl border border-border">
+        <div className="bg-card rounded-xl border border-border">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
             <h3 className="font-bold text-foreground">
               {t("My Recent Calls", "मेरी हाल की कॉल")}

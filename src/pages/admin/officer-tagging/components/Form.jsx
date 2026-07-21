@@ -154,7 +154,7 @@ export default function Form({
         }
         disabled={!selectedDistrict}
       />
-      <div className="flex justify-end gap-2 py-4 sticky bottom-0 bg-white">
+      <div className="flex justify-end gap-2 py-4 sticky bottom-0 bg-card">
         <Button
           type="button"
           variant="outline"

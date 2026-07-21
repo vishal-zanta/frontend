@@ -292,7 +292,7 @@ function FormWizard({
                   isCompleted
                     ? "bg-emerald-500 text-white shadow-md border-2 border-emerald-500"
                     : isActive
-                      ? "bg-blue-600 text-white shadow-lg ring-4 ring-blue-100 border-2 border-blue-600"
+                      ? "bg-blue-600 text-white shadow-lg ring-4 ring-primary/20 border-2 border-blue-600"
                       : "bg-muted text-muted-foreground border-2 border-border"
                 }`}
               >
@@ -405,7 +405,7 @@ function FormWizard({
             <button
               type="button"
               onClick={handleNext}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium min-w-[120px] transition-all h-9 px-4 py-2 rounded-lg flex items-center justify-center"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium min-w-[120px] transition-all h-9 px-4 py-2 rounded-lg flex items-center justify-center"
             >
               {t("Next", "आगे")} &rarr;
             </button>

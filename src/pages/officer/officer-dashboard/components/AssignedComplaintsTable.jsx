@@ -26,7 +26,7 @@ export default function AssignedComplaintsTable() {
   const displayData = complaints.length > 0 ? complaints : [];
 
   return (
-    <div className="bg-white rounded-xl border border-border">
+    <div className="bg-card rounded-xl border border-border">
       <div className="px-3 lg:px-5 py-3 lg:py-4 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <h3 className="font-bold text-foreground text-xs lg:text-sm">
           {t("My Assigned Complaints", "मेरी सौंपी गई शिकायतें")}
@@ -62,7 +62,7 @@ export default function AssignedComplaintsTable() {
 const Table = ({ filtered = [], t }) => {
   return (
     <table className="w-full text-sm">
-      <thead className="bg-[#F4F7FA]">
+      <thead className="bg-muted/50">
         <tr className="text-left text-xs text-muted-foreground">
           <th className="px-4 py-2 font-medium">
             {t("Complaint ID", "शिकायत आईडी")}

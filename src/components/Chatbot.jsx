@@ -430,7 +430,7 @@ export default function Chatbot({ role = "citizen" }) {
                 else if (a.action === "technical")
                   addBot("What technical issue are you facing?", "tech_list");
               }}
-              className="px-3 py-1.5 text-xs rounded-lg bg-white border border-primary/30 text-primary hover:bg-blue-50 transition-colors"
+              className="px-3 py-1.5 text-xs rounded-lg bg-card border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
             >
               {a.label}
             </button>
@@ -446,7 +446,7 @@ export default function Chatbot({ role = "citizen" }) {
             <button
               key={d.id}
               onClick={() => handleDistrictSelect(d.id)}
-              className="px-2.5 py-1 text-xs rounded-lg bg-white border border-border hover:border-primary hover:bg-blue-50 transition-colors"
+              className="px-2.5 py-1 text-xs rounded-lg bg-card border border-border hover:border-primary hover:bg-primary/10 transition-colors"
             >
               {d.name}
             </button>
@@ -462,7 +462,7 @@ export default function Chatbot({ role = "citizen" }) {
             <button
               key={s.id}
               onClick={() => handleServiceSelect(s.id)}
-              className="px-2.5 py-1 text-xs rounded-lg bg-white border border-border hover:border-primary hover:bg-blue-50 transition-colors"
+              className="px-2.5 py-1 text-xs rounded-lg bg-card border border-border hover:border-primary hover:bg-primary/10 transition-colors"
             >
               {s.name}
             </button>
@@ -487,7 +487,7 @@ export default function Chatbot({ role = "citizen" }) {
               setDraft({});
               addBot("Complaint cancelled. How can I help you?", "quick");
             }}
-            className="px-4 py-2 text-sm rounded-lg bg-white border border-border hover:bg-muted"
+            className="px-4 py-2 text-sm rounded-lg bg-card border border-border hover:bg-muted"
           >
             Cancel
           </button>
@@ -500,19 +500,19 @@ export default function Chatbot({ role = "citizen" }) {
         <div className="flex flex-wrap gap-2 mt-2">
           <button
             onClick={startTrack}
-            className="px-3 py-1.5 text-xs rounded-lg bg-white border border-primary/30 text-primary hover:bg-blue-50"
+            className="px-3 py-1.5 text-xs rounded-lg bg-card border border-primary/30 text-primary hover:bg-primary/10"
           >
             🔍 Track this complaint
           </button>
           <button
             onClick={() => startRaise()}
-            className="px-3 py-1.5 text-xs rounded-lg bg-white border border-primary/30 text-primary hover:bg-blue-50"
+            className="px-3 py-1.5 text-xs rounded-lg bg-card border border-primary/30 text-primary hover:bg-primary/10"
           >
             📝 File another
           </button>
           <button
             onClick={resetToDefault}
-            className="px-3 py-1.5 text-xs rounded-lg bg-white border border-border hover:bg-muted"
+            className="px-3 py-1.5 text-xs rounded-lg bg-card border border-border hover:bg-muted"
           >
             🏠 Main Menu
           </button>
@@ -527,7 +527,7 @@ export default function Chatbot({ role = "citizen" }) {
             <button
               key={i}
               onClick={() => startRaise(tmpl)}
-              className="px-3 py-2 text-xs text-left rounded-lg bg-white border border-border hover:border-primary hover:bg-blue-50 transition-colors"
+              className="px-3 py-2 text-xs text-left rounded-lg bg-card border border-border hover:border-primary hover:bg-primary/10 transition-colors"
             >
               {tmpl.label}
             </button>
@@ -543,7 +543,7 @@ export default function Chatbot({ role = "citizen" }) {
             <button
               key={i}
               onClick={() => addBot(tech.response, "quick")}
-              className="px-3 py-2 text-xs text-left rounded-lg bg-white border border-border hover:border-primary hover:bg-blue-50 transition-colors"
+              className="px-3 py-2 text-xs text-left rounded-lg bg-card border border-border hover:border-primary hover:bg-primary/10 transition-colors"
             >
               {tech.label}
             </button>
@@ -557,13 +557,13 @@ export default function Chatbot({ role = "citizen" }) {
         <div className="flex gap-2 mt-2">
           <button
             onClick={startTrack}
-            className="px-3 py-1.5 text-xs rounded-lg bg-white border border-primary/30 text-primary hover:bg-blue-50"
+            className="px-3 py-1.5 text-xs rounded-lg bg-card border border-primary/30 text-primary hover:bg-primary/10"
           >
             🔍 Try again
           </button>
           <button
             onClick={resetToDefault}
-            className="px-3 py-1.5 text-xs rounded-lg bg-white border border-border hover:bg-muted"
+            className="px-3 py-1.5 text-xs rounded-lg bg-card border border-border hover:bg-muted"
           >
             🏠 Main Menu
           </button>
@@ -589,7 +589,7 @@ export default function Chatbot({ role = "citizen" }) {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-border">
+    <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)] bg-card rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-border">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-accent text-white px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -623,7 +623,7 @@ export default function Chatbot({ role = "citizen" }) {
               className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
                 msg.role === "user"
                   ? "bg-primary text-white rounded-br-sm"
-                  : "bg-white border border-border text-foreground rounded-bl-sm"
+                  : "bg-card border border-border text-foreground rounded-bl-sm"
               }`}
             >
               <p className="whitespace-pre-line">{msg.text}</p>
@@ -633,7 +633,7 @@ export default function Chatbot({ role = "citizen" }) {
         ))}
         {typing && (
           <div className="flex justify-start">
-            <div className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3">
+            <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-4 py-3">
               <div className="flex gap-1">
                 <span
                   className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce"
@@ -655,7 +655,7 @@ export default function Chatbot({ role = "citizen" }) {
       </div>
 
       {/* Input */}
-      <div className="border-t border-border p-3 bg-white">
+      <div className="border-t border-border p-3 bg-card">
         <div className="flex items-center gap-2">
           <input
             type="text"

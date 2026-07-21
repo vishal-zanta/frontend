@@ -82,7 +82,7 @@ export default function DepartmentsTab() {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-border ">
+      <div className="bg-card rounded-xl border border-border">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
           <h3 className="font-bold text-foreground">Department Management</h3>
           <Button

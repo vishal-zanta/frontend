@@ -48,11 +48,11 @@ function SLATimer({ createdAt, slaHours }) {
 
   if (!createdAt) return null;
 
-  let badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
+  let badgeClass = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
   if (isExpired) {
-    badgeClass = "bg-red-50 text-red-700 border-red-200";
+    badgeClass = "bg-destructive/10 text-destructive border-destructive/20";
   } else if (isUrgent) {
-    badgeClass = "bg-amber-50 text-amber-700 border-amber-200 animate-pulse";
+    badgeClass = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 animate-pulse";
   }
 
   return (
@@ -82,7 +82,7 @@ export default function ComplaintDetailHeader({
   const { t } = useLanguage();
   const { hasPermission } = useAuth();
   return (
-    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3 bg-white">
+    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3">
       <div className="min-w-0">
         <div className="flex items-center gap-1.5 lg:gap-2 mb-1 flex-wrap">
           <h2 className="text-base lg:text-lg font-bold text-primary font-mono">
@@ -137,7 +137,7 @@ export default function ComplaintDetailHeader({
               <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide shrink-0">
                 {t("Current:", "वर्तमान:")}
               </span>
-              <span className="inline-flex items-center text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5 truncate">
+              <span className="inline-flex items-center text-[10px] font-medium bg-primary/10 text-primary border border-primary/20 rounded-full px-2 py-0.5 truncate">
                 {c?.assignedOfficer?.name
                   ? `${c.assignedOfficer.name}${c?.assignedOfficer?.role?.designationEnglish ? ` · ${c.assignedOfficer.role.designationEnglish}` : ""}`
                   : t("Not assigned", "नियुक्त नहीं")}

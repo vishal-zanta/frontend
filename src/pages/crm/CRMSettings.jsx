@@ -30,7 +30,7 @@ export default function CRMSettings() {
           </div>
         )}
 
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-blue-500" /> {t("Notification Preferences", "अधिसूचना प्राथमिकताएं")}
           </h3>
@@ -57,7 +57,7 @@ export default function CRMSettings() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <Globe className="w-5 h-5 text-blue-500" /> {t("Display Preferences", "प्रदर्शन प्राथमिकताएं")}
           </h3>

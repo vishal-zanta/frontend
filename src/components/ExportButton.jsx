@@ -82,7 +82,7 @@ export default function ExportButton({ data, columns, filename = "export" }) {
         size="sm"
         variant="outline"
         disabled
-        className={isCsv ? "border-emerald-200 bg-emerald-50 text-emerald-600" : "border-rose-200 bg-rose-50 text-rose-600"}
+        className={isCsv ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600" : "border-rose-500/30 bg-rose-500/10 text-rose-600"}
       >
         <Check className="w-3.5 h-3.5" />
       </Button>
@@ -97,7 +97,7 @@ export default function ExportButton({ data, columns, filename = "export" }) {
         onClick={() => handleExport("csv")}
         disabled={!!exporting}
         title="Download CSV"
-        className="hover:bg-emerald-50 border-slate-200 hover:border-emerald-300 hover:text-emerald-700 transition-colors"
+        className="hover:bg-emerald-500/10 border-border hover:border-emerald-500/30 hover:text-emerald-600 transition-colors"
       >
         {exporting === "csv" ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-600" />
@@ -111,7 +111,7 @@ export default function ExportButton({ data, columns, filename = "export" }) {
         onClick={() => handleExport("pdf")}
         disabled={!!exporting}
         title="Download PDF"
-        className="hover:bg-rose-50 border-slate-200 hover:border-rose-300 hover:text-rose-700 transition-colors"
+        className="hover:bg-rose-500/10 border-border hover:border-rose-500/30 hover:text-rose-600 transition-colors"
       >
         {exporting === "pdf" ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-600" />

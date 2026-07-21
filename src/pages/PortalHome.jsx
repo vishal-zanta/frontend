@@ -74,7 +74,7 @@ import Login from "./Login";
 
 export default function PortalHome() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-sky-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-sky-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-950 via-blue-800 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
@@ -113,14 +113,14 @@ export default function PortalHome() {
       </div>
 
       {/* Tagline banner */}
-      <div className="bg-blue-50 border-b border-blue-100">
+      <div className="bg-blue-50 border-b border-blue-100 dark:bg-slate-900 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-2 flex flex-wrap sm:flex-nowrap items-center justify-between text-sm">
-          <span className="text-blue-800 font-medium">
+          <span className="text-blue-800 font-medium dark:text-blue-300">
             {PORTAL_META.tagline}
           </span>
-          <div className="flex items-center gap-3 text-xs text-blue-600">
+          <div className="flex items-center gap-3 text-xs text-blue-600 dark:text-blue-400">
             <span className="flex items-center gap-1">
-              <Zap className="w-3 h-3 text-green-600" /> All systems operational
+              <Zap className="w-3 h-3 text-green-600 dark:text-green-400" /> All systems operational
             </span>
             <span>-</span>
             <span>Last synced: {(new Date()).toISOString().split("T")?.[0]}</span>
@@ -129,7 +129,7 @@ export default function PortalHome() {
       </div>
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-8 bg-transparent">
     
         <Login/>
 

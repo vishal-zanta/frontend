@@ -188,7 +188,7 @@ export default function ComplaintDetailView({
 
   if (!selected) {
     return (
-      <div className="lg:col-span-2 bg-white rounded-xl border border-border p-8 text-center text-muted-foreground text-sm bg-white">
+      <div className="lg:col-span-2 bg-card rounded-xl border border-border p-8 text-center text-muted-foreground text-sm">
         {t("Select a complaint from the list to view details.", "विवरण देखने के लिए सूची से एक शिकायत का चयन करें।")}
       </div>
     );
@@ -238,7 +238,7 @@ export default function ComplaintDetailView({
   return (
     <div className="md:col-span-2 space-y-4">
       <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
-        <div className="bg-white rounded-xl border border-border p-3 lg:p-5 space-y-4 lg:space-y-5 bg-white">
+        <div className="bg-card rounded-xl border border-border p-3 lg:p-5 space-y-4 lg:space-y-5">
           {/* Header Section */}
           <ComplaintDetailHeader
             c={c}
@@ -307,7 +307,7 @@ export default function ComplaintDetailView({
         </div>
 
         {/* Timeline */}
-        <div className="bg-white rounded-xl border border-border p-3 lg:p-5 bg-white">
+        <div className="bg-card rounded-xl border border-border p-3 lg:p-5">
           <h3 className="font-bold text-foreground text-xs lg:text-sm mb-3 lg:mb-4">{t("Complaint Timeline", "शिकायत समयरेखा")}</h3>
           <ComplaintTimeline events={c.timeline || []} />
         </div>

@@ -159,7 +159,7 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
+      <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <div>
             <h3 className="font-bold text-foreground">
@@ -185,7 +185,7 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-[#F4F7FA]">
+                <thead className="bg-muted/50">
                   <tr className="text-left text-xs text-muted-foreground">
                     <th className="px-4 py-2.5 font-medium">ULB Name</th>
                     <th className="px-4 py-2.5 font-medium">Hindi</th>
@@ -242,7 +242,7 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
                               onClick={() =>
                                 setDialog({ type: "delete", item: u })
                               }

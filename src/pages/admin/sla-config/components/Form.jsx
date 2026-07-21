@@ -23,7 +23,7 @@ export default function Form({
             value={
               editItem.subService?.title || editItem.subService?.name || ""
             }
-            className="bg-[#F4F7FA]"
+            className="bg-muted/50"
           />
         ) : (
           <MySelect

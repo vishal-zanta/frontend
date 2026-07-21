@@ -22,9 +22,9 @@ export default function UserManageTable({
   const { hasPermission } = useAuth();
   return (
     <table className="w-full text-sm">
-      <thead className="bg-[#F4F7FA]">
+      <thead className="bg-muted/50">
         <tr className="text-left text-xs text-muted-foreground">
-          <th className="px-4 py-3 font-medium bg-[#F4F7FA] sticky left-0">User</th>
+          <th className="px-4 py-3 font-medium bg-muted/50 sticky left-0">User</th>
           <th className="px-4 py-3 font-medium">Role</th>
           <th className="px-4 py-3 font-medium">District</th>
           <th className="px-4 py-3 font-medium min-w-[200px]">Skills</th>
@@ -32,13 +32,13 @@ export default function UserManageTable({
           <th className="px-4 py-3 font-medium min-w-[280px]">Permissions</th>
           <th className="px-4 py-3 font-medium">Last Login</th>
           <th className="px-4 py-3 font-medium">Status</th>
-          <th className="px-4 py-3 font-medium text-center bg-[#F4F7FA] sticky right-0">Actions</th>
+          <th className="px-4 py-3 font-medium text-center bg-muted/50 sticky right-0">Actions</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border">
         {users.map((u) => (
           <tr key={u.id} className="hover:bg-muted/30">
-            <td className="px-4 py-3 bg-[#ffffff] sticky left-0">
+            <td className="px-4 py-3 bg-card sticky left-0">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
                   {u.name
@@ -66,7 +66,7 @@ export default function UserManageTable({
             <td className="px-4 py-3 min-w-[200px]">
               <div className="flex flex-wrap gap-1 max-w-[300px] max-h-20 overflow-y-auto">
                 {(u.skills || []).map((sk) => (
-                  <Badge key={sk._id || sk} variant="secondary" className="text-[10px] bg-slate-100 text-slate-800 text-nowrap">
+                  <Badge key={sk._id || sk} variant="secondary" className="text-[10px] bg-muted text-foreground text-nowrap">
                     {sk.name || sk}
                   </Badge>
                 ))}
@@ -94,7 +94,7 @@ export default function UserManageTable({
                     <Badge
                       key={pi}
                       variant="outline"
-                      className="text-[10px] bg-blue-50 text-primary text-nowrap"
+                      className="text-[10px] bg-primary/10 text-primary text-nowrap"
                     >
                       {p}
                     </Badge>
@@ -109,16 +109,16 @@ export default function UserManageTable({
                 variant="outline"
                 className={`text-xs capitalize ${
                   u.status === "ACTIVE"
-                    ? "bg-emerald-50 text-emerald-700"
+                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                     : u.status === "inactive"
-                      ? "bg-amber-50 text-amber-700"
-                      : "bg-red-50 text-red-700"
+                      ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      : "bg-destructive/10 text-destructive"
                 }`}
               >
                 {u?.status?.toLowerCase()}
               </Badge>
             </td>
-            <td className="px-4 py-3 text-center bg-[#ffffff] sticky right-0">
+            <td className="px-4 py-3 text-center bg-card sticky right-0">
               <div className="flex gap-1 justify-center">
                 {/* <Button
                   variant="ghost"

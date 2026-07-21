@@ -108,7 +108,7 @@ export default function CallTracker() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl border border-border p-4 flex flex-wrap gap-3">
+        <div className="bg-card rounded-xl border border-border p-4 flex flex-wrap gap-3">
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -158,10 +158,10 @@ export default function CallTracker() {
         </div>
 
         {/* Call table */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#F4F7FA]">
+              <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
                   <th className="px-4 py-3 font-medium">
                     {t("Call ID", "कॉल आईडी")}

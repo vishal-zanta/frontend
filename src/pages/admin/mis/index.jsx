@@ -303,13 +303,13 @@ export default function MISReports() {
       label: "Total Reports Generated",
       value: stats.totalReportsGenerated ?? 0,
       icon: FileText,
-      color: "text-primary bg-blue-50",
+      color: "text-primary bg-primary/10",
     },
     {
       label: "This Month",
       value: stats.thisMonth ?? 0,
       icon: Calendar,
-      color: "text-emerald-600 bg-emerald-50",
+      color: "text-emerald-600 bg-emerald-500/10",
     },
     {
       label: "Statutory Reports",
@@ -351,7 +351,7 @@ export default function MISReports() {
               return (
                 <div
                   key={i}
-                  className="bg-white rounded-xl border border-border p-4 flex items-center gap-3"
+                  className="bg-card rounded-xl border border-border p-4 flex items-center gap-3"
                 >
                   <div
                     className={`w-9 h-9 rounded-lg ${s.color} flex items-center justify-center`}
@@ -372,7 +372,7 @@ export default function MISReports() {
           </div>
         </LoaderErrWrapper>
 
-        <div className="bg-white rounded-xl border border-border p-4">
+        <div className="bg-card rounded-xl border border-border p-4">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
               <Filter className="w-4 h-4" /> Select Report:
@@ -454,9 +454,9 @@ export default function MISReports() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-11 h-11 rounded-lg bg-blue-50 text-primary flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
               {React.createElement(currentReport.icon, {
                 className: "w-5 h-5",
               })}
@@ -488,7 +488,7 @@ export default function MISReports() {
           >
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-[#F4F7FA]">
+                <thead className="bg-muted/50">
                   <tr className="text-left text-xs text-muted-foreground">
                     {reportColumns.map((col) => (
                       <th

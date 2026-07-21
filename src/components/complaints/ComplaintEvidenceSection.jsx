@@ -12,7 +12,7 @@ export default function ComplaintEvidenceSection({
   return (
     <>
       {/* Description */}
-      <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3 bg-white">
+      <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
         <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">
           {t("Description / Details", "विवरण / विवरण")}
         </div>
@@ -20,7 +20,7 @@ export default function ComplaintEvidenceSection({
           {description}
         </p>
       </div>
-      <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3 bg-white">
+      <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
         <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">
           {t("Subject", "विषय")}
         </div>
@@ -44,7 +44,7 @@ export default function ComplaintEvidenceSection({
               return (
                 <div
                   key={idx}
-                  className="border border-border rounded-lg p-2 bg-card overflow-hidden bg-white"
+                  className="border border-border rounded-lg p-2 bg-card overflow-hidden"
                 >
                   {isImage ? (
                     <a
@@ -59,7 +59,7 @@ export default function ComplaintEvidenceSection({
                       />
                     </a>
                   ) : (
-                    <div className="w-full h-24 bg-[#F4F7FA] rounded flex items-center justify-center flex-col p-1 text-center">
+                    <div className="w-full h-24 bg-muted/50 rounded flex items-center justify-center flex-col p-1 text-center">
                       <span className="text-[10px] text-muted-foreground font-mono truncate w-full">
                         {att.fileName}
                       </span>
@@ -67,7 +67,7 @@ export default function ComplaintEvidenceSection({
                         href={IMG_BASE_URL + att.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-blue-600 hover:underline mt-1 font-semibold"
+                        className="text-xs text-primary hover:underline mt-1 font-semibold"
                       >
                         {t("Download", "डाउनलोड करें")}
                       </a>
@@ -105,7 +105,7 @@ export default function ComplaintEvidenceSection({
               return (
                 <div
                   key={idx}
-                  className="border border-border rounded-lg p-2 bg-card overflow-hidden bg-white"
+                  className="border border-border rounded-lg p-2 bg-card overflow-hidden"
                 >
                   {isImage ? (
                     <a
@@ -120,7 +120,7 @@ export default function ComplaintEvidenceSection({
                       />
                     </a>
                   ) : (
-                    <div className="w-full h-24 bg-[#F4F7FA] rounded flex items-center justify-center flex-col p-1 text-center">
+                    <div className="w-full h-24 bg-muted/50 rounded flex items-center justify-center flex-col p-1 text-center">
                       <span className="text-[10px] text-muted-foreground font-mono truncate w-full">
                         {fileName}
                       </span>
@@ -128,7 +128,7 @@ export default function ComplaintEvidenceSection({
                         href={displayUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-blue-600 hover:underline mt-1 font-semibold"
+                        className="text-xs text-primary hover:underline mt-1 font-semibold"
                       >
                         {t("Download", "डाउनलोड करें")}
                       </a>

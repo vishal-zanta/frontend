@@ -88,7 +88,7 @@ export default function OfficerDashboard() {
             error={statsError}
           />
 
-          <div className="bg-white rounded-xl border border-border overflow-hidden">
+          <div className="bg-card rounded-xl border border-border overflow-hidden">
             <div className="px-5 py-3 border-b border-border">
               <h3 className="font-bold text-foreground">
                 {t("District-wise Complaint Status", "जिला-वार शिकायत स्थिति")}
@@ -96,7 +96,7 @@ export default function OfficerDashboard() {
             </div>
             <div className="overflow-x-auto max-h-[400px] overflow-y-auto scrollbar-thin">
               <table className="w-full text-sm">
-                <thead className="bg-[#F4F7FA] sticky top-0">
+                <thead className="bg-muted/50 sticky top-0">
                   <tr className="text-left text-xs text-muted-foreground">
                     <th className="px-4 py-2 font-medium">
                       {t("District", "जिला")}
@@ -161,7 +161,7 @@ export default function OfficerDashboard() {
         />
 
         {/* Department / Services */}
-        <div className="bg-white rounded-xl border border-border p-3 lg:p-4">
+        <div className="bg-card rounded-xl border border-border p-3 lg:p-4">
           <div className="flex items-center justify-between mb-2 gap-2">
             <h3 className="font-bold text-foreground text-xs lg:text-sm">
               {t("Department & Services Assigned", "सौंपे गए विभाग और सेवाएं")}
@@ -178,7 +178,7 @@ export default function OfficerDashboard() {
                   <Badge
                     key={sId}
                     variant="outline"
-                    className="text-[10px] lg:text-xs bg-blue-50 text-primary"
+                    className="text-[10px] lg:text-xs bg-primary/10 text-primary"
                   >
                     {svc?.name || sId}
                     {svc ? ` - ${svc.dept}` : ""}
@@ -201,7 +201,7 @@ export default function OfficerDashboard() {
         />
 
         {/* Field Visits Table */}
-        <div className="bg-white rounded-xl border border-border">
+        <div className="bg-card rounded-xl border border-border">
           <div className="px-3 lg:px-5 py-3 lg:py-4 border-b border-border flex items-center justify-between gap-2">
             <h3 className="font-bold text-foreground text-xs lg:text-sm flex items-center gap-1.5 lg:gap-2">
               <Navigation className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{" "}

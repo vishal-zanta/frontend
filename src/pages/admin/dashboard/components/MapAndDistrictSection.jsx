@@ -43,7 +43,7 @@ export default function MapAndDistrictSection({ districtData }) {
       >
         <div className="overflow-x-auto max-h-[320px] overflow-y-auto scrollbar-thin">
           <table className="w-full text-sm">
-            <thead className="bg-[#F4F7FA] sticky top-0">
+            <thead className="bg-muted/50 sticky top-0">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-3 py-2 font-medium">District</th>
                 <th className="px-3 py-2 font-medium text-right">Total</th>

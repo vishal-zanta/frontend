@@ -3,30 +3,31 @@ import ReactSelect from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/context/ThemeContext";
 
 const buildStyles = (hasError, disabled, colors, isMulti) => ({
   control: (provided, state) => ({
     ...provided,
     borderColor: hasError
-      ? "#ef4444"
+      ? "hsl(var(--destructive))"
       : state.isFocused
       ? "hsl(var(--ring))"
-      : "#D7DFEA",
+      : "hsl(var(--border))",
     boxShadow: state.isFocused
       ? hasError
-        ? "0 0 0 1px #ef4444"
+        ? "0 0 0 1px hsl(var(--destructive))"
         : "0 0 0 1px hsl(var(--ring))"
       : "none",
     borderRadius: "var(--radius)",
     minHeight: "36px",
-    backgroundColor: disabled ? "#f3f4f6" : "#FFFFFF",
+    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--background))",
     cursor: disabled ? "not-allowed" : "default",
     "&:hover": {
       borderColor: hasError
-        ? "#ef4444"
+        ? "hsl(var(--destructive))"
         : state.isFocused
         ? "hsl(var(--ring))"
-        : "#D7DFEA",
+        : "hsl(var(--border))",
     },
   }),
   valueContainer: (provided) => ({
@@ -43,6 +44,9 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     ...provided,
     zIndex: 9999,
     width: "100%",
+    backgroundColor: "hsl(var(--popover))",
+    border: "1px solid hsl(var(--border))",
+    color: "hsl(var(--popover-foreground))",
   }),
   menuPortal: (provided) => ({
     ...provided,
@@ -53,6 +57,8 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     ...provided,
     maxHeight: "200px",
     overflowY: "auto",
+    backgroundColor: "hsl(var(--popover))",
+    color: "hsl(var(--popover-foreground))",
   }),
   option: (provided, state) => ({
     ...provided,
@@ -65,7 +71,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       ? "hsl(var(--primary-foreground))"
       : state.isFocused
       ? "hsl(var(--accent-foreground))"
-      : "#0F1729",
+      : "hsl(var(--popover-foreground))",
     cursor: "pointer",
     fontSize: "14px",
     padding: "8px 12px",
@@ -81,7 +87,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   }),
   multiValueLabel: (provided) => ({
     ...provided,
-    color: "#0F1729",
+    color: "hsl(var(--secondary-foreground))",
     fontSize: "13px",
     padding: "2px 6px",
   }),
@@ -98,12 +104,12 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   singleValue: (provided) => ({
     ...provided,
     fontSize: "14px",
-    color: "#0F1729",
+    color: "hsl(var(--foreground))",
   }),
   input: (provided) => ({
     ...provided,
     fontSize: "14px",
-    color: "#0F1729",
+    color: "hsl(var(--foreground))",
   }),
   placeholder: (provided) => ({
     ...provided,
@@ -127,6 +133,10 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   clearIndicator: (provided) => ({
     ...provided,
     padding: "0px 8px",
+    color: "hsl(var(--muted-foreground))",
+    "&:hover": {
+      color: "hsl(var(--foreground))",
+    },
   }),
 });
 
@@ -145,12 +155,16 @@ export default function MySelect({
   error,
   colors,
 }) {
+  const themeContext = useTheme();
+  const _theme = themeContext?.theme; // Subscribe to ThemeContext updates
+
   const isMulti = isCreatable ? true : isMultiple;
   const styles = buildStyles(!!error, disabled, colors, isMulti);
 
-  const selectOptions = isMulti && options.length > 0
-    ? [{ label: "Select All", value: "SELECT_ALL" }, ...options]
-    : options;
+  const selectOptions =
+    isMulti && options.length > 0
+      ? [{ label: "Select All", value: "SELECT_ALL" }, ...options]
+      : options;
 
   const toOption = (val) =>
     selectOptions.find((o) => o.value === val) ?? { label: val, value: val };
@@ -193,14 +207,15 @@ export default function MySelect({
     value: selectValue,
     onChange: handleChange,
     styles,
-    menuPortalTarget: typeof document !== "undefined" ? document.body : undefined,
+    menuPortalTarget:
+      typeof document !== "undefined" ? document.body : undefined,
     menuPosition: "fixed",
     menuPlacement: "auto",
     classNamePrefix: "my-select",
-    theme: (theme) => ({
-      ...theme,
+    theme: (reactSelectTheme) => ({
+      ...reactSelectTheme,
       colors: {
-        ...theme.colors,
+        ...reactSelectTheme.colors,
         primary: "hsl(var(--ring))",
         primary25: "hsl(var(--accent))",
         primary50: "hsl(var(--accent))",
@@ -219,7 +234,7 @@ export default function MySelect({
         <Label
           className={cn(
             "font-normal text-sm md:text-sm text-foreground mb-0.5",
-            labelClassName
+            labelClassName,
           )}
         >
           {label}
@@ -242,9 +257,7 @@ export default function MySelect({
       )}
 
       {error && (
-        <span className="text-destructive text-xs font-medium">
-          {error}
-        </span>
+        <span className="text-destructive text-xs font-medium">{error}</span>
       )}
     </div>
   );

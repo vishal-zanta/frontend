@@ -197,7 +197,7 @@ export default function OfficerTagging() {
             placeholder="Search officer by name..."
           />
           <Button
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-primary hover:bg-primary/90"
             onClick={() => {
               setEditItem(null);
               setDialogOpen(true);
@@ -208,7 +208,7 @@ export default function OfficerTagging() {
         </div>
 
         {/* Tagging table */}
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <LoaderErrWrapper isLoading={isLoading} error={error}>
             <OfficerTagTable
               tagging={filtered}
@@ -326,7 +326,7 @@ export default function OfficerTagging() {
         )}
 
         {/* Rules */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-5">
           <h4 className="font-bold text-amber-800 mb-2 text-sm">
             ⚠ Officer Tagging Rules
           </h4>

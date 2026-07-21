@@ -2,7 +2,7 @@ import React from "react";
 
 const WorkflowRules = () => {
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+    <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-5">
       <h4 className="font-bold text-amber-800 mb-2 text-sm">
         ⚠ Workflow Rules
       </h4>

@@ -3,17 +3,17 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 export default function StatCard({ icon: Icon, label, value, sublabel, trend, color = "blue", trendValue }) {
   const colorMap = {
-    blue: { bg: "bg-blue-50", text: "text-blue-600", ring: "ring-blue-100" },
-    green: { bg: "bg-emerald-50", text: "text-emerald-600", ring: "ring-emerald-100" },
-    amber: { bg: "bg-amber-50", text: "text-amber-600", ring: "ring-amber-100" },
-    red: { bg: "bg-red-50", text: "text-red-600", ring: "ring-red-100" },
-    purple: { bg: "bg-purple-50", text: "text-purple-600", ring: "ring-purple-100" },
-    sky: { bg: "bg-sky-50", text: "text-sky-600", ring: "ring-sky-100" },
+    blue:   { bg: "bg-blue-500/10",    text: "text-blue-600",    ring: "ring-blue-500/20" },
+    green:  { bg: "bg-emerald-500/10", text: "text-emerald-600", ring: "ring-emerald-500/20" },
+    amber:  { bg: "bg-amber-500/10",  text: "text-amber-600",   ring: "ring-amber-500/20" },
+    red:    { bg: "bg-red-500/10",     text: "text-red-600",     ring: "ring-red-500/20" },
+    purple: { bg: "bg-purple-500/10",  text: "text-purple-600",  ring: "ring-purple-500/20" },
+    sky:    { bg: "bg-sky-500/10",     text: "text-sky-600",     ring: "ring-sky-500/20" },
   };
   const c = colorMap[color] || colorMap.blue;
 
   return (
-    <div className="bg-white rounded-xl border border-border p-4 hover:shadow-lg transition-shadow">
+    <div className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow">
       <div className="flex items-start justify-between mb-3 gap-3">
         <div className={`w-9 h-9 rounded-lg ${c.bg} ${c.text} flex items-center justify-center ring-2 ${c.ring}`}>
           <Icon className="w-4 h-4" />

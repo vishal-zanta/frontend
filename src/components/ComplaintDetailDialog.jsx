@@ -331,7 +331,7 @@ export function ComplaintDetailDialog({
                   </span>
                 </div>
               </div>
-              <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
+              <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
                 <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
                   {t("Service", "सेवा")}
                 </div>
@@ -368,7 +368,7 @@ export function ComplaintDetailDialog({
                 </p>
               </div>
               {/* <div className="flex gap-2 lg:gap-3">
-                <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-2.5 lg:p-3">
+                <div className="flex-1 bg-primary/10 border border-primary/20 rounded-lg p-2.5 lg:p-3">
                   <div className="text-[10px] uppercase text-muted-foreground">L1 Officer</div>
                   <div className="font-semibold text-xs lg:text-sm mt-0.5">
                     {unifiedComplaint.l1OfficerName || "Unassigned"}
@@ -379,7 +379,7 @@ export function ComplaintDetailDialog({
                     </div>
                   )}
                 </div>
-                <div className="flex-1 bg-purple-50 border border-purple-200 rounded-lg p-2.5 lg:p-3">
+                <div className="flex-1 bg-purple-500/10 border border-purple-500/20 rounded-lg p-2.5 lg:p-3">
                   <div className="text-[10px] uppercase text-muted-foreground">L2 Officer</div>
                   <div className="font-semibold text-xs lg:text-sm mt-0.5">
                     {unifiedComplaint.l2OfficerName || "Unassigned"}
@@ -465,7 +465,7 @@ export function CallDetailDialog({ callId, open, onClose }) {
               </div>
             </div>
             {call.complaintId && (
-              <div className="bg-[#F4F7FA] rounded-lg p-3">
+              <div className="bg-muted/50 rounded-lg p-3">
                 <span className="text-xs text-muted-foreground">
                   {t("Linked Complaint:", "संबद्ध शिकायत:")}{" "}
                 </span>
@@ -510,7 +510,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                 <div className="font-bold text-lg">{officer.name}</div>
                 <Badge
                   variant="outline"
-                  className={`text-xs ${officer.designation === "l1-officer" ? "bg-blue-50 text-blue-700" : officer.designation === "l2-officer" ? "bg-purple-50 text-purple-700" : "bg-emerald-50 text-emerald-700"}`}
+                  className={`text-xs ${officer.designation === "l1-officer" ? "bg-primary/10 text-primary" : officer.designation === "l2-officer" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"}`}
                 >
                   {officer.designationLabel}
                 </Badge>
@@ -542,13 +542,13 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                 <span className="text-muted-foreground">Status:</span>
                 <Badge
                   variant="outline"
-                  className={`text-xs ${officer.status === "active" ? "bg-emerald-50 text-emerald-700" : "bg-slate-50 text-slate-500"}`}
+                  className={`text-xs ${officer.status === "active" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-muted/50 text-muted-foreground"}`}
                 >
                   {officer.status}
                 </Badge>
               </div>
             </div>
-            <div className="bg-[#F4F7FA] rounded-lg p-3">
+            <div className="bg-muted/50 rounded-lg p-3">
               <div className="text-xs text-muted-foreground mb-1">
                 Department / Services Assigned
               </div>
@@ -558,7 +558,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                     <Badge
                       key={sId}
                       variant="outline"
-                      className="text-xs bg-blue-50 text-primary"
+                      className="text-xs bg-primary/10 text-primary"
                     >
                       {getServiceName(sId)}
                     </Badge>
@@ -571,7 +571,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
               </div>
             </div>
             {officer.wards.length > 0 && (
-              <div className="bg-[#F4F7FA] rounded-lg p-3">
+              <div className="bg-muted/50 rounded-lg p-3">
                 <div className="text-xs text-muted-foreground mb-1">
                   Assigned Wards
                 </div>
@@ -580,7 +580,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                     <Badge
                       key={w}
                       variant="outline"
-                      className="text-xs bg-purple-50 text-purple-700"
+                      className="text-xs bg-purple-500/10 text-purple-600 dark:text-purple-400"
                     >
                       {w}
                     </Badge>
@@ -589,7 +589,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
               </div>
             )}
             <div className="grid grid-cols-4 gap-2">
-              <div className="bg-emerald-50 rounded-lg p-2 text-center">
+              <div className="bg-emerald-500/10 rounded-lg p-2 text-center">
                 <div className="text-lg font-bold text-emerald-600">
                   {officer.resolved}
                 </div>
@@ -597,13 +597,13 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                   Resolved
                 </div>
               </div>
-              <div className="bg-amber-50 rounded-lg p-2 text-center">
+              <div className="bg-amber-500/10 rounded-lg p-2 text-center">
                 <div className="text-lg font-bold text-amber-600">
                   {officer.pending}
                 </div>
                 <div className="text-[10px] text-muted-foreground">Pending</div>
               </div>
-              <div className="bg-red-50 rounded-lg p-2 text-center">
+              <div className="bg-red-500/10 rounded-lg p-2 text-center">
                 <div className="text-lg font-bold text-red-600">
                   {officer.slaBreached}
                 </div>
@@ -611,7 +611,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                   SLA Breach
                 </div>
               </div>
-              <div className="bg-blue-50 rounded-lg p-2 text-center">
+              <div className="bg-primary/10 rounded-lg p-2 text-center">
                 <div className="text-lg font-bold text-blue-600">
                   {officer.avgResolutionHrs}h
                 </div>
@@ -774,7 +774,7 @@ export function FieldVisitDetailDialog({
               )}
             </div>
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
+          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
               {t("Service", "सेवा")}
             </div>
@@ -782,7 +782,7 @@ export function FieldVisitDetailDialog({
               {visit.service || "-"} - {visit.subservice || "-"}
             </div>
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
+          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
               {t("Complaint ID", "शिकायत आईडी")}
             </div>
@@ -792,7 +792,7 @@ export function FieldVisitDetailDialog({
               "-"
             )}
           </div>
-          <div className="bg-[#F4F7FA] rounded-lg p-2.5 lg:p-3">
+          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
               {t("Geo-Tag", "जियो-टैग")}
             </div>

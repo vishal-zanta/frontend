@@ -204,7 +204,7 @@ export default function SLAConfig() {
             placeholder="Search sub-service..."
           />
           <Button
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-primary hover:bg-primary/90"
             onClick={() => {
               setEditItem(null);
               setDialog({
@@ -222,7 +222,7 @@ export default function SLAConfig() {
         {/* SLA Table */}
         <div
           className={clsx(
-            "bg-white rounded-xl border border-border overflow-hidden mt-6",
+            "bg-card rounded-xl border border-border overflow-hidden mt-6",
             deleteMutation.isPending && "opacity-70 pointer-events-none",
           )}
         >
@@ -262,7 +262,7 @@ export default function SLAConfig() {
             onClick={() => setDialog(null)}
           >
             <div
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
+              className="bg-card rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between px-5 py-3 border-b border-border">

@@ -72,7 +72,7 @@ const ViewDialog = ({viewUser, setViewUser}) => {
                           <Badge
                             key={p}
                             variant="outline"
-                            className="text-[10px] bg-blue-50 text-primary"
+                            className="text-[10px] bg-primary/10 text-primary"
                           >
                             {label}
                           </Badge>

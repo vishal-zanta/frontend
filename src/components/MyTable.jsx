@@ -11,7 +11,7 @@ const MyTable = ({
     <div className={clsx(" overflow-hidden", tableClassName)}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-[#F4F7FA]">
+          <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
               {tableHeaders.map((h) => (
                 <th

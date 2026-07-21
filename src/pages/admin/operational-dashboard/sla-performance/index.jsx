@@ -43,7 +43,7 @@ export default function SlaPerformanceTab() {
         />
       </div>
       <SlaComplianceChart data={SLA_PERFORMANCE} xKey="service" />
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground">SLA Performance Detail</h3>
           <ExportButton
@@ -53,7 +53,7 @@ export default function SlaPerformanceTab() {
           />
         </div>
         <table className="w-full text-sm">
-          <thead className="bg-[#F4F7FA]">
+          <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
               <th className="px-4 py-2 font-medium">Service</th>
               <th className="px-4 py-2 font-medium text-right">Within SLA</th>

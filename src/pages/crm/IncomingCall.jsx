@@ -314,7 +314,7 @@ export default function IncomingCall() {
                 {callState === "ringing" && (
                   <Button
                     onClick={acceptCall}
-                    className="bg-white text-emerald-600 hover:bg-white/90"
+                    className="bg-card text-emerald-600 hover:bg-white/90"
                   >
                     <Phone className="w-4 h-4 mr-1" />{" "}
                     {t("Accept", "स्वीकार करें")}
@@ -367,7 +367,7 @@ export default function IncomingCall() {
                       </button>
                     </div>
                     <Link to="/crm/raise" className="block">
-                      <Button className="w-full bg-white text-primary hover:bg-white/90">
+                      <Button className="w-full bg-card text-primary hover:bg-white/90">
                         <FileText className="w-4 h-4 mr-1" />{" "}
                         {t("Raise Complaint", "शिकायत दर्ज करें")}
                       </Button>
@@ -381,7 +381,7 @@ export default function IncomingCall() {
                       setRerouteTarget(null);
                       setCallDuration(0);
                     }}
-                    className="bg-white text-primary hover:bg-white/90"
+                    className="bg-card text-primary hover:bg-white/90"
                   >
                     <Phone className="w-4 h-4 mr-1" />{" "}
                     {t("Simulate New Call", "नया कॉल अनुकरण करें")}
@@ -391,7 +391,7 @@ export default function IncomingCall() {
             </div>
 
             {/* Quick info */}
-            <div className="bg-white rounded-xl border border-border p-4 mt-4 space-y-2 text-sm">
+            <div className="bg-card rounded-xl border border-border p-4 mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">
                   {t("District", "जिला")}:
@@ -426,7 +426,7 @@ export default function IncomingCall() {
           {/* Call history + reroute */}
           <div className="lg:col-span-2 space-y-6">
             {/* Previous calls history */}
-            <div className="bg-white rounded-xl border border-border">
+            <div className="bg-card rounded-xl border border-border">
               <div className="px-5 py-3 border-b border-border flex items-center gap-2">
                 <Clock className="w-4 h-4 text-muted-foreground" />
                 <h3 className="font-bold text-foreground">
@@ -438,7 +438,7 @@ export default function IncomingCall() {
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-[#F4F7FA]">
+                  <thead className="bg-muted/50">
                     <tr className="text-left text-xs text-muted-foreground">
                       <th className="px-4 py-2 font-medium">
                         {t("Call ID", "कॉल आईडी")}
@@ -492,7 +492,7 @@ export default function IncomingCall() {
             </div>
 
             {/* Past complaint history */}
-            <div className="bg-white rounded-xl border border-border">
+            <div className="bg-card rounded-xl border border-border">
               <div className="px-5 py-3 border-b border-border flex items-center gap-2">
                 <FileText className="w-4 h-4 text-muted-foreground" />
                 <h3 className="font-bold text-foreground">
@@ -525,7 +525,7 @@ export default function IncomingCall() {
                     <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                       <Building2 className="w-3 h-3" /> {c.ward}
                     </div>
-                    <div className="mt-2 bg-[#F4F7FA] rounded-lg p-2 text-xs text-muted-foreground">
+                    <div className="mt-2 bg-muted/50 rounded-lg p-2 text-xs text-muted-foreground">
                       <span className="font-medium text-foreground">
                         {t("Notes:", "टिप्पणी:")}{" "}
                       </span>
@@ -538,7 +538,7 @@ export default function IncomingCall() {
 
             {/* Outbound dial panel */}
             {showOutbound && callState === "connected" && (
-              <div className="bg-white rounded-xl border-2 border-primary p-5">
+              <div className="bg-card rounded-xl border-2 border-primary p-5">
                 <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                   <PhoneOutgoing className="w-5 h-5 text-primary" />{" "}
                   {t("Outbound Dial", "आउटबाउंड डायल")}
@@ -576,7 +576,7 @@ export default function IncomingCall() {
                       <button
                         key={i}
                         onClick={() => setOutboundNumber(num.split(" (")[0])}
-                        className="w-full text-left px-3 py-2 text-sm rounded-lg border border-border hover:border-primary hover:bg-[#F4F7FA] transition-all bg-white"
+                        className="w-full text-left px-3 py-2 text-sm rounded-lg border border-border hover:border-primary hover:bg-muted/50 transition-all bg-white"
                       >
                         <PhoneOutgoing className="w-3.5 h-3.5 inline mr-2 text-muted-foreground" />{" "}
                         {num}
@@ -589,7 +589,7 @@ export default function IncomingCall() {
 
             {/* Reroute panel */}
             {showReroutePanel && callState === "connected" && (
-              <div className="bg-white rounded-xl border-2 border-primary p-5">
+              <div className="bg-card rounded-xl border-2 border-primary p-5">
                 <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                   <PhoneForwarded className="w-5 h-5 text-primary" />{" "}
                   {t("Reroute Call", "कॉल पुनः निर्देशित करें")}
@@ -612,7 +612,7 @@ export default function IncomingCall() {
                               name: dept.name,
                             })
                           }
-                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left bg-white ${rerouteTarget?.id === dept.id ? "border-primary bg-blue-50" : "border-border hover:bg-[#F4F7FA]"}`}
+                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left bg-white ${rerouteTarget?.id === dept.id ? "border-primary bg-blue-50" : "border-border hover:bg-muted/50"}`}
                         >
                           <Building2 className="w-4 h-4 text-muted-foreground" />
                           <span className="text-sm font-medium">
@@ -642,7 +642,7 @@ export default function IncomingCall() {
                               name: agent.name,
                             })
                           }
-                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left bg-white ${rerouteTarget?.id === agent.id ? "border-primary bg-blue-50" : "border-border hover:bg-[#F4F7FA]"}`}
+                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left bg-white ${rerouteTarget?.id === agent.id ? "border-primary bg-blue-50" : "border-border hover:bg-muted/50"}`}
                         >
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
                             {agent.name
@@ -695,7 +695,7 @@ export default function IncomingCall() {
             )}
 
             {/* Agent board */}
-            <div className="bg-white rounded-xl border border-border">
+            <div className="bg-card rounded-xl border border-border">
               <div className="px-5 py-3 border-b border-border flex items-center gap-2">
                 <Users className="w-4 h-4 text-muted-foreground" />
                 <h3 className="font-bold text-foreground">

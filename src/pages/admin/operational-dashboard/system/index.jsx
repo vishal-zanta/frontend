@@ -109,19 +109,19 @@ const statusBadge = (status) => {
     return (
       <Badge
         variant="outline"
-        className="text-xs bg-emerald-50 text-emerald-700"
+        className="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
       >
         {"● " + status}
       </Badge>
     );
   if (status === "Degraded")
     return (
-      <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700">
+      <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400">
         {"● " + status}
       </Badge>
     );
   return (
-    <Badge variant="outline" className="text-xs bg-red-50 text-red-700">
+    <Badge variant="outline" className="text-xs bg-destructive/10 text-destructive">
       {"● " + status}
     </Badge>
   );
@@ -212,7 +212,7 @@ export default function SystemTab() {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-[#F4F7FA]">
+            <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-4 py-2 font-medium">Service</th>
                 <th className="px-4 py-2 font-medium">Endpoint</th>
@@ -253,7 +253,7 @@ export default function SystemTab() {
       </div> */}
       {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ResourceUsageChart data={chartData} xKey="name" />
-        <div className="bg-white rounded-xl border border-border p-5">
+        <div className="bg-card rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-3">
             Service Status
           </h3>
@@ -303,7 +303,7 @@ export default function SystemTab() {
           </div>
         </div>
       </div> */}
-      <div className="bg-white rounded-xl border border-border p-5">
+      <div className="bg-card rounded-xl border border-border p-5">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="font-bold text-foreground flex items-center gap-2">
             <Server className="w-5 h-5 text-blue-500" /> Infrastructure Details
@@ -317,10 +317,10 @@ export default function SystemTab() {
         <LoaderErrWrapper isLoading={isLoading} error={error}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* CPU Card */}
-            <div className="p-6 bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+            <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg">
+                  <div className="p-2.5 bg-primary/10 text-primary rounded-lg">
                     <Cpu className="w-5 h-5" />
                   </div>
                   <div>
@@ -340,7 +340,7 @@ export default function SystemTab() {
                     {systemStats?.cpu?.usagePercentage?.toFixed(2) ?? "0.00"}%
                   </span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="w-full bg-muted rounded-full h-2">
                   <div
                     className="bg-blue-600 h-2 rounded-full transition-all duration-500"
                     style={{
@@ -352,17 +352,17 @@ export default function SystemTab() {
             </div>
 
             {/* Memory Card */}
-            <div className="p-6 bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+            <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-purple-50 text-purple-600 rounded-lg">
+                  <div className="p-2.5 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-lg">
                     <HardDrive className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground">
                       Memory (RAM)
                     </h4>
-                    <p className="text-[10px] text-purple-700 font-mono mt-0.5 bg-purple-50 px-1.5 py-0.5 rounded">
+                    <p className="text-[10px] text-purple-600 dark:text-purple-400 font-mono mt-0.5 bg-purple-500/10 px-1.5 py-0.5 rounded">
                       {systemStats?.ram?.free?.toFixed(2) ?? "0.00"} GB free
                     </p>
                   </div>
@@ -378,7 +378,7 @@ export default function SystemTab() {
                     {systemStats?.ram?.total?.toFixed(2) ?? "0.00"} GB
                   </span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="w-full bg-muted rounded-full h-2">
                   <div
                     className="bg-purple-600 h-2 rounded-full transition-all duration-500"
                     style={{
@@ -390,17 +390,17 @@ export default function SystemTab() {
             </div>
 
             {/* Storage Card */}
-            <div className="p-6 bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+            <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-amber-50 text-amber-600 rounded-lg">
+                  <div className="p-2.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg">
                     <Database className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground">
                       Disk (Storage)
                     </h4>
-                    <p className="text-[10px] text-amber-700 font-mono mt-0.5 bg-amber-50 px-1.5 py-0.5 rounded">
+                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-mono mt-0.5 bg-amber-500/10 px-1.5 py-0.5 rounded">
                       {systemStats?.disk?.free?.toFixed(2) ?? "0.00"} GB free
                     </p>
                   </div>
@@ -416,7 +416,7 @@ export default function SystemTab() {
                     {systemStats?.disk?.total?.toFixed(2) ?? "0.00"} GB
                   </span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="w-full bg-muted rounded-full h-2">
                   <div
                     className="bg-amber-500 h-2 rounded-full transition-all duration-500"
                     style={{
@@ -443,7 +443,7 @@ export default function SystemTab() {
               service: "Geo-Tag Service API",
               message:
                 "Service down - geolocation tagging unavailable for new complaints. Engineering team notified.",
-              color: "text-red-600 bg-red-50",
+              color: "text-red-600 bg-destructive/10",
             },
             {
               time: "06 Jul, 22:10",
@@ -451,7 +451,7 @@ export default function SystemTab() {
               service: "Analytics API",
               message:
                 "Response time degraded (1,820ms vs 200ms baseline). Investigating database query performance.",
-              color: "text-amber-600 bg-amber-50",
+              color: "text-amber-600 bg-amber-500/10",
             },
             {
               time: "06 Jul, 09:15",
@@ -459,7 +459,7 @@ export default function SystemTab() {
               service: "Email Service API",
               message:
                 "SMTP connection timeout - retrying. Some notification emails may be delayed.",
-              color: "text-amber-600 bg-amber-50",
+              color: "text-amber-600 bg-amber-500/10",
             },
             {
               time: "05 Jul, 18:30",
@@ -467,7 +467,7 @@ export default function SystemTab() {
               service: "File Upload API",
               message:
                 "Storage tier temporarily unavailable - resolved after 12 minutes. No data loss.",
-              color: "text-emerald-600 bg-emerald-50",
+              color: "text-emerald-600 bg-emerald-500/10",
             },
             {
               time: "04 Jul, 11:05",
@@ -475,7 +475,7 @@ export default function SystemTab() {
               service: "AI Chatbot API",
               message:
                 "LLM provider rate limit hit - request queue backed up for 8 minutes. Auto-scaled.",
-              color: "text-emerald-600 bg-emerald-50",
+              color: "text-emerald-600 bg-emerald-500/10",
             },
           ].map((err, i) => (
             <div key={i} className="px-5 py-3 flex items-start gap-3">

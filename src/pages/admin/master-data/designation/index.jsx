@@ -93,7 +93,7 @@ export default function DesignationsTab() {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground">Designations</h3>
           <Button

@@ -14,7 +14,7 @@ export default function EditDialog({ title, onClose, onSave, children, saving, i
     <div style={{
       margin: 0
     }} className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center m-0 p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
           <h3 className="font-bold text-foreground">{title}</h3>
           <button onClick={onClose} className="p-1.5 hover:bg-muted rounded-lg">
