@@ -138,6 +138,10 @@ export default function TopBar({
     onSuccess: () => {
       localStorage.removeItem("usertoken");
       sessionStorage.removeItem("usertoken");
+      localStorage.removeItem("off-lang");
+      localStorage.removeItem("cce-lang");
+
+
       setProfileData(null);
       qc.removeQueries();
       navigate("/");
@@ -147,6 +151,8 @@ export default function TopBar({
       // Revert/proceed on failure to avoid blocking users
       localStorage.removeItem("usertoken");
       sessionStorage.removeItem("usertoken");
+          localStorage.removeItem("off-lang");
+      localStorage.removeItem("cce-lang");
       setProfileData(null);
       qc.removeQueries();
       navigate("/");
