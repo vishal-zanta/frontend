@@ -234,7 +234,7 @@ export function ComplaintDetailDialog({
     ? {
         status: activeComplaint.status,
         priority: activeComplaint.assignedPriority,
-        source: activeComplaint.source || "online",
+        source:  activeComplaint?.channel?.title || activeComplaint?.channel || "-",
         citizenName: activeComplaint.citizenInfo?.fullName || "-",
         mobile: activeComplaint.citizenInfo?.mobile || "-",
         districtName: activeComplaint.address?.district?.name || "-",
@@ -297,14 +297,14 @@ export function ComplaintDetailDialog({
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Building2 className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground">ULB:</span>
+                  <span className="text-muted-foreground">Sub Division:</span>
                   <span className="font-medium truncate">
                     {unifiedComplaint.ulbName}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Tag className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground">Ward:</span>
+                  <span className="text-muted-foreground">Village / Ward:</span>
                   <span className="font-medium">{unifiedComplaint.ward}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -351,7 +351,7 @@ export function ComplaintDetailDialog({
                   {unifiedComplaint?.assignedOfficer || "Not Assigned"}
                 </p>
               </div>
-              <div className="flex gap-2 lg:gap-3">
+              {/* <div className="flex gap-2 lg:gap-3">
                 <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-2.5 lg:p-3">
                   <div className="text-[10px] uppercase text-muted-foreground">L1 Officer</div>
                   <div className="font-semibold text-xs lg:text-sm mt-0.5">
@@ -374,7 +374,7 @@ export function ComplaintDetailDialog({
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
               {unifiedComplaint.resolvedDate && (
                 <div className="text-xs lg:text-sm text-emerald-600">
                   Resolved on{" "}

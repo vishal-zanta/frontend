@@ -1,12 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { USER_ROLES_EXECULDED } from "@/utils/constants";
 import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
 
 const DesignationTable = ({ designations = [], setDialog }) => {
-  const nonEditable = [
-    "Call Centre Supervisor", "Call Centre Executive", "Admin"
-  ];
+  const nonEditable = USER_ROLES_EXECULDED;
   return (
     <table className="w-full text-sm">
       <thead className="bg-muted/50">

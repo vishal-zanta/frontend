@@ -96,7 +96,7 @@ export default function UserManageTable({
             </td>
             <td className="px-4 py-3 text-center">
               <div className="flex gap-1 justify-center">
-                <Button
+                {/* <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleToggleStatus && handleToggleStatus(u)}
@@ -109,7 +109,7 @@ export default function UserManageTable({
                         : "text-red-500"
                     }`}
                   />
-                </Button>
+                </Button> */}
                 <Button
                   variant="ghost"
                   size="sm"

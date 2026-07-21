@@ -21,9 +21,9 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                 {role.designationEnglish}
               </th>
             ))}
-            <th className="px-3 py-3 font-medium text-center min-w-40">
+            {/* <th className="px-3 py-3 font-medium text-center min-w-40">
               Officer
-            </th>
+            </th> */}
             <th className="px-3 py-3 font-medium min-w-40 sticky right-0 bg-[#F4F7FA] text-center">
               Actions
             </th>
@@ -67,13 +67,13 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                     </td>
                   );
                 })}
-                <td className="px-3 py-2.5 text-center">
+                {/* <td className="px-3 py-2.5 text-center">
                   {s.officer ? (
                     <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" />
                   ) : (
                     <AlertTriangle className="w-4 h-4 text-red-500 mx-auto" />
                   )}
-                </td>
+                </td> */}
                 <td className="px-3 py-2.5 sticky right-0 bg-white text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="ghost" size="sm" onClick={() => onEdit(s)}>

@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button'
-import { Flame, Mail, MapPin, Phone, Shield } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Calendar, Key, Mail, MapPin, Phone, Shield } from 'lucide-react'
+import { apiPermissionOptions } from "@/utils/constants"
 import React from 'react'
 
 const ViewDialog = ({viewUser, setViewUser}) => {
@@ -40,6 +42,7 @@ const ViewDialog = ({viewUser, setViewUser}) => {
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <Phone className="w-3.5 h-3.5" /> Phone Number
                   </span>
+                  
                   <span className="font-medium text-foreground block">{viewUser?.apiData?.phone || "N/A"}</span>
                 </div>
 
@@ -52,11 +55,33 @@ const ViewDialog = ({viewUser, setViewUser}) => {
 
                 <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Flame className="w-3.5 h-3.5 text-amber-500" /> Escalated Cases
+                    <Calendar className="w-3.5 h-3.5 text-blue-500" /> Last Login
                   </span>
-                  <span className="font-medium text-foreground block">
-                    {viewUser?.apiData?.escalatedCount ?? 0}
+                  <span className="font-medium text-foreground block">{viewUser?.lastLogin || "N/A"}</span>
+                </div>
+
+                <div className="md:col-span-2 space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Key className="w-3.5 h-3.5 text-emerald-500" /> Permissions ({viewUser?.permissions?.length || 0})
                   </span>
+                  <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
+                    {viewUser?.permissions && viewUser.permissions.length > 0 ? (
+                      viewUser.permissions.map((p) => {
+                        const label = apiPermissionOptions.find((a) => a.value === p)?.label || p;
+                        return (
+                          <Badge
+                            key={p}
+                            variant="outline"
+                            className="text-[10px] bg-blue-50 text-primary"
+                          >
+                            {label}
+                          </Badge>
+                        );
+                      })
+                    ) : (
+                      <span className="text-xs text-muted-foreground">No Permissions Assigned</span>
+                    )}
+                  </div>
                 </div>
               </div>
 

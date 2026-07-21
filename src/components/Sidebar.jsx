@@ -167,6 +167,12 @@ export const sidebarSections = [
         icon: Users,
         permissions: PERMISSIONS.SHIFT_AGENT,
       },
+      {
+        label: "Call Stats",
+        path: "/crm/call-stats",
+        icon: Users,
+        permissions: PERMISSIONS.CALL_STATS,
+      },
     ],
   },
   {

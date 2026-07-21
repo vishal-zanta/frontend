@@ -54,6 +54,7 @@ import PermissionChecker from "./components/PermissionChecker";
 import NotAuthorized from "./pages/NotAuthorized";
 import { PERMISSIONS } from "./utils/constants";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
+import CallStats from "./pages/crm/call-stats";
 
 const RootLayout = () => {
   return (
@@ -190,6 +191,14 @@ const router = createBrowserRouter([
               {
                 path: "settings",
                 element: <CRMSettings />,
+              },
+              {
+                path: "call-stats",
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.CALL_STATS}>
+                    <CallStats />
+                  </PermissionChecker>
+                ),
               },
             ],
           },

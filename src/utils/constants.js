@@ -10,6 +10,9 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+export const USER_ROLES_EXECULDED = ["Admin", "Call Centre Executive", "Call Centre Supervisor"]
+
+
 export const QUERY_KEYS = {
   ROLES: "roles",
   SERVICES: "services",
@@ -54,7 +57,7 @@ export const STATUS_ACTIONS = [
     badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
-    roleHidden : ["Call Centre Supervisor", "Call Centre Executive", "Admin"],
+    roleHidden : USER_ROLES_EXECULDED,
     requireFieldVisit : true
   },
   {
@@ -303,6 +306,7 @@ export const apiPermissionOptions = [
   { label: "AI Analytical Reports", value: "AI_REPORTS" },
   { label: "Performance Dashboard", value: "PERFORMANCE_DASHBOARD" },
   { label: "Chat", value: "CHAT" },
+  { label: "Call statistics", value: "CALL_STATS" }
 ];
 
 export const PERMISSIONS = {
@@ -371,4 +375,6 @@ export const PERMISSIONS = {
   MANAGE_AGENTS: ["MANAGE_AGENTS"],
   AUDIT_TRAIL: ["AUDIT_TRAIL"],
   CHAT: ["CHAT"],
+
+   CALL_STATS: ["CALL_STATS"]
 };
