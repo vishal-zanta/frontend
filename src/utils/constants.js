@@ -10,18 +10,17 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export const USER_ROLES_EXECULDED = [
-  "Admin",
-  "Call Centre Executive",
-  "Call Centre Supervisor",
-];
+export const ADMIN_ROLES = ["Admin"];
+export const CCE_ROLES = ["Call Centre Executive", "Call Centre Supervisor"];
+
+export const USER_ROLES_EXECULDED = [...ADMIN_ROLES, ...CCE_ROLES];
 
 export const LANGUAGES = [
   { label: "English", value: "English" },
   { label: "हिन्दी", value: "Hindi" },
 ];
 
-export const MAX_LIMIT  = 500;
+export const MAX_LIMIT = 500;
 export const QUERY_KEYS = {
   ROLES: "roles",
   SERVICES: "services",
@@ -313,7 +312,7 @@ export const apiPermissionOptions = [
   { label: "Chat", value: "CHAT" },
 
   { label: "Call statistics", value: "CALL_STATS" },
-  {label : "Department Management", value : "DEPARTMENT_MANAGEMENT"},
+  { label: "Department Management", value: "DEPARTMENT_MANAGEMENT" },
   // {label : "Skill Management",value : "SKILL_SET_MANAGEMENT"}
 ];
 
@@ -385,6 +384,6 @@ export const PERMISSIONS = {
   CHAT: ["CHAT"],
 
   CALL_STATS: ["CALL_STATS"],
-  DEPARTMENT_MANAGEMENT : ["DEPARTMENT_MANAGEMENT"],
+  DEPARTMENT_MANAGEMENT: ["DEPARTMENT_MANAGEMENT"],
   // SKILL_SET_MANAGEMENT: ["SKILL_SET_MANAGEMENT"]
 };

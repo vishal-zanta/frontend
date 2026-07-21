@@ -8,7 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { apiPermissionOptions, PERMISSIONS } from "@/utils/constants";
+import { apiPermissionOptions, CCE_ROLES, PERMISSIONS } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 
 export default function UserManageTable({
@@ -49,7 +49,9 @@ export default function UserManageTable({
                 </div>
                 <div>
                   <div className="font-medium">{u.name}</div>
-                  <div className="text-xs text-muted-foreground">{u.email}</div>
+                {!CCE_ROLES.includes(u.role) &&  <div className="text-xs text-muted-foreground">{u.email}</div>}
+                {CCE_ROLES.includes(u.role) &&   <div className="text-xs text-muted-foreground">{u?.loginId || u?.email}</div>}
+
                 </div>
               </div>
             </td>

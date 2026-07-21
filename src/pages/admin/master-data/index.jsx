@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Building2, Tag, MapPin, Globe, FileHeart } from "lucide-react";
+import { Building2, Tag, MapPin, Globe, FileHeart, Briefcase, Award } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import DesignationsTab from "./designation";
@@ -20,42 +20,49 @@ const tabs = [
     label: "Designations",
     icon: Tag,
     permissions: PERMISSIONS.ROLE_MANAGEMENT,
+    group: "internal",
   },
-    {
+  {
     id: "departments",
     label: "Departments",
-    icon: Tag,
+    icon: Briefcase,
     permissions: PERMISSIONS.DEPARTMENT_MANAGEMENT,
+    group: "internal",
   },
-   {
+  {
     id: "skill-set",
     label: "Skill Set",
-    icon: Tag,
+    icon: Award,
     permissions: PERMISSIONS.USER_MANAGEMENT,
+    group: "internal",
   },
   {
     id: "service",
     label: "Services & Sub-services",
     icon: Building2,
     permissions: PERMISSIONS.SERVICE_MANAGEMENT,
+    group: "external",
   },
   {
     id: "source",
     label: "Complaint Sources",
     icon: Globe,
     permissions: PERMISSIONS.SOURCE_MANAGEMENT,
+    group: "external",
   },
   {
     id: "demography",
     label: "Demography & ULBs",
     icon: MapPin,
     permissions: PERMISSIONS.DEMOGRAPHY_MANAGEMENT,
+    group: "external",
   },
   {
     id: "grievances-nature",
     label: "Grievance Nature",
     icon: FileHeart,
     permissions: PERMISSIONS.OPTION_MANAGEMENT,
+    group: "external",
   },
 ];
 
@@ -85,26 +92,70 @@ export default function MasterData() {
           subtitle="Manage designations, services, sub-services, complaint sources & demography"
         />
 
-        <div className="flex flex-wrap gap-2">
-          {filteredTabs.map((t) => {
-            const Icon = t.icon;
-            return (
-              <button
-                key={t.id}
-                onClick={() => {
-                  setTab(t.id);
-                  setSearchParams({ tab: t.id }, { replace: true });
-                }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
-                  tab === t.id
-                    ? "bg-primary text-white shadow-md"
-                    : "bg-white border border-border text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                <Icon className="w-4 h-4" /> {t.label}
-              </button>
-            );
-          })}
+        <div className="space-y-6">
+          {/* Internal group */}
+          {filteredTabs.some((t) => t.group === "internal") && (
+            <div className="space-y-2">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Internal Configuration
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {filteredTabs
+                  .filter((t) => t.group === "internal")
+                  .map((t) => {
+                    const Icon = t.icon;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => {
+                          setTab(t.id);
+                          setSearchParams({ tab: t.id }, { replace: true });
+                        }}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          tab === t.id
+                            ? "bg-primary text-white shadow-md"
+                            : "bg-white border border-border text-muted-foreground hover:bg-muted"
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" /> {t.label}
+                      </button>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+
+          {/* External group */}
+          {filteredTabs.some((t) => t.group === "external") && (
+            <div className="space-y-2">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                External Configuration
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {filteredTabs
+                  .filter((t) => t.group === "external")
+                  .map((t) => {
+                    const Icon = t.icon;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => {
+                          setTab(t.id);
+                          setSearchParams({ tab: t.id }, { replace: true });
+                        }}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          tab === t.id
+                            ? "bg-primary text-white shadow-md"
+                            : "bg-white border border-border text-muted-foreground hover:bg-muted"
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" /> {t.label}
+                      </button>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Designations */}

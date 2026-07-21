@@ -18,8 +18,8 @@ export default function OfficerTagTable({
             <th className="px-4 py-3 font-medium">Designation</th>
             <th className="px-4 py-3 font-medium min-w-60">Sub-services</th>
             <th className="px-4 py-3 font-medium min-w-48">Subdivisions</th>
-            <th className="px-4 py-3 font-medium text-center">Active</th>
-            <th className="px-4 py-3 font-medium text-center">SLA</th>
+            {/* <th className="px-4 py-3 font-medium text-center">Active</th> */}
+            {/* <th className="px-4 py-3 font-medium text-center">SLA</th> */}
             <th className="px-4 py-3 font-medium text-center">Actions</th>
           </tr>
         </thead>
@@ -56,17 +56,17 @@ export default function OfficerTagTable({
                   ))}
                 </div>
               </td>
-              <td className="px-4 py-3 text-center font-semibold">
+              {/* <td className="px-4 py-3 text-center font-semibold">
                 <Badge
                   variant="outline"
                   className={`text-xs ${o.active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"}`}
                 >
                   {o.active ? "Active" : "Inactive"}
                 </Badge>
-              </td>
-              <td className="px-4 py-3 text-center">
+              </td> */}
+              {/* <td className="px-4 py-3 text-center">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" />
-              </td>
+              </td> */}
               <td className="px-4 py-3 text-center">
                 <div className="flex gap-1 justify-center">
                   <Button

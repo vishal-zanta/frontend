@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Shield, UserPlus } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -15,10 +15,10 @@ import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import RhfWrapper from "@/components/RhfWrapper";
 import Form from "./components/Form";
-import { addSchema, editSchema } from "./schema";
+import { getAddSchema, getEditSchema } from "./schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postUser, putUser, deleteUser } from "./users.api";
-import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
+import { CCE_ROLES, MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import ViewDialog from "./components/ViewDialog";
 import { postAdminLogout } from "@/api/auth.api";
@@ -61,6 +61,10 @@ export default function UserManagement() {
     skills: [],
     preferredLanguages: [],
   });
+
+  const rolesList = rolesApiData?.data?.docs || [];
+  const addSchema = useMemo(() => getAddSchema(rolesList), [rolesList]);
+  const editSchema = useMemo(() => getEditSchema(rolesList), [rolesList]);
 
   const queryClient = useQueryClient();
 
@@ -162,8 +166,10 @@ export default function UserManagement() {
       lastLogin: user?.lastLogin
         ? new Date(user?.lastLogin).toLocaleString() || ""
         : "-",
+        loginId : CCE_ROLES.includes(user?.role?.designationEnglish)  ? user?.loginId : "-"
     };
   });
+
   console.log({ editUser });
   return (
     <PortalLayout role="superadmin">

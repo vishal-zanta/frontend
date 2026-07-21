@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDemographics } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
-import { MAX_LIMIT, LANGUAGES } from "@/utils/constants";
+import { useFormContext } from "react-hook-form";
+import { MAX_LIMIT, LANGUAGES, CCE_ROLES, ADMIN_ROLES } from "@/utils/constants";
 
 
 export default function Form({
@@ -21,6 +22,13 @@ export default function Form({
     page: 1,
     limit: MAX_LIMIT,
   });
+
+  const { watch } = useFormContext();
+  const selectedRoleId = watch("role");
+  const selectedRoleName = (rolesApiData?.data?.docs || []).find((r) => r._id === selectedRoleId)?.designationEnglish || "";
+  const isCCE = CCE_ROLES.includes(selectedRoleName);
+  const isAdmin = ADMIN_ROLES.includes(selectedRoleName);
+  const isOther = !!selectedRoleId && !isAdmin && !isCCE;
 
   const roleOptions = (rolesApiData?.data?.docs || []).map((r) => ({
     label: r.designationEnglish,
@@ -40,6 +48,14 @@ export default function Form({
 
   return (
     <div className="space-y-4 max-h-[400px]">
+       <RhfSelect
+        name="role"
+        label="Role"
+        required
+        disabled={disabledKeys.includes("role")}
+        options={roleOptions}
+        placeholder="Select a role"
+      />
       <RhfInput
         label="Name"
         name="name"
@@ -49,13 +65,13 @@ export default function Form({
       <RhfInput
         label="Email"
         name="email"
-        required
+        required={!isCCE}
         placeholder="email@bihar.gov.in"
       />
       <RhfInput
         label="Phone"
         name="phone"
-        required
+        required={!isCCE}
         placeholder="Enter 10-digit phone number"
         isNumsOnly
         maxLength={10}
@@ -75,14 +91,7 @@ export default function Form({
         placeholder="Confirm password"
       />
 
-      <RhfSelect
-        name="role"
-        label="Role"
-        required
-        disabled={disabledKeys.includes("role")}
-        options={roleOptions}
-        placeholder="Select a role"
-      />
+     
 
       <RhfSelect
         name="district"
@@ -143,7 +152,7 @@ export default function Form({
             </>
           ) : (
             <>
-              <UserPlus className="w-4 h-4 mr-1" /> {submitLabel}
+              <UserPlus className="w-4 h-4 mr-1" /> {isOther ? "Send Verification Mail" : submitLabel}
             </>
           )}
         </Button>
