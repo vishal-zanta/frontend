@@ -55,6 +55,7 @@ import NotAuthorized from "./pages/NotAuthorized";
 import { PERMISSIONS } from "./utils/constants";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import CallStats from "./pages/crm/call-stats";
+import LanguageContextProvider from "./context/LanguageContext";
 
 const RootLayout = () => {
   return (
@@ -347,6 +348,8 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthProvider>
+      <LanguageContextProvider>
+
       <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
         <QueryClientProvider client={queryClientInstance}>
           <RouterProvider router={router} />
@@ -354,6 +357,7 @@ function App() {
           <SonnerToaster richColors position="top-center" />
         </QueryClientProvider>
       </GoogleReCaptchaProvider>
+      </LanguageContextProvider>
     </AuthProvider>
   );
 }

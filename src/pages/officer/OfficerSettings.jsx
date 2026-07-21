@@ -4,6 +4,7 @@ import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import LangSelector from "@/components/LangSelector"
 
 export default function OfficerSettings() {
   const [toast, setToast] = useState("");
@@ -59,10 +60,7 @@ export default function OfficerSettings() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label className="mb-1.5 block">Language</Label>
-              <select className="w-full border border-input rounded-md p-2 text-sm">
-                <option>English</option>
-                <option>हिंदी (Hindi)</option>
-              </select>
+            <LangSelector triggerClassName={"w-full"}/>
             </div>
             <div>
               <Label className="mb-1.5 block">Time Zone</Label>

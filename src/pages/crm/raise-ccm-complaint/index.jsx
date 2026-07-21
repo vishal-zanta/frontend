@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { useRaiseComplaintData } from "./hooks";
 import { defaultValues, grievanceSchema } from "./schema";

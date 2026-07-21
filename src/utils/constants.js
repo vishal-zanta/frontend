@@ -10,8 +10,16 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export const USER_ROLES_EXECULDED = ["Admin", "Call Centre Executive", "Call Centre Supervisor"]
+export const USER_ROLES_EXECULDED = [
+  "Admin",
+  "Call Centre Executive",
+  "Call Centre Supervisor",
+];
 
+export const LANGUAGES = [
+  { label: "English", value: "English" },
+  { label: "हिन्दी", value: "Hindi" },
+];
 
 export const QUERY_KEYS = {
   ROLES: "roles",
@@ -57,8 +65,8 @@ export const STATUS_ACTIONS = [
     badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
-    roleHidden : USER_ROLES_EXECULDED,
-    requireFieldVisit : true
+    roleHidden: USER_ROLES_EXECULDED,
+    requireFieldVisit: true,
   },
   {
     label: "Closed",
@@ -68,8 +76,7 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Closed",
     badgeClass: "bg-slate-50 text-slate-500 border-slate-200",
     isRemark: true,
-    disabled: ["RESOLVED", "CLOSED"]
-
+    disabled: ["RESOLVED", "CLOSED"],
   },
   {
     label: "In Progress",
@@ -78,8 +85,7 @@ export const STATUS_ACTIONS = [
     color: "bg-amber-600 hover:bg-amber-700",
     badgeLabel: "In Progress",
     badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
-    disabled: ["RESOLVED", "CLOSED"]
-
+    disabled: ["RESOLVED", "CLOSED"],
   },
   {
     label: "Reopen",
@@ -89,7 +95,6 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Reopened",
     badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-200",
     isRemark: true,
-
   },
   {
     label: "Open",
@@ -98,8 +103,7 @@ export const STATUS_ACTIONS = [
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Pending",
     badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
-    disabled: ["RESOLVED", "CLOSED"]
-
+    disabled: ["RESOLVED", "CLOSED"],
   },
   {
     label: "Escalate",
@@ -108,8 +112,7 @@ export const STATUS_ACTIONS = [
     color: "bg-red-600 hover:bg-red-700",
     badgeLabel: "Escalated",
     badgeClass: "bg-red-100 text-red-800 border-red-300",
-    disabled: ["RESOLVED", "CLOSED"]
-
+    disabled: ["RESOLVED", "CLOSED"],
   },
 ];
 
@@ -236,9 +239,8 @@ export const apiPermissionOptions = [
   { label: "Create Grievance", value: "CREATE_GRIEVANCE" },
   { label: "Update Grievance", value: "UPDATE_GRIEVANCE" },
   { label: "Assign Grievance", value: "ASSIGN_GRIEVANCE" }, //custom
-  {label : "My Complaints", value : "MY_COMPLAINT"},
-  {label : "Field Visit", value : "FIELD_VISIT"},
-
+  { label: "My Complaints", value: "MY_COMPLAINT" },
+  { label: "Field Visit", value: "FIELD_VISIT" },
 
   { label: "View Active Users", value: "VIEW_ACTIVE_USERS" },
   { label: "Logout Users", value: "LOGOUT_USERS" }, //custom
@@ -306,7 +308,7 @@ export const apiPermissionOptions = [
   { label: "AI Analytical Reports", value: "AI_REPORTS" },
   { label: "Performance Dashboard", value: "PERFORMANCE_DASHBOARD" },
   { label: "Chat", value: "CHAT" },
-  { label: "Call statistics", value: "CALL_STATS" }
+  { label: "Call statistics", value: "CALL_STATS" },
 ];
 
 export const PERMISSIONS = {
@@ -376,5 +378,5 @@ export const PERMISSIONS = {
   AUDIT_TRAIL: ["AUDIT_TRAIL"],
   CHAT: ["CHAT"],
 
-   CALL_STATS: ["CALL_STATS"]
+  CALL_STATS: ["CALL_STATS"],
 };

@@ -11,7 +11,6 @@ import {
   Info,
   X,
   Shield,
-  Repeat,
   Loader2,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
@@ -21,119 +20,7 @@ import { getErrorToast } from "@/utils/helpers";
 import BreakOverlay from "./break-timer/BreakOverlay";
 import { postLogout } from "@/api/auth.api";
 import { useAuth } from "@/context/AuthContext";
-
-const roleInfo = {
-  superadmin: {
-    label: "Super Admin Console",
-    user: "Ramanuj Prasad",
-    title: "SUDA Administrator",
-    avatar: "RP",
-    settingsPath: "/admin/users",
-  },
-  officer: {
-    label: "Officer Portal",
-    user: "Rajesh Kumar Singh",
-    title: "L1 Field Officer - Patna",
-    avatar: "RS",
-    settingsPath: "/officer/settings",
-  },
-  crm: {
-    label: "CRM / Call Centre",
-    user: "Priya Sharma",
-    title: "CCE Agent - Morning Shift",
-    avatar: "PS",
-    settingsPath: "/crm/settings",
-  },
-  citizen: {
-    label: "Citizen Portal",
-    user: "Ramesh Prasad",
-    title: "Citizen - Patna",
-    avatar: "RP",
-    settingsPath: "/citizen/settings",
-  },
-};
-
-const officerProfiles = [
-  {
-    id: "l1",
-    label: "L1 Field Officer",
-    user: "Rajesh Kumar Singh",
-    title: "L1 Field Officer - Patna",
-    avatar: "RS",
-  },
-  {
-    id: "l2",
-    label: "L2 Supervisory Officer",
-    user: "Prakash Jha",
-    title: "L2 Supervisory Officer - Patna",
-    avatar: "PJ",
-  },
-  {
-    id: "zone",
-    label: "Zone Administrator",
-    user: "Vikash Prasad",
-    title: "Zone Administrator - Patna",
-    avatar: "VP",
-  },
-  {
-    id: "division",
-    label: "Divisional Administrator",
-    user: "Vikash Prasad",
-    title: "Divisional Administrator - Patna",
-    avatar: "VP",
-  },
-  {
-    id: "suda",
-    label: "SUDA Administrator",
-    user: "Ramanuj Prasad",
-    title: "SUDA Administrator - Patna",
-    avatar: "RP",
-  },
-];
-
-const crmProfiles = [
-  {
-    id: "agent",
-    label: "CCE Agent",
-    user: "Priya Sharma",
-    title: "CCE Agent - Morning Shift",
-    avatar: "PS",
-  },
-  {
-    id: "supervisor",
-    label: "CC Supervisor",
-    user: "Sneha Gupta",
-    title: "CC Supervisor - Full Day",
-    avatar: "SG",
-  },
-];
-
-const CITIZEN_NOTIFICATIONS = [
-  {
-    id: 1,
-    text: "Your complaint BH-2026-047821 has been resolved ✅",
-    time: "2h ago",
-    type: "success",
-  },
-  {
-    id: 2,
-    text: "Your complaint BH-2026-047823 was escalated to L2 ⚠️",
-    time: "5h ago",
-    type: "warning",
-  },
-  {
-    id: 3,
-    text: "New service available: Animal Rescue 🐕",
-    time: "1d ago",
-    type: "info",
-  },
-  {
-    id: 4,
-    text: "Officer assigned to your complaint BH-2026-047825",
-    time: "2d ago",
-    type: "info",
-  },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const STAFF_NOTIFICATIONS = [
   {
@@ -163,13 +50,12 @@ export default function TopBar({
   onToggleSidebar,
   sidebarOpen,
 }) {
-  const {profile: profileData, setProfile : setProfileData} = useAuth();
-  const baseInfo = roleInfo[role] || roleInfo.superadmin;
+  const {profile: profileData, setProfile : setProfileData, profiledata : profileMetaData} = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
-  const isCitizen = role === "citizen";
-  const isSuperAdmin = role === "superadmin";
-  const isOfficer = role === "officer";
-  const isCRM = role === "crm";
+  const isSuperAdmin = profileMetaData?.isAdmin;
+  const isCRM = profileMetaData?.isCRM;
+  const isOfficer = profileMetaData?.isOfficer;
   const [showNotifs, setShowNotifs] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showSwitcher, setShowSwitcher] = useState(false);
@@ -177,12 +63,12 @@ export default function TopBar({
   const profileRef = useRef(null);
   const switcherRef = useRef(null);
 
-  const notifications = isCitizen ? CITIZEN_NOTIFICATIONS : STAFF_NOTIFICATIONS;
+  const notifications = STAFF_NOTIFICATIONS;
 
   const { data: breakStatusData, refetch: refetchBreakStatus } = useQuery({
     queryKey: ["breakStatus"],
     queryFn: getBreakStatus,
-    enabled: !isCitizen,
+    enabled: true,
   });
 
   const breakStatus = breakStatusData?.data?.data || breakStatusData?.data;
@@ -203,12 +89,11 @@ export default function TopBar({
   });
 
   useEffect(() => {
-
     let timer = null;
     if (breakStatus && breakStatus.isBreak === false) {
-              if (document.visibilityState === "visible") {
-          pulseMutation.mutate();
-        }
+      if (document.visibilityState === "visible") {
+        pulseMutation.mutate();
+      }
       timer = setInterval(() => {
         if (document.visibilityState === "visible") {
           pulseMutation.mutate();
@@ -216,24 +101,19 @@ export default function TopBar({
       }, 50000);
     }
     return () => clearInterval(timer);
-  }, [breakStatus?.isBreak, isCitizen]);
+  }, [breakStatus?.isBreak]);
 
-  // Determine current sub-profile from props (passed by PortalLayout)
-  let profiles = null;
-  let currentProfileId = profile || "default";
-  if (isOfficer) {
-    profiles = officerProfiles;
-    if (!currentProfileId || currentProfileId === "default")
-      currentProfileId = "l1";
-  } else if (isCRM) {
-    profiles = crmProfiles;
-    if (!currentProfileId || currentProfileId === "default")
-      currentProfileId = "agent";
-  }
-  const currentProfile = profiles
-    ? profiles.find((p) => p.id === currentProfileId) || profiles[0]
-    : null;
-  const info = currentProfile ? { ...baseInfo, ...currentProfile } : baseInfo;
+  const portalLabel = profileMetaData?.isAdmin
+    ? t("Super Admin Console", "सुपर एडमिन कंसोल")
+    : profileMetaData?.isCRM
+      ? t("CRM / Call Centre", "सीआरएम / कॉल सेंटर")
+      : t("Officer Portal", "अधिकारी पोर्टल");
+
+  const settingsPath = profileMetaData?.isAdmin
+    ? null
+    : profileMetaData?.isCRM
+      ? "/crm/settings"
+      : "/officer/settings";
 
   useEffect(() => {
     const handler = (e) => {
@@ -297,22 +177,22 @@ export default function TopBar({
         <button
           onClick={onToggleSidebar}
           className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
-          title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          title={sidebarOpen ? t("Collapse sidebar", "साइडबार छोटा करें") : t("Expand sidebar", "साइडबार बढ़ाएं")}
         >
           <Menu className="w-5 h-5" />
         </button>
         <div>
           <div className="text-[11px] text-muted-foreground font-medium">
-            {info.label}
+            {portalLabel}
           </div>
           <div className="text-sm font-bold text-foreground -mt-0.5 hidden sm:block">
-            {PORTAL_META.name}
+            {t(PORTAL_META.name, "बिहार ई-शिकायत पोर्टल")}
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        {!isCitizen && (
+      
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-muted rounded-lg text-muted-foreground">
             <svg
               className="w-4 h-4"
@@ -329,11 +209,11 @@ export default function TopBar({
             </svg>
             <input
               type="text"
-              placeholder="Search complaints, officers..."
+              placeholder={t("Search complaints, officers...", "शिकायतें, अधिकारी खोजें...")}
               className="bg-transparent text-sm w-40 lg:w-56 outline-none placeholder:text-muted-foreground/60"
             />
           </div>
-        )}
+        
 
         {/* Profile switcher for officer and CRM */}
         {/* {profiles && (
@@ -419,16 +299,16 @@ export default function TopBar({
           </div>
         )}
 
-        {!isCitizen && (
+      
           <button
             onClick={() => toggleBreakMutation.mutate()}
             disabled={toggleBreakMutation.isPending}
             className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
           >
             {toggleBreakMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
-            Start Break
+            {t("Start Break", "ब्रेक शुरू करें")}
           </button>
-        )}
+       
 
         {/* <Link
           to="/"
@@ -459,7 +339,7 @@ export default function TopBar({
                 {profileData?.name}
               </div>
               <div className="text-[11px] text-muted-foreground leading-tight">
-                {profileData?.role?.designationEnglish ?? profileData?.role}
+                {t(profileData?.role?.designationEnglish ?? profileData?.role, profileData?.role?.designationHindi ?? (profileData?.role?.designationEnglish || profileData?.role))}
               </div>
             </div>
             <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />
@@ -469,18 +349,17 @@ export default function TopBar({
               <div className="px-4 py-3 border-b border-border">
                 <div className="font-semibold text-sm"> {profileData?.name}</div>
                 <div className="text-xs text-muted-foreground">
-                                {profileData?.role?.designationEnglish ?? profileData?.role}
-
+                  {t(profileData?.role?.designationEnglish ?? profileData?.role, profileData?.role?.designationHindi ?? (profileData?.role?.designationEnglish || profileData?.role))}
                 </div>
               </div>
-              {info.settingsPath && (
+              {settingsPath && (
                 <Link
-                  to={info.settingsPath}
+                  to={settingsPath}
                   onClick={() => setShowProfile(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted"
                 >
                   <Settings className="w-4 h-4 text-muted-foreground" />{" "}
-                  Settings
+                  {t("Settings", "सेटिंग्स")}
                 </Link>
               )}
               {isSuperAdmin && (
@@ -489,8 +368,7 @@ export default function TopBar({
                   onClick={() => setShowProfile(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted"
                 >
-                  <Shield className="w-4 h-4 text-muted-foreground" /> Manage
-                  Access
+                  <Shield className="w-4 h-4 text-muted-foreground" /> {t("Manage Access", "पहुंच प्रबंधित करें")}
                 </Link>
               )}
               <button
@@ -503,7 +381,7 @@ export default function TopBar({
                 ) : (
                   <LogOut className="w-4 h-4" />
                 )}
-                {logoutMutation.isPending ? "Logging out..." : "Logout"}
+                {logoutMutation.isPending ? t("Logging out...", "लॉग आउट हो रहा है...") : t("Logout", "लॉगआउट")}
               </button>
             </div>
           )}
