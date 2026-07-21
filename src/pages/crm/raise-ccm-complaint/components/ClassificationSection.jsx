@@ -5,6 +5,7 @@ import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import MySelect from "@/components/inputs/MySelect";
 import { useGetSubservices } from "../../../admin/master-data/hooks";
 import FormSection from "./FormSection";
+import { MAX_LIMIT } from "@/utils/constants";
 
 export default function ClassificationSection({
   servicesOptions,
@@ -17,7 +18,7 @@ export default function ClassificationSection({
   const [selectedService, setSelectedService] = useState("");
   const { setValue } = useFormContext();
 
-  const API_PARAMS = { page: 1, limit: 500, select: "title,titleHindi" };
+  const API_PARAMS = { page: 1, limit: MAX_LIMIT, select: "title,titleHindi" };
 
   const { data: subServicesData, isLoading: subServicesLoading } = useGetSubservices(
     [selectedService],

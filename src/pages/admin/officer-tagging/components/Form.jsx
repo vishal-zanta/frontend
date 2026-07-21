@@ -8,6 +8,7 @@ import {
   useGetDemographics,
 } from "../../master-data/hooks";
 import subDivisionsData from "@/utils/sub-divisions.json";
+import { MAX_LIMIT } from "@/utils/constants";
 
 export default function Form({
   isEdit,
@@ -20,7 +21,7 @@ export default function Form({
   const selectedDistrict = useWatch({ name: "district" });
 
   // Fetch Services
-  const { data: servicesData } = useGetServices([], { page: 1, limit: 100 });
+  const { data: servicesData } = useGetServices([], { page: 1, limit: MAX_LIMIT });
   const servicesOptions = (servicesData?.data?.data?.docs || []).map((s) => ({
     label: s.title || s.name || "",
     value: s._id,
@@ -38,7 +39,7 @@ export default function Form({
         ? selectedService.join(",")
         : selectedService || "",
       page: 1,
-      limit: 500,
+      limit: MAX_LIMIT,
     },
     !!(selectedService && selectedService.length > 0),
   );
@@ -73,7 +74,7 @@ export default function Form({
   // Fetch Districts (Demographics)
   const { data: demographyData } = useGetDemographics([], {
     page: 1,
-    limit: 100,
+    limit: MAX_LIMIT,
   });
   const districtOptions = (demographyData?.data?.data?.docs || []).map((d) => ({
     label: d.name,

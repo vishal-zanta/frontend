@@ -32,7 +32,7 @@ import {
   getSuccessToast,
   
 } from "@/utils/helpers";
-import { QUERY_KEYS , USER_ROLES_EXECULDED} from "@/utils/constants";
+import { MAX_LIMIT, QUERY_KEYS , USER_ROLES_EXECULDED} from "@/utils/constants";
 
 export default function OfficerTagging() {
   const [search, setSearch] = useState("");
@@ -55,12 +55,12 @@ export default function OfficerTagging() {
   const docs = taggingsApiData?.data?.data?.docs || [];
   const totalPages = taggingsApiData?.data?.data?.pagination?.totalPages || 1;
 
-  const { data: demographyData } = useGetDemographics([], { page: 1, limit: 100 });
+  const { data: demographyData } = useGetDemographics([], { page: 1, limit: MAX_LIMIT });
   const demographyDocs = demographyData?.data?.data?.docs || [];
 
-  const { data: usersApiDataUntagged } = useGetUsers([1, 200, "untagged"], {
+  const { data: usersApiDataUntagged } = useGetUsers([1, MAX_LIMIT, "untagged"], {
     page: 1,
-    limit: 200,
+    limit: MAX_LIMIT,
     untagged: true,
   });
   const userOptionsUnTagged = (usersApiDataUntagged?.data?.data?.docs || [])
@@ -71,9 +71,9 @@ export default function OfficerTagging() {
       label: `${u.name} (${u.role?.designationEnglish || ""})`,
       value: u._id,
     }));
-  const { data: usersApiData } = useGetUsers([1, 200], {
+  const { data: usersApiData } = useGetUsers([1, MAX_LIMIT], {
     page: 1,
-    limit: 200,
+    limit: MAX_LIMIT,
     // untagged: true,
   });
   const userOptions = (usersApiData?.data?.data?.docs || [])

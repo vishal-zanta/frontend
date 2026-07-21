@@ -18,7 +18,7 @@ import Form from "./components/Form";
 import { addSchema, editSchema } from "./schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postUser, putUser, deleteUser } from "./users.api";
-import { QUERY_KEYS } from "@/utils/constants";
+import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import ViewDialog from "./components/ViewDialog";
 import { postAdminLogout } from "@/api/auth.api";
@@ -27,7 +27,7 @@ export default function UserManagement() {
   const [filterRole, setFilterRole] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: 100 });
+  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
   const { page, limit, ...pageProps } = usePagination();
 
   const { data, isLoading, error } = useGetUsers(

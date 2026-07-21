@@ -12,6 +12,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
         <tr className="text-left text-xs text-muted-foreground">
           <th className="px-4 py-2 font-medium">Designation (English)</th>
           <th className="px-4 py-2 font-medium">पदनाम (Hindi)</th>
+          <th className="px-4 py-2 font-medium">Department</th>
           <th className="px-4 py-2 font-medium">Level</th>
           <th className="px-4 py-2 font-medium text-center">Actions</th>
         </tr>
@@ -22,6 +23,9 @@ const DesignationTable = ({ designations = [], setDialog }) => {
             <td className="px-4 py-2.5 font-medium">{d.designationEnglish}</td>
             <td className="px-4 py-2.5 text-muted-foreground">
               {d.designationHindi}
+            </td>
+            <td className="px-4 py-2.5 text-muted-foreground">
+              {d.department?.title || d.department || "-"}
             </td>
             <td className="px-4 py-2.5">
               <Badge variant="outline" className="text-xs">

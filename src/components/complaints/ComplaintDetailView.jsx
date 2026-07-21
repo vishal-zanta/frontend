@@ -13,7 +13,7 @@ import {
   updateComplaintPriority,
 } from "@/api/complaint.api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
-import { QUERY_KEYS } from "@/utils/constants";
+import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
 
 // Import sub-components
@@ -144,7 +144,7 @@ export default function ComplaintDetailView({
     ],
     {
       page: 1,
-      limit: 100,
+      limit: MAX_LIMIT,
       subServices: data?.data?.classification?.subService?._id,
     },
     isCCE && !!data?.data?.classification?.subService?._id,

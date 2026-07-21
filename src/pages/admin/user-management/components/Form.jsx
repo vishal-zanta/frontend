@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDemographics } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
+import { MAX_LIMIT } from "@/utils/constants";
 
 
 export default function Form({
@@ -14,10 +15,10 @@ export default function Form({
   isLoading = false,
   disabledKeys = [],
 }) {
-  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: 100 });
+  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
   const { data: demographyData } = useGetDemographics([], {
     page: 1,
-    limit: 100,
+    limit: MAX_LIMIT,
   });
 
   const roleOptions = (rolesApiData?.data?.docs || []).map((r) => ({

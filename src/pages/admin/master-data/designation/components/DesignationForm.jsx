@@ -1,107 +1,91 @@
-import MySelect from '@/components/inputs/MySelect';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { apiPermissionOptions } from '@/utils/constants';
-import React from 'react'
+import React from "react";
+import RhfWrapper from "@/components/RhfWrapper";
+import RhfInput from "@/components/rhfinputs/RhfInput";
+import RhfSelect from "@/components/rhfinputs/RhfSelect";
+import { apiPermissionOptions } from "@/utils/constants";
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+import { designationSchema } from "../schema";
 
-const DesignationForm = ({formData,setFormData,errors,setErrors}) => {
+const DesignationForm = ({
+  initialValues,
+  handleSubmit,
+  onClose,
+  saving,
+  departmentOptions = [],
+}) => {
+  const levelOptions = [
+    "L1",
+    "L2",
+    "Zone",
+    "ULB",
+    "Division",
+    "SUDA",
+    "CCE",
+    "Supervisor",
+    "Admin",
+  ].map((l) => ({ label: l, value: l }));
 
   return (
-    <>
-     <div>
-            <Label className="mb-1.5 block">Designation (English) <span className="text-red-500">*</span></Label>
-            <Input
-              value={formData.designationEnglish}
-              onChange={(e) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  designationEnglish: e.target.value,
-                }));
-                if (errors.designationEnglish) {
-                  setErrors((prev) => ({ ...prev, designationEnglish: "" }));
-                }
-              }}
-              required
-              placeholder="e.g., Municipal Commissioner"
-            />
-            {errors.designationEnglish && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.designationEnglish}
-              </p>
-            )}
-          </div>
-          <div>
-            <Label className="mb-1.5 block">पदनाम (Hindi) <span className="text-red-500">*</span></Label>
-            <Input
-              value={formData.designationHindi}
-              onChange={(e) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  designationHindi: e.target.value,
-                }));
-                if (errors.designationHindi) {
-                  setErrors((prev) => ({ ...prev, designationHindi: "" }));
-                }
-              }}
-              required
-              placeholder="उदा. नगर आयुक्त"
-            />
-            {errors.designationHindi && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.designationHindi}
-              </p>
-            )}
-          </div>
-          <div>
-            <Label className="mb-1.5 block">Level <span className="text-red-500">*</span></Label>
-            <Select
-              value={formData.level}
-              onValueChange={(val) =>
-                setFormData((prev) => ({ ...prev, level: val }))
-              }
-              required
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {["L1", "L2", "Zone", "ULB", "Division", "SUDA", "CCE", "Supervisor", "Admin"].map((l) => (
-                  <SelectItem key={l} value={l}>
-                    {l}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <MySelect
-              value={formData.permissions}
-              onValueChange={(val) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  permissions: val,
-                }));
-                if (errors.permissions) {
-                  setErrors((prev) => ({ ...prev, permissions: "" }));
-                }
-              }}
-              label="Permissions"
-              // apiKey="permissions"
-              required
-              isMultiple={true}
-              options={apiPermissionOptions}
-              placeholder="Select permissions"
-              error={errors.permissions}
-            />
-            {(formData?.permissions || []).includes("ALL") && (
-              <span className="text-xs font-medium text-emerald-600 block mt-1">
-                Note: Make sure you are aware that you are given full access
-              </span>
-            )}
-          </div>
-    </>
-  )
-}
+    <RhfWrapper
+      initialValues={initialValues}
+      isValidation
+      validationSchema={designationSchema}
+      onSubmit={handleSubmit}
+      className="space-y-4 max-h-[55svh]"
+    >
+      <RhfInput
+        name="designationEnglish"
+        label="Designation (English)"
+        placeholder="e.g., Municipal Commissioner"
+        required
+      />
 
-export default DesignationForm
+      <RhfInput
+        name="designationHindi"
+        label="पदनाम (Hindi)"
+        placeholder="उदा. नगर आयुक्त"
+        required
+      />
+
+      <RhfSelect
+        name="level"
+        label="Level"
+        placeholder="Select level..."
+        options={levelOptions}
+        required
+        isMultiple={false}
+      />
+
+      <RhfSelect
+        name="permissions"
+        label="Permissions"
+        placeholder="Select permissions..."
+        options={apiPermissionOptions}
+        required
+        isMultiple={true}
+      />
+
+      <RhfSelect
+        name="department"
+        label="Department"
+        placeholder="Select department..."
+        options={departmentOptions}
+        required
+        isMultiple={false}
+      />
+
+
+      <div className="flex gap-2 justify-end pt-4 border-t border-border pb-4 bg-white sticky bottom-0">
+        <Button type="button" variant="outline" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button type="submit" disabled={saving} className="bg-primary hover:bg-primary/90">
+          <Check className="w-4 h-4 mr-1" /> {saving ? "Saving..." : "Save"}
+        </Button>
+      </div>
+    </RhfWrapper>
+  );
+};
+
+export default DesignationForm;

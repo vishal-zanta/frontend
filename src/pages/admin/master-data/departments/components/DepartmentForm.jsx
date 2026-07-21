@@ -1,50 +1,34 @@
 import React from "react";
 import RhfWrapper from "@/components/RhfWrapper";
 import RhfInput from "@/components/rhfinputs/RhfInput";
-import RhfSelect from "@/components/rhfinputs/RhfSelect";
-import { serviceSchema } from "../schema";
+import { departmentSchema } from "../schema";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 
-const ServiceForm = ({
-  initialValues,
-  handleSubmit,
-  onClose,
-  saving,
-  departmentOptions = [],
-}) => {
+const DepartmentForm = ({ initialValues, handleSubmit, onClose, saving }) => {
   return (
     <RhfWrapper
       initialValues={initialValues}
       isValidation
-      validationSchema={serviceSchema}
+      validationSchema={departmentSchema}
       onSubmit={handleSubmit}
       className="space-y-4"
     >
       <RhfInput
         name="title"
-        label="Service Name (English)"
-        placeholder="e.g., Public Works"
+        label="Department Title (English)"
+        placeholder="e.g., Forest Dept"
         required
       />
 
       <RhfInput
         name="titleHindi"
-        label="सेवा का नाम (Hindi)"
-        placeholder="उदा. सार्वजनिक कार्य"
+        label="विभाग का नाम (Hindi)"
+        placeholder="उदा. वन विभाग"
         required
       />
 
-      <RhfSelect
-        name="department"
-        label="Department"
-        placeholder="Select department..."
-        options={departmentOptions}
-        required
-        isMultiple={false}
-      />
-
-      <div className="flex gap-2 justify-end pt-4 border-t border-border pb-4 bg-white sticky bottom-0">
+      <div className="flex gap-2 justify-end pt-4 border-t border-border pb-4">
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>
@@ -56,4 +40,4 @@ const ServiceForm = ({
   );
 };
 
-export default ServiceForm;
+export default DepartmentForm;

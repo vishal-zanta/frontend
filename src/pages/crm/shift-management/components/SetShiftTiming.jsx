@@ -15,11 +15,11 @@ import { useGetShifts } from "../hooks";
 import { assignShift } from "../api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
-import { QUERY_KEYS } from "@/utils/constants";
+import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 
 export default function SetShiftTiming() {
   const qc = useQueryClient();
-  const { data, isLoading } = useGetShifts({ page: 1, limit: 100 });
+  const { data, isLoading } = useGetShifts({ page: 1, limit: MAX_LIMIT });
   const [selectedAgent, setSelectedAgent] = useState("");
   const [selectedShift, setSelectedShift] = useState("Morning (07:00–14:00)");
   const [selectedDate, setSelectedDate] = useState("2024-05-17");

@@ -1,7 +1,8 @@
+import { MAX_LIMIT } from "@/utils/constants";
 import { useGetComplaintSources, useGetDemographics, useGetOptions, useGetServices } from "../../admin/master-data/hooks";
 
 export const useRaiseComplaintData = (lang) => {
-  const API_PARAMS = { page: 1, limit: 500, select : "title,titleHindi,name,nameHindi" };
+  const API_PARAMS = { page: 1, limit: MAX_LIMIT, select : "title,titleHindi,name,nameHindi" };
 
   const { data: servicesData, isLoading: servicesLoading } =
     useGetServices([], API_PARAMS);

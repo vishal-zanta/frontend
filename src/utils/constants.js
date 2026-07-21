@@ -21,6 +21,7 @@ export const LANGUAGES = [
   { label: "हिन्दी", value: "Hindi" },
 ];
 
+export const MAX_LIMIT  = 500;
 export const QUERY_KEYS = {
   ROLES: "roles",
   SERVICES: "services",
@@ -46,6 +47,7 @@ export const QUERY_KEYS = {
   MIS_STATS: "mis-stats",
   SHIFTS: "shifts",
   SYSTEM_HEALTH: "system-health",
+  DEPARTMENTS: "departments",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
@@ -239,7 +241,7 @@ export const apiPermissionOptions = [
   { label: "Create Grievance", value: "CREATE_GRIEVANCE" },
   { label: "Update Grievance", value: "UPDATE_GRIEVANCE" },
   { label: "Assign Grievance", value: "ASSIGN_GRIEVANCE" }, //custom
-  { label: "My Complaints", value: "MY_COMPLAINT" },
+  { label: "My Grievance", value: "MY_COMPLAINT" },
   { label: "Field Visit", value: "FIELD_VISIT" },
 
   { label: "View Active Users", value: "VIEW_ACTIVE_USERS" },
@@ -308,7 +310,9 @@ export const apiPermissionOptions = [
   { label: "AI Analytical Reports", value: "AI_REPORTS" },
   { label: "Performance Dashboard", value: "PERFORMANCE_DASHBOARD" },
   { label: "Chat", value: "CHAT" },
+
   { label: "Call statistics", value: "CALL_STATS" },
+  {label : "Department Management", value : "DEPARTMENT_MANAGEMENT"}
 ];
 
 export const PERMISSIONS = {
@@ -379,4 +383,5 @@ export const PERMISSIONS = {
   CHAT: ["CHAT"],
 
   CALL_STATS: ["CALL_STATS"],
+  DEPARTMENT_MANAGEMENT : ["DEPARTMENT_MANAGEMENT"]
 };

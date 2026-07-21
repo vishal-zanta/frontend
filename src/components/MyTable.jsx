@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import React from "react";
 
-const MyTable = ({ tableHeaders = [], tableBody = [], pagination = null }) => {
+const MyTable = ({ tableHeaders = [], tableBody = [], pagination = null , tableClassName = ""}) => {
   return (
-    <div className="bg-white rounded-xl border border-border overflow-hidden">
+    <div className={clsx(" overflow-hidden", tableClassName)}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
@@ -11,7 +11,7 @@ const MyTable = ({ tableHeaders = [], tableBody = [], pagination = null }) => {
               {tableHeaders.map((h) => (
                 <th
                   key={h.id}
-                  className={clsx("px-4 py-3 font-medium", h.className)}
+                  className={clsx("px-4 py-2 font-medium", h.className)}
                 >
                   {h.label}
                 </th>

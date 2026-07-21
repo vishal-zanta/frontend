@@ -134,11 +134,14 @@ const CallStats = () => {
         <MyTable
           tableHeaders={callStatsData.tableHeaders}
           tableBody={callStatsData.tableBody}
+          tableClassName="rounded-xl border border-border bg-white"
         />
         <LayoutHeading title={"Agent Live Statistics"} />
         <MyTable
           tableHeaders={agentLiveData.tableHeaders}
           tableBody={agentLiveData.tableBody}
+          tableClassName="rounded-xl border border-border bg-white"
+
         />
       </div>
     </PortalLayout>

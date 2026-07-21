@@ -20,7 +20,7 @@ import {
   reorderWorkflowLevels,
 } from "./api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
-import { QUERY_KEYS, USER_ROLES_EXECULDED } from "@/utils/constants";
+import { MAX_LIMIT, QUERY_KEYS, USER_ROLES_EXECULDED } from "@/utils/constants";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import EditDialog from "@/components/EditDialog";
@@ -47,7 +47,7 @@ export default function WorkflowConfig() {
   const totalPages = workflowApiData?.data?.data?.pagination?.totalPages || 1;
 
   // 2. Fetch roles
-  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: 100 });
+  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
 
   const postMutation = useMutation({
     mutationFn: postWorkflowLevel,

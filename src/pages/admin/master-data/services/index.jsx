@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import React, { useState } from "react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
-import { useGetServices } from "../hooks";
+import { useGetServices, useGetDepartments } from "../hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postService, putService, deleteService } from "../api";
-import { QUERY_KEYS } from "@/utils/constants";
+import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
-import SubServicesTable from "./components/SubServicesTable";
 import Pagination from "@/components/Pagination";
 import usePagination from "@/hooks/usePagination";
 import ServiceTable from "./components/ServiceTable";
@@ -20,41 +17,17 @@ import ServiceForm from "./components/ServiceForm";
 export default function ServicesTab() {
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
-  const { data: servicesData, isLoading, error } = useGetServices([page, limit], {page, limit});
+  const { data: servicesData, isLoading, error } = useGetServices([page, limit], { page, limit });
   const services = servicesData?.data?.data?.docs || [];
-  const totalPages = servicesData?.data?.data?.pagination?.totalPages || 1
+  const totalPages = servicesData?.data?.data?.pagination?.totalPages || 1;
   const [subServiceDialog, setSubServiceDialog] = useState(null);
   const [serviceDialog, setServiceDialog] = useState(null);
 
-  const [serviceFormData, setServiceFormData] = useState({
-    title: "",
-    titleHindi: "",
-    department: "",
-  });
-  const [serviceErrors, setServiceErrors] = useState({
-    title: "",
-    titleHindi: "",
-    department: "",
-  });
-
-  useEffect(() => {
-    if (serviceDialog) {
-      setServiceErrors({ title: "", titleHindi: "", department: "" });
-      if (serviceDialog.type === "edit") {
-        setServiceFormData({
-          title: serviceDialog.item?.title || "",
-          titleHindi: serviceDialog.item?.titleHindi || "",
-          department: serviceDialog.item?.department || "",
-        });
-      } else if (serviceDialog.type === "add") {
-        setServiceFormData({
-          title: "",
-          titleHindi: "",
-          department: "",
-        });
-      }
-    }
-  }, [serviceDialog]);
+  const { data: departmentApiData } = useGetDepartments([1, 500], { page: 1, limit: MAX_LIMIT });
+  const departmentOptions = (departmentApiData?.data?.data?.docs || []).map(d => ({
+    label: d.title,
+    value: d._id
+  }));
 
   const postServiceMutation = useMutation({
     mutationFn: postService,
@@ -92,42 +65,27 @@ export default function ServicesTab() {
     },
   });
 
-  const handleSaveService = () => {
-    if (serviceDialog.type === "delete") {
-      deleteServiceMutation.mutate(serviceDialog.item._id);
-      return;
-    }
-
-    const newErrors = {};
-    if (!serviceFormData.title.trim()) {
-      newErrors.title = "Service name (English) is required";
-    }
-    if (!serviceFormData.titleHindi.trim()) {
-      newErrors.titleHindi = "सेवा का नाम (Hindi) is required";
-    }
-    if (!serviceFormData.department.trim()) {
-      newErrors.department = "Department is required";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setServiceErrors(newErrors);
-      return;
-    }
-
-    setServiceErrors({ title: "", titleHindi: "", department: "" });
-
+  const handleSubmitService = (formData) => {
     if (serviceDialog.type === "add") {
-      postServiceMutation.mutate(serviceFormData);
+      postServiceMutation.mutate(formData);
     } else {
       putServiceMutation.mutate({
         serviceId: serviceDialog.item._id,
         service: {
           ...serviceDialog.item,
-          ...serviceFormData,
+          ...formData,
         },
       });
     }
   };
+
+  const initialValues = {
+    title: serviceDialog?.item?.title || "",
+    titleHindi: serviceDialog?.item?.titleHindi || "",
+    department: serviceDialog?.item?.department?._id || serviceDialog?.item?.department || "",
+  };
+
+  const isSaving = postServiceMutation.isPending || putServiceMutation.isPending;
 
   return (
     <>
@@ -141,22 +99,25 @@ export default function ServicesTab() {
             <Plus className="w-4 h-4 mr-1" /> Add Service
           </Button>
         </div>
-       <ServiceTable
-        services={services}
-        setServiceDialog={setServiceDialog}
-        subServiceDialog={subServiceDialog}
-        setSubServiceDialog={setSubServiceDialog}
-       />
-        <Pagination page={page} limit={limit}
-        totalPage={totalPages}
-        isLoading={isLoading}
-        {...paginationProps} />
+        <ServiceTable
+          services={services}
+          setServiceDialog={setServiceDialog}
+          subServiceDialog={subServiceDialog}
+          setSubServiceDialog={setSubServiceDialog}
+        />
+        <Pagination
+          page={page}
+          limit={limit}
+          totalPage={totalPages}
+          isLoading={isLoading}
+          {...paginationProps}
+        />
       </LoaderErrWrapper>
 
       {serviceDialog && serviceDialog.type === "delete" && (
         <DeleteDialog
           title={serviceDialog.item.title}
-          onDelete={handleSaveService}
+          onDelete={() => deleteServiceMutation.mutate(serviceDialog.item._id)}
           onClose={() => setServiceDialog(null)}
           deleting={deleteServiceMutation.isPending}
         />
@@ -170,15 +131,15 @@ export default function ServicesTab() {
               : `Edit ${serviceDialog.item?.title || "Record"}`
           }
           onClose={() => setServiceDialog(null)}
-          onSave={handleSaveService}
-          saving={postServiceMutation.isPending || putServiceMutation.isPending}
+          isHideFooter={true}
         >
-        <ServiceForm
-        serviceErrors={serviceErrors}
-        serviceFormData={serviceFormData}
-        setServiceFormData={setServiceFormData}
-        setServiceErrors={setServiceErrors}
-        />
+          <ServiceForm
+            initialValues={initialValues}
+            handleSubmit={handleSubmitService}
+            onClose={() => setServiceDialog(null)}
+            saving={isSaving}
+            departmentOptions={departmentOptions}
+          />
         </EditDialog>
       )}
     </>

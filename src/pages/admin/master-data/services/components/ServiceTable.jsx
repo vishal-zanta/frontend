@@ -14,7 +14,7 @@ const ServiceTable = ({
       {services.map((s) => (
         <div
           key={s._id}
-          className="bg-white rounded-xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300"
+          className="bg-white rounded-xl border border-border p-5 pb-0 shadow-sm hover:shadow-md transition-shadow duration-300"
         >
           <div className="flex items-center justify-between mb-4 border-b border-border pb-3 flex-wrap gap-2">
             <div>
@@ -27,7 +27,7 @@ const ServiceTable = ({
               <div className="text-xs text-muted-foreground mt-0.5">
                 Department:{" "}
                 <span className="font-semibold text-primary">
-                  {s.department}
+                  {s.department?.title || s.department}
                 </span>
               </div>
             </div>

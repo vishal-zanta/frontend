@@ -105,3 +105,22 @@ export const putOption = async ({ optionId, option }) => {
 export const deleteOption = async (optionId) => {
   return instance.delete(`/options/${optionId}`);
 };
+
+// ---- departments ----
+export const getDepartments = async (params = {}) => {
+  return instance.get("/departments", { params });
+};
+
+export const postDepartment = async (department) => {
+  return instance.post("/departments", department);
+};
+
+export const putDepartment = async ({ departmentId, department }) => {
+  return instance.put(`/departments/${departmentId}`, department);
+};
+
+export const deleteDepartment = async (departmentId) => {
+  return instance.delete(`/departments/${departmentId}`);
+};
+
+

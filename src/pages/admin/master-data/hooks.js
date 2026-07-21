@@ -1,4 +1,4 @@
-import { getServices, getSubservices, getComplaintSources, getDemographics, getUlbs, getOptions, getOptionTypes } from "./api";
+import { getServices, getSubservices, getComplaintSources, getDemographics, getUlbs, getOptions, getOptionTypes, getDepartments } from "./api";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../../utils/constants";
 
@@ -50,5 +50,12 @@ export const useGetOptionTypes = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.OPTION_TYPES],
     queryFn: getOptionTypes,
+  });
+};
+
+export const useGetDepartments = (keys = [], params = {}) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.DEPARTMENTS, ...keys],
+    queryFn: () => getDepartments(params),
   });
 };

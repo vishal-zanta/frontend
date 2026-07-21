@@ -1,73 +1,38 @@
-import React, { useState, useEffect } from "react";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import React, { useState } from "react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteRole, postRole, putRole } from "@/api/roles.api";
-import { QUERY_KEYS } from "@/utils/constants";
+import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import DesignationTable from "./components/DesignationTable";
 import DesignationForm from "./components/DesignationForm";
-
+import { useGetDepartments } from "../hooks";
 
 export default function DesignationsTab() {
   const { page, limit, ...paginationProps } = usePagination();
-  const { data, isLoading, isFetching, isRefetching, error } = useGetRoles(
+  const { data, isLoading, error } = useGetRoles(
     [page, limit],
     { page, limit },
   );
+
   const designations = data?.data?.docs || [];
   const totalPages = data?.data?.pagination?.totalPages || 1;
   const queryClient = useQueryClient();
 
-  const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
-  const [formData, setFormData] = useState({
-    designationEnglish: "",
-    designationHindi: "",
-    level: "L1",
-    permissions: [],
-  });
-  const [errors, setErrors] = useState({
-    designationEnglish: "",
-    designationHindi: "",
-    permissions: "",
-  });
+  const { data: departmentApiData } = useGetDepartments([1, 500], { page: 1, limit: MAX_LIMIT });
+  const departmentOptions = (departmentApiData?.data?.data?.docs || []).map(d => ({
+    label: d.title,
+    value: d._id
+  }));
 
-  useEffect(() => {
-    if (dialog) {
-      setErrors({ designationEnglish: "", designationHindi: "", permissions: "" });
-      if (dialog.type === "edit") {
-        setFormData({
-          designationEnglish: dialog.item?.designationEnglish || "",
-          designationHindi: dialog.item?.designationHindi || "",
-          level: dialog.item?.level || "L1",
-          permissions: dialog.item?.permissions || [],
-        });
-      } else if (dialog.type === "add") {
-        setFormData({
-          designationEnglish: "",
-          designationHindi: "",
-          level: "L1",
-          permissions: [],
-        });
-      }
-    }
-  }, [dialog]);
+  const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
 
   const postMutation = useMutation({
     mutationFn: postRole,
@@ -80,6 +45,7 @@ export default function DesignationsTab() {
       getErrorToast(err);
     },
   });
+
   const putMutation = useMutation({
     mutationFn: putRole,
     onSuccess: () => {
@@ -91,6 +57,7 @@ export default function DesignationsTab() {
       getErrorToast(err);
     },
   });
+
   const deleteMutation = useMutation({
     mutationFn: deleteRole,
     onSuccess: () => {
@@ -103,30 +70,7 @@ export default function DesignationsTab() {
     },
   });
 
-  const handleSave = () => {
-    if (dialog.type === "delete") {
-      deleteMutation.mutate(dialog.item._id);
-      return;
-    }
-
-    const newErrors = {};
-    if (!formData.designationEnglish.trim()) {
-      newErrors.designationEnglish = "Designation (English) is required";
-    }
-    if (!formData.designationHindi.trim()) {
-      newErrors.designationHindi = "पदनाम (Hindi) is required";
-    }
-    if (!formData.permissions || formData.permissions.length === 0) {
-      newErrors.permissions = "Permissions are required";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({ designationEnglish: "", designationHindi: "", permissions: "" });
-
+  const handleSubmit = (formData) => {
     if (dialog.type === "add") {
       postMutation.mutate(formData);
     } else {
@@ -136,6 +80,16 @@ export default function DesignationsTab() {
       });
     }
   };
+
+  const initialValues = {
+    designationEnglish: dialog?.item?.designationEnglish || "",
+    designationHindi: dialog?.item?.designationHindi || "",
+    level: dialog?.item?.level || "L1",
+    permissions: dialog?.item?.permissions || [],
+    department: dialog?.item?.department?._id || dialog?.item?.department || "",
+  };
+
+  const isSaving = postMutation.isPending || putMutation.isPending;
 
   return (
     <>
@@ -165,7 +119,7 @@ export default function DesignationsTab() {
       {dialog && dialog.type === "delete" && (
         <DeleteDialog
           title={dialog.item.designationEnglish}
-          onDelete={handleSave}
+          onDelete={() => deleteMutation.mutate(dialog.item._id)}
           onClose={() => setDialog(null)}
           deleting={deleteMutation.isPending}
         />
@@ -178,21 +132,17 @@ export default function DesignationsTab() {
               : `Edit ${dialog.item?.designationEnglish || "Record"}`
           }
           onClose={() => setDialog(null)}
-          onSave={handleSave}
-          saving={postMutation.isPending || putMutation.isPending}
+          isHideFooter={true}
         >
           <DesignationForm
-            errors={errors}
-            formData={formData}
-            setFormData={setFormData}
-            setErrors={setErrors}
+            initialValues={initialValues}
+            handleSubmit={handleSubmit}
+            onClose={() => setDialog(null)}
+            saving={isSaving}
+            departmentOptions={departmentOptions}
           />
         </EditDialog>
       )}
-    
-      
-      
-      
     </>
   );
 }
