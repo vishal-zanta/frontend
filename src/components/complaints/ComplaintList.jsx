@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { STATUS_ACTIONS, PRIORITY_ACTIONS } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 export default function ComplaintList({
   selected,
@@ -27,7 +28,10 @@ export default function ComplaintList({
   autoSelect = true,
 }) {
   const { t } = useLanguage();
+  const [searchParams] = useSearchParams();
+  const {state} = useLocation();
   const [search, setSearch] = useState("");
+const isChangedOnce = useRef(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("");
@@ -105,6 +109,11 @@ export default function ComplaintList({
       }
     }
   }, [complaints, onStatsChange]);
+  useEffect(()=> {
+    if(!!searchParams.get("complaint")){
+      setSearch(searchParams.get("complaint"));
+    }
+  },[searchParams.get("complaint")])
 
   return (
     <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
@@ -227,6 +236,8 @@ export default function ComplaintList({
           <SearchDebounced
             placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
             handleDebouncedChange={(val) => setSearch(val)}
+            initialValue={searchParams.get("complaint") || ""}
+
           />
         </div>
       </div>
@@ -271,10 +282,19 @@ export default function ComplaintList({
                         </h2>
                         <StatusBadge status={c.status} />
                       </div>
-                      <SLATimer
-                        createdAt={c.createdAt}
-                        slaHours={c.classification?.subService?.sla || c.slaHours}
-                      />
+                      <div className="flex items-center gap-1 flex-wrap">
+                        <SLATimer
+                          createdAt={c.createdAt}
+                          slaHours={c.classification?.subService?.sla || c.slaHours}
+                        />
+                        { (
+                          <SLATimer
+                            createdAt={c?.assignedAt || null}
+                            slaHours={c.slaHours}
+                            customText="Officer SLA"
+                          />
+                        )}
+                      </div>
                     </div>
                     <div className="text-sm text-foreground truncate">
                       {c.classification?.subService?.title ||

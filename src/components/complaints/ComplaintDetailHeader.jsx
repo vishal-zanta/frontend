@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
-export function SLATimer({ createdAt, slaHours }) {
+export function SLATimer({ createdAt, slaHours, customText="Service SLA" }) {
   const { t } = useLanguage();
   const [timeLeft, setTimeLeft] = useState("");
   const [isExpired, setIsExpired] = useState(false);
@@ -55,13 +55,18 @@ export function SLATimer({ createdAt, slaHours }) {
     badgeClass = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 animate-pulse";
   }
 
+  const labelText =
+    customText === "Officer SLA"
+      ? t("Officer SLA:", "अधिकारी एसएलए:")
+      : t(`${customText}:`, "सेवा एसएलए:");
+
   return (
     <Badge
       variant="outline"
       className={`text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 ${badgeClass}`}
     >
       <Clock className="w-3 h-3" />
-      {t("SLA Timer:", "एसएलए टाइमर:")} {timeLeft}
+      {labelText} {timeLeft}
     </Badge>
   );
 }
@@ -96,12 +101,19 @@ export default function ComplaintDetailHeader({
         </p>
 
         {isCCE && (
-          <div className="flex gap-3 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
-            <span >{t("Filed:", "दर्ज:")} {formattedDate}</span>
+          <div className="flex gap-2 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
+            <span>{t("Filed:", "दर्ज:")} {formattedDate}</span>
             <SLATimer
               createdAt={c.createdAt}
               slaHours={c.classification?.subService?.sla || c.slaHours}
             />
+            {/* {!!c.assignedAt && ( */}
+              <SLATimer
+                createdAt={c?.assignedAt || null}
+                slaHours={c.slaHours}
+                customText="Officer SLA"
+              />
+            {/* )} */}
           </div>
         )}
       </div>
@@ -146,12 +158,21 @@ export default function ComplaintDetailHeader({
           )}
         </div>
       ) : (
-        <div className="text-right text-xs text-muted-foreground space-y-1">
+        <div className="text-right text-xs text-muted-foreground space-y-1 flex flex-col items-end">
           <div className="text-left sm:text-right">{t("Filed:", "दर्ज:")} {formattedDate}</div>
-          <SLATimer
-            createdAt={c.createdAt}
-            slaHours={c.classification?.subService?.sla || c.slaHours}
-          />
+          <div className="flex flex-wrap gap-1 justify-end">
+            <SLATimer
+              createdAt={c.createdAt}
+              slaHours={c.classification?.subService?.sla || c.slaHours}
+            />
+            {!!c.assignedAt && (
+              <SLATimer
+                createdAt={c.assignedAt}
+                slaHours={c.slaHours}
+                customText="Officer SLA"
+              />
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -28,6 +28,14 @@ const SearchDebounced = ({
       clearTimeout(timerRef.current);
     };
   }, [searchQuery]);
+
+  useEffect(()=> {
+   
+    if(!!initialValue && !!initialValue.trim() &&  searchQuery !== initialValue){
+      setSearchQuery(initialValue);
+    }
+  },[initialValue])
+  //  console.log({initialValue, searchQuery});
   return (
     <div className={clsx("relative", className)}>
       {icon && (
