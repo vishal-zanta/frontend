@@ -326,6 +326,7 @@ export default function ComplaintDetailView({
             currentPriority={displayPriority}
             fieldVisit={fieldVisit}
             geotaggedImages={geotaggedImages}
+            maxMbAllowed={maxMbAllowed}
           />
         </div>
 

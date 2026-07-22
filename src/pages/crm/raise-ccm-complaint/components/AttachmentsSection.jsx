@@ -9,11 +9,12 @@ export default function AttachmentsSection({
   handleFileChange,
   removeAttachment,
   t,
+  grievanceMaxUploadSizeMB
 }) {
   return (
     <FormSection title={t("Attachments", "संलग्नक")}>
        <p className="text-xs text-muted-foreground mb-3">
-        Allowed file types: Images, Videos, Audio. Max size: 10MB per file.
+        Allowed file types: Images, Videos, Audio. Max size: {grievanceMaxUploadSizeMB}MB per file.
       </p>
       <input
         ref={fileInputRef}
@@ -38,7 +39,7 @@ export default function AttachmentsSection({
             )}
           </p>
           <p className="text-xs text-muted-foreground/60 mt-1">
-            {t("Max 10 MB per file", "प्रति फ़ाइल अधिकतम 10 MB")}
+            {t(`Max ${grievanceMaxUploadSizeMB} MB per file`, `प्रति फ़ाइल अधिकतम ${grievanceMaxUploadSizeMB} MB`)}
           </p>
         </button>
       ) : (

@@ -188,6 +188,7 @@ export default function CRMRaiseComplaint() {
             complaintSourcesLoading={complaintSourcesLoading}
             allDemography={allDemography}
             demographyLoading={demographyLoading}
+            grievanceMaxUploadSizeMB={grievanceMaxUploadSizeMB}
           />
         </RhfWrapper>
       </div>
@@ -214,6 +215,7 @@ function FormWizard({
   complaintSourcesLoading,
   allDemography,
   demographyLoading,
+  grievanceMaxUploadSizeMB
 }) {
   const { trigger } = useFormContext();
   const [step, setStep] = useState(1);
@@ -378,6 +380,7 @@ function FormWizard({
               handleFileChange={handleFileChange}
               removeAttachment={removeAttachment}
               t={t}
+              grievanceMaxUploadSizeMB={grievanceMaxUploadSizeMB}
             />
           </div>
         )}

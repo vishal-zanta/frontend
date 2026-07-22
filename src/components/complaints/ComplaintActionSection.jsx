@@ -28,6 +28,7 @@ export default function ComplaintActionSection({
   currentPriority,
   fieldVisit,
   geotaggedImages,
+  maxMbAllowed,
 }) {
 
 

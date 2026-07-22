@@ -7,8 +7,8 @@ const useGetFileSize = (keys = [], enabled = true) => {
     queryKey : [QUERY_KEYS.CONFIG, ...keys],
     queryFn : () => getConfig(),
     enabled: enabled,
-    gcTime: 60*60*1000, // 1 hour,
-    staleTime: 5*60*60*1000 // 5 hour
+    // gcTime: 60*60*1000, // 1 hour,
+    // staleTime: 5*60*60*1000 // 5 hour
   })
 }
 
