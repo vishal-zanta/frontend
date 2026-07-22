@@ -53,11 +53,6 @@ export const getFormData = (data, attachments = []) => {
     String(data.impact.vulnerability.economicallyWeakerSection ?? false),
   );
 
-  formData.append(
-    "communication[satisfactionSurveyConsent]",
-    String(data.communication.satisfactionSurveyConsent ?? false),
-  );
-
   if (data.address.state) formData.append("address[state]", data.address.state);
   if (data.address.district)
     formData.append("address[district]", data.address.district);

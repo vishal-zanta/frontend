@@ -9,6 +9,7 @@ export default function RhfBoolean({
   description,
   className,
   labelClassName,
+  required =false,
   disabled = false,
 }) {
   const { control } = useFormContext();
@@ -44,6 +45,7 @@ export default function RhfBoolean({
                 )}
               >
                 {label}
+                 {required && <span className="text-destructive"> *</span>}
               </Label>
             )}
           </label>

@@ -25,6 +25,7 @@ import ImpactSection from "./components/ImpactSection";
 import AddressSection from "./components/AddressSection";
 import CommunicationSection from "./components/CommunicationSection";
 import AttachmentsSection from "./components/AttachmentsSection";
+import ButtonsFooter from "./components/ButtonsFooter";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
@@ -246,7 +247,6 @@ function FormWizard({
         "citizenInfo.email",
         "citizenInfo.preferredLanguage",
         "communication.feedbackConsent",
-        "communication.satisfactionSurveyConsent",
       ]);
     } else if (step === 2) {
       isValid = await trigger([
@@ -384,47 +384,13 @@ function FormWizard({
       </div>
 
       {/* Buttons Footer */}
-      <div className="flex justify-center gap-4 items-center mt-6 pt-4 border-t border-border">
-        <div>
-          {step > 1 && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleBack}
-              className="hover:bg-muted font-medium transition-all"
-            >
-              &larr; {t("Back", "पीछे")}
-            </Button>
-          )}
-        </div>
-
-        <div>
-          {step < 3 ? (
-            <button
-              type="button"
-              onClick={handleNext}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium min-w-[120px] transition-all h-9 px-4 py-2 rounded-lg flex items-center justify-center"
-            >
-              {t("Next", "आगे")} &rarr;
-            </button>
-          ) : (
-            <Button
-              type="submit"
-              disabled={postComplaintMutation.isPending}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium min-w-[180px] transition-all "
-            >
-              {postComplaintMutation.isPending ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  {t("Submitting...", "जमा हो रहा है...")}
-                </span>
-              ) : (
-                t("Submit Grievance", "शिकायत जमा करें")
-              )}
-            </Button>
-          )}
-        </div>
-      </div>
+      <ButtonsFooter
+        step={step}
+        handleBack={handleBack}
+        handleNext={handleNext}
+        isSubmitting={postComplaintMutation.isPending}
+        t={t}
+      />
     </div>
   );
 }
