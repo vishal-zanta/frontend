@@ -17,15 +17,19 @@ import Pagination from "@/components/Pagination";
 import { grievanceNatureSchema, grievanceNatureDefaultValues } from "../schema";
 import GrievenceItems from "./components/GrievenceItems";
 import GrievenceForm from "./components/GrievenceForm";
+import useSort from "@/hooks/useSort";
 
 export default function GrievenceNatureTab() {
+  const sortProps = useSort();
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
 
   // Fetch paginated options list
-  const { data, isLoading, error } = useGetOptions([page, limit], {
+  const { data, isLoading, error } = useGetOptions([page, limit, sortProps.sortBy, sortProps.sortOrder], {
     page,
     limit,
+    sortBy: sortProps.sortBy,
+    sortOrder: sortProps.sortOrder,
   });
   const rawItems = data?.data?.data?.docs || [];
   const totalPages = data?.data?.data?.pagination?.totalPages || 1;
@@ -148,7 +152,11 @@ export default function GrievenceNatureTab() {
             </div>
           ) : (
             <>
-              <GrievenceItems rawItems={rawItems} setDialog={setDialog} />
+              <GrievenceItems
+                rawItems={rawItems}
+                setDialog={setDialog}
+                sortProps={sortProps}
+              />
               <Pagination
                 page={page}
                 limit={limit}

@@ -19,11 +19,13 @@ import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import SearchDebounced from "@/components/debounced/SearchDebounced";
 import clsx from "clsx";
+import DeleteDialog from "@/components/DeleteDialog";
 
 export default function SLAConfig() {
   const [search, setSearch] = useState("");
   const [dialog, setDialog] = useState(null);
   const [editItem, setEditItem] = useState(null);
+  const [deleteRecord, setDeleteRecord] = useState(null);
   const [selectedDept, setSelectedDept] = useState("");
 
   const { page, limit, ...pageProps } = usePagination();
@@ -123,6 +125,7 @@ export default function SLAConfig() {
     onSuccess: () => {
       getSuccessToast("SLA config deleted successfully");
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SLA_CONFIGS] });
+      setDeleteRecord(null);
     },
     onError: (err) => {
       getErrorToast(err);
@@ -149,14 +152,12 @@ export default function SLAConfig() {
   };
 
   const handleDelete = (item) => {
-    if (
-      confirm(
-        `Are you sure you want to delete the SLA config for "${
-          item.subService?.title || "this sub-service"
-        }"?`,
-      )
-    ) {
-      deleteMutation.mutate(item._id);
+    setDeleteRecord(item);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteRecord) {
+      deleteMutation.mutate(deleteRecord._id);
     }
   };
 
@@ -345,11 +346,24 @@ export default function SLAConfig() {
                   onClick={handleSaveItem}
                   disabled={postMutation.isPending || putMutation.isPending}
                 >
-                  <Check className="w-4 h-4 mr-1" /> Save
+                  <Check className="w-4 h-4 mr-1" />{" "}
+                  {postMutation.isPending || putMutation.isPending
+                    ? "Saving..."
+                    : "Save"}
                 </Button>
               </div>
             </div>
           </div>
+        )}
+
+        {/* Delete Dialog */}
+        {deleteRecord && (
+          <DeleteDialog
+            onClose={() => setDeleteRecord(null)}
+            onDelete={handleConfirmDelete}
+            title={deleteRecord.subService?.title || "SLA Config"}
+            deleting={deleteMutation.isPending}
+          />
         )}
       </div>
     </PortalLayout>

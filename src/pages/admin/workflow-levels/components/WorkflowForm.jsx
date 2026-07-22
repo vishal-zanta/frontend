@@ -63,7 +63,7 @@ const WorkflowForm = ({
             className="bg-primary hover:bg-primary/90"
             disabled={isPending}
           >
-            <Check className="w-4 h-4 mr-1" /> Save
+            <Check className="w-4 h-4 mr-1" /> {isPending ? "Saving..." : "Save"}
           </Button>
         </div>
       </RhfWrapper>

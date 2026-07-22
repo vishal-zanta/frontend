@@ -18,11 +18,13 @@ import WorkflowRules from "./components/WorkflowRules";
 import WorkflowForm from "./components/WorkflowForm";
 import WorkflowFilter from "./components/WorkflowFilter";
 import { useGetDepartments } from "../master-data/hooks";
+import DeleteDialog from "@/components/DeleteDialog";
 
 export default function WorkflowConfig() {
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit", item? }
   const [workflowList, setWorkflowList] = useState([]);
   const [editLevel, setEditLevel] = useState(null);
+  const [deleteRecord, setDeleteRecord] = useState(null);
   const [filter, setFilter] = useState({
     department: "",
   });
@@ -70,6 +72,7 @@ export default function WorkflowConfig() {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.WORKFLOW_LEVELS] });
       setDialog(null);
       setEditLevel(null);
+      setDeleteRecord(null);
     },
     onError: (err) => {
       getErrorToast(err);
@@ -85,15 +88,12 @@ export default function WorkflowConfig() {
   };
 
   const handleDelete = (level) => {
-    if (
-      confirm(
-        `Are you sure you want to delete Level ${level.order} (${
-          level.role?.designationEnglish || "this level"
-        })?`,
-      )
-    ) {
-      const updated = workflowList.filter((lvl) => lvl._id !== level._id);
-      
+    setDeleteRecord(level);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteRecord) {
+      const updated = workflowList.filter((lvl) => lvl._id !== deleteRecord._id);
       const payloadLevels = updated.map((lvl, index) => ({
         role: lvl.role?._id || lvl.role,
         order: index + 1,
@@ -279,6 +279,16 @@ console.log({editLevel})
               isPending={postMutation.isPending}
             />
           </div>
+        )}
+
+        {/* Delete Dialog */}
+        {deleteRecord && (
+          <DeleteDialog
+            onClose={() => setDeleteRecord(null)}
+            onDelete={handleConfirmDelete}
+            title={`Level ${deleteRecord.order}`}
+            deleting={postMutation.isPending}
+          />
         )}
       </div>
     </PortalLayout>

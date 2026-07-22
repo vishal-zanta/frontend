@@ -20,7 +20,7 @@ export const LANGUAGES = [
   { label: "हिन्दी", value: "Hindi" },
 ];
 
-export const MAX_LIMIT = 500;
+export const MAX_LIMIT = 200;
 export const QUERY_KEYS = {
   ROLES: "roles",
   SERVICES: "services",

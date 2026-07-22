@@ -234,6 +234,7 @@ export default function OfficerTagging() {
         <QuickTagOfficer
           officers={userOptionsUnTagged}
           handleSaveTagging={handleQuickSave}
+          isLoading={postMutation.isPending}
         />
 
         {/* Add/Edit Dialog */}
@@ -323,6 +324,7 @@ export default function OfficerTagging() {
             onDelete={handleConfirmDelete}
             title="Remove Officer Tagging"
             message={`Are you sure you want to remove the tagging for "${deleteRecord.officer?.name || "this officer"}"?`}
+            deleting={deleteMutation.isPending}
           />
         )}
 

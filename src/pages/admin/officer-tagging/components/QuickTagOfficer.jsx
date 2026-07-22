@@ -6,7 +6,7 @@ import { useGetServices, useGetSubservices, useGetDemographics } from "../../mas
 import subDivisionsData from "@/utils/sub-divisions.json";
 import { MAX_LIMIT } from "@/utils/constants";
 
-export default function QuickTagOfficer({ officers = [], handleSaveTagging }) {
+export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLoading }) {
   const [selectedOfficer, setSelectedOfficer] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [selectedSubservices, setSelectedSubservices] = useState([]);
@@ -144,8 +144,12 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging }) {
           />
         </div>
       </div>
-      <Button className="mt-4 bg-primary hover:bg-primary/90" onClick={handleSubmit}>
-        <Save className="w-4 h-4 mr-1" /> Save Tagging
+      <Button
+        className="mt-4 bg-primary hover:bg-primary/90"
+        onClick={handleSubmit}
+        disabled={isLoading}
+      >
+        <Save className="w-4 h-4 mr-1" /> {isLoading ? "Saving..." : "Save Tagging"}
       </Button>
     </div>
   );

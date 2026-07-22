@@ -1,51 +1,54 @@
-import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import MyTable from "@/components/MyTable";
 
-const GrievenceItems = ({ rawItems = [], setDialog }) => {
+const GrievenceItems = ({ rawItems = [], setDialog , sortProps}) => {
+  const tableHeaders = [
+    { id: "title", label: "Title" },
+    { id: "type", label: "Type", isSortable: true },
+    { id: "actions", label: "Actions", className: "text-center" },
+  ];
+
+  const tableBody = rawItems.map((item) => ({
+    title: {
+      value: item.title,
+      className: "font-medium text-foreground",
+    },
+    type: {
+      value: item.type,
+      className: "text-muted-foreground text-xs",
+    },
+    actions: {
+      className: "text-center",
+      render: () => (
+        <div className="flex gap-1 justify-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setDialog({ type: "edit", item })}
+          >
+            <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-red-600"
+            onClick={() => setDialog({ type: "delete", item })}
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+      ),
+    },
+  }));
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead className="bg-muted/50">
-          <tr className="text-left text-xs text-muted-foreground">
-            <th className="px-4 py-3 font-medium">Title</th>
-            <th className="px-4 py-3 font-medium">Type</th>
-            <th className="px-4 py-3 font-medium text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {rawItems.map((item) => (
-            <tr key={item._id} className="hover:bg-muted/30">
-              <td className="px-4 py-3 font-medium text-foreground">
-                {item.title}
-              </td>
-              <td className="px-4 py-3 text-muted-foreground text-xs">
-                {item.type || "-"}
-              </td>
-              <td className="px-4 py-3 text-center">
-                <div className="flex gap-1 justify-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setDialog({ type: "edit", item })}
-                  >
-                    <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-600"
-                    onClick={() => setDialog({ type: "delete", item })}
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <MyTable
+      tableHeaders={tableHeaders}
+      tableBody={tableBody}
+      sortProps={sortProps}
+    />
   );
 };
 
