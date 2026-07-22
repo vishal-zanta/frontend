@@ -20,15 +20,15 @@ const FileSizeSections = () => {
   // Log data of useQuery as requested
   console.log("Config Query Data in FileSizeSections:", data?.data);
 
-  const [defaultSize, setDefaultSize] = useState("");
+  const defaultMaxUploadSizeMB = data?.data?.defaultMaxUploadSizeMB || 10;
+
   const [grievanceSize, setGrievanceSize] = useState("");
   const [fieldVisitSize, setFieldVisitSize] = useState("");
   const [chatSize, setChatSize] = useState("");
 
   useEffect(() => {
     if (data) {
-      const configObj = data?.data ;
-      setDefaultSize(configObj?.defaultMaxUploadSizeMB ?? "");
+      const configObj = data?.data;
       setGrievanceSize(configObj?.grievanceMaxUploadSizeMB ?? "");
       setFieldVisitSize(configObj?.fieldVisitMaxUploadSizeMB ?? "");
       setChatSize(configObj?.chatMaxUploadSizeMB ?? "");
@@ -55,12 +55,12 @@ const FileSizeSections = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     mutation.mutate({
-      defaultMaxUploadSizeMB: Number(defaultSize),
       grievanceMaxUploadSizeMB: Number(grievanceSize),
       fieldVisitMaxUploadSizeMB: Number(fieldVisitSize),
       chatMaxUploadSizeMB: Number(chatSize),
     });
   };
+
   return (
     <div className="bg-white dark:bg-card rounded-xl border border-border p-6 w-full">
       <div className="flex items-center gap-2 mb-6">
@@ -68,34 +68,16 @@ const FileSizeSections = () => {
         <div>
           <h3 className="font-bold text-foreground">File Size Limits</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Configure individual upload limits across different modules (Max 10 MB per input)
+            Configure individual upload limits across different modules (Max {defaultMaxUploadSizeMB} MB per input)
           </p>
         </div>
       </div>
 
       <LoaderErrWrapper isLoading={isLoading} error={error}>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="defaultSize">Default Max Upload Size (MB) <span className="text-red-500">*</span></Label>
-              <Input
-                id="defaultSize"
-                type="text"
-                required
-                value={defaultSize}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (isValidNumber(val, 1, 10)) {
-                    setDefaultSize(val);
-                  }
-                }}
-                placeholder="e.g. 10"
-                className="bg-white dark:bg-zinc-950 text-foreground"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="grievanceSize">Grievance Max Upload Size (MB) <span className="text-red-500">*</span></Label>
+              <Label htmlFor="grievanceSize">Citizen Attachment Max Upload Size (MB) <span className="text-red-500">*</span></Label>
               <Input
                 id="grievanceSize"
                 type="text"
@@ -103,11 +85,14 @@ const FileSizeSections = () => {
                 value={grievanceSize}
                 onChange={(e) => {
                   const val = e.target.value;
-                  if (isValidNumber(val, 1, 10)) {
+                  if (isValidNumber(val, 1, defaultMaxUploadSizeMB || 10)) {
                     setGrievanceSize(val);
                   }
+                  else{
+                    getErrorToast(`Allowed size between 1 to ${defaultMaxUploadSizeMB} MB`)
+                  }
                 }}
-                placeholder="e.g. 1"
+                placeholder={`e.g. ${defaultMaxUploadSizeMB}`}
                 className="bg-white dark:bg-zinc-950 text-foreground"
               />
             </div>
@@ -121,11 +106,14 @@ const FileSizeSections = () => {
                 value={fieldVisitSize}
                 onChange={(e) => {
                   const val = e.target.value;
-                  if (isValidNumber(val, 1, 10)) {
+                  if (isValidNumber(val, 1, defaultMaxUploadSizeMB || 10)) {
                     setFieldVisitSize(val);
                   }
+                   else{
+                    getErrorToast(`Allowed size between 1 to ${defaultMaxUploadSizeMB} MB`)
+                  }
                 }}
-                placeholder="e.g. 10"
+                placeholder={`e.g. ${defaultMaxUploadSizeMB}`}
                 className="bg-white dark:bg-zinc-950 text-foreground"
               />
             </div>
@@ -139,11 +127,14 @@ const FileSizeSections = () => {
                 value={chatSize}
                 onChange={(e) => {
                   const val = e.target.value;
-                  if (isValidNumber(val, 1, 10)) {
+                  if (isValidNumber(val, 1, defaultMaxUploadSizeMB || 10)) {
                     setChatSize(val);
                   }
+                   else{
+                    getErrorToast(`Allowed size between 1 to ${defaultMaxUploadSizeMB} MB`)
+                  }
                 }}
-                placeholder="e.g. 5"
+                placeholder={`e.g. ${defaultMaxUploadSizeMB}`}
                 className="bg-white dark:bg-zinc-950 text-foreground"
               />
             </div>
