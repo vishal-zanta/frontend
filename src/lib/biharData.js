@@ -4,7 +4,7 @@
 // ============================================================
 
 export const PORTAL_META = {
-  name: "Bihar e-Grievance Portal",
+  name: "Bihar Sahayog Helpline Portal",
   tagline: "सुशासन ही जनसेवा - Good Governance is Public Service",
   dept: "Urban Development & Housing Department, Government of Bihar",
   version: "v2.4.1",

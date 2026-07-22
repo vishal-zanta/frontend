@@ -25,6 +25,11 @@ const LanguageContextProvider = ({ children }) => {
         if (lan && lan === "Hindi") {
           setLang("Hindi");
         }
+      } else {
+        const lan = localStorage.getItem("admin-lang");
+        if (lan && lan === "Hindi") {
+          setLang("Hindi");
+        }
       }
     }
   }, [profile, profiledata]);
@@ -40,6 +45,8 @@ const LanguageContextProvider = ({ children }) => {
         localStorage.setItem("cce-lang", lang);
       } else if (profiledata.isOfficer) {
         localStorage.setItem("off-lang", lang);
+      } else {
+        localStorage.setItem("admin-lang", lang);
       }
     }
   }, [lang, profile, profiledata]);

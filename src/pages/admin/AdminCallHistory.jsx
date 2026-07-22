@@ -112,7 +112,7 @@ export default function AdminCallHistory() {
           />
         </div>
 
-        <div className="bg-white rounded-xl border border-border p-4 flex flex-wrap items-center gap-3">
+        <div className="bg-white dark:bg-card rounded-xl border border-border p-4 flex flex-wrap items-center gap-3">
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -147,7 +147,7 @@ export default function AdminCallHistory() {
           </Select>
         </div>
 
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-white dark:bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
@@ -172,7 +172,7 @@ export default function AdminCallHistory() {
                     <td className="px-3 py-3">
                       <Badge
                         variant="outline"
-                        className={`text-[10px] ${c.callType === "Outbound" ? "bg-sky-50 text-sky-700" : "bg-blue-50 text-primary"}`}
+                        className={`text-[10px] ${c.callType === "Outbound" ? "bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-400" : "bg-blue-50 text-primary dark:bg-blue-950/30 dark:text-blue-400"}`}
                       >
                         {c.callType}
                       </Badge>
@@ -193,14 +193,14 @@ export default function AdminCallHistory() {
                     <td className="px-3 py-3">
                       <Badge
                         variant="outline"
-                        className={`text-xs ${c.status === "Resolved" ? "bg-emerald-50 text-emerald-700" : c.status === "Missed" ? "bg-red-50 text-red-700" : c.status === "Escalated" ? "bg-amber-50 text-amber-700" : "bg-slate-50 text-slate-600"}`}
+                        className={`text-xs ${c.status === "Resolved" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : c.status === "Missed" ? "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400" : c.status === "Escalated" ? "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400" : "bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}
                       >
                         {c.status}
                       </Badge>
                     </td>
                     <td className="px-3 py-3">
                       {c.evidenceTagged ? (
-                        <ShieldCheck className="w-4 h-4 text-purple-600" />
+                        <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                       ) : (
                         <span className="text-xs text-muted-foreground">-</span>
                       )}

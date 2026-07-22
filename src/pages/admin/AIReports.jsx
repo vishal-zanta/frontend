@@ -223,7 +223,7 @@ export default function AIReports() {
         </ChartCard>
 
         {/* Prediction confidence with benchmark */}
-        <div className="bg-white rounded-xl border border-border p-5">
+        <div className="bg-white dark:bg-card rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <Zap className="w-5 h-5 text-purple-500" /> AI Model Confidence
           </h3>
@@ -234,7 +234,7 @@ export default function AIReports() {
             ).map((p, i) => (
               <div key={i} className="text-center p-3 bg-muted/50 rounded-lg">
                 <div
-                  className={`text-2xl font-bold ${p.trend === "up" ? "text-red-600" : p.trend === "down" ? "text-emerald-600" : "text-amber-600"}`}
+                  className={`text-2xl font-bold ${p.trend === "up" ? "text-red-600 dark:text-red-400" : p.trend === "down" ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}
                 >
                   {p.confidence}%
                 </div>

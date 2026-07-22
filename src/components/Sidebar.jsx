@@ -461,7 +461,7 @@ export default function Sidebar({
   const config = roleConfig[role] || roleConfig.superadmin;
   const overrides = profileLabelOverrides[role]?.[profile] || {};
   const { hasPermission } = useAuth();
-  const {t} = useLanguage();
+  const { t } = useLanguage();
 
   const navRef = useRef(null);
 
@@ -515,7 +515,7 @@ export default function Sidebar({
               </div>
               <div className="min-w-0">
                 <div className="text-sm font-bold text-white leading-tight">
-                  {t("e-Grievance", "ई-शिकायत")}
+                  {t("Sahayog Helpline", "ई-शिकायत")}
                 </div>
                 <div className="text-[10px] text-sidebar-foreground/60 leading-tight">
                   {t("Govt. of Bihar", "बिहार सरकार")}

@@ -1,4 +1,6 @@
 import React, { useState, useRef } from "react";
+import { Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ComplaintTimeline from "@/components/ComplaintTimeline";
 import {
   useGetComplaintById,
@@ -24,6 +26,7 @@ import ComplaintComplainantSection from "./ComplaintComplainantSection";
 import ComplaintLocationSection from "./ComplaintLocationSection";
 import ComplaintEvidenceSection from "./ComplaintEvidenceSection";
 import ComplaintActionSection from "./ComplaintActionSection";
+// import { useAuth } from "@/context/AuthContext";
 
 export default function ComplaintDetailView({
   selected,
@@ -36,6 +39,7 @@ export default function ComplaintDetailView({
   const [selectedFiles, setSelectedFiles] = useState([]); // array of { file, preview }
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
+  // const {profiledata} = useAuth();
 
   const officerQuery = useGetComplaintByIdForOfficer(selectedId, {
     enabled: !!selectedId && !isCCE,
@@ -253,6 +257,7 @@ export default function ComplaintDetailView({
             assignOfficerMutation={assignOfficerMutation}
             selectedId={selectedId}
           />
+
 
           {/* Classification details */}
           <ComplaintClassificationSection

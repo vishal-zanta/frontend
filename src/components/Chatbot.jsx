@@ -5,7 +5,7 @@ import { DISTRICTS, SERVICES } from "@/lib/biharData";
 import { addStoredComplaint, findComplaintById } from "@/lib/complaintStore";
 
 const WELCOME =
-  "Namaste! 🙏 Welcome to Bihar e-Grievance AI Assistant.\n\nI can help you:\n📝 File a complaint (right here in chat!)\n🔍 Track your complaint status\n💡 Get answers about services & SLA\n🛠️ Technical support\n\nHow can I help you today?";
+  "Namaste! 🙏 Welcome to Bihar Sahayog Helpline AI Assistant.\n\nI can help you:\n📝 File a complaint (right here in chat!)\n🔍 Track your complaint status\n💡 Get answers about services & SLA\n🛠️ Technical support\n\nHow can I help you today?";
 
 const QUICK_ACTIONS = [
   { label: "📝 File Complaint", action: "raise" },
@@ -402,7 +402,7 @@ export default function Chatbot({ role = "citizen" }) {
 
     try {
       const res = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are the AI Assistant for the Bihar e-Grievance Portal (BUCGP). The user asked: "${text}". Provide a helpful, concise response (max 3 sentences) about Bihar government grievance services. Be friendly and practical. If the user seems to want to file a complaint, suggest clicking "File Complaint".`,
+        prompt: `You are the AI Assistant for the Bihar Sahayog Helpline Portal (BUCGP). The user asked: "${text}". Provide a helpful, concise response (max 3 sentences) about Bihar government grievance services. Be friendly and practical. If the user seems to want to file a complaint, suggest clicking "File Complaint".`,
       });
       addBot(res, "quick");
     } catch {

@@ -1,16 +1,24 @@
 import React, { useState } from "react";
-import { Download, FileSpreadsheet, FileDown, Loader2, Check } from "lucide-react";
+import {
+  Download,
+  FileSpreadsheet,
+  FileDown,
+  Loader2,
+  Check,
+} from "lucide-react";
 import { jsPDF } from "jspdf";
 import { Button } from "@/components/ui/button";
 
 function toCSV(data, columns) {
-  const header = columns.map(c => c.label).join(",");
-  const rows = data.map(row =>
-    columns.map(c => {
-      const val = typeof c.key === "function" ? c.key(row) : row[c.key];
-      const str = val == null ? "" : String(val).replace(/"/g, '""');
-      return `"${str}"`;
-    }).join(",")
+  const header = columns.map((c) => c.label).join(",");
+  const rows = data.map((row) =>
+    columns
+      .map((c) => {
+        const val = typeof c.key === "function" ? c.key(row) : row[c.key];
+        const str = val == null ? "" : String(val).replace(/"/g, '""');
+        return `"${str}"`;
+      })
+      .join(","),
   );
   return [header, ...rows].join("\n");
 }
@@ -37,12 +45,20 @@ export default function ExportButton({ data, columns, filename = "export" }) {
       if (format === "csv") {
         downloadFile(toCSV(data, columns), `${filename}.csv`, "text/csv");
       } else {
-        const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+        const doc = new jsPDF({
+          orientation: "landscape",
+          unit: "mm",
+          format: "a4",
+        });
         doc.setFontSize(14);
-        doc.text("Bihar e-Grievance Portal", 14, 15);
+        doc.text("Bihar Sahayog Helpline Portal", 14, 15);
         doc.setFontSize(9);
         doc.setTextColor(100);
-        doc.text(`Report: ${filename} • Generated: ${new Date().toLocaleString("en-IN")}`, 14, 22);
+        doc.text(
+          `Report: ${filename} • Generated: ${new Date().toLocaleString("en-IN")}`,
+          14,
+          22,
+        );
 
         const pageWidth = doc.internal.pageSize.getWidth();
         const colWidth = (pageWidth - 28) / columns.length;
@@ -59,8 +75,14 @@ export default function ExportButton({ data, columns, filename = "export" }) {
         doc.setTextColor(0, 0, 0);
         data.forEach((row, ri) => {
           y += 7;
-          if (y > 195) { doc.addPage(); y = 20; }
-          if (ri % 2 === 0) { doc.setFillColor(245, 245, 245); doc.rect(14, y - 5, pageWidth - 28, 7, "F"); }
+          if (y > 195) {
+            doc.addPage();
+            y = 20;
+          }
+          if (ri % 2 === 0) {
+            doc.setFillColor(245, 245, 245);
+            doc.rect(14, y - 5, pageWidth - 28, 7, "F");
+          }
           columns.forEach((c, i) => {
             const val = typeof c.key === "function" ? c.key(row) : row[c.key];
             doc.text(String(val ?? "").substring(0, 25), 14 + i * colWidth, y);
@@ -82,7 +104,11 @@ export default function ExportButton({ data, columns, filename = "export" }) {
         size="sm"
         variant="outline"
         disabled
-        className={isCsv ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600" : "border-rose-500/30 bg-rose-500/10 text-rose-600"}
+        className={
+          isCsv
+            ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
+            : "border-rose-500/30 bg-rose-500/10 text-rose-600"
+        }
       >
         <Check className="w-3.5 h-3.5" />
       </Button>

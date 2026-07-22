@@ -64,7 +64,7 @@ export const STATUS_ACTIONS = [
     icon: CheckCircle2,
     color: "bg-emerald-600 hover:bg-emerald-700",
     badgeLabel: "Resolved",
-    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/40",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
     roleHidden: USER_ROLES_EXECULDED,
@@ -76,7 +76,7 @@ export const STATUS_ACTIONS = [
     icon: XCircle,
     color: "bg-red-600 hover:bg-red-700",
     badgeLabel: "Closed",
-    badgeClass: "bg-slate-50 text-slate-500 border-slate-200",
+    badgeClass: "bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-900/50 dark:text-slate-400 dark:border-slate-800",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
   },
@@ -86,7 +86,7 @@ export const STATUS_ACTIONS = [
     icon: Pause,
     color: "bg-amber-600 hover:bg-amber-700",
     badgeLabel: "In Progress",
-    badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800/40",
     disabled: ["RESOLVED", "CLOSED"],
   },
   {
@@ -95,7 +95,7 @@ export const STATUS_ACTIONS = [
     icon: RotateCcw,
     color: "bg-yellow-600 hover:bg-yellow-700",
     badgeLabel: "Reopened",
-    badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-200",
+    badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-800/40",
     isRemark: true,
   },
   {
@@ -104,7 +104,7 @@ export const STATUS_ACTIONS = [
     icon: Clock,
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Pending",
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/40",
     disabled: ["RESOLVED", "CLOSED"],
   },
   {
@@ -113,7 +113,7 @@ export const STATUS_ACTIONS = [
     icon: AlertCircle,
     color: "bg-red-600 hover:bg-red-700",
     badgeLabel: "Escalated",
-    badgeClass: "bg-red-100 text-red-800 border-red-300",
+    badgeClass: "bg-red-100 text-red-800 border-red-300 dark:bg-red-950/30 dark:text-red-400 dark:border-red-800/40",
     disabled: ["RESOLVED", "CLOSED"],
   },
 ];
@@ -125,7 +125,7 @@ export const PRIORITY_ACTIONS = [
     icon: Check,
     color: "bg-slate-600 hover:bg-slate-700",
     badgeLabel: "Normal",
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/40",
   },
   {
     label: "Pending",
@@ -133,7 +133,7 @@ export const PRIORITY_ACTIONS = [
     icon: Clock,
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Pending",
-    badgeClass: "bg-slate-100 text-slate-700 border-slate-200",
+    badgeClass: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/50 dark:text-slate-400 dark:border-slate-800",
   },
   {
     label: "Urgent",
@@ -141,7 +141,7 @@ export const PRIORITY_ACTIONS = [
     icon: AlertTriangle,
     color: "bg-amber-600 hover:bg-amber-700",
     badgeLabel: "Urgent",
-    badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800/40",
   },
   {
     label: "Critical",
@@ -149,7 +149,7 @@ export const PRIORITY_ACTIONS = [
     icon: AlertCircle,
     color: "bg-red-600 hover:bg-red-700",
     badgeLabel: "Critical",
-    badgeClass: "bg-red-100 text-red-800 border-red-300",
+    badgeClass: "bg-red-100 text-red-800 border-red-300 dark:bg-red-950/30 dark:text-red-400 dark:border-red-800/40",
   },
 ];
 
@@ -182,31 +182,31 @@ export const getStatusBadgeMeta = (status) => {
   if (norm === "OPEN") {
     return {
       badgeLabel: "Pending",
-      badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+      badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/40",
     };
   }
   if (norm === "PENDING") {
     return {
       badgeLabel: "Pending",
-      badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+      badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/40",
     };
   }
   if (norm === "REJECTED") {
     return {
       badgeLabel: "Rejected",
-      badgeClass: "bg-red-50 text-red-700 border-red-200",
+      badgeClass: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-800/40",
     };
   }
   if (norm === "FIELD_VISIT") {
     return {
       badgeLabel: "Field Visit",
-      badgeClass: "bg-purple-50 text-purple-700 border-purple-200",
+      badgeClass: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-400 dark:border-purple-800/40",
     };
   }
   // Default fallback
   return {
     badgeLabel: status || "Pending",
-    badgeClass: "bg-slate-100 text-slate-700 border-slate-200",
+    badgeClass: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/50 dark:text-slate-400 dark:border-slate-800",
   };
 };
 
@@ -218,19 +218,19 @@ export const getPriorityBadgeMeta = (priority) => {
   if (norm === "LOW") {
     return {
       badgeLabel: "Low",
-      badgeClass: "bg-slate-100 text-slate-700 border-slate-200",
+      badgeClass: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/50 dark:text-slate-400 dark:border-slate-800",
     };
   }
   if (norm === "HIGH") {
     return {
       badgeLabel: "High",
-      badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+      badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800/40",
     };
   }
   // Default fallback
   return {
     badgeLabel: priority || "Normal",
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/40",
   };
 };
 

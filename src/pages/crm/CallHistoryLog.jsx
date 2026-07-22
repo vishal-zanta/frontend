@@ -266,7 +266,7 @@ export default function CallHistoryLog() {
                 {filtered.map((c, i) => (
                   <tr
                     key={i}
-                    className={`hover:bg-muted/30 ${selected.includes(c.id) ? "bg-purple-50/40" : ""}`}
+                    className={`hover:bg-muted/30 ${selected.includes(c.id) ? "bg-purple-50/40 dark:bg-purple-950/20" : ""}`}
                   >
                     <td className="px-3 py-3">
                       <input
@@ -319,8 +319,8 @@ export default function CallHistoryLog() {
                     <td className="px-3 py-3">
                       {c.evidenceTagged ? (
                         <div className="flex items-center gap-1">
-                          <ShieldCheck className="w-4 h-4 text-purple-600" />
-                          <span className="text-xs text-purple-600 font-medium">
+                          <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                          <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
                             {t("Tagged", "चिह्नित")}
                           </span>
                         </div>
@@ -388,7 +388,7 @@ export default function CallHistoryLog() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 px-5 py-3 border-b border-border">
-              <ShieldCheck className="w-5 h-5 text-purple-600" />
+              <ShieldCheck className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               <h3 className="font-bold text-foreground">
                 {t("Tag", "चिह्नित करें")} {tagDialog.ids.length}{" "}
                 {t("Call(s) as Evidence", "कॉल साक्ष्य के रूप में")}

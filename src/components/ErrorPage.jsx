@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { AlertOctagon, RefreshCw, Home, ChevronRight, ChevronDown, Copy, Check } from "lucide-react";
+import {
+  AlertOctagon,
+  RefreshCw,
+  Home,
+  ChevronRight,
+  ChevronDown,
+  Copy,
+  Check,
+} from "lucide-react";
 
 const ErrorPage = ({ error, resetErrorBoundary }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -43,10 +51,10 @@ const ErrorPage = ({ error, resetErrorBoundary }) => {
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl mb-3">
             System Error Occurred
           </h1>
-          
+
           <p className="text-base text-slate-600 max-w-md mx-auto mb-8">
-            The Bihar e-Grievance portal encountered an unexpected application issue.
-            We apologize for the inconvenience.
+            The Bihar Sahayog Helpline portal encountered an unexpected
+            application issue. We apologize for the inconvenience.
           </p>
 
           {/* Call-to-action Buttons */}
@@ -79,7 +87,11 @@ const ErrorPage = ({ error, resetErrorBoundary }) => {
                   <span>Technical Diagnostics (Code: 500)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                  {showDetails ? (
+                    <ChevronDown className="w-4 h-4" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4" />
+                  )}
                 </div>
               </button>
 
@@ -106,7 +118,7 @@ const ErrorPage = ({ error, resetErrorBoundary }) => {
                       )}
                     </button>
                   </div>
-                  
+
                   <div className="p-3 bg-slate-900 rounded-lg overflow-x-auto border border-slate-950 shadow-inner">
                     <p className="text-xs font-mono text-red-400 font-bold leading-normal mb-2">
                       {error.toString()}
@@ -122,10 +134,10 @@ const ErrorPage = ({ error, resetErrorBoundary }) => {
             </div>
           )}
         </div>
-        
+
         {/* Footer */}
         <div className="bg-slate-50 px-8 py-4 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-400">
-          <span>e-Grievance Resolution System</span>
+          <span>Sahayog Helpline Resolution System</span>
           <span>Government of Bihar</span>
         </div>
       </div>

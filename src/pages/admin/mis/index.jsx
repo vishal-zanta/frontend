@@ -96,7 +96,7 @@ const periodLabels = {
 };
 
 const aiSummary = [
-  "This report covers the period from 01 January 2026 to 06 July 2026 (6 months). During this period, the Bihar e-Grievance Portal received a total of 48,732 complaints across 12 districts and 6 ULBs.",
+  "This report covers the period from 01 January 2026 to 06 July 2026 (6 months). During this period, the Bihar Sahayog Helpline Portal received a total of 48,732 complaints across 12 districts and 6 ULBs.",
   "",
   "Key Highlights:",
   "- Overall SLA compliance stands at 95.1%, with 38,290 complaints resolved within SLA and 1,953 beyond SLA.",
@@ -626,7 +626,7 @@ export default function MISReports() {
                     const doc = new jsPDF();
                     doc.setFontSize(16);
                     doc.text(
-                      "Bihar e-Grievance Portal - MIS Cover Note",
+                      "Bihar Sahayog Helpline Portal - MIS Cover Note",
                       14,
                       20,
                     );

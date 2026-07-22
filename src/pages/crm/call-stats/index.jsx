@@ -111,14 +111,14 @@ const agentLiveData = {
       userName: { value: "Ankit kumar" },
       loginPhone: {
         render: () => <LoginPhoneCell data={{ value: "103" }} />,
-        className: "px-0 py-0 bg-red-200",
+        className: "px-0 py-0 bg-red-200 dark:bg-red-950/40",
       },
       customerPhone: { value: "8434628247" },
       spendingTime: {
         value: "00:01:22",
         render: () => <SpendingTimeCell data={{ value: "00:02:56" }} />,
         className:
-          " px-0 py-0 text-xs font-semibold  bg-emerald-100  font-mono",
+          " px-0 py-0 text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 font-mono",
       },
       campaign: { value: "Inbound" },
       skillGroup: {
@@ -161,13 +161,13 @@ const CallStats = () => {
         <MyTable
           tableHeaders={callStatsHeaders}
           tableBody={callStatsData.tableBody}
-          tableClassName="rounded-xl border border-border bg-white"
+          tableClassName="rounded-xl border border-border bg-white dark:bg-card"
         />
         <LayoutHeading title={t("Agent Live Statistics", "एजेंट लाइव सांख्यिकी")} />
         <MyTable
           tableHeaders={agentLiveHeaders}
           tableBody={agentLiveData.tableBody}
-          tableClassName="rounded-xl border border-border bg-white"
+          tableClassName="rounded-xl border border-border bg-white dark:bg-card"
         />
       </div>
     </PortalLayout>

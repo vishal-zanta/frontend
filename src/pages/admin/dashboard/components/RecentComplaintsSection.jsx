@@ -18,7 +18,7 @@ export default function RecentComplaintsSection() {
   const totalPages = data?.data?.pagination?.totalPages  || 1;
 
   return (
-    <div className="bg-white rounded-xl border border-border">
+    <div className="bg-white dark:bg-card rounded-xl border border-border">
       <div className="px-5 py-3 border-b border-border flex items-center justify-between">
         <h3 className="font-bold text-foreground">Recent Complaints</h3>
         <Link

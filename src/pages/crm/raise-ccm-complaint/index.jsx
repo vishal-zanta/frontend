@@ -31,6 +31,7 @@ import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import SuccessScreen from "./components/SuccessScreen";
 import { postComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
+import LangSelector from "@/components/LangSelector";
 
 export default function CRMRaiseComplaint() {
   const role = "crm";
@@ -151,15 +152,7 @@ export default function CRMRaiseComplaint() {
             </p>
           </div>
 
-          <Select value={lang} onValueChange={(v) => setLang(v)}>
-            <SelectTrigger className="w-28">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="hi">हिन्दी</SelectItem>
-            </SelectContent>
-          </Select>
+          <LangSelector/>
         </div>
 
         <RhfWrapper
