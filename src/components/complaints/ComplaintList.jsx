@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Filter, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/Badges";
+import { SLATimer } from "./ComplaintDetailHeader";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import SearchDebounced from "../debounced/SearchDebounced";
 import {
@@ -14,7 +15,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { STATUS_ACTIONS } from "@/utils/constants";
+import { STATUS_ACTIONS, PRIORITY_ACTIONS } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function ComplaintList({
@@ -29,6 +30,7 @@ export default function ComplaintList({
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState("");
+  const [selectedPriority, setSelectedPriority] = useState("");
   const {
     data,
     isLoading,
@@ -41,6 +43,7 @@ export default function ComplaintList({
     search,
     status: selectedStatus || undefined,
     feedback: selectedFeedback !== "" ? selectedFeedback : undefined,
+    priority: selectedPriority || undefined,
   });
 
   const complaints = useMemo(() => {
@@ -104,7 +107,7 @@ export default function ComplaintList({
   }, [complaints, onStatsChange]);
 
   return (
-    <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full">
+    <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
       <div className="px-4 py-3 border-b border-border ">
         <div className="flex items-center justify-between shrink-0">
           <h3 className="font-bold text-foreground text-sm">
@@ -118,7 +121,7 @@ export default function ComplaintList({
                 className="relative h-8 w-8 p-0 cursor-pointer"
               >
                 <Filter className="w-4 h-4" />
-                {(selectedStatus || selectedFeedback !== "") && (
+                {(selectedStatus || selectedFeedback !== "" || selectedPriority) && (
                   <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
                 )}
               </Button>
@@ -176,13 +179,40 @@ export default function ComplaintList({
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
-              {(selectedStatus || selectedFeedback !== "") && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="cursor-pointer">
+                  <span>{t("Priority", "प्राथमिकता")}</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="w-40 bg-card">
+                  <DropdownMenuItem
+                    onClick={() => setSelectedPriority("")}
+                    className={`cursor-pointer ${!selectedPriority ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                  >
+                    {t("All Priorities", "सभी प्राथमिकताएं")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {PRIORITY_ACTIONS.map((action) => {
+                    const isSelected = selectedPriority === action.value;
+                    return (
+                      <DropdownMenuItem
+                        key={action.value}
+                        onClick={() => setSelectedPriority(action.value)}
+                        className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                      >
+                        {action.badgeLabel || action.label}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              {(selectedStatus || selectedFeedback !== "" || selectedPriority) && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => {
                       setSelectedStatus("");
                       setSelectedFeedback("");
+                      setSelectedPriority("");
                     }}
                     className="text-destructive focus:text-destructive cursor-pointer"
                   >
@@ -201,7 +231,13 @@ export default function ComplaintList({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-thin max-h-[600px] divide-y divide-border overscroll-contain">
+      <div
+        style={{
+          maxHeight: window.innerWidth < 768 ? "600px" : "calc(100vh - 365px)",
+          minHeight:"360px !important"
+        }}
+        className="flex-1 overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
+      >
         <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
           {complaints.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-muted-foreground">
@@ -223,15 +259,22 @@ export default function ComplaintList({
                       setStatusUpdate(null);
                     }}
                     className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors cursor-pointer ${
-                      isSelected ? "bg-primary/10 border-l-4 border-primary" : "bg-card"
+                      isSelected
+                        ? "bg-primary/10 border-l-4 border-primary"
+                        : "bg-card"
                     }`}
                   >
-                    <div className="flex items-center gap-2 mb-1">
-                      <h2 className="text-xs font-bold text-primary font-mono">
-                        {c.grievanceId || c.id}
-                      </h2>
-
-                      <StatusBadge status={c.status} />
+                    <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-xs font-bold text-primary font-mono">
+                          {c.grievanceId || c.id}
+                        </h2>
+                        <StatusBadge status={c.status} />
+                      </div>
+                      <SLATimer
+                        createdAt={c.createdAt}
+                        slaHours={c.classification?.subService?.sla || c.slaHours}
+                      />
                     </div>
                     <div className="text-sm text-foreground truncate">
                       {c.classification?.subService?.title ||

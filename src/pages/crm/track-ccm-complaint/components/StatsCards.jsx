@@ -11,7 +11,7 @@ export default function StatsCards({ totalAssigned, pendingAction, resolved, sla
       <StatCard icon={Search} label={t("Total Assigned", "कुल आवंटित")} value={totalAssigned} color="blue" />
       <StatCard icon={Clock} label={t("Pending Action", "लंबित कार्रवाई")} value={pendingAction} color="amber" />
       <StatCard icon={CheckCircle2} label={t("Resolved", "हल की गई")} value={resolved} color="green" />
-      <StatCard icon={AlertTriangle} label={t("SLA Breach Risk", "एसएलए उल्लंघन का जोखिम")} value={slaBreachRisk} color="red" />
+      <StatCard icon={AlertTriangle} label={t("Escalated", "बढ़ाया गया")} value={slaBreachRisk} color="red" />
     </div>
   );
 }

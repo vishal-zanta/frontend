@@ -13,6 +13,8 @@ import SkillSetTab from "./skill-set";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/utils/constants";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useLanguage } from "@/context/LanguageContext";
 
 const tabs = [
   {
@@ -68,6 +70,7 @@ const tabs = [
 
 export default function MasterData() {
   const { hasPermission } = useAuth();
+  const { t: translate } = useLanguage();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
@@ -78,11 +81,26 @@ export default function MasterData() {
       : undefined) ?? filteredTabs?.[0]?.id,
   );
 
+  const currentTabGroup = tabs.find((t) => t.id === tab)?.group || "internal";
+  const [parentTab, setParentTab] = useState(currentTabGroup);
+
   useEffect(() => {
     if (!filteredTabs.some((s) => s.id == tab)) {
-      setTab(filteredTabs?.[0]?.id || "");
+      const defaultTab = filteredTabs?.[0]?.id || "";
+      setTab(defaultTab);
+      const defaultGroup = tabs.find((t) => t.id === defaultTab)?.group || "internal";
+      setParentTab(defaultGroup);
     }
   }, [filteredTabs]);
+
+  const handleParentTabChange = (group) => {
+    setParentTab(group);
+    const firstTabInGroup = filteredTabs.find((t) => t.group === group);
+    if (firstTabInGroup) {
+      setTab(firstTabInGroup.id);
+      setSearchParams({ tab: firstTabInGroup.id }, { replace: true });
+    }
+  };
 
   return (
     <PortalLayout role="superadmin">
@@ -92,71 +110,58 @@ export default function MasterData() {
           subtitle="Manage designations, services, sub-services, complaint sources & demography"
         />
 
-        <div className="space-y-6">
-          {/* Internal group */}
-          {filteredTabs.some((t) => t.group === "internal") && (
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Internal Configuration
-              </h3>
-              <div className="flex flex-wrap gap-2">
+        <Tabs value={parentTab} onValueChange={handleParentTabChange} className="w-full">
+          <TabsList className="grid w-full max-w-[500px] grid-cols-2">
+            <TabsTrigger value="internal">
+              {translate("Internal Configuration", "आंतरिक कॉन्फ़िगरेशन")}
+            </TabsTrigger>
+            <TabsTrigger value="external">
+              {translate("External Configuration", "बाहरी कॉन्फ़िगरेशन")}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="internal" className="mt-4">
+            <Tabs value={tab} onValueChange={(val) => {
+              setTab(val);
+              setSearchParams({ tab: val }, { replace: true });
+            }} className="w-full">
+              <TabsList className="flex flex-wrap h-auto p-1 bg-muted rounded-lg w-fit gap-1">
                 {filteredTabs
                   .filter((t) => t.group === "internal")
                   .map((t) => {
                     const Icon = t.icon;
                     return (
-                      <button
-                        key={t.id}
-                        onClick={() => {
-                          setTab(t.id);
-                          setSearchParams({ tab: t.id }, { replace: true });
-                        }}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                          tab === t.id
-                            ? "bg-primary text-primary-foreground shadow-md"
-                            : "bg-card border border-border text-muted-foreground hover:bg-muted"
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" /> {t.label}
-                      </button>
+                      <TabsTrigger key={t.id} value={t.id} className="flex items-center gap-2 px-3 py-1.5 text-xs lg:text-sm">
+                        <Icon className="w-4 h-4" />
+                        {t.label}
+                      </TabsTrigger>
                     );
                   })}
-              </div>
-            </div>
-          )}
+              </TabsList>
+            </Tabs>
+          </TabsContent>
 
-          {/* External group */}
-          {filteredTabs.some((t) => t.group === "external") && (
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                External Configuration
-              </h3>
-              <div className="flex flex-wrap gap-2">
+          <TabsContent value="external" className="mt-4">
+            <Tabs value={tab} onValueChange={(val) => {
+              setTab(val);
+              setSearchParams({ tab: val }, { replace: true });
+            }} className="w-full">
+              <TabsList className="flex flex-wrap h-auto p-1 bg-muted rounded-lg w-fit gap-1">
                 {filteredTabs
                   .filter((t) => t.group === "external")
                   .map((t) => {
                     const Icon = t.icon;
                     return (
-                      <button
-                        key={t.id}
-                        onClick={() => {
-                          setTab(t.id);
-                          setSearchParams({ tab: t.id }, { replace: true });
-                        }}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                          tab === t.id
-                            ? "bg-primary text-primary-foreground shadow-md"
-                            : "bg-card border border-border text-muted-foreground hover:bg-muted"
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" /> {t.label}
-                      </button>
+                      <TabsTrigger key={t.id} value={t.id} className="flex items-center gap-2 px-3 py-1.5 text-xs lg:text-sm">
+                        <Icon className="w-4 h-4" />
+                        {t.label}
+                      </TabsTrigger>
                     );
                   })}
-              </div>
-            </div>
-          )}
-        </div>
+              </TabsList>
+            </Tabs>
+          </TabsContent>
+        </Tabs>
 
         {/* Designations */}
         {tab === "designation" && <DesignationsTab />}

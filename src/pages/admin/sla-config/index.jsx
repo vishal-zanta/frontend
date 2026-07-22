@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, X, Check, AlertTriangle } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -9,7 +9,7 @@ import SlaAnalytics from "./components/SlaAnalytics";
 import SlaTable from "./components/SlaTable";
 import Form from "./components/Form";
 import { useGetSlaconfig } from "./hooks";
-import { useGetSubservices } from "../master-data/hooks";
+import { useGetSubservices, useGetDepartments } from "../master-data/hooks";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSlaConfig, putSlaConfig, deleteSlaConfig } from "./api";
@@ -24,20 +24,37 @@ export default function SLAConfig() {
   const [search, setSearch] = useState("");
   const [dialog, setDialog] = useState(null);
   const [editItem, setEditItem] = useState(null);
+  const [selectedDept, setSelectedDept] = useState("");
 
   const { page, limit, ...pageProps } = usePagination();
   const queryClient = useQueryClient();
+
+  const { data: deptApiData, isLoading: deptLoading, error: deptError } = useGetDepartments([], {
+    page: 1,
+    limit: MAX_LIMIT,
+  });
+  const depts = (deptApiData?.data?.data?.docs || []).map((d) => ({
+    label: d.title,
+    value: d._id,
+  }));
+
+  useEffect(() => {
+    if (depts.length > 0 && !selectedDept) {
+      setSelectedDept(depts[0].value);
+    }
+  }, [depts, selectedDept]);
 
   // 1. Fetch SLA configs
   const {
     data: slaApiData,
     isLoading: isSlaLoading,
     error: slaError,
-  } = useGetSlaconfig([search, page, limit], {
+  } = useGetSlaconfig([search, page, limit, selectedDept], {
     search,
     page,
     limit,
-  });
+    department: selectedDept,
+  }, !!selectedDept);
   const docs = slaApiData?.data?.data?.docs || [];
   const totalPages = slaApiData?.data?.data?.pagination?.totalPages || 1;
 
@@ -46,16 +63,20 @@ export default function SLAConfig() {
     data: rolesApiData,
     isLoading: isRolesLoading,
     error: rolesError,
-  } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
+  } = useGetRoles(
+    [selectedDept],
+    { page: 1, limit: MAX_LIMIT, department: selectedDept },
+    !!selectedDept
+  );
   const roles = (rolesApiData?.data?.docs || []).filter(
     (r) => !USER_ROLES_EXECULDED.includes(r.designationEnglish)
   );
 
   // 3. Fetch subservices for selection dropdown
   const { data: subservicesData } = useGetSubservices(
-    [1, 100],
-    { page: 1, limit: MAX_LIMIT },
-    true,
+    [selectedDept],
+    { page: 1, limit: MAX_LIMIT, department: selectedDept },
+    !!selectedDept,
   );
   const subservices = subservicesData?.data?.data?.docs || [];
 
@@ -139,6 +160,12 @@ export default function SLAConfig() {
     }
   };
 
+    const subServiceOptions = availableSubservices.map((ss) => ({
+    label: ss.title || ss.name || "",
+    value: ss._id,
+    sla : ss.sla
+  }));
+
   const handleSaveItem = () => {
     if (!dialog.subService) {
       getErrorToast({ message: "Please select a sub-service" });
@@ -153,8 +180,9 @@ export default function SLAConfig() {
     cleanedEscalations.forEach((e) => {
       sum += e.slaHours;
     });
-    if (sum > 24) {
-      getErrorToast({ message: "SLA hours sum cannot exceed 24 hrs" });
+    const ss = subServiceOptions.find(s=>s.value == dialog.subService)?.sla || 24
+    if (sum > ss) {
+      getErrorToast({ message: `SLA hours sum cannot exceed ${ss} hrs` });
       return;
     }
 
@@ -163,6 +191,7 @@ export default function SLAConfig() {
       escalations: cleanedEscalations,
       officer: !!dialog.officer,
       active: true,
+      department: selectedDept,
     };
 
     if (editItem) {
@@ -175,10 +204,6 @@ export default function SLAConfig() {
     }
   };
 
-  const subServiceOptions = availableSubservices.map((ss) => ({
-    label: ss.title || ss.name || "",
-    value: ss._id,
-  }));
 
   return (
     <PortalLayout role="superadmin">
@@ -193,7 +218,9 @@ export default function SLAConfig() {
         {/* </LoaderErrWrapper> */}
 
         {/* Search + Add */}
-        <div className="flex gap-3 mt-6">
+        <div className="flex flex-col sm:flex-row gap-3 mt-6 sm:items-center">
+         
+
           <SearchDebounced
             handleDebouncedChange={(val) => {
               setSearch(val);
@@ -203,8 +230,32 @@ export default function SLAConfig() {
             className="flex-1"
             placeholder="Search sub-service..."
           />
+          <LoaderErrWrapper isLoading={deptLoading}>
+
+         
+           <div className="flex items-center gap-1.5 shrink-0">
+            <label className="text-xs font-semibold text-muted-foreground">
+              Department:
+            </label>
+            <select
+              value={selectedDept}
+              onChange={(e) => {
+                setSelectedDept(e.target.value);
+                pageProps.setPage(1);
+              }}
+              className="text-xs h-8 rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
+            >
+              {depts.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+           </LoaderErrWrapper>
           <Button
             className="bg-primary hover:bg-primary/90"
+            disabled={!selectedDept}
             onClick={() => {
               setEditItem(null);
               setDialog({
@@ -227,8 +278,8 @@ export default function SLAConfig() {
           )}
         >
           <LoaderErrWrapper
-            isLoading={isSlaLoading || isRolesLoading}
-            error={slaError || rolesError}
+            isLoading={isSlaLoading || isRolesLoading || deptLoading}
+            error={slaError || rolesError || deptError?.message}
           >
             <SlaTable
               docs={filtered}

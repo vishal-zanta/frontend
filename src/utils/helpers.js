@@ -43,14 +43,14 @@ export const isAlpha = (value) => {
   // empty value is valid
   if (value === "") return true;
 
-  // only letters and spaces allowed (no numbers, no special chars)
-  if (!/^[A-Za-z ]*$/.test(value)) return false;
+  // only English letters, Hindi (Devanagari) letters, and spaces
+  if (!/^[A-Za-z\p{Script=Devanagari} ]*$/u.test(value)) return false;
 
-  // must contain at least one letter — spaces alone are not valid
-  if (!/[A-Za-z]/.test(value)) return false;
+  // must contain at least one English or Hindi letter
+  if (!/[A-Za-z\p{Script=Devanagari}]/u.test(value)) return false;
 
   // no more than 2 trailing spaces allowed
-  const trailingSpaces = value.match(/ *$/)[0].length;
+  const trailingSpaces = value.match(/ *$/)?.[0].length ?? 0;
   if (trailingSpaces > 2) return false;
 
   return true;

@@ -228,7 +228,7 @@ export default function ComplaintDetailView({
   const subServiceText =
     c.classification?.subService?.title || c.subserviceName || "-";
   const departmentText =
-    c.classification?.subService?.service?.department || "-";
+    c.classification?.subService?.service?.department?.title ||  c.classification?.subService?.service?.department || "-";
   const subjectText = (c.classification?.subject || "").trim() || "-";
 
   const formattedDate =

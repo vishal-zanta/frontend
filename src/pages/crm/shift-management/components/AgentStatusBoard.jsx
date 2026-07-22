@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useGetShifts } from "../hooks";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import Pagination from "@/components/Pagination";
 import usePagination from "@/hooks/usePagination";
 import { useLanguage } from "@/context/LanguageContext";
+import { Pencil } from "lucide-react";
+import EditShiftDialog from "./EditShiftDialog";
 
 export default function AgentStatusBoard({
   isSupervisor = false,
@@ -16,6 +18,8 @@ export default function AgentStatusBoard({
     page: pageProps.page,
     limit: pageProps.limit,
   });
+
+  const [editingAgent, setEditingAgent] = useState(null);
 
   const shiftsData = data?.data?.data?.docs || [];
   const totalPages = data?.data?.data?.pagination?.totalPages;
@@ -81,13 +85,18 @@ export default function AgentStatusBoard({
                 <th className="px-4 py-3 font-medium">
                   {t("Status", "स्थिति")}
                 </th>
+                {isSupervisor && (
+                  <th className="px-4 py-3 font-medium text-center sticky right-0 bg-[#F4F7FA] dark:bg-[#172033] z-10">
+                    {t("Actions", "कार्रवाई")}
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {shiftsData.map((a) => (
                 <tr key={a._id} className="hover:bg-muted/30">
                   <td className="px-4 py-3 font-medium flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold capitalize">
                       {a.name
                         .split(" ")
                         .map((n) => n[0])
@@ -137,6 +146,17 @@ export default function AgentStatusBoard({
                             : a?.status || "-"}
                     </Badge>
                   </td>
+                  {isSupervisor && (
+                    <td className="px-4 py-3 text-center sticky right-0 bg-white dark:bg-[#0f1729] z-10">
+                      <button
+                        onClick={() => setEditingAgent(a)}
+                        className="p-1.5 hover:bg-muted rounded text-muted-foreground cursor-pointer"
+                        title={t("Edit Shift", "शिफ्ट संपादित करें")}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -144,6 +164,14 @@ export default function AgentStatusBoard({
         </div>
       </LoaderErrWrapper>
       <Pagination {...pageProps} totalPage={totalPages} />
+
+      {editingAgent && (
+        <EditShiftDialog
+          agent={editingAgent}
+          onClose={() => setEditingAgent(null)}
+          t={t}
+        />
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 export default function ShiftManagement() {
   const {profile} = useAuth();
   console.log({profile});
-  const isSupervisor = profile?.role?.designationEnglish === "Call Centre Supervisor";
+  const isSupervisor = profile?.role?.designationEnglish !== "Call Centre Executive";
 
   return (
     <PortalLayout role="crm">

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
-function SLATimer({ createdAt, slaHours }) {
+export function SLATimer({ createdAt, slaHours }) {
   const { t } = useLanguage();
   const [timeLeft, setTimeLeft] = useState("");
   const [isExpired, setIsExpired] = useState(false);

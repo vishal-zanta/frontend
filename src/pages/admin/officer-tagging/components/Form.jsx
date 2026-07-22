@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import { Button } from "@/components/ui/button";
 import { useFormContext, useWatch } from "react-hook-form";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   useGetServices,
   useGetSubservices,
@@ -9,6 +10,7 @@ import {
 } from "../../master-data/hooks";
 import subDivisionsData from "@/utils/sub-divisions.json";
 import { MAX_LIMIT } from "@/utils/constants";
+import { Loader2 } from "lucide-react";
 
 export default function Form({
   isEdit,
@@ -16,12 +18,27 @@ export default function Form({
   userOptions = [],
   onCancel,
 }) {
-  const { resetField, getValues, setValue } = useFormContext();
+  const { resetField, getValues, setValue, formState: { errors } } = useFormContext();
+  const { t } = useLanguage();
   const selectedService = useWatch({ name: "service" });
   const selectedDistrict = useWatch({ name: "district" });
+  const selectedOfficer = useWatch({ name: "officer" });
+  const officerDept = (
+    userOptions.find((u) => u.value === selectedOfficer)?.apiData || {}
+  )?.role?.department;
+
+  // console.log({userOptions, officerDept})
 
   // Fetch Services
-  const { data: servicesData } = useGetServices([], { page: 1, limit: MAX_LIMIT });
+  const {
+    data: servicesData,
+    isLoading: serviceLoading,
+    isFetching: serviceFetching,
+  } = useGetServices([officerDept?._id], {
+    page: 1,
+    limit: MAX_LIMIT,
+    department: officerDept?._id,
+  });
   const servicesOptions = (servicesData?.data?.data?.docs || []).map((s) => ({
     label: s.title || s.name || "",
     value: s._id,
@@ -68,8 +85,13 @@ export default function Form({
     const validIds = new Set(subservicesOptions.map((o) => o.value));
     const filtered = currentSubservices.filter((id) => validIds.has(id));
     setValue("services", filtered, { shouldValidate: true });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubservicesLoading, isSubservicesFetching, subservicesOptions.length, selectedService]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isSubservicesLoading,
+    isSubservicesFetching,
+    subservicesOptions.length,
+    selectedService,
+  ]);
 
   // Fetch Districts (Demographics)
   const { data: demographyData } = useGetDemographics([], {
@@ -122,20 +144,32 @@ export default function Form({
         isMultiple={true}
         options={servicesOptions}
         placeholder="Select services"
+        isLoading={serviceLoading || serviceFetching}
       />
-      <RhfSelect
-        name="services"
-        label="Sub-services"
-        required
-        isMultiple={true}
-        options={subservicesOptions}
-        placeholder={
-          !selectedService || selectedService.length === 0
-            ? "Select service first"
-            : "Select sub-services"
-        }
-        disabled={!selectedService || selectedService.length === 0}
-      />
+      {
+        <RhfSelect
+          name="services"
+          label="Sub-services"
+          required
+          isMultiple={true}
+          options={subservicesOptions}
+          placeholder={
+            !selectedService || selectedService.length === 0
+              ? "Select service first"
+              : "Select sub-services"
+          }
+          disabled={
+            !selectedService ||
+            selectedService.length === 0 ||
+            serviceLoading ||
+            isSubservicesLoading
+          }
+          isLoading={
+            serviceLoading || isSubservicesFetching || isSubservicesLoading
+          }
+        />
+      }
+
       <RhfSelect
         name="district"
         label="District"
@@ -154,7 +188,17 @@ export default function Form({
         }
         disabled={!selectedDistrict}
       />
-      <div className="flex justify-end gap-2 py-4 sticky bottom-0 bg-card">
+      <div className="py-4 sticky bottom-0 bg-card flex justify-between">
+        <div className="flex items-center">
+          {Object.keys(errors).length > 0 && (
+            <span className="text-destructive text-xs font-semibold animate-pulse">
+              {t("* Please fix form errors first", "* कृपया पहले फॉर्म की त्रुटियों को सुधारें")}
+            </span>
+          )}
+        </div>
+  
+      <div className="flex justify-end gap-2 ">
+        
         <Button
           type="button"
           variant="outline"
@@ -172,5 +216,6 @@ export default function Form({
         </Button>
       </div>
     </div>
+        </div>
   );
 }

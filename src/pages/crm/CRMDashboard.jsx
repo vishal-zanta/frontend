@@ -457,30 +457,30 @@ export default function CRMDashboard() {
             {t(sc.label, sc.labelHindi)})
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{sc.calls}</div>
+            <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{sc.calls}</div>
               <div className="text-xs text-muted-foreground">
                 {t("Total Calls", "कुल कॉल")}
               </div>
             </div>
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">
+            <div className="text-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 {sc.ticketsRaised}
               </div>
               <div className="text-xs text-muted-foreground">
                 {t("Tickets Raised", "टिकट उठाए गए")}
               </div>
             </div>
-            <div className="text-center p-3 bg-emerald-50 rounded-lg">
-              <div className="text-2xl font-bold text-emerald-600">
+            <div className="text-center p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg">
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                 {sc.resolved}
               </div>
               <div className="text-xs text-muted-foreground">
                 {t("Resolved", "हल की गई")}
               </div>
             </div>
-            <div className="text-center p-3 bg-amber-50 rounded-lg">
-              <div className="text-2xl font-bold text-amber-600">
+            <div className="text-center p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg">
+              <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                 {sc.csat}/5
               </div>
               <div className="text-xs text-muted-foreground">
@@ -540,10 +540,10 @@ export default function CRMDashboard() {
         </div>
 
         {/* Read-only notice */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3">
-          <Activity className="w-5 h-5 text-blue-600 flex-shrink-0" />
+        <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/30 rounded-xl p-4 flex items-center gap-3">
+          <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
           <div>
-            <div className="font-medium text-sm text-primary">
+            <div className="font-medium text-sm text-blue-900 dark:text-blue-100">
               {t("Agent View - Read Only", "एजेंट दृश्य - केवल पठन")}
             </div>
             <p className="text-xs text-muted-foreground">

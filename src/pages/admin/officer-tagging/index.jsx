@@ -83,6 +83,7 @@ export default function OfficerTagging() {
     .map((u) => ({
       label: `${u.name} (${u.role?.designationEnglish || ""})`,
       value: u._id,
+      apiData : u
     }));
 
   const filtered = docs.filter(

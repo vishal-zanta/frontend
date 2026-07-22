@@ -5,6 +5,7 @@ import CreatableSelect from "react-select/creatable";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
+import { Loader, Loader2 } from "lucide-react";
 
 const buildStyles = (hasError, disabled, colors, isMulti) => ({
   control: (provided, state) => ({
@@ -153,6 +154,7 @@ export default function RhfSelect({
   disabled = false,
   isMultiple = false,
   isCreatable = false,
+  isLoading=false,
   colors,
 }) {
   const { control } = useFormContext();
@@ -255,6 +257,9 @@ export default function RhfSelect({
                 {required && <span className="text-destructive"> *</span>}
               </Label>
             )}
+            {isLoading ? <Loader2 className="animate-spin" /> : (
+
+           <>
 
             {isCreatable ? (
               <CreatableSelect
@@ -269,12 +274,14 @@ export default function RhfSelect({
             ) : (
               <ReactSelect {...commonProps} />
             )}
-
+            </>
+ )}
             {error && (
               <span className="text-destructive text-xs font-medium">
                 {error.message}
               </span>
             )}
+
           </div>
         );
       }}

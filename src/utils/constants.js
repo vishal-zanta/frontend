@@ -39,6 +39,7 @@ export const QUERY_KEYS = {
   COMPLAINT_DETAIL_OFFICER: "complaint-detail-officer",
 
   COMPLAINTS_ALL: "complaints-all",
+  COMPLAINT_ANALYTICS_SUMMARY: "complaint-analytics-summary",
   CHATS_INFINTE: "chats-infinite",
   QUERY_KEY_OFIICER_DASHBOARD: "officer-dashboard",
   QUERY_KEY_OFFICER_DASHBOARD: "officer-dashboard",
@@ -98,6 +99,7 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Reopened",
     badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-800/40",
     isRemark: true,
+    disabled: ["REOPENED", "OPEN", "ESCALATED", "IN_PROGRESS"]
   },
   {
     label: "Open",

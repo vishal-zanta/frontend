@@ -5,7 +5,10 @@ import PortalLayout from "@/components/PortalLayout";
 import StatsCards from "./components/StatsCards";
 import ComplaintList from "@/components/complaints/ComplaintList";
 import ComplaintDetailView from "@/components/complaints/ComplaintDetailView";
-import { useGetComplaintsForCCEandAdminInfinite } from "@/hooks/query/useGetComplaints";
+import { 
+  useGetComplaintsForCCEandAdminInfinite,
+  useGetComplaintAnalyticsSummary 
+} from "@/hooks/query/useGetComplaints";
 
 export default function TrackCCMComplaint() {
   const [selected, setSelected] = useState(null);
@@ -17,15 +20,18 @@ export default function TrackCCMComplaint() {
     slaBreachRisk: 0,
   });
 
+  const { data: analyticsData } = useGetComplaintAnalyticsSummary();
+  const analytics = analyticsData?.data || {};
+
   return (
     <PortalLayout role="crm" isHideOverflow={true}>
       <div className="p-6 space-y-6 relative">
         {/* Stats */}
         <StatsCards
-          totalAssigned={stats.totalAssigned}
-          pendingAction={stats.pendingAction}
-          resolved={stats.resolved}
-          slaBreachRisk={stats.slaBreachRisk}
+          totalAssigned={analytics.totalAssigned ?? 0}
+          pendingAction={analytics.pendingCount ?? 0}
+          resolved={analytics.resolvedCount ?? 0}
+          slaBreachRisk={analytics.escalatedCount ?? 0}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0 items-start">
