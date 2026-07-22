@@ -248,7 +248,7 @@ export default function Login() {
                 autoFocus
                 placeholder="Enter your User ID"
                 value={loginId}
-                onChange={(e) => setLoginId(e.target.value)}
+                onChange={(e) => setLoginId((e.target.value || "").toUpperCase())}
                 className="pl-10 h-12"
                 required
               />
