@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, Mail, Lock, Loader2, Eye, EyeOff, User } from "lucide-react";
+import { LogIn, Mail, Lock, Loader2, Eye, EyeOff, User, Shield, Headphones } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { postLogin, getProfile } from "@/api/auth.api";
 import { sidebarSections } from "@/components/Sidebar";
@@ -152,10 +152,69 @@ export default function Login() {
         </div>
       )}
 
+      {/* Mode Selection Boxes */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <button
+          type="button"
+          onClick={() => handleModeChange("email")}
+          className={`flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer ${
+            loginMode === "email"
+              ? "border-primary bg-primary/5 text-primary ring-2 ring-primary/20 shadow-sm"
+              : "border-border bg-muted/30 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+          }`}
+        >
+          <div
+            className={`p-2 rounded-lg shrink-0 ${
+              loginMode === "email"
+                ? "bg-primary/10 text-primary"
+                : "bg-muted text-muted-foreground"
+            }`}
+          >
+            <Shield className="w-4 h-4" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-xs font-bold leading-tight truncate">
+              Admin / Officer
+            </div>
+            <div className="text-[10px] text-muted-foreground/80 font-normal truncate">
+              Login with Email
+            </div>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleModeChange("loginId")}
+          className={`flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer ${
+            loginMode === "loginId"
+              ? "border-primary bg-primary/5 text-primary ring-2 ring-primary/20 shadow-sm"
+              : "border-border bg-muted/30 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+          }`}
+        >
+          <div
+            className={`p-2 rounded-lg shrink-0 ${
+              loginMode === "loginId"
+                ? "bg-primary/10 text-primary"
+                : "bg-muted text-muted-foreground"
+            }`}
+          >
+            <Headphones className="w-4 h-4" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-xs font-bold leading-tight truncate">
+              CCE Agent
+            </div>
+            <div className="text-[10px] text-muted-foreground/80 font-normal truncate">
+              Login with User ID
+            </div>
+          </div>
+        </button>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {loginMode === "email" ? (
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <Mail
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
@@ -166,7 +225,7 @@ export default function Login() {
                 type="email"
                 autoComplete="email"
                 autoFocus
-                placeholder="you@example.com"
+                placeholder="you@bihar.gov.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10 h-12"
@@ -199,9 +258,6 @@ export default function Login() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            {/* <Link to="/forgot-password" className="text-xs text-primary hover:underline">
-              Forgot password?
-            </Link> */}
           </div>
           <div className="relative">
             <Lock
@@ -245,15 +301,6 @@ export default function Login() {
             "Log in"
           )}
         </Button>
-        <div className="text-center mt-4">
-          <button
-            type="button"
-            onClick={() => handleModeChange(loginMode === "email" ? "loginId" : "email")}
-            className="text-sm font-medium text-primary hover:underline focus:outline-none cursor-pointer bg-transparent border-0"
-          >
-            {loginMode === "email" ? "Login with user id" : "Login with email"}
-          </button>
-        </div>
       </form>
     </AuthLayout>
   );

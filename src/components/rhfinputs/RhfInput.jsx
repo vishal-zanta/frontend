@@ -19,6 +19,7 @@ export default function RhfInput({
   isNumsOnly = false,
   isDisableFutureDates= false,
   isLettersAllowed = false,
+  isUppercase = false,
 
   
   ...props
@@ -63,6 +64,9 @@ export default function RhfInput({
                 }
                 if (isLettersAllowed && !isAlpha(e.target.value)) {
                   return;
+                }
+                if (isUppercase && e.target.value) {
+                  e.target.value = e.target.value.toUpperCase();
                 }
                 field.onChange(e);
                 

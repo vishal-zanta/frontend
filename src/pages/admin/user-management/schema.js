@@ -10,6 +10,7 @@ export const getAddSchema = (rolesList) => {
     skills: z.array(z.string()).optional(),
     preferredLanguages: z.array(z.string()).optional(),
     email: z.string().optional(),
+    loginId: z.string().optional(),
     phone: z.string().optional(),
     password: z.string().min(1, "Password is required"),
     confirmPassword: z.string().min(1, "Confirm password is required"),
@@ -29,15 +30,13 @@ export const getAddSchema = (rolesList) => {
     const isCCE = CCE_ROLES.includes(roleName);
 
     if (isCCE) {
-      // For CCE, email and phone are optional, but if provided must be valid
-      if (data.email && data.email.trim() !== "") {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Please enter a valid email address",
-            path: ["email"],
-          });
-        }
+      // For CCE, loginId is required
+      if (!data.loginId || data.loginId.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Login ID is required",
+          path: ["loginId"],
+        });
       }
       if (data.phone && data.phone.trim() !== "") {
         if (!/^\d{10}$/.test(data.phone)) {
@@ -91,6 +90,7 @@ export const getEditSchema = (rolesList) => {
     skills: z.array(z.string()).optional(),
     preferredLanguages: z.array(z.string()).optional(),
     email: z.string().optional(),
+    loginId: z.string().optional(),
     phone: z.string().optional(),
     password: z.string().optional(),
     confirmPassword: z.string().optional(),
@@ -110,15 +110,13 @@ export const getEditSchema = (rolesList) => {
     const isCCE = CCE_ROLES.includes(roleName);
 
     if (isCCE) {
-      // For CCE, email and phone are optional, but if provided must be valid
-      if (data.email && data.email.trim() !== "") {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Please enter a valid email address",
-            path: ["email"],
-          });
-        }
+      // For CCE, loginId is required
+      if (!data.loginId || data.loginId.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Login ID is required",
+          path: ["loginId"],
+        });
       }
       if (data.phone && data.phone.trim() !== "") {
         if (!/^\d{10}$/.test(data.phone)) {

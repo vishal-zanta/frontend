@@ -62,12 +62,22 @@ export default function Form({
         required
         placeholder="Enter full name"
       />
-      <RhfInput
-        label="Email"
-        name="email"
-        required={!isCCE}
-        placeholder="email@bihar.gov.in"
-      />
+      {isCCE ? (
+        <RhfInput
+          label="Login ID"
+          name="loginId"
+          required
+          isUppercase={true}
+          placeholder="Enter Login ID"
+        />
+      ) : (
+        <RhfInput
+          label="Email"
+          name="email"
+          required
+          placeholder="email@bihar.gov.in"
+        />
+      )}
       <RhfInput
         label="Phone"
         name="phone"

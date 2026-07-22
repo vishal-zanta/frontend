@@ -14,23 +14,30 @@ import Pagination from "@/components/Pagination";
 import DesignationTable from "./components/DesignationTable";
 import DesignationForm from "./components/DesignationForm";
 import { useGetDepartments } from "../hooks";
+import Filter from "@/components/Filter";
 
 export default function DesignationsTab() {
+  const [filters, setFilters] = useState({});
   const { page, limit, ...paginationProps } = usePagination();
   const { data, isLoading, error } = useGetRoles(
-    [page, limit],
-    { page, limit },
+    [page, limit, filters.department],
+    { page, limit, department: filters.department },
   );
 
   const designations = data?.data?.docs || [];
   const totalPages = data?.data?.pagination?.totalPages || 1;
   const queryClient = useQueryClient();
 
-  const { data: departmentApiData } = useGetDepartments([1, 500], { page: 1, limit: MAX_LIMIT });
-  const departmentOptions = (departmentApiData?.data?.data?.docs || []).map(d => ({
-    label: d.title,
-    value: d._id
-  }));
+  const { data: departmentApiData } = useGetDepartments([1, MAX_LIMIT], {
+    page: 1,
+    limit: MAX_LIMIT,
+  });
+  const departmentOptions = (departmentApiData?.data?.data?.docs || []).map(
+    (d) => ({
+      label: d.title || d.name || "",
+      value: d._id,
+    }),
+  );
 
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
 
@@ -96,13 +103,26 @@ export default function DesignationsTab() {
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground">Designations</h3>
-          <Button
-            size="sm"
-            onClick={() => setDialog({ type: "add" })}
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Plus className="w-4 h-4 mr-1" /> Add Designation
-          </Button>
+          <div className="flex items-center gap-2">
+            <Filter
+              filters={filters}
+              setFilters={setFilters}
+              filterOptions={[
+                {
+                  label: "Department",
+                  filterKey: "department",
+                  options: departmentOptions,
+                },
+              ]}
+            />
+            <Button
+              size="sm"
+              onClick={() => setDialog({ type: "add" })}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Plus className="w-4 h-4 mr-1" /> Add Designation
+            </Button>
+          </div>
         </div>
         <LoaderErrWrapper isLoading={isLoading} error={error}>
           <DesignationTable designations={designations} setDialog={setDialog} />

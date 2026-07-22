@@ -53,6 +53,7 @@ export default function UserManagement() {
   const [addInitialValues, setAddInitialValues] = useState({
     name: "",
     email: "",
+    loginId: "",
     phone: "",
     password: "",
     confirmPassword: "",
@@ -185,6 +186,7 @@ export default function UserManagement() {
                 setAddInitialValues({
                   name: "",
                   email: "",
+                  loginId: "",
                   phone: "",
                   password: "",
                   confirmPassword: "",
@@ -206,6 +208,7 @@ export default function UserManagement() {
                 setAddInitialValues({
                   name: "",
                   email: "",
+                  loginId: "",
                   phone: "",
                   password: "",
                   confirmPassword: "",
@@ -282,6 +285,7 @@ export default function UserManagement() {
               initialValues={{
                 name: editUser?.apiData?.name || "",
                 email: editUser?.apiData?.email || "",
+                loginId: editUser?.apiData?.loginId || "",
                 phone: editUser?.apiData?.phone || "",
                 password: editUser?.apiData?.password || "",
                 confirmPassword: editUser?.apiData?.password || "",
