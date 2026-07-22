@@ -209,7 +209,7 @@ console.log({editLevel})
       <div className="p-6 space-y-6">
         <SectionTitle
           title="Workflow Configuration"
-          subtitle="Define escalation hierarchy: Complaint Initiator → L1 → L2 → Zone → ULB → Division → SUDA"
+          subtitle=""
         />
 
         {/* Visual workflow */}

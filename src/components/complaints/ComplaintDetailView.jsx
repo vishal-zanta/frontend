@@ -54,7 +54,7 @@ export default function ComplaintDetailView({
 
   const { data: fileSizeData } = useGetFileSize();
   
-  const maxMbAllowed = fileSizeData?.data?.grievanceMaxUploadSizeMB ?? 0;
+  const maxMbAllowed = fileSizeData?.data?.fieldVisitMaxUploadSizeMB ?? 0;
   const MAX_FILE_SIZE = maxMbAllowed * 1024 * 1024;
   const postMutation = useMutation({
     mutationFn: uploadGeotaggedImage,
@@ -180,10 +180,10 @@ export default function ComplaintDetailView({
       reader.readAsDataURL(file);
     });
   };
+console.log({MAX_FILE_SIZE, maxMbAllowed})
 
   const handleUpload = () => {
     if (selectedFiles.length === 0) return;
-
     // Validate that each file is within MAX_FILE_SIZE
     const oversizedFiles = selectedFiles.filter((item) => item.file.size > MAX_FILE_SIZE);
     if (oversizedFiles.length > 0) {

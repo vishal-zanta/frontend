@@ -60,6 +60,7 @@ export default function CRMRaiseComplaint() {
 
  const grievanceMaxUploadSizeMB = data?.data?.grievanceMaxUploadSizeMB || 1;
  const MAX_FILE_SIZE = grievanceMaxUploadSizeMB * 1024 * 1024;
+ 
 
   const handleFileChange = (e) => {
     setFileError("");
