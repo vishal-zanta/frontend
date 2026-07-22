@@ -48,6 +48,7 @@ export const QUERY_KEYS = {
   SYSTEM_HEALTH: "system-health",
   DEPARTMENTS: "departments",
   SKILLS: "skills",
+  CONFIG: "config",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
@@ -313,6 +314,7 @@ export const apiPermissionOptions = [
 
   { label: "Call statistics", value: "CALL_STATS" },
   { label: "Department Management", value: "DEPARTMENT_MANAGEMENT" },
+  {label : "File Size Management", value : "FILE_MANAGEMENT"}
   // {label : "Skill Management",value : "SKILL_SET_MANAGEMENT"}
 ];
 
@@ -385,5 +387,6 @@ export const PERMISSIONS = {
 
   CALL_STATS: ["CALL_STATS"],
   DEPARTMENT_MANAGEMENT: ["DEPARTMENT_MANAGEMENT"],
+  FILE_MANAGEMENT: ["FILE_MANAGEMENT"],
   // SKILL_SET_MANAGEMENT: ["SKILL_SET_MANAGEMENT"]
 };

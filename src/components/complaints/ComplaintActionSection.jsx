@@ -8,6 +8,7 @@ import { getErrorToast } from "@/utils/helpers";
 import { Label } from "../ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import useGetFileSize from "@/hooks/query/useGetFileSize";
 
 const initialRemark = { isOpen: false, value: "", id: null, status: null };
 
@@ -28,6 +29,8 @@ export default function ComplaintActionSection({
   fieldVisit,
   geotaggedImages,
 }) {
+
+
   const { t } = useLanguage();
   const { profiledata } = useAuth();
   const [remark, setRemark] = useState(initialRemark);
@@ -145,7 +148,9 @@ export default function ComplaintActionSection({
               className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0 cursor-pointer"
               size="sm"
             >
-              {updateStatusMutation.isPending ? t("Saving...", "सहेज रहा है...") : t("Save", "सहेजें")}
+              {updateStatusMutation.isPending
+                ? t("Saving...", "सहेज रहा है...")
+                : t("Save", "सहेजें")}
             </Button>
           )}
         </div>
@@ -157,7 +162,8 @@ export default function ComplaintActionSection({
 
         {statusUpdate && (
           <div className="mt-3 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-600 dark:text-emerald-400">
-            ✓ {t("Status updated to", "स्थिति को अपडेट किया गया")} <strong>{statusUpdate}</strong>.
+            ✓ {t("Status updated to", "स्थिति को अपडेट किया गया")}{" "}
+            <strong>{statusUpdate}</strong>.
           </div>
         )}
       </div>
@@ -190,7 +196,9 @@ export default function ComplaintActionSection({
               className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0 cursor-pointer"
               size="sm"
             >
-              {updatePriorityMutation.isPending ? t("Saving...", "सहेज रहा है...") : t("Save", "सहेजें")}
+              {updatePriorityMutation.isPending
+                ? t("Saving...", "सहेज रहा है...")
+                : t("Save", "सहेजें")}
             </Button>
           )}
         </div>
@@ -219,7 +227,7 @@ export default function ComplaintActionSection({
               <p className="text-sm text-muted-foreground">
                 {t(
                   "Click to capture/upload field photo with geo-tag (multiple allowed)",
-                  "जियो-टैग के साथ फील्ड फोटो कैप्चर/अपलोड करने के लिए क्लिक करें (एकाधिक अनुमत)"
+                  "जियो-टैग के साथ फील्ड फोटो कैप्चर/अपलोड करने के लिए क्लिक करें (एकाधिक अनुमत)",
                 )}
               </p>
             </div>
@@ -287,7 +295,8 @@ export default function ComplaintActionSection({
         >
           <div className="">
             <Label>
-              {t("Remark", "टिप्पणी")} <span className="text-red-500 mb-2">*</span>
+              {t("Remark", "टिप्पणी")}{" "}
+              <span className="text-red-500 mb-2">*</span>
             </Label>
             <Textarea
               value={remark.value}

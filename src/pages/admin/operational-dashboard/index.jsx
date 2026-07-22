@@ -70,6 +70,7 @@ export default function OperationalDashboard() {
   const { hasPermission } = useAuth();
   const [searchParams] = useSearchParams();
   const [period, setPeriod] = useState("daily");
+  const [dateRange, setDateRange] = useState({});
 
   const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
 
@@ -161,7 +162,7 @@ export default function OperationalDashboard() {
               and infrastructure
             </p>
           </div>
-          {/* <TimeRangeFilter period={period} setPeriod={setPeriod} /> */}
+          {/* <TimeRangeFilter period={period} setPeriod={setPeriod} dateRange={dateRange} setDateRange={setDateRange} /> */}
         </div>
 
         {tab === "call-volume" && <CallVolumeTab pd={pd} />}

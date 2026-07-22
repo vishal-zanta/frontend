@@ -262,7 +262,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
-              <th className="px-3 py-3 font-medium sticky left-0 bg-muted/50 z-10">
+              <th className="px-3 py-3 font-medium sticky left-0 bg-[#F4F7FA] dark:bg-[#172033] z-10">
                 Menu Item
               </th>
               {cols ? (
@@ -294,7 +294,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
           <tbody className="divide-y divide-border">
             {menuItems.map((menu, mi) => (
               <tr key={mi} className="hover:bg-muted/30">
-                <td className="px-3 py-2.5 font-medium sticky left-0 bg-card z-10">
+                <td className="px-3 py-2.5 font-medium sticky left-0 bg-white dark:bg-[#0f1729] z-10">
                   {menu}
                 </td>
                 {cols ? (

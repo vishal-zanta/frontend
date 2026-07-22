@@ -68,7 +68,7 @@ export default function CRMSettings() {
             </div>
             <div>
               <Label className="mb-1.5 block">{t("Call Display Format", "कॉल प्रदर्शन प्रारूप")}</Label>
-              <select className="w-full border border-input rounded-md p-2 text-sm bg-white">
+              <select className="w-full border border-input rounded-md p-2 text-sm bg-white dark:bg-card text-foreground">
                 <option value="standard">{t("Standard (Caller ID + Name)", "मानक (कॉलर आईडी + नाम)")}</option>
                 <option value="detailed">{t("Detailed (Caller ID + History)", "विस्तृत (कॉलर आईडी + इतिहास)")}</option>
               </select>

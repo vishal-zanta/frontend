@@ -14,9 +14,59 @@ import { BarChartCard, PieChartCard } from "@/components/Charts";
 import { Award, TrendingUp, AlertTriangle, Clock, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import TimeRangeFilter from "@/components/TimeRangeFilter";
+import { MAX_LIMIT } from "@/utils/constants";
+import useGetRoles from "@/hooks/query/useGetRoles";
+import { useGetUsers } from "@/pages/admin/user-management/hooks";
 
 export default function PerformanceDashboard() {
   const [period, setPeriod] = useState("daily");
+  const [dateRange, setDateRange] = useState({});
+  const [filters, setFilters] = useState({});
+
+  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
+  // const rolesList = ;
+  const roleOptions = (rolesApiData?.data?.docs || [])
+    .filter(
+      (r) =>
+        r.designationEnglish.startsWith("L1") ||
+        r.designationEnglish.startsWith("L2"),
+    )
+    .map((r) => ({
+      label: r.designationEnglish,
+      value: r._id,
+    }));
+  const roleIds = roleOptions.map((r) => r.value).join(",");
+  const { data: usersApiData } = useGetUsers(
+    ["all-users-performance", roleIds],
+    {
+      page: 1,
+      limit: MAX_LIMIT,
+      role: roleIds,
+    },
+    !!roleIds
+  );
+
+  const usersList =
+    usersApiData?.data?.data?.docs ||
+    usersApiData?.data?.docs ||
+    usersApiData?.docs ||
+    [];
+
+  const filterOptions = [
+    {
+      filterKey: "role",
+      label: "By Role",
+      options: roleOptions,
+    },
+    {
+      filterKey: "user",
+      label: "By User",
+      options: usersList.map((u) => ({
+        label: u.name,
+        value: u._id,
+      })),
+    },
+  ];
   const sub =
     period === "daily"
       ? "vs yesterday"
@@ -32,7 +82,15 @@ export default function PerformanceDashboard() {
             title="Performance Dashboard"
             subtitle="Service-wise, district-wise, division-wise & ULB-wise performance analytics"
           />
-          <TimeRangeFilter period={period} setPeriod={setPeriod} />
+          <TimeRangeFilter
+            period={period}
+            setPeriod={setPeriod}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            filters={filters}
+            setFilters={setFilters}
+            filterOptions={filterOptions}
+          />
         </div>
 
         {/* Stats ON TOP */}

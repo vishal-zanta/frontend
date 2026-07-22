@@ -49,7 +49,7 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
                     download={att.name}
                     className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm border shadow-sm
                       ${isOwn
-                        ? "bg-blue-700 text-white border-blue-600"
+                        ? "bg-blue-600 dark:bg-blue-600 text-white border-blue-600 dark:border-blue-500"
                         : "bg-card text-foreground border-border"
                       }`}
                   >
@@ -73,7 +73,7 @@ export default function MessageBubble({ msg, isOwn, senderName }) {
           <div
             className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm whitespace-pre-wrap break-words
               ${isOwn
-                ? "bg-blue-900 text-white rounded-br-sm"
+                ? "bg-blue-600 dark:bg-blue-600 text-white rounded-br-sm"
                 : "bg-card text-foreground border border-border rounded-bl-sm"
               }`}
           >

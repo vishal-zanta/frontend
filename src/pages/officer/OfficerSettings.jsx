@@ -31,7 +31,7 @@ export default function OfficerSettings() {
           </div>
         )}
 
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-white dark:bg-card rounded-xl border border-border p-6">
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-blue-500" /> {t("Notification Preferences", "अधिसूचना प्राथमिकताएं")}
           </h3>
@@ -59,7 +59,7 @@ export default function OfficerSettings() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-white dark:bg-card rounded-xl border border-border p-6">
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <Globe className="w-5 h-5 text-blue-500" /> {t("Display Preferences", "प्रदर्शन प्राथमिकताएं")}
           </h3>
@@ -70,7 +70,7 @@ export default function OfficerSettings() {
             </div>
             <div>
               <Label className="mb-1.5 block">{t("Time Zone", "समय क्षेत्र")}</Label>
-              <select className="w-full border border-input rounded-md p-2 text-sm bg-white">
+              <select className="w-full border border-input rounded-md p-2 text-sm bg-white dark:bg-card text-foreground">
                 <option>IST (GMT+5:30)</option>
               </select>
             </div>

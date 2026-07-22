@@ -1,5 +1,7 @@
 import React from "react";
 import { Users, Clock, TrendingUp, Activity } from "lucide-react";
+import RealTimeStats from "./components/RealTimeStats";
+import InboundCallMetrics from "./components/InboundCallMetrics";
 import StatCard from "@/components/StatCard";
 import AgentPerformanceChart from "./components/AgentPerformanceChart";
 import AgentStatusChart from "./components/AgentStatusChart";
@@ -124,6 +126,7 @@ const agentExportColumns = [
 export default function CcePerformanceTab({ pd }) {
   return (
     <div className="space-y-6">
+      {/* Previous stats cards: do not change these */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={Users}
@@ -154,6 +157,9 @@ export default function CcePerformanceTab({ pd }) {
           sublabel="Target: 95%"
         />
       </div>
+
+      {/* New Real-Time & In-Bound Metrics Components */}
+  
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AgentPerformanceChart data={AGENT_PERFORMANCE} xKey="agent" />
         <AgentStatusChart data={HELPDESK_STATUS} />
@@ -276,6 +282,8 @@ export default function CcePerformanceTab({ pd }) {
           </table>
         </div>
       </div>
+          <RealTimeStats />
+      <InboundCallMetrics />
     </div>
   );
 }

@@ -188,7 +188,7 @@ export default function MessagesContainer({
   // ── Render ─────────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground">
+      <div className="flex-1 flex flex-col bg-card  items-center justify-center gap-3 text-muted-foreground">
         <Loader2 className="w-6 h-6 animate-spin" />
         <p className="text-sm">Loading messages...</p>
       </div>
@@ -197,7 +197,7 @@ export default function MessagesContainer({
 
   if (!messages.length) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-muted/20">
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-card ">
         <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
           <MessageSquareDot className="w-6 h-6 text-blue-400" />
         </div>
@@ -224,14 +224,14 @@ export default function MessagesContainer({
   return (
     <div
       ref={containerRef}
-      className="flex-1 overflow-y-auto overscroll-contain scrollbar-thin px-4 py-4 space-y-2"
+      className="flex-1 bg-card overflow-y-auto overscroll-contain scrollbar-thin px-4 py-4 space-y-2"
     >
       {/* Top sentinel — triggers IntersectionObserver to load older messages */}
       <div ref={topSentinelRef} className="h-1 opacity-0 w-full" />
 
       {/* Loading older messages spinner */}
       {isFetchingMore && (
-        <div className="flex justify-center items-center py-3 gap-2 text-blue-900">
+        <div className="flex justify-center items-center py-3 gap-2 text-blue-600 dark:text-blue-400">
           <Loader2 className="w-4 h-4 animate-spin" />
           <span className="text-xs font-semibold">
             Loading older messages...

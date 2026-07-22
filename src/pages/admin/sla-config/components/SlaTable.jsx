@@ -10,7 +10,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
       <table className="w-full text-sm">
         <thead className="bg-muted/50">
           <tr className="text-left text-xs text-muted-foreground">
-            <th className="px-3 py-3 font-medium min-w-40 sticky left-0 bg-muted/50">
+            <th className="px-3 py-3 font-medium min-w-40 sticky left-0 bg-[#F4F7FA] dark:bg-[#172033]">
               Sub-Service
             </th>
             {roles.map((role) => (
@@ -24,7 +24,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
             {/* <th className="px-3 py-3 font-medium text-center min-w-40">
               Officer
             </th> */}
-            <th className="px-3 py-3 font-medium min-w-40 sticky right-0 bg-muted/50 text-center">
+            <th className="px-3 py-3 font-medium min-w-40 sticky right-0 bg-[#F4F7FA] dark:bg-[#172033] text-center">
               Actions
             </th>
           </tr>
@@ -42,7 +42,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
           ) : (
             docs.map((s, i) => (
               <tr key={s._id || i} className="hover:bg-muted/30">
-                <td className="px-3 py-2.5 font-medium sticky left-0 bg-card ">
+                <td className="px-3 py-2.5 font-medium sticky left-0 bg-white dark:bg-[#0f1729] ">
                   {s.subService?.title ||
                     s.subService?.name ||
                     s.subService ||
@@ -74,7 +74,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                     <AlertTriangle className="w-4 h-4 text-red-500 mx-auto" />
                   )}
                 </td> */}
-                <td className="px-3 py-2.5 sticky right-0 bg-card text-center">
+                <td className="px-3 py-2.5 sticky right-0 bg-white dark:bg-[#0f1729] text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="ghost" size="sm" onClick={() => onEdit(s)}>
                       <Pencil className="w-3.5 h-3.5 mr-1" /> Edit

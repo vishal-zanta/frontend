@@ -118,7 +118,7 @@ export default function TopBar({
       : t("Officer Portal", "अधिकारी पोर्टल");
 
   const settingsPath = profileMetaData?.isAdmin
-    ? null
+    ? "/admin/settings"
     : profileMetaData?.isCRM
       ? "/crm/settings"
       : "/officer/settings";

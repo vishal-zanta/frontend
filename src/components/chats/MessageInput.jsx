@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postChatMessage, postConversation } from "@/api/chats.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast } from "@/utils/helpers";
+import useGetFileSize from "@/hooks/query/useGetFileSize";
 
 // ─── Allowed MIME types & size limit ────────────────────────────────────────
 const ALLOWED_MIME_TYPES = new Set([
@@ -14,7 +15,6 @@ const ALLOWED_MIME_TYPES = new Set([
   "video/mp4",
   "audio/mpeg",
 ]);
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 // ─── Build FormData for POST /chat/message ───────────────────────────────────
 const buildMessageFormData = ({ conversationId, text, file }) => {
@@ -37,21 +37,33 @@ const buildMessageFormData = ({ conversationId, text, file }) => {
   return formData;
 };
 
-export default function MessageInput({ selectedUser, setAllMessages , setSelectedUser}) {
+export default function MessageInput({
+  selectedUser,
+  setAllMessages,
+  setSelectedUser,
+}) {
+  const { data, isLoading, error } = useGetFileSize();
+  const maxMbAllowed = (data?.data?.chatMaxUploadSizeMB || 1)
+  const MAX_FILE_SIZE = maxMbAllowed * 1024 * 1024; // 10 MB
+
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
   const qc = useQueryClient();
-  
 
   const postMessageMutation = useMutation({
     mutationFn: postChatMessage,
     onSuccess: (data, variables) => {
-      setAllMessages((prev)=> [...prev, data?.data?.data]);
-      setSelectedUser((prev)=> ({...prev, conversationId: data?.data?.data?.conversation}));
+      setAllMessages((prev) => [...prev, data?.data?.data]);
+      setSelectedUser((prev) => ({
+        ...prev,
+        conversationId: data?.data?.data?.conversation,
+      }));
       // qc.invalidateQueries({ queryKey: ["chat-messages"] });
-      
+    },
+    onError: (err, variables) => {
+      getErrorToast(err);
     },
   });
 
@@ -65,6 +77,7 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
           text: variables._pendingText,
           file: variables._pendingFile,
         });
+
         postMessageMutation.mutate(formData);
       }
     },
@@ -127,11 +140,16 @@ export default function MessageInput({ selectedUser, setAllMessages , setSelecte
     const oversized = [];
     const selected = Array.from(e.target.files || []).filter((f) => {
       if (!ALLOWED_MIME_TYPES.has(f.type)) return false;
-      if (f.size > MAX_FILE_SIZE) { oversized.push(f.name); return false; }
+      if (f.size > MAX_FILE_SIZE) {
+        oversized.push(f.name);
+        return false;
+      }
       return true;
     });
     if (oversized.length) {
-      getErrorToast(`File(s) exceed the 10 MB limit and were not attached:\n${oversized.join("\n")}`);
+      getErrorToast(
+        `File(s) exceed the ${maxMbAllowed} MB limit and were not attached:\n${oversized.join("\n")}`,
+      );
       // return;
     }
     setFiles(() => [...selected]);

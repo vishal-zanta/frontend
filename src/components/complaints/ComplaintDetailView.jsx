@@ -26,6 +26,7 @@ import ComplaintComplainantSection from "./ComplaintComplainantSection";
 import ComplaintLocationSection from "./ComplaintLocationSection";
 import ComplaintEvidenceSection from "./ComplaintEvidenceSection";
 import ComplaintActionSection from "./ComplaintActionSection";
+import useGetFileSize from "@/hooks/query/useGetFileSize";
 // import { useAuth } from "@/context/AuthContext";
 
 export default function ComplaintDetailView({
@@ -51,6 +52,10 @@ export default function ComplaintDetailView({
 
   const { data, isLoading, error } = isCCE ? cceQuery : officerQuery;
 
+  const { data: fileSizeData } = useGetFileSize();
+  
+  const maxMbAllowed = fileSizeData?.data?.grievanceMaxUploadSizeMB ?? 0;
+  const MAX_FILE_SIZE = maxMbAllowed * 1024 * 1024;
   const postMutation = useMutation({
     mutationFn: uploadGeotaggedImage,
     onSuccess: () => {
@@ -178,6 +183,19 @@ export default function ComplaintDetailView({
 
   const handleUpload = () => {
     if (selectedFiles.length === 0) return;
+
+    // Validate that each file is within MAX_FILE_SIZE
+    const oversizedFiles = selectedFiles.filter((item) => item.file.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      getErrorToast(
+        t(
+          `File(s) exceed the ${maxMbAllowed} MB limit`,
+          `फ़ाइल(ओं) का आकार ${maxMbAllowed} MB की सीमा से अधिक है`
+        )
+      );
+      return;
+    }
+
     const formData = new FormData();
     selectedFiles.forEach((item) => {
       formData.append("files", item.file);

@@ -24,7 +24,7 @@ export default function UserManageTable({
     <table className="w-full text-sm">
       <thead className="bg-muted/50">
         <tr className="text-left text-xs text-muted-foreground">
-          <th className="px-4 py-3 font-medium bg-muted/50 sticky left-0">User</th>
+          <th className="px-4 py-3 font-medium bg-[#F4F7FA] dark:bg-[#172033] sticky left-0">User</th>
           <th className="px-4 py-3 font-medium">Role</th>
           <th className="px-4 py-3 font-medium">District</th>
           <th className="px-4 py-3 font-medium min-w-[200px]">Skills</th>
@@ -32,13 +32,13 @@ export default function UserManageTable({
           <th className="px-4 py-3 font-medium min-w-[280px]">Permissions</th>
           <th className="px-4 py-3 font-medium">Last Login</th>
           <th className="px-4 py-3 font-medium">Status</th>
-          <th className="px-4 py-3 font-medium text-center bg-muted/50 sticky right-0">Actions</th>
+          <th className="px-4 py-3 font-medium text-center bg-[#F4F7FA] dark:bg-[#172033] sticky right-0">Actions</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border">
         {users.map((u) => (
           <tr key={u.id} className="hover:bg-muted/30">
-            <td className="px-4 py-3 bg-card sticky left-0">
+            <td className="px-4 py-3 bg-white dark:bg-[#0f1729] sticky left-0">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
                   {u.name
@@ -118,7 +118,7 @@ export default function UserManageTable({
                 {u?.status?.toLowerCase()}
               </Badge>
             </td>
-            <td className="px-4 py-3 text-center bg-card sticky right-0">
+            <td className="px-4 py-3 text-center bg-white dark:bg-[#0f1729] sticky right-0">
               <div className="flex gap-1 justify-center">
                 {/* <Button
                   variant="ghost"

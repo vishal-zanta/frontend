@@ -32,6 +32,7 @@ import SuccessScreen from "./components/SuccessScreen";
 import { postComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import LangSelector from "@/components/LangSelector";
+import useGetFileSize from "@/hooks/query/useGetFileSize";
 
 export default function CRMRaiseComplaint() {
   const role = "crm";
@@ -54,6 +55,10 @@ export default function CRMRaiseComplaint() {
   const fileInputRef = useRef(null);
   const [attachments, setAttachments] = useState([]);
   const [fileError, setFileError] = useState("");
+  const { data, isLoading, error } = useGetFileSize();
+
+ const grievanceMaxUploadSizeMB = data?.data?.grievanceMaxUploadSizeMB || 1;
+ const MAX_FILE_SIZE = grievanceMaxUploadSizeMB * 1024 * 1024;
 
   const handleFileChange = (e) => {
     setFileError("");
@@ -81,11 +86,11 @@ export default function CRMRaiseComplaint() {
       return;
     }
 
-    const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
+    const oversized = files.find((f) => f.size > MAX_FILE_SIZE );
     if (oversized) {
       const errMsg = t(
-        "File too large. Max 10 MB.",
-        "फ़ाइल बहुत बड़ी है। अधिकतम 10 MB।",
+        `File too large. Max ${grievanceMaxUploadSizeMB} MB.`,
+        `फ़ाइल बहुत बड़ी है। अधिकतम ${grievanceMaxUploadSizeMB} MB।`,
       );
       setFileError(errMsg);
       getErrorToast({ message: errMsg });

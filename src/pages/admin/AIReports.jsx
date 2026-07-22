@@ -7,6 +7,7 @@ import {
   Minus,
   Zap,
   Loader2,
+  FileDown,
 } from "lucide-react";
 import {
   DAILY_VOLUME,
@@ -32,8 +33,10 @@ import TimeRangeFilter from "@/components/TimeRangeFilter";
 
 export default function AIReports() {
   const [period, setPeriod] = useState("weekly");
+  const [dateRange, setDateRange] = useState({});
   const [showInsights, setShowInsights] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const handleGenerate = () => {
     setGenerating(true);
@@ -41,6 +44,70 @@ export default function AIReports() {
       setGenerating(false);
       setShowInsights(true);
     }, 2000);
+  };
+
+  const handleExportPDF = async () => {
+    const element = document.querySelector(".ai-report-pdf");
+    if (!element) return;
+    setExporting(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const { jsPDF } = await import("jspdf");
+
+      const children = Array.from(element.children);
+      const doc = new jsPDF("p", "mm", "a4");
+
+      const margin = 10; // 10mm margins
+      const pageWidth = 210; // A4 width
+      const pageHeight = 297; // A4 height
+      const usableWidth = pageWidth - (margin * 2); // 190mm
+      const usableHeight = pageHeight - (margin * 2); // 277mm
+
+      let currentY = margin;
+      let isFirstPage = true;
+
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        
+        // Render the individual child element to a canvas
+        const canvas = await html2canvas(child, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: false,
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        let childHeight = (canvas.height * usableWidth) / canvas.width;
+
+        // If a single child is larger than the usable height, scale it down to fit
+        if (childHeight > usableHeight) {
+          childHeight = usableHeight;
+        }
+
+        // If the child doesn't fit in the remaining space of the current page, add a new page
+        if (currentY + childHeight > pageHeight - margin) {
+          doc.addPage();
+          currentY = margin;
+          isFirstPage = false;
+        } else if (isFirstPage && i > 0) {
+          // Add spacing between elements on the same page
+          currentY += 6;
+        } else if (!isFirstPage && currentY > margin) {
+          // Add spacing between elements on subsequent pages
+          currentY += 6;
+        }
+
+        doc.addImage(imgData, "PNG", margin, currentY, usableWidth, childHeight, "", "FAST");
+        currentY += childHeight;
+      }
+
+      doc.save(`AI_Analytical_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -51,9 +118,32 @@ export default function AIReports() {
             title="AI Analytical Reports"
             subtitle="Time-series analysis, category distribution, hotspot prediction & AI-powered insights"
           />
-          <TimeRangeFilter period={period} setPeriod={setPeriod} />
+          <div className="flex flex-col  items-end  gap-3">
+            <TimeRangeFilter period={period} setPeriod={setPeriod} dateRange={dateRange} setDateRange={setDateRange} />
+            <Button
+              onClick={handleExportPDF}
+              disabled={exporting}
+              size={"sm"}
+              className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-medium text-xs px-4 py-2 rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer border-0 h-9"
+            >
+              {exporting ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Exporting...</span>
+                </>
+              ) : (
+                <>
+                  <FileDown className="w-3.5 h-3.5" />
+                  <span>Export PDF</span>
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
+        <div className="space-y-6 ai-report-pdf">
+
+     
         {/* AI Insights - Generate button */}
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white">
           <div className="flex items-start justify-between">
@@ -271,6 +361,7 @@ export default function AIReports() {
             ))}
           </div>
         </div>
+           </div>
       </div>
     </PortalLayout>
   );

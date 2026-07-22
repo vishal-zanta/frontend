@@ -42,6 +42,8 @@ import AuditTrail from "./pages/admin/AuditTrail";
 import AdminCallHistory from "./pages/admin/AdminCallHistory";
 import ManageOfficers from "./pages/admin/ManageOfficers";
 import ManageAgents from "./pages/admin/ManageAgents";
+import AdminSettings from "./pages/admin/settings";
+
 import OfficerSettings from "./pages/officer/OfficerSettings";
 import CRMSettings from "./pages/crm/CRMSettings";
 import FieldVisits from "./pages/officer/field-visits";
@@ -330,6 +332,14 @@ const router = createBrowserRouter([
                 element: (
                   <PermissionChecker permission={PERMISSIONS.MANAGE_AGENTS}>
                     <ManageAgents />
+                  </PermissionChecker>
+                ),
+              },
+               {
+                path: "settings",
+                element: (
+                  <PermissionChecker >
+                    <AdminSettings />
                   </PermissionChecker>
                 ),
               },

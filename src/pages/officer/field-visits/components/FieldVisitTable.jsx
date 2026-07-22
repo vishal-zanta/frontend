@@ -44,7 +44,7 @@ export default function FieldVisitTable({
             <th className="px-4 py-3 font-medium">{t("Photo", "फोटो")}</th>
             <th className="px-4 py-3 font-medium">{t("Status", "स्थिति")}</th>
             {!isHideAction && (
-              <th className="px-4 py-3 font-medium text-center sticky right-0 bg-muted/50">
+              <th className="px-4 py-3 font-medium text-center sticky right-0 bg-[#F4F7FA] dark:bg-[#172033]">
                 {t("Actions", "कार्रवाई")}
               </th>
             )}
@@ -162,7 +162,7 @@ export default function FieldVisitTable({
                   </Badge>
                 </td>
                 {!isHideAction && (
-                  <td className="px-4 py-3 text-center sticky right-0 bg-card">
+                  <td className="px-4 py-3 text-center sticky right-0 bg-white dark:bg-[#0f1729]">
                     <div className="flex gap-2 justify-center">
                       <button
                         onClick={() => onEdit && onEdit(fv)}
