@@ -31,7 +31,7 @@ const SearchComplaints = () => {
     fetchNextPage: officerFetchNext,
     isFetchingNextPage: officerFetchingNext,
   } = useGetComplaintsOfOfiicer(
-    { search, limit: 5 },
+    { search, limit: 10 },
     { enabled: isOfficer && !!search },
   );
 
@@ -43,7 +43,7 @@ const SearchComplaints = () => {
     fetchNextPage: crmFetchNext,
     isFetchingNextPage: crmFetchingNext,
   } = useGetComplaintsForCCEandAdminInfinite(
-    { search, limit: 5 },
+    { search, limit: 10 },
     { enabled: !isOfficer && !!search },
   );
 
