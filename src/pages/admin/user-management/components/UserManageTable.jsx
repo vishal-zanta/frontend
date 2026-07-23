@@ -29,7 +29,7 @@ export default function UserManageTable({
           <th className="px-4 py-3 font-medium">District</th>
           <th className="px-4 py-3 font-medium min-w-[200px]">Skills</th>
           <th className="px-4 py-3 font-medium min-w-[150px]">Languages</th>
-          <th className="px-4 py-3 font-medium min-w-[280px]">Permissions</th>
+          {/* <th className="px-4 py-3 font-medium min-w-[280px]">Permissions</th> */}
           <th className="px-4 py-3 font-medium">Last Login</th>
           <th className="px-4 py-3 font-medium">Status</th>
           <th className="px-4 py-3 font-medium text-center bg-[#F4F7FA] dark:bg-[#172033] sticky right-0">Actions</th>
@@ -83,7 +83,7 @@ export default function UserManageTable({
                 {(u.preferredLanguages || []).length === 0 && "-"}
               </div>
             </td>
-            <td className="px-2 py-1 min-w-[280px]">
+            {/* <td className="px-2 py-1 min-w-[280px]">
               <div className="flex flex-wrap gap-1 px-2 py-2 max-w-[350px] max-h-20 overflow-y-auto ">
                 {u.permissions
                   ?.map(
@@ -100,7 +100,7 @@ export default function UserManageTable({
                     </Badge>
                   ))}
               </div>
-            </td>
+            </td> */}
             <td className="px-4 py-3 text-xs text-muted-foreground">
               {u.lastLogin}
             </td>

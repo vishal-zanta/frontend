@@ -125,7 +125,10 @@ export default function DesignationsTab() {
           </div>
         </div>
         <LoaderErrWrapper isLoading={isLoading} error={error}>
+          <div className="overflow-x-auto">
+
           <DesignationTable designations={designations} setDialog={setDialog} />
+          </div>
           <Pagination
             page={page}
             limit={limit}

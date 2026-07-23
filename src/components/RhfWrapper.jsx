@@ -45,6 +45,19 @@ const RhfWrapper = ({
     }
   }, [validationSchema, schemaKey]);
 
+  React.useEffect(() => {
+    if(methods.formState.errors){
+
+      const firstError = Object.keys(methods.formState.errors).reduce((field, a) => {
+        return !!methods.formState.errors[field] ? field : a;
+      }, null);
+      
+      if (firstError) {
+        methods.setFocus(firstError);
+      }
+    }
+}, [methods.formState.errors, methods.setFocus]);
+
   return (
     <FormProvider {...methods}>
       <form

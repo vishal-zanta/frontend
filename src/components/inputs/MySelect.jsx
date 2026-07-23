@@ -20,7 +20,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       : "none",
     borderRadius: "var(--radius)",
     minHeight: "36px",
-    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--background))",
+    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--card))",
     cursor: disabled ? "not-allowed" : "default",
     "&:hover": {
       borderColor: hasError
@@ -73,7 +73,10 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       ? "hsl(var(--accent-foreground))"
       : "hsl(var(--popover-foreground))",
     cursor: "pointer",
-    fontSize: "14px",
+    fontSize: "0.875rem",
+    "@media (max-width: 768px)": {
+      fontSize: "1rem",
+    },
     padding: "8px 12px",
     "&:active": {
       backgroundColor: "hsl(var(--accent))",
@@ -103,18 +106,30 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   }),
   singleValue: (provided) => ({
     ...provided,
-    fontSize: "14px",
+    fontSize: "0.875rem",
     color: "hsl(var(--foreground))",
+    "@media (max-width: 768px)": {
+      fontSize: "1rem",
+    },
   }),
   input: (provided) => ({
     ...provided,
-    fontSize: "14px",
+    fontSize: "0.875rem",
     color: "hsl(var(--foreground))",
+    margin: 0,
+    padding: 0,
+    "@media (max-width: 768px)": {
+      fontSize: "1rem",
+    },
   }),
   placeholder: (provided) => ({
     ...provided,
-    fontSize: "14px",
+    position: "absolute",
+    fontSize: "0.875rem",
     color: colors?.placeholder ?? "hsl(var(--muted-foreground))",
+    "@media (max-width: 768px)": {
+      fontSize: "1rem",
+    },
   }),
   indicatorSeparator: () => ({ display: "none" }),
   indicatorsContainer: (provided) => ({
@@ -138,10 +153,6 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       color: "hsl(var(--foreground))",
     },
   }),
-    placeholder: (provided)=> ({
-    ...provided,
-    position : "absolute"
-  })
 });
 
 export default function MySelect({
