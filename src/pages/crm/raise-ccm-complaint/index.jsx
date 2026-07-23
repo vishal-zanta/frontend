@@ -218,7 +218,7 @@ function FormWizard({
   demographyLoading,
   grievanceMaxUploadSizeMB
 }) {
-  const { trigger } = useFormContext();
+  const methods = useFormContext();
   const [step, setStep] = useState(1);
 
   const steps = [
@@ -242,7 +242,7 @@ function FormWizard({
   const handleNext = async () => {
     let isValid = false;
     if (step === 1) {
-      isValid = await trigger([
+      isValid = await methods.trigger([
         "channel",
         "citizenInfo.fullName",
         "citizenInfo.mobile",
@@ -251,8 +251,9 @@ function FormWizard({
         "citizenInfo.preferredLanguage",
         "communication.feedbackConsent",
       ]);
+      // console.log({isValid, errors: methods.formState.errors});
     } else if (step === 2) {
-      isValid = await trigger([
+      isValid = await methods.trigger([
         "address.state",
         "address.district",
         "address.subdivision",

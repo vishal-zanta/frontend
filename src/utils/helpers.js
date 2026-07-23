@@ -143,6 +143,9 @@ export const checkPermissionManual = (validPermissions , permission)=> {
     return validPermissions.includes(permission);
 }
 
+
+
+
 /**
  * Recursively walks a react-hook-form errors object (which may be deeply nested)
  * and returns the DOM element for the first leaf error found.
@@ -155,6 +158,7 @@ export const checkPermissionManual = (validPermissions , permission)=> {
  * @returns {{ el: Element|null, path: string|null }}
  */
 export const getFirstErrorEl = (errors, prefix = "") => {
+   
   if (!errors || typeof errors !== "object") return { el: null, path: null };
 
   for (const key of Object.keys(errors)) {
@@ -182,3 +186,19 @@ export const getFirstErrorEl = (errors, prefix = "") => {
 
   return { el: null, path: null };
 };
+
+export const focusErrorElement = (methods, err=null)=> {
+  let errors = err? err : methods.formState.errors;
+      if (!Object.keys(errors).length) return;
+    
+ const { el, path } = getFirstErrorEl(errors);
+    // console.log({el, path, errors});
+    if (el ) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+     
+    }
+    if (path) {
+      // setFocus expects the registered field name (dot-path for nested fields)
+      try { methods.setFocus(path); } catch (_) {}
+    }
+}
