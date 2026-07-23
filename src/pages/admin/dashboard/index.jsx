@@ -64,7 +64,7 @@ export default function AdminDashboard() {
         <ModesAndSocialSection modeData = {dashboardData?.charts?.bySource} />
           </LoaderErrWrapper>
 
-        {/* Recent Complaints Table */}
+        {/* Recent Complaints Table */} 
         <RecentComplaintsSection />
 
         {/* Quick Links Menu */}
