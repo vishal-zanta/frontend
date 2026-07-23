@@ -18,86 +18,84 @@ export default function OfficerTagTable({
             <th className="px-4 py-3 font-medium">Designation</th>
             <th className="px-4 py-3 font-medium min-w-60">Sub-services</th>
             <th className="px-4 py-3 font-medium min-w-48">Subdivisions</th>
-            {/* <th className="px-4 py-3 font-medium text-center">Active</th> */}
-            {/* <th className="px-4 py-3 font-medium text-center">SLA</th> */}
             <th className="px-4 py-3 font-medium text-center">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {tagging.map((o, i) => (
-            <tr key={i} className="hover:bg-muted/30">
-              <td className="px-4 py-3 font-medium">{o.officer?.name}</td>
-              <td className="px-4 py-3 text-muted-foreground">
-                {o.officer?.role?.designationEnglish}
-              </td>
-              <td className="px-4 py-3">
-                <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
-                  {(o.services || []).map((s, si) => (
-                    <Badge
-                      key={si}
-                      variant="outline"
-                      className="text-[10px] bg-primary/10 text-primary"
-                    >
-                      {s.title}
-                    </Badge>
-                  ))}
-                </div>
-              </td>
-              <td className="px-4 py-3">
-                <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
-                  {(o.wards || []).map((w, wi) => (
-                    <Badge
-                      key={wi}
-                      variant="outline"
-                      className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                    >
-                      {w}
-                    </Badge>
-                  ))}
-                </div>
-              </td>
-              {/* <td className="px-4 py-3 text-center font-semibold">
-                <Badge
-                  variant="outline"
-                  className={`text-xs ${o.active ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-destructive/10 text-destructive border-destructive/20"}`}
-                >
-                  {o.active ? "Active" : "Inactive"}
-                </Badge>
-              </td> */}
-              {/* <td className="px-4 py-3 text-center">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" />
-              </td> */}
-              <td className="px-4 py-3 text-center">
-                <div className="flex gap-1 justify-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setEditItem(o);
-                      setDialog({
-                        officer: o.officer?.name || "",
-                        designation: o.officer?.role?.designationEnglish || "",
-                        services: (o.services || []).map((s) => s.title),
-                        wards: o.wards || [],
-                        activeComplaints: 0,
-                        slaCompliant: true,
-                      });
-                    }}
-                  >
-                    <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-600"
-                    onClick={() => handleDelete && handleDelete(o)}
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
-                </div>
+          {tagging.length === 0 ? (
+            <tr>
+              <td
+                colSpan={5}
+                className="text-center py-8 text-sm text-muted-foreground"
+              >
+                No tagging found.
               </td>
             </tr>
-          ))}
+          ) : (
+            tagging.map((o, i) => (
+              <tr key={i} className="hover:bg-muted/30">
+                <td className="px-4 py-3 font-medium">{o.officer?.name}</td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  {o.officer?.role?.designationEnglish}
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
+                    {(o.services || []).map((s, si) => (
+                      <Badge
+                        key={si}
+                        variant="outline"
+                        className="text-[10px] bg-primary/10 text-primary"
+                      >
+                        {s.title}
+                      </Badge>
+                    ))}
+                  </div>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
+                    {(o.wards || []).map((w, wi) => (
+                      <Badge
+                        key={wi}
+                        variant="outline"
+                        className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                      >
+                        {w}
+                      </Badge>
+                    ))}
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <div className="flex gap-1 justify-center">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditItem(o);
+                        setDialog({
+                          officer: o.officer?.name || "",
+                          designation: o.officer?.role?.designationEnglish || "",
+                          services: (o.services || []).map((s) => s.title),
+                          wards: o.wards || [],
+                          activeComplaints: 0,
+                          slaCompliant: true,
+                        });
+                      }}
+                    >
+                      <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-600"
+                      onClick={() => handleDelete && handleDelete(o)}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

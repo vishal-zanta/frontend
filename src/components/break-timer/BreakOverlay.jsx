@@ -69,7 +69,7 @@ export default function BreakOverlay({onEndBreak, isEnding, activeBreak }) {
           </div>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-4 flex items-center justify-center">
           <Button
             size="lg"
             onClick={onEndBreak}
