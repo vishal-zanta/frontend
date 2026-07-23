@@ -21,15 +21,13 @@ export default function Filter({ filters = {}, setFilters, filterOptions = [] })
 
   const handleSelectFilter = (key, value) => {
     if (setFilters) {
-      setFilters((prev) => {
-        const next = { ...prev };
+      const next = { ...filters };
         if (value === undefined || value === "") {
           delete next[key];
         } else {
           next[key] = value;
         }
-        return next;
-      });
+      setFilters(next);
     }
   };
 

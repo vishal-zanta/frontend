@@ -148,7 +148,7 @@ export default function ComplaintDetailView({
     },
   });
 
-  const { data: usersData } = useGetUsers(
+  const { data: usersData, isLoading :  userLoading} = useGetUsers(
     [
       "cce-officer-list",
       `subServices_${data?.data?.classification?.subService?._id}`,
@@ -272,6 +272,7 @@ console.log({MAX_FILE_SIZE, maxMbAllowed})
             isCCE={isCCE}
             formattedDate={formattedDate}
             userOptions={userOptions}
+            userLoading={userLoading}
             assignOfficerMutation={assignOfficerMutation}
             selectedId={selectedId}
           />

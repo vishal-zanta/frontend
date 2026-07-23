@@ -13,21 +13,36 @@ import Pagination from "@/components/Pagination";
 import usePagination from "@/hooks/usePagination";
 import ServiceTable from "./components/ServiceTable";
 import ServiceForm from "./components/ServiceForm";
+import Filter from "@/components/Filter";
 
 export default function ServicesTab() {
   const queryClient = useQueryClient();
+  const [filters, setFilters] = useState({});
   const { page, limit, ...paginationProps } = usePagination();
-  const { data: servicesData, isLoading, error } = useGetServices([page, limit], { page, limit });
+  const {
+    data: servicesData,
+    isLoading,
+    error,
+  } = useGetServices([page, limit, filters.department], {
+    page,
+    limit,
+    department: filters.department,
+  });
   const services = servicesData?.data?.data?.docs || [];
   const totalPages = servicesData?.data?.data?.pagination?.totalPages || 1;
   const [subServiceDialog, setSubServiceDialog] = useState(null);
   const [serviceDialog, setServiceDialog] = useState(null);
 
-  const { data: departmentApiData } = useGetDepartments([1, 500], { page: 1, limit: MAX_LIMIT });
-  const departmentOptions = (departmentApiData?.data?.data?.docs || []).map(d => ({
-    label: d.title,
-    value: d._id
-  }));
+  const { data: departmentApiData } = useGetDepartments([1, 500], {
+    page: 1,
+    limit: MAX_LIMIT,
+  });
+  const departmentOptions = (departmentApiData?.data?.data?.docs || []).map(
+    (d) => ({
+      label: d.title || d.name || "",
+      value: d._id,
+    }),
+  );
 
   const postServiceMutation = useMutation({
     mutationFn: postService,
@@ -82,15 +97,33 @@ export default function ServicesTab() {
   const initialValues = {
     title: serviceDialog?.item?.title || "",
     titleHindi: serviceDialog?.item?.titleHindi || "",
-    department: serviceDialog?.item?.department?._id || serviceDialog?.item?.department || "",
+    department:
+      serviceDialog?.item?.department?._id ||
+      serviceDialog?.item?.department ||
+      "",
   };
 
-  const isSaving = postServiceMutation.isPending || putServiceMutation.isPending;
+  const isSaving =
+    postServiceMutation.isPending || putServiceMutation.isPending;
 
   return (
     <>
       <LoaderErrWrapper isLoading={isLoading} error={error}>
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-end items-center gap-2 mb-4">
+          <Filter
+            filters={filters}
+            setFilters={(val) => {
+              setFilters(val);
+              paginationProps.setPage(1);
+            }}
+            filterOptions={[
+              {
+                label: "Department",
+                filterKey: "department",
+                options: departmentOptions,
+              },
+            ]}
+          />
           <Button
             size="sm"
             onClick={() => setServiceDialog({ type: "add" })}
