@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getFirstErrorEl } from "@/utils/helpers";
 
 const RhfWrapper = ({
   children,
@@ -14,6 +15,7 @@ const RhfWrapper = ({
   resetForm,
   validationOn = "onChange",
 }) => {
+  const lastFocusedEl = useRef(null);
   // Create resolver that updates when validationSchema changes
   const resolver = useMemo(() => {
     if (!isValidation || !validationSchema) return undefined;
@@ -45,16 +47,21 @@ const RhfWrapper = ({
     }
   }, [validationSchema, schemaKey]);
 
-useEffect(() => {
-  const errors = methods.formState.errors;
-  const firstError = Object.keys(errors)[0];
-  if (firstError) {
-    const el = document.getElementById(firstError);
-    // console.log({el, firstError});
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-    methods.setFocus(firstError);
-  }
-}, [methods.formState.errors]);
+  // useEffect(() => {
+  //   const errors = methods.formState.errors;
+  //   if (!Object.keys(errors).length) return;
+
+  //   const { el, path } = getFirstErrorEl(errors);
+  //   // console.log({el, path});
+  //   if (el && el !== lastFocusedEl.current) {
+  //     el.scrollIntoView({ behavior: "smooth", block: "center" });
+  //     lastFocusedEl.current = el;
+  //   }
+  //   if (path) {
+  //     // setFocus expects the registered field name (dot-path for nested fields)
+  //     try { methods.setFocus(path); } catch (_) {}
+  //   }
+  // }, [methods.formState.errors]);
   return (
     <FormProvider {...methods}>
       <form

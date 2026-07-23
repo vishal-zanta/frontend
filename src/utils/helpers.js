@@ -142,3 +142,43 @@ export const checkPermissionManual = (validPermissions , permission)=> {
     }
     return validPermissions.includes(permission);
 }
+
+/**
+ * Recursively walks a react-hook-form errors object (which may be deeply nested)
+ * and returns the DOM element for the first leaf error found.
+ *
+ * A "leaf" error is an object that has a `message` string property (i.e. an
+ * actual FieldError), as opposed to a nested error group.
+ *
+ * @param {object} errors - The `formState.errors` object (or a sub-tree of it).
+ * @param {string} [prefix] - Dot-path prefix built up during recursion.
+ * @returns {{ el: Element|null, path: string|null }}
+ */
+export const getFirstErrorEl = (errors, prefix = "") => {
+  if (!errors || typeof errors !== "object") return { el: null, path: null };
+
+  for (const key of Object.keys(errors)) {
+    const node = errors[key];
+    const path = prefix ? `${prefix}.${key}` : key;
+
+    if (!node || typeof node !== "object") continue;
+
+    // A FieldError leaf has a `message` string.
+    if (typeof node.message === "string") {
+      // Try querying by name attribute first (covers inputs rendered with that name),
+      // then fall back to getElementById for react-select inputs (inputId === name).
+      const el =
+        document.querySelector(`[name="${path}"]`) ??
+        document.getElementById(path) ??
+        // react-select sets inputId; also try the last segment for flat ids.
+        document.getElementById(key);
+      return { el, path };
+    }
+
+    // Nested error group — recurse.
+    const result = getFirstErrorEl(node, path);
+    if (result.path !== null) return result;
+  }
+
+  return { el: null, path: null };
+};
