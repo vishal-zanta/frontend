@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -20,6 +21,13 @@ export default function TimeRangeFilter({
   filterOptions
 }) {
   const { t } = useLanguage();
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [tempRange, setTempRange] = useState(dateRange);
+
+  useEffect(() => {
+    setTempRange(dateRange);
+  }, [dateRange, popoverOpen]);
+
   const options = [
     { id: "daily", label: t("Today", "आज"), sub: "vs yesterday" },
     { id: "weekly", label: t("This Week", "इस सप्ताह"), sub: "vs last week" },
@@ -28,21 +36,22 @@ export default function TimeRangeFilter({
 
   const canSelectCustom = typeof setDateRange === "function";
 
-  const handleSelect = (range) => {
+  const handleApply = () => {
     if (setDateRange) {
-      setDateRange(range);
-      if (range?.from) {
+      setDateRange(tempRange);
+      if (tempRange?.from) {
         setPeriod("custom");
       }
     }
+    setPopoverOpen(false);
   };
 
   const handleClear = () => {
     if (setDateRange) {
       setDateRange(undefined);
     }
+    setTempRange(undefined);
     setPeriod("monthly");
-    // setFilters({});
   };
 
   return (
@@ -63,7 +72,7 @@ export default function TimeRangeFilter({
         ))}
 
         {canSelectCustom && (
-          <Popover>
+          <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
               <button
                 className={`px-3 py-1 rounded-md text-xs font-medium transition-all flex items-center gap-1 cursor-pointer ${
@@ -73,28 +82,38 @@ export default function TimeRangeFilter({
                 }`}
               >
                 <CalendarIcon className="w-3.5 h-3.5 mr-1" />
-                {/* {dateRange?.from ? (
-                  dateRange.to ? (
-                    <>
-                      {format(dateRange.from, "LLL dd, y")} -{" "}
-                      {format(dateRange.to, "LLL dd, y")}
-                    </>
-                  ) : (
-                    format(dateRange.from, "LLL dd, y")
-                  )
-                ) : ( */}
                 <span>{t("Custom", "कस्टम")}</span>
-                {/* )} */}
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="end">
+            <PopoverContent className="w-auto p-3 flex flex-col gap-3" align="end">
               <Calendar
                 mode="range"
-                defaultMonth={dateRange?.from || new Date()}
-                selected={dateRange}
-                onSelect={handleSelect}
+                defaultMonth={tempRange?.from || dateRange?.from || new Date()}
+                selected={tempRange}
+                onSelect={(range) => setTempRange(range)}
                 numberOfMonths={2}
               />
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={() => {
+                    setTempRange(dateRange);
+                    setPopoverOpen(false);
+                  }}
+                >
+                  {t("Cancel", "रद्द करें")}
+                </Button>
+                <Button
+                  size="sm"
+                  className="h-8 text-xs bg-primary hover:bg-primary/90"
+                  disabled={!tempRange?.from}
+                  onClick={handleApply}
+                >
+                  {t("Apply", "लागू करें")}
+                </Button>
+              </div>
             </PopoverContent>
           </Popover>
         )}

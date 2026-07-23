@@ -496,12 +496,12 @@ export default function CRMDashboard() {
             <h3 className="font-bold text-foreground">
               {t("My Recent Calls", "मेरी हाल की कॉल")}
             </h3>
-            <Link
+            {/* <Link
               to="/crm/history"
               className="text-sm text-blue-600 hover:underline"
             >
               {t("View All →", "सभी देखें →")}
-            </Link>
+            </Link> */}
           </div>
           {myCalls.length === 0 ? (
             <div className="px-5 py-8 text-center text-sm text-muted-foreground">
