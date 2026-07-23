@@ -172,7 +172,7 @@ export default function RhfSelect({
   isLoading=false,
   colors,
 }) {
-  const { control , register} = useFormContext();
+  const { control } = useFormContext();
   const themeContext = useTheme();
   const _theme = themeContext?.theme; // Subscribe to ThemeContext so component re-renders on theme change
 
@@ -223,6 +223,7 @@ export default function RhfSelect({
         };
 
         const commonProps = {
+          ref: field.ref,
           inputId: name,
           options: selectOptions,
           placeholder: placeholder ?? label ?? "Select...",
@@ -260,7 +261,7 @@ export default function RhfSelect({
             onClick={(e) => e.stopPropagation()}
             className={cn("flex flex-col gap-1.5", className)}
             data-invalid={!!error}
-                ref={register(name).ref}
+            
 
           >
             {label && (
@@ -275,9 +276,9 @@ export default function RhfSelect({
                 {required && <span className="text-destructive"> *</span>}
               </Label>
             )}
-            {/* {isLoading ? <Loader2 className="animate-spin" /> : (
+            {isLoading ? <Loader2 className="animate-spin" /> : (
 
-           <> */}
+           <>
 
             {isCreatable ? (
               <CreatableSelect
@@ -292,8 +293,8 @@ export default function RhfSelect({
             ) : (
               <ReactSelect {...commonProps}  />
             )}
-            {/* </>
- )} */}
+            </>
+ )}
             {error && (
               <span className="text-destructive text-xs font-medium">
                 {error.message}

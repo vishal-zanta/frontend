@@ -18,7 +18,12 @@ export default function Form({
   userOptions = [],
   onCancel,
 }) {
-  const { resetField, getValues, setValue, formState: { errors } } = useFormContext();
+  const {
+    resetField,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   const { t } = useLanguage();
   const selectedService = useWatch({ name: "service" });
   const selectedDistrict = useWatch({ name: "district" });
@@ -72,6 +77,13 @@ export default function Form({
   // Guard: skip if still loading to avoid wiping selection on in-flight empty response.
   const isFirstRenderService = useRef(true);
   useEffect(() => {
+    console.log({
+      isFirstRenderService: isFirstRenderService.current,
+      isSubservicesLoading,
+      isSubservicesFetching,
+      subservicesOptions: subservicesOptions.length,
+      selectedService,
+    });
     if (isFirstRenderService.current) {
       isFirstRenderService.current = false;
       return;
@@ -87,10 +99,12 @@ export default function Form({
     setValue("services", filtered, { shouldValidate: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    isSubservicesLoading,
-    isSubservicesFetching,
-    subservicesOptions.length,
-    selectedService,
+    JSON.stringify({
+      isSubservicesLoading,
+      isSubservicesFetching,
+      subservicesOptions,
+      selectedService,
+    }),
   ]);
 
   // Fetch Districts (Demographics)
@@ -192,30 +206,32 @@ export default function Form({
         <div className="flex items-center">
           {Object.keys(errors).length > 0 && (
             <span className="text-destructive text-xs font-semibold animate-pulse">
-              {t("* Please fix form errors first", "* कृपया पहले फॉर्म की त्रुटियों को सुधारें")}
+              {t(
+                "* Please fix form errors first",
+                "* कृपया पहले फॉर्म की त्रुटियों को सुधारें",
+              )}
             </span>
           )}
         </div>
-  
-      <div className="flex justify-end gap-2 ">
-        
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          disabled={isLoading}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          disabled={isLoading}
-          className="bg-primary hover:bg-primary/90"
-        >
-          {isLoading ? "Saving..." : "Save"}
-        </Button>
+
+        <div className="flex justify-end gap-2 ">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="bg-primary hover:bg-primary/90"
+          >
+            {isLoading ? "Saving..." : "Save"}
+          </Button>
+        </div>
       </div>
     </div>
-        </div>
   );
 }

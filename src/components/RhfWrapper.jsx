@@ -45,19 +45,16 @@ const RhfWrapper = ({
     }
   }, [validationSchema, schemaKey]);
 
-  React.useEffect(() => {
-    if(methods.formState.errors){
-
-      const firstError = Object.keys(methods.formState.errors).reduce((field, a) => {
-        return !!methods.formState.errors[field] ? field : a;
-      }, null);
-      
-      if (firstError) {
-        methods.setFocus(firstError);
-      }
-    }
-}, [methods.formState.errors, methods.setFocus]);
-
+useEffect(() => {
+  const errors = methods.formState.errors;
+  const firstError = Object.keys(errors)[0];
+  if (firstError) {
+    const el = document.getElementById(firstError);
+    // console.log({el, firstError});
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    methods.setFocus(firstError);
+  }
+}, [methods.formState.errors]);
   return (
     <FormProvider {...methods}>
       <form
