@@ -29,7 +29,7 @@ export default function RecentComplaintsSection() {
         </Link>
       </div>
       <LoaderErrWrapper isLoading={isLoading} error={error}>
-        <div className="overflow-x-auto max-h-[400px] overflow-y-auto scrollbar-thin">
+        <div className="overflow-x-auto  scrollbar-thin">
           <table className="w-full text-sm">
             <thead className="bg-muted/50 sticky top-0">
               <tr className="text-left text-xs text-muted-foreground">

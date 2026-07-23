@@ -13,7 +13,7 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 export default function AdminDashboard() {
   const { data, error, isLoading } = useGetDashboardData();
   const dashboardData = data?.data?.data;
-  console.log({ dashboardData });
+  // console.log({ dashboardData });
 
   return (
     <PortalLayout role="superadmin">

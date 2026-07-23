@@ -11,7 +11,7 @@ export default function CategoryDistributionChart({ mainData }) {
       title="Category Distribution"
       subtitle="Complaints by service type"
     >
-      <PieChartCard data={chartData} height={300} />
+      <PieChartCard data={chartData} height={350} />
     </ChartCard>
   );
 }

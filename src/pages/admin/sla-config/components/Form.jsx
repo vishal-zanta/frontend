@@ -165,7 +165,7 @@ export default function Form({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 pt-2">
+      {/* <div className="flex items-center gap-2 pt-2">
         <input
           type="checkbox"
           id="officer-assigned"
@@ -176,7 +176,7 @@ export default function Form({
         <Label htmlFor="officer-assigned" className="cursor-pointer">
           Officer Assigned
         </Label>
-      </div>
+      </div> */}
     </div>
   );
 }
