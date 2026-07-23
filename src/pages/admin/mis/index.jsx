@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import ExportButton from "@/components/ExportButton";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import StatCard from "@/components/StatCard";
 import { jsPDF } from "jspdf";
 import { useGetMisReports, useGetMisStats } from "./hooks";
 
@@ -303,25 +304,25 @@ export default function MISReports() {
       label: "Total Reports Generated",
       value: stats.totalReportsGenerated ?? 0,
       icon: FileText,
-      color: "text-primary bg-primary/10",
+      color: "blue",
     },
     {
       label: "This Month",
       value: stats.thisMonth ?? 0,
       icon: Calendar,
-      color: "text-emerald-600 bg-emerald-500/10",
+      color: "emerald",
     },
     {
       label: "Statutory Reports",
       value: stats.statutoryReports ?? 0,
       icon: FileCheck,
-      color: "text-purple-600 bg-purple-50",
+      color: "purple",
     },
     {
       label: "Pending Reports",
       value: stats.pendingReports ?? 0,
       icon: FileBarChart,
-      color: "text-amber-600 bg-amber-50",
+      color: "amber",
     },
   ];
 
@@ -346,29 +347,15 @@ export default function MISReports() {
           error={statsError?.response?.data?.message || statsError?.message}
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {statTiles.map((s, i) => {
-              const Icon = s.icon;
-              return (
-                <div
-                  key={i}
-                  className="bg-card rounded-xl border border-border p-4 flex items-center gap-3"
-                >
-                  <div
-                    className={`w-9 h-9 rounded-lg ${s.color} flex items-center justify-center`}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold">
-                      {Number(s.value).toLocaleString("en-IN")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {s.label}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {statTiles.map((s, i) => (
+              <StatCard
+                key={i}
+                icon={s.icon}
+                label={s.label}
+                value={Number(s.value).toLocaleString("en-IN")}
+                color={s.color}
+              />
+            ))}
           </div>
         </LoaderErrWrapper>
 

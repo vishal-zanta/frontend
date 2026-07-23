@@ -2,10 +2,11 @@ import { getServices, getSubservices, getComplaintSources, getDemographics, getU
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../../utils/constants";
 
-export const useGetServices = (keys = [], params = {}) => {
+export const useGetServices = (keys = [], params = {}, enabled = true) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SERVICES, ...keys],
     queryFn: () => getServices(params),
+    enabled: enabled
   });
 };
 

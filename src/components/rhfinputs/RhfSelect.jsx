@@ -141,6 +141,10 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       color: "hsl(var(--foreground))",
     },
   }),
+  placeholder: (provided)=> ({
+    ...provided,
+    position : "absolute"
+  })
 });
 
 export default function RhfSelect({
@@ -212,6 +216,7 @@ export default function RhfSelect({
           options: selectOptions,
           placeholder: placeholder ?? label ?? "Select...",
           isDisabled: disabled,
+          isLoading: isLoading,
           isMulti: isMulti,
           isClearable: true,
           isSearchable: true,
@@ -257,9 +262,9 @@ export default function RhfSelect({
                 {required && <span className="text-destructive"> *</span>}
               </Label>
             )}
-            {isLoading ? <Loader2 className="animate-spin" /> : (
+            {/* {isLoading ? <Loader2 className="animate-spin" /> : (
 
-           <>
+           <> */}
 
             {isCreatable ? (
               <CreatableSelect
@@ -274,8 +279,8 @@ export default function RhfSelect({
             ) : (
               <ReactSelect {...commonProps} />
             )}
-            </>
- )}
+            {/* </>
+ )} */}
             {error && (
               <span className="text-destructive text-xs font-medium">
                 {error.message}

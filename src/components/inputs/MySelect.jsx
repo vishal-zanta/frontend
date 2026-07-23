@@ -138,6 +138,10 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       color: "hsl(var(--foreground))",
     },
   }),
+    placeholder: (provided)=> ({
+    ...provided,
+    position : "absolute"
+  })
 });
 
 export default function MySelect({
@@ -150,6 +154,7 @@ export default function MySelect({
   labelClassName,
   required = false,
   disabled = false,
+  isLoading = false,
   isMultiple = false,
   isCreatable = false,
   error,
@@ -201,6 +206,7 @@ export default function MySelect({
     options: selectOptions,
     placeholder: placeholder ?? label ?? "Select...",
     isDisabled: disabled,
+    isLoading: isLoading,
     isMulti: isMulti,
     isClearable: true,
     isSearchable: true,

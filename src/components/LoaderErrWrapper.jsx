@@ -11,9 +11,17 @@ const LoaderErrWrapper = ({ isLoading, error, children }) => {
   }
 
   if (error) {
+    let msg =
+      error?.response?.data?.message ||
+      error?.message ||
+      (typeof error == "string" ? error : "Something went wrong !!!");
+    if (msg.includes("Requires permission:")) {
+      msg =
+        " You do not have access to this module. Please contact your administrator.";
+    }
     return (
       <div className="flex items-center justify-center h-full min-h-40">
-        <p className="text-red-500 text-lg font-semibold">{ error?.response?.data?.message  ||error?.message || error}</p>
+        <p className="text-red-500 text-lg font-semibold">⚠{" "}{msg}</p>
       </div>
     );
   }

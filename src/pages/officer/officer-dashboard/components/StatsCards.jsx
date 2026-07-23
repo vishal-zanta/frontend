@@ -22,7 +22,7 @@ export default function StatsCards({ officer, analyticsData, isLoading, error })
   const slaTrend = getTrendProps(current.slaBreached, previous.slaBreached, true);
 
   return (
-    <LoaderErrWrapper isLoading={isLoading} error={error?.message}>
+    <LoaderErrWrapper isLoading={isLoading} error={error}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={Inbox}

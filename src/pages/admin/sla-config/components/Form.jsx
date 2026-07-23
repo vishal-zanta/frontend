@@ -3,19 +3,56 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MySelect from "@/components/inputs/MySelect";
 import { isValidNumber } from "@/utils/helpers";
+import { Loader2 } from "lucide-react";
 
 export default function Form({
   editItem,
   dialog,
   setDialog,
   roles = [],
+  serviceOptions = [],
   subServiceOptions = [],
+  isServicesPending = false,
+  isSubservicesPending = false,
 }) {
+  
   return (
     <div className="space-y-4">
       <div>
-        <Label className="mb-1.5 block">
+        <Label className="mb-1.5 flex items-center gap-2">
+          Service <span className="text-red-500">*</span>
+          {isServicesPending && (
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          )}
+        </Label>
+        {editItem ? (
+          <Input
+            disabled
+            value={
+              editItem.subService?.service?.title ||
+              editItem.subService?.service ||  
+              ""
+            }
+            className="bg-muted/50"
+          />
+        ) : (
+          <MySelect
+            options={serviceOptions}
+            value={dialog.service || ""}
+            onValueChange={(val) =>
+              setDialog({ ...dialog, service: val, subService: "" })
+            }
+            placeholder="Select service..."
+            isLoading={isServicesPending}
+          />
+        )}
+      </div>
+      <div>
+        <Label className="mb-1.5 flex items-center gap-2">
           Sub-Service <span className="text-red-500">*</span>
+          {isSubservicesPending && (
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          )}
         </Label>
         {editItem ? (
           <Input
@@ -30,7 +67,13 @@ export default function Form({
             options={subServiceOptions}
             value={dialog.subService || ""}
             onValueChange={(val) => setDialog({ ...dialog, subService: val })}
-            placeholder="Select sub-service..."
+            placeholder={
+              !dialog.service
+                ? "Select service first..."
+                : "Select sub-service..."
+            }
+            disabled={!dialog.service || isSubservicesPending}
+            isLoading={isSubservicesPending}
           />
         )}
       </div>

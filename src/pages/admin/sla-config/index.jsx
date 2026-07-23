@@ -9,7 +9,7 @@ import SlaAnalytics from "./components/SlaAnalytics";
 import SlaTable from "./components/SlaTable";
 import Form from "./components/Form";
 import { useGetSlaconfig } from "./hooks";
-import { useGetSubservices, useGetDepartments } from "../master-data/hooks";
+import { useGetSubservices, useGetDepartments, useGetServices } from "../master-data/hooks";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSlaConfig, putSlaConfig, deleteSlaConfig } from "./api";
@@ -74,12 +74,33 @@ export default function SLAConfig() {
     (r) => !USER_ROLES_EXECULDED.includes(r.designationEnglish)
   );
 
-  // 3. Fetch subservices for selection dropdown
-  const { data: subservicesData } = useGetSubservices(
+  // 3. Fetch services for selection dropdown
+  const {
+    data: servicesData,
+    isLoading: isServicesLoading,
+    isPending: isServicesPending,
+  } = useGetServices(
     [selectedDept],
     { page: 1, limit: MAX_LIMIT, department: selectedDept },
-    !!selectedDept,
+    !!selectedDept
   );
+  const serviceOptions = (servicesData?.data?.data?.docs || []).map((s) => ({
+    label: s.title || s.name || "",
+    value: s._id,
+  }));
+
+  // 4. Fetch subservices for selection dropdown
+  const {
+    data: subservicesData,
+    isLoading: isSubservicesLoading,
+    isFetching: isSubservicesFetching,
+    isPending: isSubservicesPendingQuery,
+  } = useGetSubservices(
+    [selectedDept, dialog?.service],
+    { page: 1, limit: MAX_LIMIT, department: selectedDept, serviceId: dialog?.service },
+    !!(selectedDept && dialog?.service),
+  );
+  const isSubservicesPending = (isSubservicesPendingQuery || isSubservicesLoading || isSubservicesFetching) && !!dialog?.service;
   const subservices = subservicesData?.data?.data?.docs || [];
 
   // Filter available subservices for the SLA config select dropdown
@@ -141,6 +162,7 @@ export default function SLAConfig() {
   const handleEdit = (item) => {
     setEditItem(item);
     setDialog({
+      service: item.subService?.service?._id || item.subService?.service || "",
       subService: item.subService?._id || item.subService,
       escalations: (item.escalations || []).map((e) => ({
         role: e.role?._id || e.role,
@@ -260,6 +282,7 @@ export default function SLAConfig() {
             onClick={() => {
               setEditItem(null);
               setDialog({
+                service: "",
                 subService: "",
                 escalations: [],
                 officer: true,
@@ -334,7 +357,10 @@ export default function SLAConfig() {
                   dialog={dialog}
                   setDialog={setDialog}
                   roles={roles}
+                  serviceOptions={serviceOptions}
                   subServiceOptions={subServiceOptions}
+                  isServicesPending={isServicesPending}
+                  isSubservicesPending={isSubservicesPending}
                 />
               </div>
               <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
