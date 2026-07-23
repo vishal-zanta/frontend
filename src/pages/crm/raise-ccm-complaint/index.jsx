@@ -251,7 +251,7 @@ function FormWizard({
         "citizenInfo.preferredLanguage",
         "communication.feedbackConsent",
       ]);
-      // console.log({isValid, errors: methods.formState.errors});
+
     } else if (step === 2) {
       isValid = await methods.trigger([
         "address.state",
