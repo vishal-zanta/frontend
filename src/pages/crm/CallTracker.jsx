@@ -122,7 +122,7 @@ export default function CallTracker() {
             />
           </div>
           <Select value={agentFilter} onValueChange={setAgentFilter}>
-            <SelectTrigger className="w-40 bg-white">
+            <SelectTrigger className="w-40 bg-background">
               <SelectValue placeholder={t("Agent", "एजेंट")} />
             </SelectTrigger>
             <SelectContent>
@@ -135,7 +135,7 @@ export default function CallTracker() {
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40 bg-white">
+            <SelectTrigger className="w-40 bg-background">
               <SelectValue placeholder={t("Status", "स्थिति")} />
             </SelectTrigger>
             <SelectContent>
@@ -206,12 +206,12 @@ export default function CallTracker() {
                         variant="outline"
                         className={`text-xs ${
                           c.status === "Resolved"
-                            ? "bg-emerald-50 text-emerald-700"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                             : c.status === "Missed"
-                              ? "bg-red-50 text-red-700"
+                              ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
                               : c.status === "Escalated"
-                                ? "bg-amber-50 text-amber-700"
-                                : "bg-slate-50 text-slate-600"
+                                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                                : "bg-muted/50 text-muted-foreground border-border"
                         }`}
                       >
                         {c.status === "Resolved"
