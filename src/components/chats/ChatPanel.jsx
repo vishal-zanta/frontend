@@ -118,7 +118,7 @@ export default function ChatPanel({ onClose, currentUserId }) {
 
   return (
     <div
-      className="absolute bottom-14 right-0 w-[min(400px,95vw)] bg-white rounded-2xl shadow-2xl border border-slate-200/60 overflow-hidden flex flex-col"
+      className="absolute bottom-2 right-0 w-[min(400px,95vw)] bg-white rounded-2xl shadow-2xl border border-slate-200/60 overflow-hidden flex flex-col"
       style={{ height: "min(560px, 85vh)" }}
     >
       <div className="flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-blue-950 to-blue-700 text-white shrink-0">

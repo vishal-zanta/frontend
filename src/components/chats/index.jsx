@@ -14,7 +14,7 @@ export default function ChatWidget() {
     <div className="fixed bottom-5 right-5 z-[9999] flex flex-col items-end gap-2">
       {/* Panel */}
       <div
-        className={`transition-all duration-300 origin-bottom-right ${
+        className={`transition-all duration-300 origin-bottom-right  p-4 ${
           isOpen
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-4 pointer-events-none"

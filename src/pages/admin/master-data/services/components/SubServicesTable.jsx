@@ -46,6 +46,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
     title: "",
     titleHindi: "",
     sla: 24,
+    slaType: "hrs",
     geoTagged: false,
     fieldVisit: false,
   });
@@ -59,10 +60,12 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
     if (dialog) {
       setErrors({ title: "", titleHindi: "", sla: "" });
       if (dialog.type === "edit") {
+        const type = dialog.item?.slaType ?? "hrs";
         setFormData({
           title: dialog.item?.title || "",
           titleHindi: dialog.item?.titleHindi || "",
-          sla: dialog.item?.sla || 24,
+          sla: type === "days" ? (dialog.item?.sla ? dialog.item.sla / 24 : "") : (dialog.item?.sla || 24),
+          slaType: type,
           geoTagged: !!dialog.item?.geoTagged,
           fieldVisit: !!dialog.item?.fieldVisit,
         });
@@ -71,6 +74,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
           title: "",
           titleHindi: "",
           sla: 24,
+          slaType: "hrs",
           geoTagged: false,
           fieldVisit: false,
         });
@@ -135,7 +139,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
       isNaN(Number(formData.sla)) ||
       Number(formData.sla) <= 0
     ) {
-      newErrors.sla = "Valid SLA hours are required";
+      newErrors.sla = "Valid SLA duration is required";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -145,10 +149,13 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
 
     setErrors({ title: "", titleHindi: "", sla: "" });
 
+    const finalSla = formData.slaType === "days" ? Number(formData.sla) * 24 : Number(formData.sla);
+
     if (dialog.type === "add") {
       postMutation.mutate({
         ...formData,
-        sla: Number(formData.sla),
+        sla: finalSla,
+        slaType: formData.slaType || "hrs",
         service: dialog.item._id,
       });
     } else {
@@ -157,7 +164,8 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
         subservice: {
           ...dialog.item,
           ...formData,
-          sla: Number(formData.sla),
+          sla: finalSla,
+          slaType: formData.slaType || "hrs",
         },
       });
     }
@@ -186,7 +194,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                 </th>
                 <th className="px-3 py-2.5 font-medium">उप-सेवा (Hindi)</th>
                 <th className="px-3 py-2.5 font-medium text-center">
-                  SLA (hrs)
+                  SLA
                 </th>
                 <th className="px-3 py-2.5 font-medium text-center">
                   Geo-Tagged
@@ -209,7 +217,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                       variant="outline"
                       className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/30"
                     >
-                      {ss.sla}h
+                      {ss?.slaType === "days" ? ss.sla / 24 : ss.sla}{ss?.slaType === "days" ? "d" : "h"}
                     </Badge>
                   </td>
                   <td className="px-3 py-2.5 text-center">

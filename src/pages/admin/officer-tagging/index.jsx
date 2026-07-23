@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -18,7 +18,7 @@ import RhfWrapper from "@/components/RhfWrapper";
 import { officerTaggingSchema } from "./schema";
 
 import { useGetOfficerTag } from "./hooks";
-import { useGetDemographics } from "../master-data/hooks";
+import { useGetDemographics, useGetDepartments } from "../master-data/hooks";
 import { useGetUsers } from "../user-management/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import subDivisionsData from "@/utils/sub-divisions.json";
@@ -27,42 +27,67 @@ import {
   putOfficerTagging,
   deleteOfficerTagging,
 } from "./api";
-import {
-  getErrorToast,
-  getSuccessToast,
-  
-} from "@/utils/helpers";
-import { MAX_LIMIT, QUERY_KEYS , USER_ROLES_EXECULDED} from "@/utils/constants";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { MAX_LIMIT, QUERY_KEYS, USER_ROLES_EXECULDED } from "@/utils/constants";
 
 export default function OfficerTagging() {
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [deleteRecord, setDeleteRecord] = useState(null);
+  const [selectedDept, setSelectedDept] = useState("");
 
   const { page, limit, ...pageProps } = usePagination();
   const queryClient = useQueryClient();
+
+  const { data: deptApiData, isLoading: deptLoading, error: deptError } = useGetDepartments([], {
+    page: 1,
+    limit: MAX_LIMIT,
+  });
+  const depts = (deptApiData?.data?.data?.docs || []).map((d) => ({
+    label: d.title,
+    value: d._id,
+  }));
+
+  useEffect(() => {
+    if (depts.length > 0 && !selectedDept) {
+      setSelectedDept(depts[0].value);
+    }
+  }, [depts, selectedDept]);
 
   const {
     data: taggingsApiData,
     isLoading,
     error,
-  } = useGetOfficerTag([search, page, limit], {
-    search,
-    page,
-    limit,
-  });
+  } = useGetOfficerTag(
+    [search, page, limit, selectedDept],
+    {
+      search,
+      page,
+      limit,
+      department: selectedDept,
+    },
+    !!selectedDept,
+  );
   const docs = taggingsApiData?.data?.data?.docs || [];
   const totalPages = taggingsApiData?.data?.data?.pagination?.totalPages || 1;
 
-  const { data: demographyData } = useGetDemographics([], { page: 1, limit: MAX_LIMIT });
-  const demographyDocs = demographyData?.data?.data?.docs || [];
-
-  const { data: usersApiDataUntagged } = useGetUsers([1, MAX_LIMIT, "untagged"], {
+  const { data: demographyData } = useGetDemographics([], {
     page: 1,
     limit: MAX_LIMIT,
-    untagged: true,
   });
+  const demographyDocs = demographyData?.data?.data?.docs || [];
+
+  const { data: usersApiDataUntagged } = useGetUsers(
+    [1, MAX_LIMIT, "untagged", selectedDept],
+    {
+      page: 1,
+      limit: MAX_LIMIT,
+      untagged: true,
+      department: selectedDept,
+    },
+    !!selectedDept,
+  );
   const userOptionsUnTagged = (usersApiDataUntagged?.data?.data?.docs || [])
     .filter(
       (u) => !USER_ROLES_EXECULDED.includes(u.role?.designationEnglish || ""),
@@ -71,11 +96,15 @@ export default function OfficerTagging() {
       label: `${u.name} (${u.role?.designationEnglish || ""})`,
       value: u._id,
     }));
-  const { data: usersApiData } = useGetUsers([1, MAX_LIMIT], {
-    page: 1,
-    limit: MAX_LIMIT,
-    // untagged: true,
-  });
+  const { data: usersApiData } = useGetUsers(
+    [1, MAX_LIMIT, selectedDept],
+    {
+      page: 1,
+      limit: MAX_LIMIT,
+      department: selectedDept,
+    },
+    !!selectedDept,
+  );
   const userOptions = (usersApiData?.data?.data?.docs || [])
     .filter(
       (u) => !USER_ROLES_EXECULDED.includes(u.role?.designationEnglish || ""),
@@ -83,7 +112,7 @@ export default function OfficerTagging() {
     .map((u) => ({
       label: `${u.name} (${u.role?.designationEnglish || ""})`,
       value: u._id,
-      apiData : u
+      apiData: u,
     }));
 
   const filtered = docs.filter(
@@ -186,8 +215,8 @@ export default function OfficerTagging() {
           }))}
         />
 
-        {/* Search + Add */}
-        <div className="flex gap-3">
+        {/* Search + Dept Filter + Add */}
+        <div className="flex gap-3 items-center">
           <SearchDebounced
             handleDebouncedChange={(val) => {
               setSearch(val);
@@ -197,8 +226,30 @@ export default function OfficerTagging() {
             className="flex-1"
             placeholder="Search officer by name..."
           />
+          <LoaderErrWrapper isLoading={deptLoading}>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <label className="text-xs font-semibold text-muted-foreground">
+                Department:
+              </label>
+              <select
+                value={selectedDept}
+                onChange={(e) => {
+                  setSelectedDept(e.target.value);
+                  pageProps.setPage(1);
+                }}
+                className="text-xs h-8 rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
+              >
+                {depts.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </LoaderErrWrapper>
           <Button
             className="bg-primary hover:bg-primary/90"
+            disabled={!selectedDept}
             onClick={() => {
               setEditItem(null);
               setDialogOpen(true);
@@ -246,7 +297,6 @@ export default function OfficerTagging() {
               setEditItem(null);
             }}
             title={editItem ? "Edit Tagging" : "Tag New Officer"}
-
           >
             <RhfWrapper
               isValidation={true}
@@ -262,22 +312,31 @@ export default function OfficerTagging() {
                           ? editItem.service.map((s) => s._id || s)
                           : [editItem.service?._id || editItem.service];
                       } else if (editItem.services?.length > 0) {
-                        const parentIds = editItem.services.map((s) =>
-                          typeof s?.service === "object" ? s.service?._id : s?.service
-                        ).filter(Boolean);
+                        const parentIds = editItem.services
+                          .map((s) =>
+                            typeof s?.service === "object"
+                              ? s.service?._id
+                              : s?.service,
+                          )
+                          .filter(Boolean);
                         initialServiceId = [...new Set(parentIds)];
                       }
 
-                      let initialDistrictId = editItem.district?._id || editItem.district || "";
+                      let initialDistrictId =
+                        editItem.district?._id || editItem.district || "";
                       if (!initialDistrictId) {
                         const firstWard = editItem.wards?.[0];
                         if (firstWard) {
-                          const districtName = Object.keys(subDivisionsData).find(districtKey =>
-                            subDivisionsData[districtKey].includes(firstWard)
+                          const districtName = Object.keys(
+                            subDivisionsData,
+                          ).find((districtKey) =>
+                            subDivisionsData[districtKey].includes(firstWard),
                           );
                           if (districtName) {
                             const matchingDoc = demographyDocs.find(
-                              (d) => d.name?.toLowerCase() === districtName.toLowerCase()
+                              (d) =>
+                                d.name?.toLowerCase() ===
+                                districtName.toLowerCase(),
                             );
                             if (matchingDoc) {
                               initialDistrictId = matchingDoc._id;
@@ -287,9 +346,12 @@ export default function OfficerTagging() {
                       }
 
                       return {
-                        officer: editItem.officer?._id || editItem.officer || "",
+                        officer:
+                          editItem.officer?._id || editItem.officer || "",
                         service: initialServiceId,
-                        services: (editItem.services || []).map((s) => s._id || s),
+                        services: (editItem.services || []).map(
+                          (s) => s._id || s,
+                        ),
                         district: initialDistrictId,
                         wards: editItem.wards || [],
                       };

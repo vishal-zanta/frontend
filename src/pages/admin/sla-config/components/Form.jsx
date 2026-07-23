@@ -15,7 +15,6 @@ export default function Form({
   isServicesPending = false,
   isSubservicesPending = false,
 }) {
-  
   return (
     <div className="space-y-4">
       <div>
@@ -30,7 +29,7 @@ export default function Form({
             disabled
             value={
               editItem.subService?.service?.title ||
-              editItem.subService?.service ||  
+              editItem.subService?.service ||
               ""
             }
             className="bg-muted/50"
@@ -84,47 +83,82 @@ export default function Form({
         </Label>
         <div className="grid grid-cols-2 p-3 gap-3 max-h-[40vh] overflow-y-auto border rounded-lg bg-muted/10">
           {roles.map((role) => {
-            const value =
-              dialog.escalations?.find(
-                (item) => (item.role?._id || item.role) === role._id,
-              )?.slaHours ?? "";
+            const esc = dialog.escalations?.find(
+              (item) => (item.role?._id || item.role) === role._id,
+            );
+            const value = esc?.slaHours ?? "";
+            const slaType = esc?.slaType ?? "hrs";
+
             return (
               <div key={role._id} className="space-y-1">
                 <Label className="text-xs truncate block text-muted-foreground">
                   {role.designationEnglish}
                 </Label>
-                <Input
-                  value={value}
-                  placeholder="Hours"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    const isValid = isValidNumber(val, 0, 24);
+                <div className="relative flex items-center">
+                  <Input
+                    type="text"
+                    value={value}
+                    placeholder="Duration"
+                    className="pr-16"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val !== "" && Number(val) < 0  ) return;
+                      if(!isValidNumber(val, 0,9999)) return;
 
-                    if (!isValid) return;
-                    let newEsc = [...(dialog.escalations || [])];
-                    const idx = newEsc.findIndex(
-                      (item) => (item.role?._id || item.role) === role._id,
-                    );
-                    if (val === "") {
-                      if (idx > -1) {
-                        newEsc.splice(idx, 1);
+                      let newEsc = [...(dialog.escalations || [])];
+                      const idx = newEsc.findIndex(
+                        (item) => (item.role?._id || item.role) === role._id,
+                      );
+                      if (val === "") {
+                        if (idx > -1) {
+                          newEsc.splice(idx, 1);
+                        }
+                      } else {
+                        if (idx > -1) {
+                          newEsc[idx] = {
+                            ...newEsc[idx],
+                            slaHours: Number(val),
+                            slaType: newEsc[idx].slaType || "hrs",
+                          };
+                        } else {
+                          newEsc.push({
+                            role: role._id,
+                            slaHours: Number(val),
+                            slaType: "hrs",
+                          });
+                        }
                       }
-                    } else {
+                      setDialog({ ...dialog, escalations: newEsc });
+                    }}
+                  />
+                  <select
+                    value={slaType}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      let newEsc = [...(dialog.escalations || [])];
+                      const idx = newEsc.findIndex(
+                        (item) => (item.role?._id || item.role) === role._id,
+                      );
                       if (idx > -1) {
                         newEsc[idx] = {
                           ...newEsc[idx],
-                          slaHours: Number(val),
+                          slaType: newType,
                         };
                       } else {
                         newEsc.push({
                           role: role._id,
-                          slaHours: Number(val),
+                          slaHours: 0,
+                          slaType: newType,
                         });
                       }
-                    }
-                    setDialog({ ...dialog, escalations: newEsc });
-                  }}
-                />
+                      setDialog({ ...dialog, escalations: newEsc });
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 bg-transparent border-0 text-xs text-muted-foreground focus:outline-none cursor-pointer"
+                  >
+                    <option value="hrs" className="bg-popover text-popover-foreground">Hrs</option>
+                    <option value="days" className="bg-popover text-popover-foreground">Days</option>
+                  </select>
+                </div>
               </div>
             );
           })}

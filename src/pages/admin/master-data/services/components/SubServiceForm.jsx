@@ -53,19 +53,39 @@ const SubServiceForm = ({
       </div>
       <div>
         <Label className="mb-1.5 block">
-          SLA Hours <span className="text-red-500">*</span>
+          SLA Duration <span className="text-red-500">*</span>
         </Label>
-        <Input
-          type="text"
-          value={formData.sla}
-          onChange={(e) => {
-            if (!isValidNumber(e.target.value, 0)) return;
-            setFormData((prev) => ({ ...prev, sla: e.target.value }));
-            if (errors.sla) setErrors((prev) => ({ ...prev, sla: "" }));
-          }}
-          placeholder="e.g., 48"
-          required
-        />
+        <div className="relative flex items-center">
+          <Input
+            type="text"
+            value={formData.sla}
+            onChange={(e) => {
+              const val = e.target.value;
+              if (val !== "" && Number(val) < 0) return;
+              if (!isValidNumber(val, 0, 9999)) return;
+              setFormData((prev) => ({ ...prev, sla: val }));
+              if (errors.sla) setErrors((prev) => ({ ...prev, sla: "" }));
+            }}
+            placeholder="e.g., 48"
+            className="pr-16"
+            required
+          />
+          <select
+            value={formData.slaType || "hrs"}
+            onChange={(e) => {
+              const newType = e.target.value;
+              setFormData((prev) => ({ ...prev, slaType: newType }));
+            }}
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-7 bg-transparent border-0 text-xs text-muted-foreground focus:outline-none cursor-pointer"
+          >
+            <option value="hrs" className="bg-popover text-popover-foreground">
+              Hrs
+            </option>
+            <option value="days" className="bg-popover text-popover-foreground">
+              Days
+            </option>
+          </select>
+        </div>
         {errors.sla && (
           <p className="text-red-500 text-xs mt-1">{errors.sla}</p>
         )}

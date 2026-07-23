@@ -166,7 +166,8 @@ export default function SLAConfig() {
       subService: item.subService?._id || item.subService,
       escalations: (item.escalations || []).map((e) => ({
         role: e.role?._id || e.role,
-        slaHours: e.slaHours,
+        slaHours: (e.slaType ?? "hrs") == "days" ?e.slaHours/24  : e.slaHours,
+        slaType: e.slaType ?? "hrs"
       })),
       officer: !!item.officer,
       active: !!item.active,
@@ -188,20 +189,24 @@ export default function SLAConfig() {
     value: ss._id,
     sla : ss.sla
   }));
+// console.log({dialog})
 
   const handleSaveItem = () => {
     if (!dialog.subService) {
       getErrorToast({ message: "Please select a sub-service" });
       return;
     }
-
     const cleanedEscalations = (dialog.escalations || []).filter(
       (e) =>
         e.slaHours !== "" && e.slaHours !== undefined && e.slaHours !== null,
-    );
+    ).map(s=> ({
+      ...s ,
+      slaHours : s.slaType === "days" ?  s.slaHours * 24 : s.slaHours
+    }));
+    // console.log({cleanedEscalations});
     let sum = 0;
     cleanedEscalations.forEach((e) => {
-      sum += e.slaHours;
+      sum +=  e.slaHours ;
     });
     const ss = subServiceOptions.find(s=>s.value == dialog.subService)?.sla || 24
     if (sum > ss) {

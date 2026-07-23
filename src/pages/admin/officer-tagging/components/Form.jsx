@@ -157,8 +157,9 @@ export default function Form({
         required
         isMultiple={true}
         options={servicesOptions}
-        placeholder="Select services"
+        placeholder={!selectedOfficer ? "Select officer first" : "Select services"}
         isLoading={serviceLoading || serviceFetching}
+        disabled={!selectedOfficer}
       />
       {
         <RhfSelect
