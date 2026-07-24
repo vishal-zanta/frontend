@@ -20,18 +20,18 @@ export default function ComplaintClassificationSection({ departmentText, occurre
         <span className="font-semibold text-foreground">{occurrenceDate}</span>
       </div>
 
-                {profiledata?.isOfficer && (
-                  <div className="flex justify-end pt-1 pb-2">
-                    <Button
-                      variant="outline"
-                      className="bg-white hover:bg-muted/30 dark:bg-zinc-900 text-foreground border border-border flex items-center gap-2 cursor-pointer"
-                      
-                    >
-                      <Mail className="w-4 h-4" />
-                      {t("Send Mail", "मेल भेजें")}
-                    </Button>
-                  </div>
-                )}
+        {profiledata?.isOfficer && (
+          <div className="flex items-center justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-card hover:bg-muted text-foreground border-border flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5 text-primary" />
+              <span className="text-primary">{t("Send Mail", "मेल भेजें")}</span>
+            </Button>
+          </div>
+        )}
     </div>
   );
 }

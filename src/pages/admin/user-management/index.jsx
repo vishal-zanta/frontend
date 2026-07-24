@@ -202,7 +202,7 @@ export default function UserManagement() {
             <Button
               onClick={() => {
                 const superAdminRole = (rolesApiData?.data?.docs || []).find(
-                  (r) => r.designationEnglish === "Super Admin",
+                  (r) => r.designationEnglish === "Admin",
                 );
                 const superAdminId = superAdminRole?._id || "";
                 setAddInitialValues({
@@ -219,7 +219,7 @@ export default function UserManagement() {
               }}
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
-              <Shield className="w-4 h-4 mr-1" /> Create Super Admin
+              <Shield className="w-4 h-4 mr-1" /> Create Admin
             </Button>
           </div>
         </div>

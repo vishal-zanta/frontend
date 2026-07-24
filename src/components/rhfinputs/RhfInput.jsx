@@ -18,6 +18,7 @@ export default function RhfInput({
   disabled = false,
   isNumsOnly = false,
   isDisableFutureDates= false,
+  isDisablePastDates= false, 
   isLettersAllowed = false,
   isUppercase = false,
 
@@ -72,6 +73,7 @@ export default function RhfInput({
                 
               }}
               max={isDisableFutureDates ?new Date().toISOString().split('T')[0] : undefined }
+              min={isDisablePastDates ?new Date().toISOString().split('T')[0] : undefined }
               {...props}
             />
             {type === "password" && (

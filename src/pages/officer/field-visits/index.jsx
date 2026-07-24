@@ -165,6 +165,7 @@ export default function FieldVisits() {
               <FieldVisitForm
                 onCancel={() => setEditVisit(null)}
                 isLoading={updateMutation.isPending}
+                fieldVisit={editVisit}
               />
             </RhfWrapper>
           </EditDialog>

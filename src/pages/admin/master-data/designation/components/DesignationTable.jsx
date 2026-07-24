@@ -35,7 +35,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
               </Badge>
             </td>
             <td className="px-2 py-1 min-w-[280px]">
-              <div className="flex flex-wrap gap-1 px-2 py-2 max-w-[350px] max-h-20 overflow-y-auto">
+              <div className="flex flex-wrap gap-1 px-2 py-2 max-w-[350px] max-h-16 overflow-y-auto">
                 {(d.permissions || [])
                   .map(
                     (p) =>

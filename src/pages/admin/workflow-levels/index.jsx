@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -19,9 +19,11 @@ import WorkflowForm from "./components/WorkflowForm";
 import WorkflowFilter from "./components/WorkflowFilter";
 import { useGetDepartments } from "../master-data/hooks";
 import DeleteDialog from "@/components/DeleteDialog";
+import EditDialog from "@/components/EditDialog";
 
 export default function WorkflowConfig() {
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit", item? }
+  const [reOrderDialog, setReOrderDialog] = useState(null);
   const [workflowList, setWorkflowList] = useState([]);
   const [editLevel, setEditLevel] = useState(null);
   const [deleteRecord, setDeleteRecord] = useState(null);
@@ -32,7 +34,11 @@ export default function WorkflowConfig() {
   const { page, limit } = usePagination();
   const queryClient = useQueryClient();
 
-  const { data: deptApiData, isLoading : deptLoading, error : deptError } = useGetDepartments([], {
+  const {
+    data: deptApiData,
+    isLoading: deptLoading,
+    error: deptError,
+  } = useGetDepartments([], {
     page: 1,
     limit: MAX_LIMIT,
   });
@@ -52,17 +58,21 @@ export default function WorkflowConfig() {
     data: workflowApiData,
     isLoading: isWorkflowLoading,
     error: workflowError,
-  } = useGetWorkflowByDepartment([page, limit, filter.department], {
-    page,
-    limit,
-    department: filter.department,
-  }, !!filter.department);
+  } = useGetWorkflowByDepartment(
+    [page, limit, filter.department],
+    {
+      page,
+      limit,
+      department: filter.department,
+    },
+    !!filter.department,
+  );
 
   // 2. Fetch roles
   const { data: rolesApiData } = useGetRoles(
     [filter.department],
-    { page: 1, limit: MAX_LIMIT , department :filter.department},
-    !!filter.department
+    { page: 1, limit: MAX_LIMIT, department: filter.department },
+    !!filter.department,
   );
 
   const postMutation = useMutation({
@@ -73,6 +83,7 @@ export default function WorkflowConfig() {
       setDialog(null);
       setEditLevel(null);
       setDeleteRecord(null);
+      setReOrderDialog(null);
     },
     onError: (err) => {
       getErrorToast(err);
@@ -93,7 +104,9 @@ export default function WorkflowConfig() {
 
   const handleConfirmDelete = () => {
     if (deleteRecord) {
-      const updated = workflowList.filter((lvl) => lvl._id !== deleteRecord._id);
+      const updated = workflowList.filter(
+        (lvl) => lvl._id !== deleteRecord._id,
+      );
       const payloadLevels = updated.map((lvl, index) => ({
         role: lvl.role?._id || lvl.role,
         order: index + 1,
@@ -145,8 +158,17 @@ export default function WorkflowConfig() {
     });
   };
 
-  const handleOrderChange = (oldIndex, newIndex) => {
+  const handleOrderChange = (oldIndex, newIndex, isPopupConfirmed = false) => {
     if (oldIndex === newIndex) return;
+    if (!isPopupConfirmed) {
+      setReOrderDialog({
+        oldIndex,
+        newIndex,
+        workflowList,
+      });
+      return;
+    }
+
     const reordered = Array.from(workflowList);
     const [removed] = reordered.splice(oldIndex, 1);
     reordered.splice(newIndex, 0, removed);
@@ -181,7 +203,8 @@ export default function WorkflowConfig() {
   const roleOptions = editLevel
     ? allRoleOptions
     : allRoleOptions.filter(
-        (opt) => !workflowList.some((w) => (w.role?._id || w.role) === opt.value)
+        (opt) =>
+          !workflowList.some((w) => (w.role?._id || w.role) === opt.value),
       );
 
   useEffect(() => {
@@ -203,14 +226,11 @@ export default function WorkflowConfig() {
     role: dialog?.item?.role?._id || dialog?.item?.role || "",
     description: dialog?.item?.description || "",
   };
-console.log({editLevel})
+  // console.log({ editLevel });
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
-        <SectionTitle
-          title="Workflow Configuration"
-          subtitle=""
-        />
+        <SectionTitle title="Workflow Configuration" subtitle="" />
 
         {/* Visual workflow */}
         <EscalationFlow levels={workflowList} />
@@ -221,19 +241,18 @@ console.log({editLevel})
             <h3 className="font-bold text-foreground">Workflow Levels</h3>
             <div className="flex items-center gap-2">
               <LoaderErrWrapper isLoading={deptLoading}>
-
-              <WorkflowFilter
-                filterOptions={[
-                  {
-                    label: "Departments",
-                    options: depts,
-                    filterKey: "department",
-                  },
-                ]}
-                filter={filter}
-                setFilter={setFilter}
+                <WorkflowFilter
+                  filterOptions={[
+                    {
+                      label: "Departments",
+                      options: depts,
+                      filterKey: "department",
+                    },
+                  ]}
+                  filter={filter}
+                  setFilter={setFilter}
                 />
-                </LoaderErrWrapper>
+              </LoaderErrWrapper>
               <Button
                 size="sm"
                 className="bg-primary hover:bg-primary/90"
@@ -247,7 +266,10 @@ console.log({editLevel})
             </div>
           </div>
 
-          <LoaderErrWrapper isLoading={isWorkflowLoading || deptLoading} error={workflowError || deptError}>
+          <LoaderErrWrapper
+            isLoading={isWorkflowLoading || deptLoading}
+            error={workflowError || deptError}
+          >
             <WorkflowTable
               docs={workflowList}
               setDocs={setWorkflowList}
@@ -279,6 +301,34 @@ console.log({editLevel})
               isPending={postMutation.isPending}
             />
           </div>
+        )}
+        {reOrderDialog && (
+          <EditDialog
+            onSave={() =>
+              handleOrderChange(
+                reOrderDialog.oldIndex,
+                reOrderDialog.newIndex,
+                true,
+              )
+            }
+            onClose={() => {
+              reOrderDialog.workflowList &&
+                setWorkflowList(reOrderDialog.workflowList);
+              setReOrderDialog(null);
+            }}
+            title="Reorder Workflow Level"
+            saving={postMutation.isPending}
+          >
+            <div className="space-y-4 text-sm text-muted-foreground">
+              <p className="text-foreground font-medium">
+                Are you sure you want to change the sequence of this escalation level?
+              </p>
+
+            
+
+             
+            </div>
+          </EditDialog>
         )}
 
         {/* Delete Dialog */}

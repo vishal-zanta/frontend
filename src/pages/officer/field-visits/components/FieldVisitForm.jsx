@@ -7,9 +7,12 @@ import { FIELD_VISIT_STATUS } from "@/utils/constants";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 
-export default function FieldVisitForm({ onCancel, isLoading }) {
+export default function FieldVisitForm({ onCancel, isLoading, fieldVisit }) {
   const { watch } = useFormContext();
   const status = watch("status");
+  // console.log({fieldVisit});
+  const isDisabled =  ["RESOLVED", "CLOSED"].includes(fieldVisit?.grievance?.status || "");
+
 
   return (
     <div className="space-y-4">
@@ -18,6 +21,7 @@ export default function FieldVisitForm({ onCancel, isLoading }) {
         label="Status"
         required
         options={FIELD_VISIT_STATUS}
+        disabled={isDisabled}
         placeholder="Select status..."
       />
       {status !== "CANCELLED" && (
@@ -26,6 +30,8 @@ export default function FieldVisitForm({ onCancel, isLoading }) {
           label="Schedule Date"
           type="date"
           required
+          disabled={isDisabled}
+          isDisablePastDates
         />
       )}
       {status === "COMPLETED" && (

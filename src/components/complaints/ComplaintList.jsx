@@ -244,8 +244,8 @@ const isChangedOnce = useRef(false);
 
       <div
         style={{
-          maxHeight: window.innerWidth < 768 ? "600px" : "calc(100vh - 365px)",
-          minHeight:"360px !important"
+          maxHeight: window.innerWidth < 768 ? "600px" : "calc(100vh - 385px)",
+          minHeight:"380px !important"
         }}
         className="flex-1 overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
       >
@@ -276,7 +276,7 @@ const isChangedOnce = useRef(false);
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center flex-wrap gap-2">
                         <h2 className="text-xs font-bold text-primary font-mono">
                           {c.grievanceId || c.id}
                         </h2>

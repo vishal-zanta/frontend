@@ -3,8 +3,29 @@ import { StatusBadge, PriorityBadge } from "@/components/Badges";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/utils/constants";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Loader2 } from "lucide-react";
+import { Clock, Loader2, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+
+export function getResolvedDuration(createdAt, resolvedAt, t) {
+  if (!createdAt || !resolvedAt) return "";
+  const start = new Date(createdAt).getTime();
+  const end = new Date(resolvedAt).getTime();
+  const diff = end - start;
+  if (isNaN(diff) || diff < 0) return "";
+
+  const totalMinutes = Math.floor(diff / (1000 * 60));
+  const days = Math.floor(totalMinutes / (60 * 24));
+  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) {
+    return `${days}d ${hours}h ${minutes}m`;
+  }
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${minutes}m`;
+}
 
 export function SLATimer({ createdAt, slaHours, customText = "Service SLA" }) {
   const { t } = useLanguage();
@@ -89,6 +110,8 @@ export default function ComplaintDetailHeader({
 }) {
   const { t } = useLanguage();
   const { hasPermission } = useAuth();
+  const isResolved = (c?.status === "RESOLVED" || displayStatus === "RESOLVED") && c?.resolvedAt;
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3">
       <div className="min-w-0">
@@ -103,24 +126,33 @@ export default function ComplaintDetailHeader({
           {serviceText} &rarr; {subServiceText}
         </p>
 
-        {isCCE && (
-          <div className="flex gap-2 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
-            <span>
-              {t("Filed:", "दर्ज:")} {formattedDate}
-            </span>
-            <SLATimer
-              createdAt={c.createdAt}
-              slaHours={c.classification?.subService?.sla || c.slaHours}
-            />
-            {/* {!!c.assignedAt && ( */}
-            <SLATimer
-              createdAt={c?.assignedAt || null}
-              slaHours={c.slaHours}
-              customText="Officer SLA"
-            />
-            {/* )} */}
-          </div>
-        )}
+        <div className="flex gap-2 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
+          <span>
+            {t("Filed:", "दर्ज:")} {formattedDate}
+          </span>
+          {isResolved ? (
+            <Badge
+              variant="outline"
+              className="text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+            >
+              <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+              {t("Resolved in:", "समाधान समय:")}{" "}
+              {getResolvedDuration(c.createdAt, c.resolvedAt, t)}
+            </Badge>
+          ) : (
+            <>
+              <SLATimer
+                createdAt={c.createdAt}
+                slaHours={c.classification?.subService?.sla || c.slaHours}
+              />
+              <SLATimer
+                createdAt={c?.assignedAt || null}
+                slaHours={c.slaHours}
+                customText="Officer SLA"
+              />
+            </>
+          )}
+        </div>
       </div>
 
       {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) ? (
@@ -130,8 +162,7 @@ export default function ComplaintDetailHeader({
           </label>
           {userLoading ? (
             <div className="flex py-1 ">
-
-            <Loader2 className=" animate-spin" />
+              <Loader2 className=" animate-spin" />
             </div>
           ) : (
             <select
@@ -184,16 +215,29 @@ export default function ComplaintDetailHeader({
             {t("Filed:", "दर्ज:")} {formattedDate}
           </div>
           <div className="flex flex-wrap gap-1 justify-end">
-            <SLATimer
-              createdAt={c.createdAt}
-              slaHours={c.classification?.subService?.sla || c.slaHours}
-            />
-            {!!c.assignedAt && (
-              <SLATimer
-                createdAt={c.assignedAt}
-                slaHours={c.slaHours}
-                customText="Officer SLA"
-              />
+            {isResolved ? (
+              <Badge
+                variant="outline"
+                className="text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+              >
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                {t("Resolved in:", "समाधान समय:")}{" "}
+                {getResolvedDuration(c.createdAt, c.resolvedAt, t)}
+              </Badge>
+            ) : (
+              <>
+                <SLATimer
+                  createdAt={c.createdAt}
+                  slaHours={c.classification?.subService?.sla || c.slaHours}
+                />
+                {!!c.assignedAt && (
+                  <SLATimer
+                    createdAt={c.assignedAt}
+                    slaHours={c.slaHours}
+                    customText="Officer SLA"
+                  />
+                )}
+              </>
             )}
           </div>
         </div>
@@ -201,3 +245,4 @@ export default function ComplaintDetailHeader({
     </div>
   );
 }
+

@@ -81,16 +81,17 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div>
           <MySelect
-            label="Select Officer *"
+            label="Select Officer "
             options={officers}
             value={selectedOfficer}
             onValueChange={setSelectedOfficer}
             placeholder="Select officer..."
+            required
           />
         </div>
         <div>
           <MySelect
-            label="Service (Multi-select) *"
+            label="Service (Multi-select) "
             isMultiple
             options={servicesOptions}
             value={selectedService}
@@ -99,11 +100,13 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
               setSelectedSubservices([]);
             }}
             placeholder="Select services..."
+            required
+
           />
         </div>
         <div>
           <MySelect
-            label="Sub-services (Multi-select) *"
+            label="Sub-services (Multi-select) "
             isMultiple
             options={subservicesOptions}
             value={selectedSubservices}
@@ -114,11 +117,13 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
                 : "Select sub-services..."
             }
             disabled={!selectedService || selectedService.length === 0}
+            required
+
           />
         </div>
         <div>
           <MySelect
-            label="District *"
+            label="District "
             options={districtOptions}
             value={selectedDistrict}
             onValueChange={(val) => {
@@ -126,11 +131,13 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
               setSelectedSubdivisions([]);
             }}
             placeholder="Select district..."
+            required
+
           />
         </div>
         <div>
           <MySelect
-            label="Subdivision (Multi-select) *"
+            label="Subdivision (Multi-select) "
             isMultiple
             options={subdivisionOptions}
             value={selectedSubdivisions}
@@ -141,6 +148,8 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
                 : "Select subdivisions..."
             }
             disabled={!selectedDistrict}
+            required
+
           />
         </div>
       </div>

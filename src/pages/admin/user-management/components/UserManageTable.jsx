@@ -8,7 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { apiPermissionOptions, CCE_ROLES, PERMISSIONS } from "@/utils/constants";
+import { apiPermissionOptions, CCE_ROLES, PERMISSIONS, ADMIN_ROLES } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 
 export default function UserManageTable({
@@ -119,7 +119,7 @@ export default function UserManageTable({
               </Badge>
             </td>
             <td className="px-4 py-3 text-center bg-white dark:bg-[#0f1729] sticky right-0">
-              <div className="flex gap-1 justify-center">
+              <div className="flex gap-1 justify-end">
                 {/* <Button
                   variant="ghost"
                   size="sm"
@@ -150,14 +150,14 @@ export default function UserManageTable({
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
-                <Button
+              {!ADMIN_ROLES.includes(u.role)  &&  <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleDelete && handleDelete(u)}
                   title="Delete User"
                 >
                   <Trash2 className="w-4 h-4 text-red-500" />
-                </Button>
+                </Button>}
                 {hasPermission(PERMISSIONS.LOGOUT_USERS) && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

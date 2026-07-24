@@ -76,7 +76,7 @@ const DesignationForm = ({
       />
 
 
-      <div className="flex gap-2 justify-end pt-4 border-t border-border pb-4 bg-card sticky bottom-0">
+      <div className="flex gap-2 justify-end pt-4 border-t border-border pb-4 bg-background sticky bottom-0">
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>

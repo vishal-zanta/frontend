@@ -20,7 +20,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       : "none",
     borderRadius: "var(--radius)",
     minHeight: "36px",
-    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--card))",
+    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--background))",
     cursor: disabled ? "not-allowed" : "default",
     "&:hover": {
       borderColor: hasError
