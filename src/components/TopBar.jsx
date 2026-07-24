@@ -25,6 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import SearchComplaints from "@/components/SearchComplaints";
+import { LangSelectorSmall } from "@/components/LangSelector";
 
 const STAFF_NOTIFICATIONS = [
   {
@@ -254,6 +255,9 @@ export default function TopBar({
             )}
           </div>
         )} */}
+
+        {/* Language Selector */}
+        <LangSelectorSmall className="shrink-0" />
 
         {/* Theme Toggle */}
         <button

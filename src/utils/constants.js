@@ -16,8 +16,8 @@ export const CCE_ROLES = ["Call Centre Executive", "Call Centre Supervisor"];
 export const USER_ROLES_EXECULDED = [...ADMIN_ROLES, ...CCE_ROLES];
 
 export const LANGUAGES = [
-  { label: "English", value: "English" },
-  { label: "हिन्दी", value: "Hindi" },
+  { label: "English", value: "English", labelSmall : "En" },
+  { label: "हिन्दी", value: "Hindi", labelSmall : "हि" },
 ];
 
 export const MAX_LIMIT = 200;
