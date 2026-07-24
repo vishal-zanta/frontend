@@ -237,7 +237,6 @@ export default function RhfSelect({
           onBlur: field.onBlur,
           styles,
           menuShouldBlockScroll: true,
-   
 
           // Portal the menu into <body> so it escapes dialog/overflow contexts
           menuPortalTarget:
@@ -245,6 +244,8 @@ export default function RhfSelect({
 
           menuPosition: "fixed",
           menuPlacement: "auto",
+          minMenuHeight: "200px",
+
           classNamePrefix: "rhf-select",
           theme: (reactSelectTheme) => ({
             ...reactSelectTheme,

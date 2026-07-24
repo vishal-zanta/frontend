@@ -229,6 +229,7 @@ export default function MySelect({
       typeof document !== "undefined" ? document.body : undefined,
     menuPosition: "fixed",
     menuPlacement: "auto",
+    minMenuHeight : "200px",
     classNamePrefix: "my-select",
     theme: (reactSelectTheme) => ({
       ...reactSelectTheme,
