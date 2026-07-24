@@ -110,7 +110,8 @@ export default function ComplaintDetailHeader({
 }) {
   const { t } = useLanguage();
   const { hasPermission } = useAuth();
-  const isResolved = (c?.status === "RESOLVED" || displayStatus === "RESOLVED") && c?.resolvedAt;
+  const isResolved =
+    (c?.status === "RESOLVED" || displayStatus === "RESOLVED") && c?.resolvedAt;
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3">
@@ -126,33 +127,39 @@ export default function ComplaintDetailHeader({
           {serviceText} &rarr; {subServiceText}
         </p>
 
-        <div className="flex gap-2 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
-          <span>
-            {t("Filed:", "दर्ज:")} {formattedDate}
-          </span>
-          {isResolved ? (
-            <Badge
-              variant="outline"
-              className="text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-            >
-              <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-              {t("Resolved in:", "समाधान समय:")}{" "}
-              {getResolvedDuration(c.createdAt, c.resolvedAt, t)}
-            </Badge>
-          ) : (
-            <>
-              <SLATimer
-                createdAt={c.createdAt}
-                slaHours={c.classification?.subService?.sla || c.slaHours}
-              />
-              <SLATimer
-                createdAt={c?.assignedAt || null}
-                slaHours={c.slaHours}
-                customText="Officer SLA"
-              />
-            </>
-          )}
-        </div>
+          <>
+        {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) && (
+            <div className="flex gap-2 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
+              <span>
+                {t("Filed:", "दर्ज:")} {formattedDate}
+              </span>
+
+              <>
+                <SLATimer
+                  createdAt={c.createdAt}
+                  slaHours={c.classification?.subService?.sla || c.slaHours}
+                />
+                <SLATimer
+                  createdAt={c?.assignedAt || null}
+                  slaHours={c.slaHours}
+                  customText="Officer SLA"
+                />
+              </>
+            </div>
+            )}
+             {isResolved &&   <div className="mt-1">
+              <Badge
+                variant="outline"
+                className="text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+              >
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                {t("Resolved in:", "समाधान समय:")}{" "}
+                {getResolvedDuration(c.createdAt, c.resolvedAt, t)}
+              </Badge>
+       
+          </div>}
+            
+          </>
       </div>
 
       {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) ? (
@@ -176,7 +183,10 @@ export default function ComplaintDetailHeader({
                   });
                 }
               }}
-              disabled={assignOfficerMutation.isPending || (userOptions || []).length == 0}
+              disabled={
+                assignOfficerMutation.isPending ||
+                (userOptions || []).length == 0
+              }
               className="w-full text-xs bg-background border border-border rounded-lg p-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none disabled:opacity-60 cursor-pointer"
             >
               <option value="">
@@ -214,17 +224,12 @@ export default function ComplaintDetailHeader({
           <div className="text-left sm:text-right">
             {t("Filed:", "दर्ज:")} {formattedDate}
           </div>
+      
+
           <div className="flex flex-wrap gap-1 justify-end">
-            {isResolved ? (
-              <Badge
-                variant="outline"
-                className="text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-              >
-                <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                {t("Resolved in:", "समाधान समय:")}{" "}
-                {getResolvedDuration(c.createdAt, c.resolvedAt, t)}
-              </Badge>
-            ) : (
+            {/* {isResolved ? ( */}
+
+            
               <>
                 <SLATimer
                   createdAt={c.createdAt}
@@ -238,11 +243,10 @@ export default function ComplaintDetailHeader({
                   />
                 )}
               </>
-            )}
+           
           </div>
         </div>
       )}
     </div>
   );
 }
-

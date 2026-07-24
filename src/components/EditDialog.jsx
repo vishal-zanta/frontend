@@ -13,14 +13,14 @@ export default function EditDialog({ title, onClose, onSave, children, saving, i
 
    useEffect(() => {
     // lock scroll on mount
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    // const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     const originalOverflow = document.body.style.overflow;
-    const originalPaddingRight = document.body.style.paddingRight;
+    // const originalPaddingRight = document.body.style.paddingRight;
 
     document.body.style.overflow = "hidden";
-    if (scrollbarWidth > 0) {
-      // document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
+    // if (scrollbarWidth > 0) {
+    //   // document.body.style.paddingRight = `${scrollbarWidth}px`;
+    // }
 
     // unlock scroll on unmount
     return () => {
