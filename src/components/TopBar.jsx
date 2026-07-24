@@ -122,8 +122,11 @@ export default function TopBar({
   const settingsPath = profileMetaData?.isAdmin
     ? "/admin/settings"
     : profileMetaData?.isCRM
-      ? "/crm/settings"
-      : "/officer/settings";
+      // ? "/crm/settings"
+      ? null
+      : null;
+
+      // : "/officer/settings";
 
   useEffect(() => {
     const handler = (e) => {

@@ -129,12 +129,12 @@ export default function AgentStatusBoard({
                       variant="outline"
                       className={`text-xs ${
                         a?.status === "On Call"
-                          ? "bg-amber-50 text-amber-700"
+                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
                           : a?.status === "Available"
-                            ? "bg-emerald-50 text-emerald-700"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                             : a?.status === "Break"
-                              ? "bg-purple-50 text-purple-700"
-                              : "bg-slate-50 text-slate-500"
+                              ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20"
+                              : "bg-muted/50 text-muted-foreground border-border"
                       }`}
                     >
                       {a?.status === "On Call"

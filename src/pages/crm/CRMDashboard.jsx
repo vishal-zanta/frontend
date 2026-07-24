@@ -244,7 +244,7 @@ export default function CRMDashboard() {
                       <td className="px-4 py-2.5">
                         <Badge
                           variant="outline"
-                          className={`text-xs ${a.role === "Supervisor" ? "bg-purple-50 text-purple-700" : "bg-blue-50 text-blue-700"}`}
+                          className={`text-xs ${a.role === "Supervisor" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"}`}
                         >
                           {a.role}
                         </Badge>
@@ -255,19 +255,19 @@ export default function CRMDashboard() {
                       <td className="px-4 py-2.5 text-center font-semibold">
                         {a.callsToday}
                       </td>
-                      <td className="px-4 py-2.5 text-center text-emerald-600">
+                      <td className="px-4 py-2.5 text-center text-emerald-600 dark:text-emerald-400">
                         {a.resolvedToday}
                       </td>
                       <td className="px-4 py-2.5 text-muted-foreground text-xs">
                         {a.avgTalkTime}
                       </td>
-                      <td className="px-4 py-2.5 text-center text-amber-600 font-medium">
+                      <td className="px-4 py-2.5 text-center text-amber-600 dark:text-amber-400 font-medium">
                         ★ {a.csat}/5
                       </td>
                       <td className="px-4 py-2.5">
                         <Badge
                           variant="outline"
-                          className={`text-xs ${a.status === "Available" ? "bg-emerald-50 text-emerald-700" : a.status === "On Call" ? "bg-amber-50 text-amber-700" : a.status === "Break" ? "bg-purple-50 text-purple-700" : "bg-slate-50 text-slate-500"}`}
+                          className={`text-xs ${a.status === "Available" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : a.status === "On Call" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" : a.status === "Break" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" : "bg-muted/50 text-muted-foreground border-border"}`}
                         >
                           {a.status}
                         </Badge>
@@ -341,7 +341,7 @@ export default function CRMDashboard() {
                     </div>
                     <Badge
                       variant="outline"
-                      className={`text-xs ${c.status === "Missed" ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"}`}
+                      className={`text-xs ${c.status === "Missed" ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"}`}
                     >
                       {c.status}
                     </Badge>
@@ -529,7 +529,7 @@ export default function CRMDashboard() {
                   </div>
                   <Badge
                     variant="outline"
-                    className={`text-xs ${c.status === "Missed" ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"}`}
+                    className={`text-xs ${c.status === "Missed" ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"}`}
                   >
                     {c.status}
                   </Badge>

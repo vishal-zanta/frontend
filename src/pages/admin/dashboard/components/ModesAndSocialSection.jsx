@@ -8,9 +8,9 @@ import { SOCIAL_COMPLAINTS } from "@/lib/biharData";
 
 export default function ModesAndSocialSection({ modeData }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
       <ModeWiseComplaintsChart mainData={modeData} />
-      <ChartCard
+      {/* <ChartCard
         title="Social Media Complaints"
         subtitle="Latest from Twitter, WhatsApp, Instagram & Newspaper"
         actions={
@@ -54,7 +54,7 @@ export default function ModesAndSocialSection({ modeData }) {
             </div>
           ))}
         </div>
-      </ChartCard>
+      </ChartCard> */}
     </div>
   );
 }

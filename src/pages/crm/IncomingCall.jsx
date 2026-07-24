@@ -476,7 +476,7 @@ export default function IncomingCall() {
                         <td className="px-4 py-2.5">
                           <Badge
                             variant="outline"
-                            className={`text-xs ${c.disposition.includes("Escalat") ? "bg-red-50 text-red-700" : c.disposition.includes("Supervisor") ? "bg-amber-50 text-amber-700" : "bg-blue-50 text-blue-700"}`}
+                            className={`text-xs ${c.disposition.includes("Escalat") ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : c.disposition.includes("Supervisor") ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"}`}
                           >
                             {c.disposition}
                           </Badge>
@@ -660,7 +660,7 @@ export default function IncomingCall() {
                           </div>
                           <Badge
                             variant="outline"
-                            className={`text-[10px] ${agent.status === "Available" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}
+                            className={`text-[10px] ${agent.status === "Available" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"}`}
                           >
                             {agent.status}
                           </Badge>
@@ -706,7 +706,7 @@ export default function IncomingCall() {
                 {CRM_AGENTS.map((agent) => (
                   <div
                     key={agent.id}
-                    className={`rounded-xl border p-3 ${agent.status === "Available" ? "border-emerald-200 bg-emerald-50/50" : agent.status === "On Call" ? "border-amber-200 bg-amber-50/50" : agent.status === "Break" ? "border-purple-200 bg-purple-50/50" : "border-slate-200 bg-slate-50/50"}`}
+                    className={`rounded-xl border p-3 ${agent.status === "Available" ? "border-emerald-500/20 bg-emerald-500/5 dark:bg-emerald-950/20" : agent.status === "On Call" ? "border-amber-500/20 bg-amber-500/5 dark:bg-amber-950/20" : agent.status === "Break" ? "border-purple-500/20 bg-purple-500/5 dark:bg-purple-950/20" : "border-border bg-muted/40"}`}
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
@@ -727,7 +727,7 @@ export default function IncomingCall() {
                     <div className="flex items-center justify-between">
                       <Badge
                         variant="outline"
-                        className={`text-[10px] ${agent.status === "Available" ? "bg-emerald-50 text-emerald-700" : agent.status === "On Call" ? "bg-amber-50 text-amber-700" : agent.status === "Break" ? "bg-purple-50 text-purple-700" : "bg-slate-50 text-slate-500"}`}
+                        className={`text-[10px] ${agent.status === "Available" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : agent.status === "On Call" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" : agent.status === "Break" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" : "bg-muted/50 text-muted-foreground border-border"}`}
                       >
                         {agent.status}
                       </Badge>

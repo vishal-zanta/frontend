@@ -79,10 +79,10 @@ export default function MyShiftDetails({ agentViewShift }) {
               variant="outline"
               className={`text-xs ${
                 currentStatus === "Available"
-                  ? "bg-emerald-50 text-emerald-700"
+                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                   : currentStatus === "On Call"
-                    ? "bg-amber-50 text-amber-700"
-                    : "bg-slate-50 text-slate-500"
+                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                    : "bg-muted/50 text-muted-foreground border-border"
               }`}
             >
               {currentStatus}

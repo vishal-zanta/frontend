@@ -338,7 +338,7 @@ function FormWizard({
       </div>
 
       {/* Step Content */}
-      <div className="bg-card border border-border shadow-sm rounded-xl p-6 transition-all duration-300">
+      <div className=" ">
         {step === 1 && (
           <div className="space-y-6">
             <CitizenInfoSection
