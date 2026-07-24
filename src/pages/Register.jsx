@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
+import instance from "@/lib/axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,10 +28,10 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      await base44.auth.register({ email, password });
+      await instance.post("/auth/register", { email, password });
       setShowOtp(true);
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(err.response?.data?.message || err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -41,13 +41,14 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
-      const result = await base44.auth.verifyOtp({ email, otpCode });
-      if (result?.access_token) {
-        base44.auth.setToken(result.access_token);
+      const response = await instance.post("/auth/verify-otp", { email, otpCode });
+      const token = response.data?.token || response.data?.access_token;
+      if (token) {
+        localStorage.setItem("usertoken", token);
       }
       window.location.href = "/";
     } catch (err) {
-      setError(err.message || "Invalid verification code");
+      setError(err.response?.data?.message || err.message || "Invalid verification code");
     } finally {
       setLoading(false);
     }
@@ -56,18 +57,18 @@ export default function Register() {
   const handleResend = async () => {
     setError("");
     try {
-      await base44.auth.resendOtp(email);
+      await instance.post("/auth/resend-otp", { email });
       toast({
         title: "Code sent",
         description: "Check your email for the new code.",
       });
     } catch (err) {
-      setError(err.message || "Failed to resend code");
+      setError(err.response?.data?.message || err.message || "Failed to resend code");
     }
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    window.location.href = `${import.meta.env.VITE_BASE_URL || ''}/api/v1/auth/google`;
   };
 
   if (showOtp) {
