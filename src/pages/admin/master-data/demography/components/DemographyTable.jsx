@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import EditButton from "@/components/EditButton";
 import React from "react";
 
 const DemographyTable = ({ districts = [], setDialog }) => {
@@ -31,14 +32,7 @@ const DemographyTable = ({ districts = [], setDialog }) => {
             <td className="px-4 py-2.5 text-center">{d.urban ? "✅" : "-"}</td>
             <td className="px-4 py-2.5 text-center">
               <div className="flex gap-1 justify-center">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2 text-muted-foreground hover:text-foreground"
-                  onClick={() => setDialog({ type: "edit", item: d })}
-                >
-                  <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                </Button>
+                <EditButton onClick={() => setDialog({ type: "edit", item: d })} />
                 <Button
                   variant="ghost"
                   size="sm"

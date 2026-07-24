@@ -48,7 +48,11 @@ const ServiceForm = ({
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button type="submit" disabled={saving} className="bg-primary hover:bg-primary/90">
+        <Button
+          type="submit"
+          disabled={saving}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Check className="w-4 h-4 mr-1" /> {saving ? "Saving..." : "Save"}
         </Button>
       </div>

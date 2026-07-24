@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import EditButton from "@/components/EditButton";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -64,7 +65,12 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
         setFormData({
           title: dialog.item?.title || "",
           titleHindi: dialog.item?.titleHindi || "",
-          sla: type === "days" ? (dialog.item?.sla ? dialog.item.sla / 24 : "") : (dialog.item?.sla || 24),
+          sla:
+            type === "days"
+              ? dialog.item?.sla
+                ? dialog.item.sla / 24
+                : ""
+              : dialog.item?.sla || 24,
           slaType: type,
           geoTagged: !!dialog.item?.geoTagged,
           fieldVisit: !!dialog.item?.fieldVisit,
@@ -149,7 +155,10 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
 
     setErrors({ title: "", titleHindi: "", sla: "" });
 
-    const finalSla = formData.slaType === "days" ? Number(formData.sla) * 24 : Number(formData.sla);
+    const finalSla =
+      formData.slaType === "days"
+        ? Number(formData.sla) * 24
+        : Number(formData.sla);
 
     if (dialog.type === "add") {
       postMutation.mutate({
@@ -193,9 +202,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                   Sub-Service (English)
                 </th>
                 <th className="px-3 py-2.5 font-medium">उप-सेवा (Hindi)</th>
-                <th className="px-3 py-2.5 font-medium text-center">
-                  SLA
-                </th>
+                <th className="px-3 py-2.5 font-medium text-center">SLA</th>
                 <th className="px-3 py-2.5 font-medium text-center">
                   Geo-Tagged
                 </th>
@@ -217,7 +224,8 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                       variant="outline"
                       className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/30"
                     >
-                      {ss?.slaType === "days" ? ss.sla / 24 : ss.sla}{ss?.slaType === "days" ? "d" : "h"}
+                      {ss?.slaType === "days" ? ss.sla / 24 : ss.sla}
+                      {ss?.slaType === "days" ? "d" : "h"}
                     </Badge>
                   </td>
                   <td className="px-3 py-2.5 text-center">
@@ -228,14 +236,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
                   </td>
                   <td className="px-3 py-2.5">
                     <div className="flex gap-1 justify-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-muted-foreground hover:text-foreground"
-                        onClick={() => setDialog({ type: "edit", item: ss })}
-                      >
-                        <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                      </Button>
+                      <EditButton onClick={() => setDialog({ type: "edit", item: ss })} />
                       <Button
                         variant="ghost"
                         size="sm"

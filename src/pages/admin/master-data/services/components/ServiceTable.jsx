@@ -1,7 +1,8 @@
 import React from "react";
 import SubServicesTable from "./SubServicesTable";
 import { Button } from "@/components/ui/button";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
+import EditButton from "@/components/EditButton";
 
 const ServiceTable = ({
   services = [],
@@ -32,14 +33,7 @@ const ServiceTable = ({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setServiceDialog({ type: "edit", item: s })}
-                className="h-8 px-2 text-muted-foreground hover:text-foreground hover:bg-muted"
-              >
-                <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-              </Button>
+              <EditButton onClick={() => setServiceDialog({ type: "edit", item: s })} />
               <Button
                 size="sm"
                 variant="ghost"
@@ -52,7 +46,7 @@ const ServiceTable = ({
                 size="sm"
                 variant="outline"
                 onClick={() => setSubServiceDialog({ type: "add", item: s })}
-                className="border-primary text-primary hover:bg-primary/5 hover:text-primary-foreground transition-all duration-200"
+                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
               >
                 <Plus className="w-4 h-4 mr-1" /> Add Sub-service
               </Button>

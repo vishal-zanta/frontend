@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import EditButton from "@/components/EditButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -230,16 +231,11 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                         </td>
                         <td className="px-4 py-2.5">
                           <div className="flex gap-1 justify-center">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                            <EditButton
                               onClick={() =>
                                 setDialog({ type: "edit", item: u })
                               }
-                            >
-                              <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                            </Button>
+                            />
                             <Button
                               variant="ghost"
                               size="sm"
