@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { STATUS_ACTIONS, PRIORITY_ACTIONS } from "@/utils/constants";
+import MySelect from "@/components/inputs/MySelect";
 import EditDialog from "../EditDialog";
 import { Textarea } from "../ui/textarea";
 import { getErrorToast } from "@/utils/helpers";
@@ -114,33 +115,30 @@ export default function ComplaintActionSection({
           {t("Update Status", "स्थिति अपडेट करें")}
         </div>
         <div className="flex gap-2 items-center">
-          <select
+          <MySelect
             value={selectedStatus}
-            onChange={(e) =>
+            onValueChange={(val) =>
               handleStatusChange(
-                e,
-                STATUS_ACTIONS.find((s) => s.value === e.target.value),
+                { target: { value: val } },
+                STATUS_ACTIONS.find((s) => s.value === val),
               )
             }
+            isMultiple={false}
+            nonClearable
             disabled={updateStatusMutation.isPending}
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-          >
-            <option value="" disabled>
-              {t("Select Status", "स्थिति चुनें")}
-            </option>
-            {STATUS_ACTIONS.map((a, i) => (
-              <option
-                key={i}
-                value={a.value}
-                disabled={
-                  (a.disabled && a.disabled.includes(currentStatus)) ||
-                  (a.roleHidden && a.roleHidden.includes(profiledata?.role))
-                }
-              >
-                {a.badgeLabel || a.label}
-              </option>
-            ))}
-          </select>
+            placeholder={t("Select Status", "स्थिति चुनें")}
+            options={STATUS_ACTIONS.map((a) => ({
+              label: a.badgeLabel || a.label,
+              value: a.value,
+              disabled:
+                (a.disabled && a.disabled.includes(currentStatus)) ||
+                (a.roleHidden && a.roleHidden.includes(profiledata?.role)),
+            }))}
+            className={"w-full"}
+             customStyles={{
+              containerWidth : "200px"
+            }}
+          />
 
           {selectedStatus !== currentStatus && (
             <Button
@@ -175,21 +173,23 @@ export default function ComplaintActionSection({
           {t("Update Priority", "प्राथमिकता अपडेट करें")}
         </div>
         <div className="flex gap-2 items-center">
-          <select
+          <MySelect
             value={selectedPriority}
-            onChange={(e) => setSelectedPriority(e.target.value)}
+            onValueChange={(val) => setSelectedPriority(val)}
+            isMultiple={false}
+            nonClearable
             disabled={updatePriorityMutation.isPending}
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-          >
-            <option value="" disabled>
-              {t("Select Priority", "प्राथमिकता चुनें")}
-            </option>
-            {PRIORITY_ACTIONS.map((a, i) => (
-              <option key={i} value={a.value}>
-                {a.badgeLabel || a.label}
-              </option>
-            ))}
-          </select>
+            placeholder={t("Select Priority", "प्राथमिकता चुनें")}
+            options={PRIORITY_ACTIONS.map((a) => ({
+              label: a.badgeLabel || a.label,
+              value: a.value,
+            }))}
+            className={"w-full"}
+            customStyles={{
+              containerWidth : "200px"
+            }}
+
+          />
           {selectedPriority !== currentPriority && (
             <Button
               onClick={handleSavePriority}

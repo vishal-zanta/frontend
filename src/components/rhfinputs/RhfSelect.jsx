@@ -57,31 +57,37 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   }),
   menuList: (provided) => ({
     ...provided,
-    maxHeight: "154px",
+    maxHeight: "152px",
     overflowY: "auto",
     backgroundColor: "hsl(var(--popover))",
     color: "hsl(var(--popover-foreground))",
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected
-      ? "hsl(var(--primary))"
-      : state.isFocused
-        ? "hsl(var(--accent))"
-        : "transparent",
-    color: state.isSelected
-      ? "hsl(var(--primary-foreground))"
-      : state.isFocused
-        ? "hsl(var(--accent-foreground))"
-        : "hsl(var(--popover-foreground))",
-    cursor: "pointer",
+    backgroundColor: state.isDisabled
+      ? "transparent"
+      : state.isSelected
+        ? "hsl(var(--primary))"
+        : state.isFocused
+          ? "hsl(var(--accent))"
+          : "transparent",
+    color: state.isDisabled
+      ? "hsl(var(--muted-foreground))"
+      : state.isSelected
+        ? "hsl(var(--primary-foreground))"
+        : state.isFocused
+          ? "hsl(var(--accent-foreground))"
+          : "hsl(var(--popover-foreground))",
+    cursor: state.isDisabled ? "not-allowed" : "pointer",
+    opacity: state.isDisabled ? 0.45 : 1,
+    pointerEvents: state.isDisabled ? "none" : "auto",
     fontSize: "0.875rem",
     "@media (max-width: 768px)": {
       fontSize: "1rem",
     },
     padding: "8px 12px",
     "&:active": {
-      backgroundColor: "hsl(var(--accent))",
+      backgroundColor: state.isDisabled ? "transparent" : "hsl(var(--accent))",
     },
   }),
   multiValue: (provided) => ({
@@ -232,6 +238,7 @@ export default function RhfSelect({
           isMulti: isMulti,
           isClearable: true,
           isSearchable: true,
+          isOptionDisabled: (option) => !!option.disabled,
           value: selectValue,
           onChange: handleChange,
           onBlur: field.onBlur,

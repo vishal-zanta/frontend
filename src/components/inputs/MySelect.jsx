@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
 import { Loader2 } from "lucide-react";
 
-const buildStyles = (hasError, disabled, colors, isMulti) => ({
+const buildStyles = (hasError, disabled, colors, isMulti, customStyles) => ({
   control: (provided, state) => ({
     ...provided,
     borderColor: hasError
@@ -56,31 +56,37 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   }),
   menuList: (provided) => ({
     ...provided,
-    maxHeight: "154px",
+    maxHeight: customStyles?.containerWidth ??  "152px",
     overflowY: "auto",
     backgroundColor: "hsl(var(--popover))",
     color: "hsl(var(--popover-foreground))",
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected
-      ? "hsl(var(--primary))"
-      : state.isFocused
-        ? "hsl(var(--accent))"
-        : "transparent",
-    color: state.isSelected
-      ? "hsl(var(--primary-foreground))"
-      : state.isFocused
-        ? "hsl(var(--accent-foreground))"
-        : "hsl(var(--popover-foreground))",
-    cursor: "pointer",
+    backgroundColor: state.isDisabled
+      ? "transparent"
+      : state.isSelected
+        ? "hsl(var(--primary))"
+        : state.isFocused
+          ? "hsl(var(--accent))"
+          : "transparent",
+    color: state.isDisabled
+      ? "hsl(var(--muted-foreground))"
+      : state.isSelected
+        ? "hsl(var(--primary-foreground))"
+        : state.isFocused
+          ? "hsl(var(--accent-foreground))"
+          : "hsl(var(--popover-foreground))",
+    cursor: state.isDisabled ? "not-allowed" : "pointer",
+    opacity: state.isDisabled ? 0.45 : 1,
+    pointerEvents: state.isDisabled ? "none" : "auto",
     fontSize: "0.875rem",
     "@media (max-width: 768px)": {
       fontSize: "1rem",
     },
     padding: "8px 12px",
     "&:active": {
-      backgroundColor: "hsl(var(--accent))",
+      backgroundColor: state.isDisabled ? "transparent" : "hsl(var(--accent))",
     },
   }),
   multiValue: (provided) => ({
@@ -171,12 +177,14 @@ export default function MySelect({
   isCreatable = false,
   error,
   colors,
+  nonClearable = false,
+   customStyles= {}
 }) {
   const themeContext = useTheme();
   const _theme = themeContext?.theme; // Subscribe to ThemeContext updates
 
   const isMulti = isCreatable ? true : isMultiple;
-  const styles = buildStyles(!!error, disabled, colors, isMulti);
+  const styles = buildStyles(!!error, disabled, colors, isMulti, customStyles);
 
   const selectOptions =
     isMulti && options.length > 0
@@ -220,8 +228,9 @@ export default function MySelect({
     isDisabled: disabled,
     isLoading: isLoading,
     isMulti: isMulti,
-    isClearable: true,
+    isClearable: !nonClearable,
     isSearchable: true,
+    isOptionDisabled: (option) => !!option.disabled,
     value: selectValue,
     onChange: handleChange,
     styles,
