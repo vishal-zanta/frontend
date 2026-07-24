@@ -20,7 +20,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       : "none",
     borderRadius: "var(--radius)",
     minHeight: "36px",
-    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--background))",
+    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--card))",
     cursor: disabled ? "not-allowed" : "default",
     "&:hover": {
       borderColor: hasError
@@ -238,6 +238,7 @@ export default function MySelect({
         primary50: "hsl(var(--accent))",
       },
     }),
+    menuShouldBlockScroll: true,
   };
 
   return (

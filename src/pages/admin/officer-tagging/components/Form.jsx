@@ -203,7 +203,7 @@ export default function Form({
         }
         disabled={!selectedDistrict}
       />
-      <div className="py-4 sticky bottom-0 bg-background flex justify-between">
+      <div className="py-4 sticky bottom-0 bg-card flex justify-between">
         <div className="flex items-center">
           {Object.keys(errors).length > 0 && (
             <span className="text-destructive text-xs font-semibold animate-pulse">

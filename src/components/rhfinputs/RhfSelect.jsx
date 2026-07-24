@@ -13,8 +13,8 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     borderColor: hasError
       ? "hsl(var(--destructive))"
       : state.isFocused
-      ? "hsl(var(--ring))"
-      : "hsl(var(--border))",
+        ? "hsl(var(--ring))"
+        : "hsl(var(--border))",
     boxShadow: state.isFocused
       ? hasError
         ? "0 0 0 1px hsl(var(--destructive))"
@@ -22,14 +22,14 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       : "none",
     borderRadius: "var(--radius)",
     minHeight: "36px",
-    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--background))",
+    backgroundColor: disabled ? "hsl(var(--muted))" : "hsl(var(--card))",
     cursor: disabled ? "not-allowed" : "default",
     "&:hover": {
       borderColor: hasError
         ? "hsl(var(--destructive))"
         : state.isFocused
-        ? "hsl(var(--ring))"
-        : "hsl(var(--border))",
+          ? "hsl(var(--ring))"
+          : "hsl(var(--border))",
     },
   }),
   valueContainer: (provided) => ({
@@ -67,13 +67,13 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     backgroundColor: state.isSelected
       ? "hsl(var(--primary))"
       : state.isFocused
-      ? "hsl(var(--accent))"
-      : "transparent",
+        ? "hsl(var(--accent))"
+        : "transparent",
     color: state.isSelected
       ? "hsl(var(--primary-foreground))"
       : state.isFocused
-      ? "hsl(var(--accent-foreground))"
-      : "hsl(var(--popover-foreground))",
+        ? "hsl(var(--accent-foreground))"
+        : "hsl(var(--popover-foreground))",
     cursor: "pointer",
     fontSize: "0.875rem",
     "@media (max-width: 768px)": {
@@ -169,7 +169,7 @@ export default function RhfSelect({
   disabled = false,
   isMultiple = false,
   isCreatable = false,
-  isLoading=false,
+  isLoading = false,
   colors,
 }) {
   const { control } = useFormContext();
@@ -199,8 +199,8 @@ export default function RhfSelect({
             ? field.value.map(toOption)
             : []
           : field.value
-          ? toOption(field.value)
-          : null;
+            ? toOption(field.value)
+            : null;
 
         const handleChange = (selected) => {
           if (isMulti) {
@@ -236,8 +236,8 @@ export default function RhfSelect({
           onChange: handleChange,
           onBlur: field.onBlur,
           styles,
-          menuShouldBlockScroll : true,
-
+          menuShouldBlockScroll: true,
+   
 
           // Portal the menu into <body> so it escapes dialog/overflow contexts
           menuPortalTarget:
@@ -263,8 +263,6 @@ export default function RhfSelect({
             onClick={(e) => e.stopPropagation()}
             className={cn("flex flex-col gap-1.5", className)}
             data-invalid={!!error}
-            
-
           >
             {label && (
               <Label
@@ -278,31 +276,32 @@ export default function RhfSelect({
                 {required && <span className="text-destructive"> *</span>}
               </Label>
             )}
-            {isLoading ? <Loader2 className="animate-spin" /> : (
-
-           <>
-
-            {isCreatable ? (
-              <CreatableSelect
-                {...commonProps}
-                isMulti={isMultiple}
-                createOptionPosition="last"
-                isValidNewOption={(inputValue) => inputValue.trim().length > 0}
-                formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
-                value={selectValue}
-                onChange={handleChange}
-              />
+            {isLoading ? (
+              <Loader2 className="animate-spin" />
             ) : (
-              <ReactSelect {...commonProps}  />
+              <>
+                {isCreatable ? (
+                  <CreatableSelect
+                    {...commonProps}
+                    isMulti={isMultiple}
+                    createOptionPosition="last"
+                    isValidNewOption={(inputValue) =>
+                      inputValue.trim().length > 0
+                    }
+                    formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
+                    value={selectValue}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <ReactSelect {...commonProps} />
+                )}
+              </>
             )}
-            </>
- )}
             {error && (
               <span className="text-destructive text-xs font-medium">
                 {error.message}
               </span>
             )}
-
           </div>
         );
       }}

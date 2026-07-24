@@ -29,6 +29,7 @@ export default function ComplaintList({
 }) {
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
+  
   const {state} = useLocation();
   const [search, setSearch] = useState("");
 const isChangedOnce = useRef(false);

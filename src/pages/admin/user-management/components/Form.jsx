@@ -137,7 +137,7 @@ export default function Form({
         isMultiple={true}
       />
 
-      <div className="flex gap-2 pt-2  mt-4 sticky bottom-0 bg-background pb-4">
+      <div className="flex gap-2 pt-2  mt-4 sticky bottom-0 bg-card pb-4">
         <Button
           variant="outline"
           className="flex-1"
