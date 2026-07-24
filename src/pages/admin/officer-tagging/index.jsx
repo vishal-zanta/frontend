@@ -145,6 +145,10 @@ export default function OfficerTagging() {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
       });
+       queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.USERS],
+        refetchType: "active",
+      });
       setDialogOpen(false);
       setEditItem(null);
     },
@@ -159,6 +163,10 @@ export default function OfficerTagging() {
       getSuccessToast("Officer tagging deleted successfully");
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
+      });
+       queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.USERS],
+        refetchType: "active",
       });
       setDeleteRecord(null);
     },
