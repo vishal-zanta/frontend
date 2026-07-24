@@ -260,7 +260,7 @@ export default function TopBar({
         )} */}
 
         {/* Language Selector */}
-     {!profileMetaData?.isAdmin &&    <LangSelectorSmall className="shrink-0" />}
+     {  <LangSelectorSmall className="shrink-0" />}
 
         {/* Theme Toggle */}
         <button
