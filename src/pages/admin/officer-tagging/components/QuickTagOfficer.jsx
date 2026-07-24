@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UserCog, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MySelect from "@/components/inputs/MySelect";
-import { useGetServices, useGetSubservices, useGetDemographics } from "../../master-data/hooks";
+import {
+  useGetServices,
+  useGetSubservices,
+  useGetDemographics,
+} from "../../master-data/hooks";
 import subDivisionsData from "@/utils/sub-divisions.json";
 import { MAX_LIMIT } from "@/utils/constants";
 
-export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLoading }) {
+export default function QuickTagOfficer({
+  officers = [],
+  handleSaveTagging,
+  isLoading,
+  department,
+}) {
   const [selectedOfficer, setSelectedOfficer] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [selectedSubservices, setSelectedSubservices] = useState([]);
@@ -14,14 +23,23 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
   const [selectedSubdivisions, setSelectedSubdivisions] = useState([]);
 
   // Fetch Services
-  const { data: servicesData } = useGetServices([], { page: 1, limit: MAX_LIMIT });
+  const {
+    data: servicesData,
+    isLoading: serviceLoading,
+    isFetching: serviceFetching,
+  } = useGetServices(
+    [department],
+    { page: 1, limit: MAX_LIMIT, department },
+    !!department,
+  );
   const servicesOptions = (servicesData?.data?.data?.docs || []).map((s) => ({
     label: s.title || s.name || "",
     value: s._id,
   }));
 
   // Fetch Subservices based on selectedService
-  const { data: subservicesData } = useGetSubservices(
+  const { data: subservicesData,    isLoading: subServiceLoading,
+    isFetching: subServiceFetching, } = useGetSubservices(
     [selectedService],
     {
       serviceId: Array.isArray(selectedService)
@@ -30,15 +48,20 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
       page: 1,
       limit: MAX_LIMIT,
     },
-    !!(selectedService && selectedService.length > 0)
+    !!(selectedService && selectedService.length > 0),
   );
-  const subservicesOptions = (subservicesData?.data?.data?.docs || []).map((s) => ({
-    label: s.title || s.name || "",
-    value: s._id,
-  }));
+  const subservicesOptions = (subservicesData?.data?.data?.docs || []).map(
+    (s) => ({
+      label: s.title || s.name || "",
+      value: s._id,
+    }),
+  );
 
   // Fetch Districts (Demographics)
-  const { data: demographyData } = useGetDemographics([], { page: 1, limit: MAX_LIMIT });
+  const { data: demographyData } = useGetDemographics([], {
+    page: 1,
+    limit: MAX_LIMIT,
+  });
   const districtOptions = (demographyData?.data?.data?.docs || []).map((d) => ({
     label: d.name,
     value: d._id,
@@ -46,16 +69,31 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
   }));
 
   // Map Subdivisions options based on selectedDistrict
-  const selectedDistrictObj = districtOptions.find((d) => d.value === selectedDistrict);
+  const selectedDistrictObj = districtOptions.find(
+    (d) => d.value === selectedDistrict,
+  );
   const districtLabel = selectedDistrictObj?.name;
-  const rawSubdivisions = districtLabel ? subDivisionsData[districtLabel] || [] : [];
+  const rawSubdivisions = districtLabel
+    ? subDivisionsData[districtLabel] || []
+    : [];
   const subdivisionOptions = rawSubdivisions.map((sub) => ({
     label: sub,
     value: sub,
   }));
 
+  const  clearState = ()=> {
+    setSelectedOfficer("");
+    setSelectedService("");
+    setSelectedSubservices([]);
+    setSelectedDistrict("");
+    setSelectedSubdivisions([]);
+  }
   const handleSubmit = () => {
-    if (!selectedOfficer || selectedSubservices.length === 0 || selectedSubdivisions.length === 0) {
+    if (
+      !selectedOfficer ||
+      selectedSubservices.length === 0 ||
+      selectedSubdivisions.length === 0
+    ) {
       return;
     }
     handleSaveTagging({
@@ -66,12 +104,13 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
       wards: selectedSubdivisions,
     });
     // Clear state
-    setSelectedOfficer("");
-    setSelectedService("");
-    setSelectedSubservices([]);
-    setSelectedDistrict("");
-    setSelectedSubdivisions([]);
+clearState();
   };
+  useEffect(()=> {
+    if(department ){
+      clearState();
+    }
+  },[department])
 
   return (
     <div className="bg-card rounded-xl border border-border p-5">
@@ -91,7 +130,7 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
         </div>
         <div>
           <MySelect
-            label="Service (Multi-select) "
+            label={  "Service (Multi-select) "}
             isMultiple
             options={servicesOptions}
             value={selectedService}
@@ -99,9 +138,10 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
               setSelectedService(val);
               setSelectedSubservices([]);
             }}
-            placeholder="Select services..."
+            placeholder={!selectedOfficer ? "Select officer first" : "Select services..."}
             required
-
+            disabled={!selectedOfficer}
+            isLoading={serviceLoading || serviceFetching}
           />
         </div>
         <div>
@@ -117,8 +157,8 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
                 : "Select sub-services..."
             }
             disabled={!selectedService || selectedService.length === 0}
+            isLoading={subServiceFetching || subServiceLoading}
             required
-
           />
         </div>
         <div>
@@ -132,7 +172,6 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
             }}
             placeholder="Select district..."
             required
-
           />
         </div>
         <div>
@@ -149,7 +188,6 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
             }
             disabled={!selectedDistrict}
             required
-
           />
         </div>
       </div>
@@ -158,7 +196,8 @@ export default function QuickTagOfficer({ officers = [], handleSaveTagging, isLo
         onClick={handleSubmit}
         disabled={isLoading}
       >
-        <Save className="w-4 h-4 mr-1" /> {isLoading ? "Saving..." : "Save Tagging"}
+        <Save className="w-4 h-4 mr-1" />{" "}
+        {isLoading ? "Saving..." : "Save Tagging"}
       </Button>
     </div>
   );

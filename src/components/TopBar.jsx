@@ -26,6 +26,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import SearchComplaints from "@/components/SearchComplaints";
 import { LangSelectorSmall } from "@/components/LangSelector";
+import Notifications from "@/components/Notifications";
 
 const STAFF_NOTIFICATIONS = [
   {
@@ -275,46 +276,7 @@ export default function TopBar({
           )}
         </button>
 
-        {!isSuperAdmin && (
-          <div className="relative" ref={notifRef}>
-            <button
-              onClick={() => setShowNotifs(!showNotifs)}
-              className="p-2 rounded-lg hover:bg-muted text-muted-foreground relative"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-            {showNotifs && (
-              <div className="absolute right-0 top-12 w-80 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-                  <span className="font-semibold text-sm">Notifications</span>
-                  <button
-                    onClick={() => setShowNotifs(false)}
-                    className="p-1 hover:bg-muted rounded"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-                <div className="max-h-80 overflow-y-auto scrollbar-thin">
-                  {notifications.map((n) => (
-                    <div
-                      key={n.id}
-                      className="px-4 py-3 border-b border-border last:border-0 hover:bg-muted flex items-start gap-3"
-                    >
-                      <div className="mt-0.5">{notifIcon(n.type)}</div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-foreground">{n.text}</p>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">
-                          {n.time}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+        { <Notifications />}
 
         <button
           onClick={() => toggleBreakMutation.mutate()}

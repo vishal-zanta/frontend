@@ -4,6 +4,7 @@ import CreatableSelect from "react-select/creatable";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
+import { Loader2 } from "lucide-react";
 
 const buildStyles = (hasError, disabled, colors, isMulti) => ({
   control: (provided, state) => ({
@@ -11,8 +12,8 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     borderColor: hasError
       ? "hsl(var(--destructive))"
       : state.isFocused
-      ? "hsl(var(--ring))"
-      : "hsl(var(--border))",
+        ? "hsl(var(--ring))"
+        : "hsl(var(--border))",
     boxShadow: state.isFocused
       ? hasError
         ? "0 0 0 1px hsl(var(--destructive))"
@@ -26,8 +27,8 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
       borderColor: hasError
         ? "hsl(var(--destructive))"
         : state.isFocused
-        ? "hsl(var(--ring))"
-        : "hsl(var(--border))",
+          ? "hsl(var(--ring))"
+          : "hsl(var(--border))",
     },
   }),
   valueContainer: (provided) => ({
@@ -55,7 +56,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   }),
   menuList: (provided) => ({
     ...provided,
-    maxHeight: "200px",
+    maxHeight: "154px",
     overflowY: "auto",
     backgroundColor: "hsl(var(--popover))",
     color: "hsl(var(--popover-foreground))",
@@ -65,13 +66,13 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     backgroundColor: state.isSelected
       ? "hsl(var(--primary))"
       : state.isFocused
-      ? "hsl(var(--accent))"
-      : "transparent",
+        ? "hsl(var(--accent))"
+        : "transparent",
     color: state.isSelected
       ? "hsl(var(--primary-foreground))"
       : state.isFocused
-      ? "hsl(var(--accent-foreground))"
-      : "hsl(var(--popover-foreground))",
+        ? "hsl(var(--accent-foreground))"
+        : "hsl(var(--popover-foreground))",
     cursor: "pointer",
     fontSize: "0.875rem",
     "@media (max-width: 768px)": {
@@ -190,8 +191,8 @@ export default function MySelect({
       ? value.map(toOption)
       : []
     : value
-    ? toOption(value)
-    : null;
+      ? toOption(value)
+      : null;
 
   const handleChange = (selected) => {
     if (isMulti) {
@@ -259,19 +260,24 @@ export default function MySelect({
           {required && <span className="text-destructive"> *</span>}
         </Label>
       )}
-
-      {isCreatable ? (
-        <CreatableSelect
-          {...commonProps}
-          isMulti
-          createOptionPosition="last"
-          isValidNewOption={(inputValue) => inputValue.trim().length > 0}
-          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
-          value={selectValue}
-          onChange={handleChange}
-        />
+      {isLoading ? (
+        <Loader2 className="animate-spin" />
       ) : (
-        <ReactSelect {...commonProps} />
+        <>
+          {isCreatable ? (
+            <CreatableSelect
+              {...commonProps}
+              isMulti
+              createOptionPosition="last"
+              isValidNewOption={(inputValue) => inputValue.trim().length > 0}
+              formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
+              value={selectValue}
+              onChange={handleChange}
+            />
+          ) : (
+            <ReactSelect {...commonProps} />
+          )}
+        </>
       )}
 
       {error && (

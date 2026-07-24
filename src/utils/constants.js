@@ -50,6 +50,7 @@ export const QUERY_KEYS = {
   DEPARTMENTS: "departments",
   SKILLS: "skills",
   CONFIG: "config",
+  NOTIFICATIONS: "notifications",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [

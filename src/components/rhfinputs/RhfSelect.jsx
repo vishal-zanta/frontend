@@ -57,7 +57,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   }),
   menuList: (provided) => ({
     ...provided,
-    maxHeight: "200px",
+    maxHeight: "154px",
     overflowY: "auto",
     backgroundColor: "hsl(var(--popover))",
     color: "hsl(var(--popover-foreground))",

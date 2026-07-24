@@ -286,6 +286,7 @@ export default function OfficerTagging() {
           officers={userOptionsUnTagged}
           handleSaveTagging={handleQuickSave}
           isLoading={postMutation.isPending}
+          department={selectedDept}
         />
 
         {/* Add/Edit Dialog */}

@@ -103,7 +103,7 @@ export default function Form({
                     onChange={(e) => {
                       const val = e.target.value;
                       if (val !== "" && Number(val) < 0  ) return;
-                      if(!isValidNumber(val, 0,9999)) return;
+                      if(!isValidNumber(val, 1,9999)) return;
 
                       let newEsc = [...(dialog.escalations || [])];
                       const idx = newEsc.findIndex(
