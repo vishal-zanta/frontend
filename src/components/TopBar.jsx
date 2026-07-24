@@ -204,10 +204,10 @@ export default function TopBar({
           <Menu className="w-5 h-5" />
         </button>
         <div>
-          <div className="text-[11px] text-muted-foreground font-medium">
+          <div className="text-[11px] text-muted-foreground font-medium hidden sm:block">
             {portalLabel}
           </div>
-          <div className="text-sm font-bold text-foreground -mt-0.5 hidden sm:block">
+          <div className="text-sm font-bold text-foreground -mt-0.5 hidden sm:block lg:hidden xl:block">
             {t(PORTAL_META.name, "बिहार ई-शिकायत पोर्टल")}
           </div>
         </div>
