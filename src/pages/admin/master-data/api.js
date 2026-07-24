@@ -140,4 +140,21 @@ export const deleteSkill = async (skillId) => {
   return instance.delete(`/skills/${skillId}`);
 };
 
+export const getApiKeys = async (params = {}) => {
+  return instance.get("/api-keys", { params });
+};
+
+export const postApiKey = async (data) => {
+  return instance.post("/api-keys", data);
+};
+
+export const toggleApiKeyStatus = async (id) => {
+  return instance.patch(`/api-keys/${id}/toggle`);
+};
+
+export const deleteApiKey = async (id) => {
+  return instance.delete(`/api-keys/${id}`);
+};
+
+
 

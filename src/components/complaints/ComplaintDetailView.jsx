@@ -227,6 +227,7 @@ console.log({MAX_FILE_SIZE, maxMbAllowed})
     c.classification?.subService?.service?.title || c.serviceName || "-";
   const subServiceText =
     c.classification?.subService?.title || c.subserviceName || "-";
+    
   const departmentText =
     c.classification?.subService?.service?.department?.title ||  c.classification?.subService?.service?.department || "-";
   const subjectText = (c.classification?.subject || "").trim() || "-";

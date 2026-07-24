@@ -53,6 +53,7 @@ export const QUERY_KEYS = {
   NOTIFICATIONS: "notifications",
   FIELD_VISITS: "field-visits",
   VISIT_STATS: "visit-stats",
+  API_KEYS: "api-keys",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
@@ -261,6 +262,7 @@ export const apiPermissionOptions = [
 
   { label: "Officer Tagging", value: "OFFICER_TAGGING" },
 
+  { label: "API Keys Management", value: "API_KEYS_MANAGEMENT" }, //custom
   { label: "Option Management", value: "OPTION_MANAGEMENT" }, //custom
 
   { label: "Role Management", value: "ROLE_MANAGEMENT" }, //custom
@@ -338,6 +340,7 @@ export const PERMISSIONS = {
     "SERVICE_MANAGEMENT",
     "DEMOGRAPHY_MANAGEMENT",
     "SOURCE_MANAGEMENT",
+    "API_KEYS_MANAGEMENT",
   ],
   USER_MANAGEMENT: ["USER_MANAGEMENT"],
   MANAGE_LINKS: ["ROLE_MANAGEMENT"],
@@ -347,6 +350,7 @@ export const PERMISSIONS = {
   SOURCE_MANAGEMENT: ["SOURCE_MANAGEMENT"],
   DEMOGRAPHY_MANAGEMENT: ["DEMOGRAPHY_MANAGEMENT"],
   OPTION_MANAGEMENT: ["OPTION_MANAGEMENT"],
+  API_KEYS_MANAGEMENT: ["API_KEYS_MANAGEMENT"],
   LOGOUT_USERS: ["LOGOUT_USERS"],
   ASSIGN_GRIEVANCE: ["ASSIGN_GRIEVANCE"],
 

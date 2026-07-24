@@ -31,7 +31,7 @@ export default function FieldVisitForm({ onCancel, isLoading, fieldVisit }) {
           type="date"
           required
           disabled={isDisabled}
-          isDisablePastDates
+          // isDisablePastDates
         />
       )}
       {status === "COMPLETED" && (

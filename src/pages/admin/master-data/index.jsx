@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Building2, Tag, MapPin, Globe, FileHeart, Briefcase, Award } from "lucide-react";
+import { Building2, Tag, MapPin, Globe, FileHeart, Briefcase, Award, Key } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import DesignationsTab from "./designation";
@@ -9,6 +9,7 @@ import DemographyTab from "./demography";
 import GrievenceNatureTab from "./grievence-nature";
 import DepartmentTab from "./departments";
 import SkillSetTab from "./skill-set";
+import ApiKeysTab from "./api-keys";
 
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -36,6 +37,13 @@ const tabs = [
     label: "Skill Set",
     icon: Award,
     permissions: PERMISSIONS.USER_MANAGEMENT,
+    group: "internal",
+  },
+  {
+    id: "api-keys",
+    label: "API Keys",
+    icon: Key,
+    permissions: PERMISSIONS.API_KEYS_MANAGEMENT,
     group: "internal",
   },
   {
@@ -168,6 +176,7 @@ export default function MasterData() {
         
         {tab === "departments" && <DepartmentTab />}
         {tab === "skill-set" && <SkillSetTab />}
+        {tab === "api-keys" && <ApiKeysTab />}
 
 
 
