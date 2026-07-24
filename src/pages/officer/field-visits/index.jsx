@@ -13,7 +13,7 @@ import Pagination from "@/components/Pagination";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import usePagination from "@/hooks/usePagination";
 import { useGetFieldVisits } from "@/hooks/query/useGetFieldVisits";
-import { FIELD_VISIT_STATUS } from "@/utils/constants";
+import { FIELD_VISIT_STATUS, QUERY_KEYS } from "@/utils/constants";
 
 import EditDialog from "@/components/EditDialog";
 import RhfWrapper from "@/components/RhfWrapper";
@@ -51,7 +51,8 @@ export default function FieldVisits() {
     mutationFn: putFieldVisit,
     onSuccess: () => {
       getSuccessToast(t("Field visit updated successfully", "फील्ड विजिट सफलतापूर्वक अपडेट किया गया"));
-      queryClient.invalidateQueries({ queryKey: ["field-visits"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.FIELD_VISITS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.VISIT_STATS] });
       setEditVisit(null);
     },
     onError: (err) => {
@@ -75,7 +76,7 @@ export default function FieldVisits() {
           </p>
         </div>
 
-        <FieldVisitCards data={[]} />
+        <FieldVisitCards />
 
         <div className="flex gap-3">
           <SearchDebounced

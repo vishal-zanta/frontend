@@ -51,6 +51,8 @@ export const QUERY_KEYS = {
   SKILLS: "skills",
   CONFIG: "config",
   NOTIFICATIONS: "notifications",
+  FIELD_VISITS: "field-visits",
+  VISIT_STATS: "visit-stats",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [

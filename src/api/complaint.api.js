@@ -55,3 +55,7 @@ export const putFieldVisit = async ({ id, data }) => {
 export const getComplaintAnalyticsSummary = async (params = {}) => {
   return instance.get("/grievances/analytics-summary", { params }).then((res) => res.data);
 };
+
+export const getVisitStats = async (params) => {
+  return instance.get("/visits/stats", { params });
+};
