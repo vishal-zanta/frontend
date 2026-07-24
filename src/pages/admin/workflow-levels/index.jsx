@@ -158,18 +158,22 @@ export default function WorkflowConfig() {
     });
   };
 
-  const handleOrderChange = (oldIndex, newIndex, isPopupConfirmed = false) => {
+  const handleOrderChange = (oldIndex, newIndex, isPopupConfirmed = false, oldWorkFlowList = null) => {
     if (oldIndex === newIndex) return;
+    // console.log({workflowList, oldWorkFlowList, isPopupConfirmed});
+
     if (!isPopupConfirmed) {
       setReOrderDialog({
         oldIndex,
         newIndex,
-        workflowList,
+        workflowList : [...workflowList],
       });
       return;
     }
+    let newWorkflowList = oldWorkFlowList ?? workflowList;
+    // console.log({workflowList, oldWorkFlowList, isPopupConfirmed, newWorkflowList});
 
-    const reordered = Array.from(workflowList);
+    const reordered = Array.from(newWorkflowList);
     const [removed] = reordered.splice(oldIndex, 1);
     reordered.splice(newIndex, 0, removed);
 
@@ -309,6 +313,7 @@ export default function WorkflowConfig() {
                 reOrderDialog.oldIndex,
                 reOrderDialog.newIndex,
                 true,
+                reOrderDialog.workflowList
               )
             }
             onClose={() => {
