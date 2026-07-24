@@ -19,13 +19,13 @@ export default function EditDialog({ title, onClose, onSave, children, saving, i
 
     document.body.style.overflow = "hidden";
     if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      // document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
 
     // unlock scroll on unmount
     return () => {
       document.body.style.overflow = originalOverflow;
-      document.body.style.paddingRight = originalPaddingRight;
+      // document.body.style.paddingRight = originalPaddingRight;
     };
   }, []);
   return (
