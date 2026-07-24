@@ -53,9 +53,7 @@ export default function PortalLayout({
       />
       <div className="flex-1 flex flex-col min-w-0">
         <TopBar
-          role={role}
-          profile={profile}
-          onProfileChange={setProfile}
+       
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           sidebarOpen={sidebarOpen}
         />

@@ -46,6 +46,7 @@ export const LangSelectorSmall = ({ className }) => {
         return (
           <>
             <button
+              key={l.value}
               type="button"
               onClick={() => setLang(l.value)}
               className={clsx(

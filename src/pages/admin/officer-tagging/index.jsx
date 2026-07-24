@@ -145,10 +145,10 @@ export default function OfficerTagging() {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
       });
-       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.USERS],
-        refetchType: "active",
-      });
+      //  queryClient.invalidateQueries({
+      //   queryKey: [QUERY_KEYS.USERS],
+      //   refetchType: "active",
+      // });
       setDialogOpen(false);
       setEditItem(null);
     },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ChevronDown,
@@ -50,9 +50,9 @@ const STAFF_NOTIFICATIONS = [
 ];
 
 export default function TopBar({
-  role = "superadmin",
-  profile,
-  onProfileChange,
+ 
+ 
+
   onToggleSidebar,
   sidebarOpen,
 }) {
@@ -61,6 +61,7 @@ export default function TopBar({
     setProfile: setProfileData,
     profiledata: profileMetaData,
   } = useAuth();
+ 
   const { t } = useLanguage();
   const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -174,13 +175,6 @@ export default function TopBar({
     logoutMutation.mutate();
   };
 
-  const handleSwitchProfile = (profileId) => {
-    setShowSwitcher(false);
-    setShowProfile(false);
-    if (onProfileChange) onProfileChange(profileId);
-    // Navigate to the dashboard - no query param needed, profile is in localStorage
-    navigate(`/${role}`);
-  };
 
   const notifIcon = (type) => {
     if (type === "success")
@@ -189,6 +183,7 @@ export default function TopBar({
       return <AlertCircle className="w-4 h-4 text-amber-500" />;
     return <Info className="w-4 h-4 text-blue-500" />;
   };
+ 
 
   return (
     <header className="h-14 bg-background border-b border-border flex items-center justify-between px-4 sticky top-0 z-30 shadow-sm">
@@ -276,7 +271,7 @@ export default function TopBar({
           )}
         </button>
 
-        { <Notifications />}
+      <Notifications/>
 
         <button
           onClick={() => toggleBreakMutation.mutate()}
