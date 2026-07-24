@@ -62,8 +62,8 @@ const SubServiceForm = ({
             onChange={(e) => {
               const val = e.target.value;
               if (val !== "" && Number(val) < 0) return;
-              if (!isValidNumber(val, 0, 9999)) return;
-              setFormData((prev) => ({ ...prev, sla: val }));
+              if (!isValidNumber(val, 1, 9999)) return;
+              setFormData((prev) => ({ ...prev, sla : Number(val) }));
               if (errors.sla) setErrors((prev) => ({ ...prev, sla: "" }));
             }}
             placeholder="e.g., 48"

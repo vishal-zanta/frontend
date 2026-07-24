@@ -75,7 +75,7 @@ export default function FieldVisits() {
           </p>
         </div>
 
-        <FieldVisitCards data={FIELD_VISIT_DATA} />
+        <FieldVisitCards data={[]} />
 
         <div className="flex gap-3">
           <SearchDebounced

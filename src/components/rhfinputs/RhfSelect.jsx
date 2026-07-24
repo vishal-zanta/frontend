@@ -210,7 +210,7 @@ export default function RhfSelect({
               const allValues = options.map((o) => o.value);
               const previouslySelectedCount = (field.value ?? []).length;
               if (previouslySelectedCount === allValues.length) {
-                field.onChange([]);
+                // field.onChange([]);
               } else {
                 field.onChange(allValues);
               }
