@@ -285,13 +285,7 @@ const Notifications = ({ title = "Notifications" }) => {
                       <p className="text-sm font-medium text-foreground leading-snug">
                         {n.title}
                       </p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug ">
-                        {n.message}
-                      </p>
-
-                      {/* Meta row */}
-                      <div className="flex items-end justify-between gap-2 mt-1.5 ">
-                        <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap my-1">
                           {n.metadata?.visitId && (
                             <span
                               // onClick={(e) => {}}
@@ -306,7 +300,14 @@ const Notifications = ({ title = "Notifications" }) => {
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-2">
+                      <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug ">
+                        {n.message}
+                      </p>
+
+                      {/* Meta row */}
+                      <div className="flex items-center justify-end gap-1 mt-1.5 ">
+                      
+                        {/* <div className="flex items-center gap-2"> */}
                           {!n.isRead && (
                             <span
                               className={`ml-auto w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`}
@@ -316,7 +317,7 @@ const Notifications = ({ title = "Notifications" }) => {
                           <span className="text-[10px] text-muted-foreground text-nowrap">
                             {formatTime(n.createdAt)}
                           </span>
-                        </div>
+                        {/* </div> */}
                       </div>
                     </div>
                   </div>
