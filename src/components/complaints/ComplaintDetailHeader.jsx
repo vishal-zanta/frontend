@@ -47,8 +47,12 @@ export function SLATimer({
     const calculate = () => {
       const createdAtTime = new Date(createdAt).getTime();
       if (isNaN(createdAtTime)) return;
+      if (!slaHours) {
+        setTimeLeft(t("N/A", "N/A"));
+        return;
+      }
 
-      const slaHrs = Number(slaHours || 24);
+      const slaHrs = Number(slaHours);
       const slaMs = slaHrs * 60 * 60 * 1000;
       const deadline = createdAtTime + slaMs;
 
@@ -93,6 +97,9 @@ export function SLATimer({
   } else if (isUrgent) {
     badgeClass =
       "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 animate-pulse";
+  }
+  else if(timeLeft === "N/A"){
+    badgeClass = "border-gray-500/10 text-gray-600 dark:text-gray-400"
   }
 
   const labelText =
@@ -154,14 +161,14 @@ export default function ComplaintDetailHeader({
               <>
                 <SLATimer
                   createdAt={c.createdAt}
-                  slaHours={c.classification?.subService?.sla || c.slaHours}
+                  slaHours={c.classification?.subService?.sla || null}
                   resolvedAt={
                     c.status == "RESOLVED" ? c?.resolvedAt || null : null
                   }
                 />
                 <SLATimer
                   createdAt={c?.assignedAt || null}
-                  slaHours={c.slaHours}
+                  slaHours={c?.slaHours || null}
                   customText="Officer SLA"
                   resolvedAt={
                     c.status == "RESOLVED" ? c?.resolvedAt || null : null
@@ -254,7 +261,7 @@ export default function ComplaintDetailHeader({
             <>
               <SLATimer
                 createdAt={c.createdAt}
-                slaHours={c.classification?.subService?.sla || c.slaHours}
+                slaHours={c.classification?.subService?.sla || null}
                 resolvedAt={
                   c.status == "RESOLVED" ? c?.resolvedAt || null : null
                 }
@@ -262,7 +269,7 @@ export default function ComplaintDetailHeader({
               {!!c.assignedAt && (
                 <SLATimer
                   createdAt={c.assignedAt}
-                  slaHours={c.slaHours}
+                  slaHours={c?.slaHours || null}
                   customText="Officer SLA"
                   resolvedAt={
                     c.status == "RESOLVED" ? c?.resolvedAt || null : null

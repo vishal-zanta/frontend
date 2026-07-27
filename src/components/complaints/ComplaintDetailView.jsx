@@ -316,6 +316,7 @@ console.log({MAX_FILE_SIZE, maxMbAllowed})
             attachments={attachments}
             geotaggedImages={geotaggedImages}
             subjectText={subjectText}
+            resolvedReason={c.status === "RESOLVED" ? c?.resolvedReason : null}
           />
 
           {/* Actions (Status change, Priority change, Geotag upload) */}

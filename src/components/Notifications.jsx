@@ -275,20 +275,24 @@ const  Notifications = ({ title = "Notifications" }) =>  {
                       </p>
 
                       {/* Meta row */}
-                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                      <div className="flex items-center justify-between gap-2 mt-1.5 flex-wrap">
                         {n.metadata?.grievanceRef && (
                           <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground border border-border">
                             #{n.metadata.grievanceRef}
                           </span>
                         )}
-                        <span className="text-[10px] text-muted-foreground">
-                          {formatTime(n.createdAt)}
-                        </span>
-                        {!n.isRead && (
+                        <div className="flex items-center gap-2">
+                           {!n.isRead && (
                           <span
                             className={`ml-auto w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`}
                           />
                         )}
+
+                        <span className="text-[10px] text-muted-foreground">
+                          {formatTime(n.createdAt)}
+                        </span>
+                       
+                        </div>
                       </div>
                     </div>
                   </div>

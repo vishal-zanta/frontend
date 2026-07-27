@@ -1,5 +1,5 @@
-import { Search } from "lucide-react";
-import  { useEffect, useRef, useState } from "react";
+import { Search, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import clsx from "clsx";
 
@@ -13,6 +13,7 @@ const SearchDebounced = ({
   inputProps = {},
   placeholder = "Search by name or email...",
   icon = true,
+  isClearable = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialValue);
   const timerRef = useRef(null);
@@ -29,13 +30,12 @@ const SearchDebounced = ({
     };
   }, [searchQuery]);
 
-  useEffect(()=> {
-   
-    if(!!initialValue && !!initialValue.trim() &&  searchQuery !== initialValue){
+  useEffect(() => {
+    if (!!initialValue && !!initialValue.trim() && searchQuery !== initialValue) {
       setSearchQuery(initialValue);
     }
-  },[initialValue])
-  //  console.log({initialValue, searchQuery});
+  }, [initialValue]);
+
   return (
     <div className={clsx("relative", className)}>
       {icon && (
@@ -45,9 +45,24 @@ const SearchDebounced = ({
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder={placeholder}
-        className={clsx(icon && "pl-9", inputClassName)}
+        className={clsx(
+          icon && "pl-9",
+          isClearable && searchQuery && "pr-8",
+          inputClassName
+        )}
         {...inputProps}
       />
+      {isClearable && searchQuery && (
+        <button
+          type="button"
+          onClick={() => {setSearchQuery("") 
+            handleDebouncedChange("")
+          }}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 };

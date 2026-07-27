@@ -207,6 +207,7 @@ export default function RhfSelect({
           : field.value
             ? toOption(field.value)
             : null;
+            // console.log({selectValue, field: field.value, options, name})
 
         const handleChange = (selected) => {
           if (isMulti) {
@@ -305,11 +306,17 @@ export default function RhfSelect({
                 )}
               </>
             )}
+            {!!selectValue?.notExist && (
+              <span className="text-amber-600 dark:text-amber-400 text-xs font-medium">
+                NOTE : This {name} no longer exists.
+              </span>
+            )}
             {error && (
               <span className="text-destructive text-xs font-medium">
                 {error.message}
               </span>
             )}
+            
           </div>
         );
       }}

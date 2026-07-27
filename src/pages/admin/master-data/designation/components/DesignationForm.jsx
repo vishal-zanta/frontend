@@ -25,6 +25,21 @@ const DesignationForm = ({
     "Supervisor",
     "Admin",
   ].map((l) => ({ label: l, value: l }));
+  // console.log({ initialValues });
+  let updatedDeptOptions = initialValues?.departmentObj?.active !== false
+    ? departmentOptions
+    : [
+        ...departmentOptions,
+        {
+          label:
+            initialValues?.departmentObj?.title ||
+            initialValues?.departmentObj?.name ||
+            "",
+          value: initialValues?.departmentObj?._id,
+          disabled: true,
+          notExist: true
+        },
+      ];
 
   return (
     <RhfWrapper
@@ -70,17 +85,20 @@ const DesignationForm = ({
         name="department"
         label="Department"
         placeholder="Select department..."
-        options={departmentOptions}
+        options={updatedDeptOptions}
         required
         isMultiple={false}
       />
-
 
       <div className="flex gap-2 justify-end pt-4 border-t border-border pb-4 bg-card sticky bottom-0">
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button type="submit" disabled={saving} className="bg-primary hover:bg-primary/90">
+        <Button
+          type="submit"
+          disabled={saving}
+          className="bg-primary hover:bg-primary/90"
+        >
           <Check className="w-4 h-4 mr-1" /> {saving ? "Saving..." : "Save"}
         </Button>
       </div>

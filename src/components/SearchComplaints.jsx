@@ -165,7 +165,7 @@ const SearchComplaints = () => {
                         <SLATimer
                           createdAt={c.createdAt}
                           slaHours={
-                            c.classification?.subService?.sla || c.slaHours
+                            c.classification?.subService?.sla || null
                           }
                           resolvedAt={c.status == "RESOLVED" ?  (c?.resolvedAt || null) : null}
 
@@ -173,7 +173,7 @@ const SearchComplaints = () => {
                         {!!c.assignedAt && (
                           <SLATimer
                             createdAt={c.assignedAt}
-                            slaHours={c.slaHours}
+                            slaHours={c?.slaHours || null}
                             customText="Officer SLA"
                             resolvedAt={c.status == "RESOLVED" ?  (c?.resolvedAt || null) : null}
                           />

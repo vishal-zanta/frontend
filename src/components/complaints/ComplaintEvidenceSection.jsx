@@ -1,14 +1,17 @@
 import React from "react";
 import { IMG_BASE_URL } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ComplaintEvidenceSection({
   description,
   attachments,
   geotaggedImages,
   subjectText,
+  resolvedReason = null,
 }) {
   const { t } = useLanguage();
+  const { profiledata } = useAuth();
   return (
     <>
       {/* Description */}
@@ -28,6 +31,16 @@ export default function ComplaintEvidenceSection({
           {subjectText}
         </p>
       </div>
+      {resolvedReason && !profiledata?.isOfficer && (
+        <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
+          <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">
+            {t("Resolved Reason", "समाधान का कारण")}
+          </div>
+          <p className="text-xs lg:text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+            {resolvedReason}
+          </p>
+        </div>
+      )}
 
       {/* Attachments */}
       {attachments.length > 0 && (

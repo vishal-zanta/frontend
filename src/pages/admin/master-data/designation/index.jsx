@@ -36,6 +36,7 @@ export default function DesignationsTab() {
     (d) => ({
       label: d.title || d.name || "",
       value: d._id,
+      apiObj : d
     }),
   );
 
@@ -94,6 +95,7 @@ export default function DesignationsTab() {
     level: dialog?.item?.level || "L1",
     permissions: dialog?.item?.permissions || [],
     department: dialog?.item?.department?._id || dialog?.item?.department || "",
+    departmentObj : dialog?.item?.department || {}
   };
 
   const isSaving = postMutation.isPending || putMutation.isPending;

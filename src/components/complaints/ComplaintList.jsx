@@ -28,7 +28,7 @@ export default function ComplaintList({
   autoSelect = true,
 }) {
   const { t } = useLanguage();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { state } = useLocation();
   const [search, setSearch] = useState("");
@@ -240,8 +240,15 @@ export default function ComplaintList({
         <div className="mt-2">
           <SearchDebounced
             placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
-            handleDebouncedChange={(val) => setSearch(val)}
+            handleDebouncedChange={(val) => {
+              console.log({ val });
+              if (val !== searchParams.get("complaint")) {
+                setSearchParams({}, { replace: true });
+              }
+              setSearch(val);
+            }}
             initialValue={searchParams.get("complaint") || ""}
+            isClearable={true}
           />
         </div>
       </div>
@@ -290,7 +297,7 @@ export default function ComplaintList({
                         <SLATimer
                           createdAt={c.createdAt}
                           slaHours={
-                            c.classification?.subService?.sla || c.slaHours
+                            c.classification?.subService?.sla || null
                           }
                           resolvedAt={
                             c.status == "RESOLVED"
@@ -301,7 +308,7 @@ export default function ComplaintList({
                         {
                           <SLATimer
                             createdAt={c?.assignedAt || null}
-                            slaHours={c.slaHours}
+                            slaHours={c?.slaHours || null}
                             customText="Officer SLA"
                             resolvedAt={
                               c.status == "RESOLVED"
