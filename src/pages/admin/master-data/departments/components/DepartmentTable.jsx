@@ -11,7 +11,7 @@ const DepartmentTable = ({ departments = [], setDialog, pagination }) => {
 
   const tableBody = departments.map((d) => ({
     title: { value: d.title },
-    titleHindi: { value: d.titleHindi || "-" },
+    titleHindi: { value: d.titleHindi || "N/A" },
     actions: {
       className: "text-center",
       render: () => (

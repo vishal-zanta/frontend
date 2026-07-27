@@ -211,14 +211,14 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                         : districts.find(
                             (d) => d._id === u.district || d.id === u.district,
                           );
-                    const districtName = districtObj?.name || "-";
+                    const districtName = districtObj?.name || "N/A";
                     const districtPopulation = districtObj?.population;
 
                     return (
                       <tr key={u._id} className="hover:bg-muted/30">
                         <td className="px-4 py-2.5 font-medium">{u.name}</td>
                         <td className="px-4 py-2.5 text-muted-foreground">
-                          {u.nameHindi || "-"}
+                          {u.nameHindi || "N/A"}
                         </td>
                         <td className="px-4 py-2.5 text-muted-foreground capitalize">
                           {districtName}
@@ -227,7 +227,7 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                         <td className="px-4 py-2.5 text-right font-semibold">
                           {districtPopulation
                             ? districtPopulation.toLocaleString("en-IN")
-                            : "-"}
+                            : "N/A"}
                         </td>
                         <td className="px-4 py-2.5">
                           <div className="flex gap-1 justify-center">

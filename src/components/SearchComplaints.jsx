@@ -184,12 +184,12 @@ const SearchComplaints = () => {
                       {c.classification?.subService?.title ||
                         c.subserviceName ||
                         c.serviceName ||
-                        "-"}
+                        "N/A"}
                     </div>
                     <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
                       <MapPin className="w-3 h-3" />{" "}
-                      {`${c.address?.villageOrWard || c.ward || "-"}, ${c.address?.district?.name || "-"}, ${c.address?.state || "-"}`.replaceAll(
-                        "-,",
+                      {`${c.address?.villageOrWard || c.ward || "N/A"}, ${c.address?.district?.name || "N/A"}, ${c.address?.state || "N/A"}`.replaceAll(
+                        "N/A,",
                         "",
                       )}
                     </div>

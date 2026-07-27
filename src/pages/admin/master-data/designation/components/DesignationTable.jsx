@@ -27,7 +27,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
               {d.designationHindi}
             </td>
             <td className="px-4 py-2.5 text-muted-foreground">
-              {d.department?.title || d.department || "-"}
+              {d.department?.title || d.department || "N/A"}
             </td>
             <td className="px-4 py-2.5">
               <Badge variant="outline" className="text-xs">
@@ -50,7 +50,7 @@ const DesignationTable = ({ designations = [], setDialog }) => {
                       {p}
                     </Badge>
                   ))}
-                {(d.permissions || []).length === 0 && "-"}
+                {(d.permissions || []).length === 0 && "N/A"}
               </div>
             </td>
             <td className="px-4 py-2.5 text-center">

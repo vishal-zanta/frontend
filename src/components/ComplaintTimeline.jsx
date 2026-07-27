@@ -66,7 +66,7 @@ export default function ComplaintTimeline({ events }) {
                     {event.type?.replace(/_/g, " ")}
                   </div>
                   <div className="text-[11px] text-muted-foreground mt-0.5">
-                    by {event.actor?.name || event.actor?.role || "-"}
+                    by {event.actor?.name || event.actor?.role || "N/A"}
                   </div>
                   {notes && (
                     <div className="text-sm text-muted-foreground mt-1">
@@ -84,7 +84,7 @@ export default function ComplaintTimeline({ events }) {
                         hour: "2-digit",
                         minute: "2-digit",
                       })
-                    : "-"}
+                    : "N/A"}
                 </div>
               </div>
             </div>

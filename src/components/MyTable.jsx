@@ -37,7 +37,7 @@ const MyTable = ({
                         {currCell?.render ? (
                           <currCell.render />
                         ) : (
-                          currCell?.value || "-"
+                          currCell?.value || "N/A"
                         )}
                       </td>
                     );

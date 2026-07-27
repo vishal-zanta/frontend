@@ -9,7 +9,7 @@ export default function MyShiftDetails({ agentViewShift }) {
   const { profile } = useAuth();
 
   const formatShift = (shift) => {
-    if (!shift) return "-";
+    if (!shift) return "N/A";
     let datePart = "";
     if (shift.date) {
       const d = new Date(shift.date);
@@ -21,13 +21,13 @@ export default function MyShiftDetails({ agentViewShift }) {
     }
     const timePart = shift.time || "";
     if (datePart && timePart) return `${datePart} | ${timePart}`;
-    return datePart || timePart || "-";
+    return datePart || timePart || "N/A";
   };
 
-  const agentName = profile?.name || "-";
-  const agentId = profile?.userCode || "-";
-  const shiftText = agentViewShift ? formatShift(agentViewShift) : "-";
-  const currentStatus = agentViewShift ? "-" : "-";
+  const agentName = profile?.name || "N/A";
+  const agentId = profile?.userCode || "N/A";
+  const shiftText = agentViewShift ? formatShift(agentViewShift) : "N/A";
+  const currentStatus = agentViewShift ? "N/A" : "N/A";
   const callsToday = agentViewShift ? 0 : 0;
   const resolvedToday = agentViewShift ? 0 : 0;
 

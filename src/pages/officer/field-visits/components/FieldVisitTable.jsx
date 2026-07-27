@@ -54,17 +54,17 @@ export default function FieldVisitTable({
           {filtered.map((fv, i) => {
             return (
               <tr key={fv._id || i} className="hover:bg-muted/30">
-                <td className="px-4 py-3">
-                  <FieldVisitId id={fv.visitId || fv._id || "-"} visit={fv} />
+                <td className="px-4 py-3 text-nowrap">
+                  <FieldVisitId id={fv.visitId || fv._id || "N/A"} visit={fv} />
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 text-nowrap">
                   {fv.grievance?._id ? (
                     <ComplaintId
                       id={fv.grievance._id}
                       complaint={fv.grievance}
                     />
                   ) : (
-                    "-"
+                    "N/A"
                   )}
                 </td>
                 <td className="px-4 py-3 text-nowrap">
@@ -87,46 +87,46 @@ export default function FieldVisitTable({
                       })}
                     </>
                   ) : (
-                    "-"
+                    "N/A"
                   )}
                 </td>
-                <td className="px-4 py-3 text-muted-foreground text-xs">
-                  {fv.serviceDetails?.title || "-"}
+                <td className="px-4 py-3 text-nowrap text-muted-foreground text-xs">
+                  {fv.serviceDetails?.title || "N/A"}
                   {fv.subServiceDetails?.title && (
                     <div className="text-[10px] text-muted-foreground">
                       {fv.subServiceDetails.title}
                     </div>
                   )}
                 </td>
-                <td className="px-4 py-3 text-xs">
+                <td className="px-4 py-3 text-nowrap text-xs">
                   {fv?.grievance?.address?.state ||
                   fv?.grievance?.address?.district ? (
                     <>
                       <MapPin className="w-3 h-3 inline mr-1" />
-                      {fv?.grievance?.address?.district?.name || "-"},{" "}
-                      {fv?.grievance?.address?.state || "-"}
+                      {fv?.grievance?.address?.district?.name || "N/A"},{" "}
+                      {fv?.grievance?.address?.state || "N/A"}
                     </>
                   ) : (
-                    "-"
+                    "N/A"
                   )}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 text-nowrap">
                   {fv.grievance?.assignedPriority ? (
                     <PriorityBadge priority={fv.grievance.assignedPriority} />
                   ) : (
-                    "-"
+                    "N/A"
                   )}
                 </td>
-                <td className="px-4 py-3 font-mono text-[10px] text-muted-foreground text-nowrap text-center">
+                <td className="px-4 py-3 text-nowrap font-mono text-[10px] text-muted-foreground  text-center">
                   {(() => {
                     const coords =
                       fv.grievance?.geotaggedImages?.[0]?.coordinates;
                     return coords?.latitude && coords?.longitude
                       ? `${String(coords.latitude).slice(0, 7)} | ${String(coords.longitude).slice(0, 7)}`
-                      : "-";
+                      : "N/A";
                   })()}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 text-nowrap">
                   {fv.grievance?.geotaggedImages &&
                   fv.grievance.geotaggedImages.length > 0 ? (
                     (() => {
@@ -153,12 +153,12 @@ export default function FieldVisitTable({
                     <span>-</span>
                   )}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 text-nowrap">
                   <Badge
                     variant="outline"
                     className={`text-xs ${getFieldVisitStatusClass(fv.status)}`}
                   >
-                    {fv.status || "-"}
+                    {fv.status || "N/A"}
                   </Badge>
                 </td>
                 {!isHideAction && (

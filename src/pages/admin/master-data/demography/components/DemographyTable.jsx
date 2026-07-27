@@ -22,14 +22,14 @@ const DemographyTable = ({ districts = [], setDialog }) => {
           <tr key={d._id} className="hover:bg-muted/30">
             <td className="px-4 py-2.5 font-medium">{d.name}</td>
             <td className="px-4 py-2.5 text-muted-foreground">
-              {d.nameHindi || "-"}
+              {d.nameHindi || "N/A"}
             </td>
             <td className="px-4 py-2.5 text-muted-foreground">{d.division}</td>
             <td className="px-4 py-2.5 text-muted-foreground">{d.zone}</td>
             <td className="px-4 py-2.5 text-right font-semibold">
               {d.population.toLocaleString("en-IN")}
             </td>
-            <td className="px-4 py-2.5 text-center">{d.urban ? "✅" : "-"}</td>
+            <td className="px-4 py-2.5 text-center">{d.urban ? "✅" : "N/A"}</td>
             <td className="px-4 py-2.5 text-center">
               <div className="flex gap-1 justify-center">
                 <EditButton onClick={() => setDialog({ type: "edit", item: d })} />

@@ -46,7 +46,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                   {s.subService?.title ||
                     s.subService?.name ||
                     s.subService ||
-                    "-"}
+                    "N/A"}
                 </td>
                 {roles.map((role) => {
                   const esc = (s.escalations || []).find(
@@ -62,7 +62,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                           {esc?.slaType == "days" ?  esc.slaHours/24 : esc.slaHours}{esc?.slaType == "days" ? "d" : "h"}
                         </Badge>
                       ) : (
-                        "-"
+                        "N/A"
                       )}
                     </td>
                   );

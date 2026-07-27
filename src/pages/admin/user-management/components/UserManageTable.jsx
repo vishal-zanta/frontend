@@ -70,7 +70,7 @@ export default function UserManageTable({
                     {sk.name || sk}
                   </Badge>
                 ))}
-                {(u.skills || []).length === 0 && "-"}
+                {(u.skills || []).length === 0 && "N/A"}
               </div>
             </td>
             <td className="px-4 py-3 min-w-[150px]">
@@ -80,7 +80,7 @@ export default function UserManageTable({
                     {lang}
                   </Badge>
                 ))}
-                {(u.preferredLanguages || []).length === 0 && "-"}
+                {(u.preferredLanguages || []).length === 0 && "N/A"}
               </div>
             </td>
             {/* <td className="px-2 py-1 min-w-[280px]">

@@ -81,44 +81,44 @@ const Table = ({ filtered = [], t }) => {
       </thead>
       <tbody className="divide-y divide-border">
         {filtered.map((c, i) => {
-          const complaintId = c.grievanceId || c.id || c._id || "-";
+          const complaintId = c.grievanceId || c.id || c._id || "N/A";
           const serviceName =
             c.classification?.subService?.service?.title ||
             c.serviceName ||
-            "-";
+            "N/A";
           const subserviceName =
-            c.classification?.subService?.title || c.subserviceName || "-";
-          const ward = c.address?.villageOrWard || c.ward || "-";
+            c.classification?.subService?.title || c.subserviceName || "N/A";
+          const ward = c.address?.villageOrWard || c.ward || "N/A";
           const priority = c.assignedPriority || c.priority || "NORMAL";
           const slaHours =
-            c.classification?.subService?.sla ?? c.slaHours ?? "-";
+            c.classification?.subService?.sla ?? c.slaHours ?? "N/A";
           const status = c.status || "PENDING";
 
           return (
             <tr key={c._id || c.id || i} className="hover:bg-muted/30">
-              <td className="px-4 py-2.5">
+              <td className="px-4 py-2.5 text-nowrap">
                 <ComplaintId id={complaintId} complaint={c} />
               </td>
-              <td className="px-4 py-2.5 text-muted-foreground">
+              <td className="px-4 py-2.5 text-muted-foreground text-nowrap">
                 {serviceName}
               </td>
-              <td className="px-4 py-2.5 text-muted-foreground text-xs">
+              <td className="px-4 py-2.5 text-muted-foreground text-xs text-nowrap">
                 {subserviceName}
               </td>
-              <td className="px-4 py-2.5 text-muted-foreground">
-                <MapPin className="w-3 h-3 inline mr-1" />
+              <td className="px-4 py-2.5 text-muted-foreground text-nowrap">
+             {ward && ward !="N/A" &&   <MapPin className="w-3 h-3 inline mr-1" />}
                 {ward}
               </td>
-              <td className="px-4 py-2.5">
+              <td className="px-4 py-2.5 text-nowrap">
                 <PriorityBadge priority={priority} />
               </td>
               <td className="px-4 py-2.5">
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground text-nowrap">
                   <Clock className="w-3 h-3 inline mr-1" />
                   {slaHours}h
                 </span>
               </td>
-              <td className="px-4 py-2.5">
+              <td className="px-4 py-2.5 text-nowrap">
                 <StatusBadge status={status} />
               </td>
             </tr>

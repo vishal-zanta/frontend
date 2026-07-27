@@ -62,16 +62,16 @@ export default function WorkflowTable({
                   </div>
                 </td>
                 <td className="px-4 py-3 font-medium">
-                  {level.role?.level || "-"}
+                  {level.role?.level || "N/A"}
                 </td>
                 <td className="px-4 py-3 font-medium text-muted-foreground">
-                  {level.department?.title || level.department || "-"}
+                  {level.department?.title || level.department || "N/A"}
                 </td>
                 <td className="px-4 py-3 font-medium">
-                  {level.role?.designationEnglish || "-"}
+                  {level.role?.designationEnglish || "N/A"}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
-                  {level.description || "-"}
+                  {level.description || "N/A"}
                 </td>
                 <td className="px-4 py-3 text-center">
                   <div className="flex gap-1 justify-center">
