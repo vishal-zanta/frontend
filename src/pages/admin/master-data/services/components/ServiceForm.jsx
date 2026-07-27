@@ -13,6 +13,21 @@ const ServiceForm = ({
   saving,
   departmentOptions = [],
 }) => {
+   let updatedDeptOptions = initialValues?.departmentObj?.active !== false
+    ? departmentOptions
+    : [
+        ...departmentOptions,
+        {
+          label:
+            initialValues?.departmentObj?.title ||
+            initialValues?.departmentObj?.name ||
+            "",
+          value: initialValues?.departmentObj?._id,
+          disabled: true,
+          notExist: true
+        },
+      ];
+      console.log({initialValues, departmentOptions, updatedDeptOptions})
   return (
     <RhfWrapper
       initialValues={initialValues}
@@ -39,7 +54,7 @@ const ServiceForm = ({
         name="department"
         label="Department"
         placeholder="Select department..."
-        options={departmentOptions}
+        options={updatedDeptOptions}
         required
         isMultiple={false}
       />

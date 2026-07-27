@@ -101,6 +101,7 @@ export default function ServicesTab() {
       serviceDialog?.item?.department?._id ||
       serviceDialog?.item?.department ||
       "",
+      departmentObj :  serviceDialog?.item?.department || {}
   };
 
   const isSaving =
