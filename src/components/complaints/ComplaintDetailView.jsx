@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import ComplaintTimeline from "@/components/ComplaintTimeline";
 import {
   useGetComplaintById,
@@ -221,40 +222,40 @@ console.log({MAX_FILE_SIZE, maxMbAllowed})
   const detail = data?.data || data;
   const c = detail || selected;
 
-  const displayId = c.grievanceId || c.id || "-";
+  const displayId = c.grievanceId || c.id || "N/A";
   const displayStatus = c.status || "OPEN";
   const displayPriority = c.assignedPriority || c.priority || "NORMAL";
 
   const serviceText =
-    c.classification?.subService?.service?.title || c.serviceName || "-";
+    c.classification?.subService?.service?.title || c.serviceName || "N/A";
   const subServiceText =
-    c.classification?.subService?.title || c.subserviceName || "-";
+    c.classification?.subService?.title || c.subserviceName || "N/A";
     
   const departmentText =
-    c.classification?.subService?.service?.department?.title ||  c.classification?.subService?.service?.department || "-";
-  const subjectText = (c.classification?.subject || "").trim() || "-";
+    c.classification?.subService?.service?.department?.title ||  c.classification?.subService?.service?.department || "N/A";
+  const subjectText = (c.classification?.subject || "").trim() || "N/A";
 
   const formattedDate =
     c.createdAt || c.createdDate
       ? new Date(c.createdAt || c.createdDate).toLocaleDateString("en-IN")
-      : "-";
+      : "N/A";
   const occurrenceDate = c.evidence?.occurrenceDate
     ? new Date(c.evidence.occurrenceDate).toLocaleDateString("en-IN")
-    : "-";
+    : "N/A";
 
-  const citizenName = c.citizenInfo?.fullName || c.citizenName || "-";
-  const mobileNumber = c.citizenInfo?.mobile || c.mobile || "-";
-  const emailAddress = c.citizenInfo?.email || "-";
-  const preferredLanguage = c.citizenInfo?.preferredLanguage || "-";
+  const citizenName = c.citizenInfo?.fullName || c.citizenName || "N/A";
+  const mobileNumber = c.citizenInfo?.mobile || c.mobile || "N/A";
+  const emailAddress = c.citizenInfo?.email || "N/A";
+  const preferredLanguage = c.citizenInfo?.preferredLanguage || "N/A";
 
-  const addressState = c.address?.state || "-";
-  const addressDistrict = c.address?.district?.name || c.address?.district || c.districtName || "-";
-  const addressSubdivision = c.address?.subdivision || "-";
-  const addressVillageOrWard = c.address?.villageOrWard || c.ward || "-";
-  const addressPinCode = c.address?.pinCode || "-";
-  const addressLandmark = c.address?.landmark || "-";
+  const addressState = c.address?.state || "N/A";
+  const addressDistrict = c.address?.district?.name || c.address?.district || c.districtName || "N/A";
+  const addressSubdivision = c.address?.subdivision || "N/A";
+  const addressVillageOrWard = c.address?.villageOrWard || c.ward || "N/A";
+  const addressPinCode = c.address?.pinCode || "N/A";
+  const addressLandmark = c.address?.landmark || "N/A";
 
-  const description = c.evidence?.details || c.description || "-";
+  const description = c.evidence?.details || c.description || "N/A";
   const attachments = c.evidence?.attachments || [];
   const geotaggedImages = c.geotaggedImages || [];
 
@@ -262,7 +263,11 @@ console.log({MAX_FILE_SIZE, maxMbAllowed})
 
   return (
     <div className="md:col-span-2 space-y-4">
-      <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
+      <LoaderErrWrapper
+        isLoading={isLoading}
+        error={error?.message || error}
+        customLoader={<ComplaintViewShimmer />}
+      >
         <div className="bg-card rounded-xl border border-border p-3 lg:p-5 space-y-4 lg:space-y-5">
           {/* Header Section */}
           <ComplaintDetailHeader
@@ -343,3 +348,162 @@ console.log({MAX_FILE_SIZE, maxMbAllowed})
     </div>
   );
 }
+
+
+export const ComplaintViewShimmer = () => {
+  return (
+    <div className="md:col-span-2 space-y-4">
+      {/* Main Details Card Shimmer */}
+      <div className="bg-card rounded-xl border border-border p-3 lg:p-5 space-y-4 lg:space-y-5">
+        {/* Header Section Shimmer */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-3">
+          <div className="min-w-0 space-y-2">
+            <div className="flex items-center gap-1.5 lg:gap-2 flex-wrap">
+              <Skeleton className="h-6 w-32 rounded-md" />
+              <Skeleton className="h-5 w-20 rounded-full" />
+              <Skeleton className="h-5 w-20 rounded-full" />
+            </div>
+            <Skeleton className="h-4 w-56 lg:w-72" />
+            <div className="flex items-center gap-2 pt-0.5">
+              <Skeleton className="h-3.5 w-24" />
+              <Skeleton className="h-5 w-28 rounded-md" />
+              <Skeleton className="h-5 w-28 rounded-md" />
+            </div>
+          </div>
+          <div className="w-full sm:w-44 lg:w-56 shrink-0 space-y-1.5">
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="h-9 w-full rounded-lg" />
+            <Skeleton className="h-4 w-36 rounded-full" />
+          </div>
+        </div>
+
+        {/* Classification Section Shimmer */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-3 bg-muted/20 p-2.5 lg:p-3 rounded-lg border border-border">
+          <div className="space-y-1.5">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-4 w-28" />
+          </div>
+          <div className="space-y-1.5">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <div className="flex items-center justify-end">
+            <Skeleton className="h-8 w-24 rounded-md" />
+          </div>
+        </div>
+
+        {/* Complainant Section Shimmer */}
+        <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border space-y-2.5">
+          <Skeleton className="h-3 w-36" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 lg:gap-3">
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+          </div>
+        </div>
+
+        {/* Location & Address Shimmer */}
+        <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border space-y-2.5">
+          <Skeleton className="h-3 w-32" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-3">
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-4 w-28" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-14" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-12" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-4 w-28" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+          </div>
+        </div>
+
+        {/* Evidence Details & Description Shimmer */}
+        <div className="space-y-4">
+          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3 space-y-2">
+            <Skeleton className="h-3 w-32" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
+          </div>
+          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3 space-y-2">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+        </div>
+
+        {/* Action Section Shimmer */}
+        <div className="space-y-4 pt-2">
+          <div className="border-t border-border pt-4 space-y-2">
+            <Skeleton className="h-3 w-24" />
+            <div className="flex gap-2 items-center">
+              <Skeleton className="h-9 w-48 rounded-lg" />
+              <Skeleton className="h-9 w-16 rounded-lg" />
+            </div>
+          </div>
+          <div className="border-t border-border pt-4 space-y-2">
+            <Skeleton className="h-3 w-24" />
+            <div className="flex gap-2 items-center">
+              <Skeleton className="h-9 w-48 rounded-lg" />
+              <Skeleton className="h-9 w-16 rounded-lg" />
+            </div>
+          </div>
+          <div className="border-t border-border pt-4 mt-4 space-y-2">
+            <Skeleton className="h-3 w-36" />
+            <Skeleton className="h-20 w-full rounded-lg" />
+          </div>
+        </div>
+      </div>
+
+      {/* Timeline Card Shimmer */}
+      <div className="bg-card rounded-xl border border-border p-3 lg:p-5">
+        <Skeleton className="h-4 w-36 mb-3 lg:mb-4" />
+        <div className="relative pl-8 space-y-6">
+          <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-border" />
+          {[1, 2, 3].map((_, i) => (
+            <div key={i} className="relative">
+              <div className="absolute -left-[31px] top-0 w-6 h-6 rounded-full bg-muted border-2 border-border" />
+              <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 flex-1">
+                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-3 w-3/4" />
+                  </div>
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};

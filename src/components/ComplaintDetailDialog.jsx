@@ -237,19 +237,19 @@ export function ComplaintDetailDialog({
         status: activeComplaint.status,
         priority: activeComplaint.assignedPriority,
         source:
-          activeComplaint?.channel?.title || activeComplaint?.channel || "-",
-        citizenName: activeComplaint.citizenInfo?.fullName || "-",
-        mobile: activeComplaint.citizenInfo?.mobile || "-",
-        districtName: activeComplaint.address?.district?.name || "-",
-        ulbName: activeComplaint.address?.subdivision || "-",
-        ward: activeComplaint.address?.villageOrWard || "-",
+          activeComplaint?.channel?.title || activeComplaint?.channel || "N/A",
+        citizenName: activeComplaint.citizenInfo?.fullName || "N/A",
+        mobile: activeComplaint.citizenInfo?.mobile || "N/A",
+        districtName: activeComplaint.address?.district?.name || "N/A",
+        ulbName: activeComplaint.address?.subdivision || "N/A",
+        ward: activeComplaint.address?.villageOrWard || "N/A",
         createdDate: activeComplaint.createdAt,
         serviceName:
-          activeComplaint.classification?.subService?.service?.title || "-",
+          activeComplaint.classification?.subService?.service?.title || "N/A",
         subserviceName:
-          activeComplaint.classification?.subService?.title || "-",
-        subject: activeComplaint.classification?.subject || "-",
-        description: activeComplaint.evidence?.details || "-",
+          activeComplaint.classification?.subService?.title || "N/A",
+        subject: activeComplaint.classification?.subject || "N/A",
+        description: activeComplaint.evidence?.details || "N/A",
         l1OfficerName: activeComplaint.l1Officer?.name || "Unassigned",
         l1Officer:
           activeComplaint.l1Officer?._id || activeComplaint.l1Officer || null,
@@ -355,7 +355,7 @@ export function ComplaintDetailDialog({
                 <p className="text-xs lg:text-sm">
                   {unifiedComplaint.subject ||
                     unifiedComplaint.classification?.subject ||
-                    "-"}
+                    "N/A"}
                 </p>
               </div>
               <div>
@@ -647,32 +647,32 @@ export function FieldVisitDetailDialog({
 
   const visit = {
     id: isApiObject ? rawVisit.visitId || rawVisit._id : rawVisit.id,
-    status: rawVisit.status || "-",
+    status: rawVisit.status || "N/A",
     priority: isApiObject
       ? rawVisit.grievance?.assignedPriority || "NORMAL"
       : rawVisit.priority || "NORMAL",
     officer: isApiObject
-      ? rawVisit.officer?.name || "-"
-      : rawVisit.officer || "-",
+      ? rawVisit.officer?.name || "N/A"
+      : rawVisit.officer || "N/A",
     officerId: isApiObject
-      ? rawVisit.officer?._id || "-"
-      : rawVisit.officerId || "-",
+      ? rawVisit.officer?._id || "N/A"
+      : rawVisit.officerId || "N/A",
     ward: isApiObject
       ? rawVisit.address?.villageOrWard ||
         rawVisit.grievance?.address?.villageOrWard ||
-        "-"
-      : rawVisit.ward || "-",
+        "N/A"
+      : rawVisit.ward || "N/A",
     district: isApiObject
       ? rawVisit.address?.district?.name ||
         rawVisit.address?.district ||
         rawVisit?.grievance?.address?.district?.name ||
         rawVisit?.grievance?.address?.district ||
-        "-"
-      : rawVisit.district || "-",
+        "N/A"
+      : rawVisit.district || "N/A",
     schedule: rawVisit.schedule
       ? (() => {
           const dateStr = rawVisit.schedule;
-          return dateStr.includes("-") || dateStr.includes("T")
+          return dateStr.includes("N/A") || dateStr.includes("T")
             ? new Date(dateStr).toLocaleDateString("en-IN", {
                 day: "2-digit",
                 month: "short",
@@ -680,29 +680,29 @@ export function FieldVisitDetailDialog({
               })
             : dateStr;
         })()
-      : "-",
+      : "N/A",
     photoUploaded: isApiObject
       ? rawVisit.grievance?.geotaggedImages?.length > 0
       : rawVisit.photoUploaded,
     service: isApiObject
-      ? rawVisit.serviceDetails?.title || "-"
-      : rawVisit.service || "-",
+      ? rawVisit.serviceDetails?.title || "N/A"
+      : rawVisit.service || "N/A",
     subservice: isApiObject
-      ? rawVisit.subServiceDetails?.title || "-"
-      : rawVisit.subservice || "-",
+      ? rawVisit.subServiceDetails?.title || "N/A"
+      : rawVisit.subservice || "N/A",
     complaintId: isApiObject
-      ? rawVisit.grievance?._id || rawVisit.grievance?.grievanceId || "-"
-      : rawVisit.complaintId || "-",
+      ? rawVisit.grievance?._id || rawVisit.grievance?.grievanceId || "N/A"
+      : rawVisit.complaintId || "N/A",
     complaint: isApiObject ? rawVisit.grievance : null,
     geoTag: isApiObject
       ? (() => {
           const coords = rawVisit.grievance?.geotaggedImages?.[0]?.coordinates;
           return coords?.latitude && coords?.longitude
             ? `${String(coords.latitude).slice(0, 6)} | ${String(coords.longitude).slice(0, 6)}`
-            : "-";
+            : "N/A";
         })()
-      : rawVisit.geoTag || "-",
-    notes: isApiObject ? rawVisit.remarks || "-" : rawVisit.notes || "-",
+      : rawVisit.geoTag || "N/A",
+    notes: isApiObject ? rawVisit.remarks || "N/A" : rawVisit.notes || "N/A",
   };
   // console.log({visit, rawVisit}, "asdf")
 
@@ -732,33 +732,33 @@ export function FieldVisitDetailDialog({
             {/* <div className="flex items-center gap-2">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span className="text-muted-foreground">Officer:</span>
-                <span className="font-medium">{visit.officer || "-"}</span>
+                <span className="font-medium">{visit.officer || "N/A"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <HardHat className="w-4 h-4 text-muted-foreground" />
                 <span className="text-muted-foreground">Officer ID:</span>
-                <OfficerId id={visit.officerId || "-"} />
+                <OfficerId id={visit.officerId || "N/A"} />
               </div> */}
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
               <span className="text-muted-foreground">
                 {t("Ward:", "वार्ड:")}
               </span>
-              <span className="font-medium">{visit.ward || "-"}</span>
+              <span className="font-medium">{visit.ward || "N/A"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Building2 className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
               <span className="text-muted-foreground">
                 {t("District:", "जिला:")}
               </span>
-              <span className="font-medium">{visit.district || "-"}</span>
+              <span className="font-medium">{visit.district || "N/A"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Calendar className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
               <span className="text-muted-foreground">
                 {t("Scheduled:", "निर्धारित:")}
               </span>
-              <span className="font-medium">{visit?.schedule || "-"}</span>
+              <span className="font-medium">{visit?.schedule || "N/A"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Camera className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
@@ -779,17 +779,17 @@ export function FieldVisitDetailDialog({
               {t("Service", "सेवा")}
             </div>
             <div className="font-medium text-xs lg:text-sm">
-              {visit.service || "-"} - {visit.subservice || "-"}
+              {visit.service || "N/A"} - {visit.subservice || "N/A"}
             </div>
           </div>
           <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
               {t("Complaint ID", "शिकायत आईडी")}
             </div>
-            {visit.complaintId && visit.complaintId !== "-" ? (
+            {visit.complaintId && visit.complaintId !== "N/A" ? (
               <ComplaintId id={visit.complaintId} complaint={visit.complaint} />
             ) : (
-              "-"
+              "N/A"
             )}
           </div>
           <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
@@ -797,14 +797,14 @@ export function FieldVisitDetailDialog({
               {t("Geo-Tag", "जियो-टैग")}
             </div>
             <div className="font-mono text-xs lg:text-sm">
-              {visit.geoTag || "-"}
+              {visit.geoTag || "N/A"}
             </div>
           </div>
           <div>
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
               {t("Visit Notes", "विजिट टिप्पणी")}
             </div>
-            <p className="text-xs lg:text-sm">{visit.notes || "-"}</p>
+            <p className="text-xs lg:text-sm">{visit.notes || "N/A"}</p>
           </div>
         </div>
       </DialogContent>

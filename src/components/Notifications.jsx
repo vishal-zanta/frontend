@@ -96,7 +96,7 @@ const  Notifications = ({ title = "Notifications" }) =>  {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryFn: ({ pageParam = 1 }) =>
-      getNotification({ page: pageParam, limit: 20 }),
+      getNotification({ page: pageParam, limit: 10 }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const { page, totalPages } = lastPage?.data?.data?.pagination ?? {};

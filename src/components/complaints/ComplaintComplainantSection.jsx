@@ -33,7 +33,7 @@ export default function ComplaintComplainantSection({
         </div>
         <div>
           <span className="text-muted-foreground block">{t("Email Address", "ईमेल पता")}</span>
-          {emailAddress !== "-" ? (
+          {emailAddress !== "N/A" ? (
             <a
               href={`mailto:${emailAddress}`}
               className="font-semibold text-blue-600 hover:underline block truncate cursor-pointer"
@@ -41,7 +41,7 @@ export default function ComplaintComplainantSection({
               {emailAddress}
             </a>
           ) : (
-            <span className="font-semibold text-foreground">-</span>
+            <span className="font-semibold text-foreground">N/A</span>
           )}
         </div>
         <div>

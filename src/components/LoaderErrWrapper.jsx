@@ -1,8 +1,9 @@
 import React from "react";
 import { ClipLoader } from "react-spinners";
 
-const LoaderErrWrapper = ({ isLoading, error, children }) => {
+const LoaderErrWrapper = ({ isLoading, error, children, customLoader }) => {
   if (isLoading) {
+    if (customLoader) return customLoader;
     return (
       <div className="flex items-center justify-center h-full py-4">
         <ClipLoader color="#0A5ADB" size={32} />
