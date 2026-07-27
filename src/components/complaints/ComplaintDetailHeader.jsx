@@ -27,7 +27,12 @@ export function getResolvedDuration(createdAt, resolvedAt, t) {
   return `${minutes}m`;
 }
 
-export function SLATimer({ createdAt, slaHours, customText = "Service SLA", resolvedAt }) {
+export function SLATimer({
+  createdAt,
+  slaHours,
+  customText = "Service SLA",
+  resolvedAt,
+}) {
   const { t } = useLanguage();
   const [timeLeft, setTimeLeft] = useState("");
   const [isExpired, setIsExpired] = useState(false);
@@ -139,8 +144,8 @@ export default function ComplaintDetailHeader({
           {serviceText} &rarr; {subServiceText}
         </p>
 
-          <>
-        {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) && (
+        <>
+          {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) && (
             <div className="flex gap-2 text-[10px] lg:text-xs text-muted-foreground mt-1 items-center flex-wrap">
               <span>
                 {t("Filed:", "दर्ज:")} {formattedDate}
@@ -150,20 +155,23 @@ export default function ComplaintDetailHeader({
                 <SLATimer
                   createdAt={c.createdAt}
                   slaHours={c.classification?.subService?.sla || c.slaHours}
-                            resolvedAt={c?.resolvedAt || null}
-
+                  resolvedAt={
+                    c.status == "RESOLVED" ? c?.resolvedAt || null : null
+                  }
                 />
                 <SLATimer
                   createdAt={c?.assignedAt || null}
                   slaHours={c.slaHours}
                   customText="Officer SLA"
-                            resolvedAt={c?.resolvedAt || null}
-
+                  resolvedAt={
+                    c.status == "RESOLVED" ? c?.resolvedAt || null : null
+                  }
                 />
               </>
             </div>
-            )}
-             {isResolved &&   <div className="mt-1">
+          )}
+          {isResolved && (
+            <div className="mt-1">
               <Badge
                 variant="outline"
                 className="text-[10px] font-medium tracking-wide flex items-center text-nowrap w-fit gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
@@ -172,10 +180,9 @@ export default function ComplaintDetailHeader({
                 {t("Resolved in:", "समाधान समय:")}{" "}
                 {getResolvedDuration(c.createdAt, c.resolvedAt, t)}
               </Badge>
-       
-          </div>}
-            
-          </>
+            </div>
+          )}
+        </>
       </div>
 
       {hasPermission(PERMISSIONS.ASSIGN_GRIEVANCE) ? (
@@ -240,30 +247,29 @@ export default function ComplaintDetailHeader({
           <div className="text-left sm:text-right">
             {t("Filed:", "दर्ज:")} {formattedDate}
           </div>
-      
 
           <div className="flex flex-wrap gap-1 justify-end">
             {/* {isResolved ? ( */}
 
-            
-              <>
+            <>
+              <SLATimer
+                createdAt={c.createdAt}
+                slaHours={c.classification?.subService?.sla || c.slaHours}
+                resolvedAt={
+                  c.status == "RESOLVED" ? c?.resolvedAt || null : null
+                }
+              />
+              {!!c.assignedAt && (
                 <SLATimer
-                  createdAt={c.createdAt}
-                  slaHours={c.classification?.subService?.sla || c.slaHours}
-                            resolvedAt={c?.resolvedAt || null}
-
+                  createdAt={c.assignedAt}
+                  slaHours={c.slaHours}
+                  customText="Officer SLA"
+                  resolvedAt={
+                    c.status == "RESOLVED" ? c?.resolvedAt || null : null
+                  }
                 />
-                {!!c.assignedAt && (
-                  <SLATimer
-                    createdAt={c.assignedAt}
-                    slaHours={c.slaHours}
-                    customText="Officer SLA"
-                            resolvedAt={c?.resolvedAt || null}
-
-                  />
-                )}
-              </>
-           
+              )}
+            </>
           </div>
         </div>
       )}

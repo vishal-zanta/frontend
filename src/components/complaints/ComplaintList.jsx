@@ -292,14 +292,22 @@ export default function ComplaintList({
                           slaHours={
                             c.classification?.subService?.sla || c.slaHours
                           }
-                          resolvedAt={c?.resolvedAt || null}
+                          resolvedAt={
+                            c.status == "RESOLVED"
+                              ? c?.resolvedAt || null
+                              : null
+                          }
                         />
                         {
                           <SLATimer
                             createdAt={c?.assignedAt || null}
                             slaHours={c.slaHours}
                             customText="Officer SLA"
-                            resolvedAt={c?.resolvedAt || null}
+                            resolvedAt={
+                              c.status == "RESOLVED"
+                                ? c?.resolvedAt || null
+                                : null
+                            }
                           />
                         }
                       </div>
