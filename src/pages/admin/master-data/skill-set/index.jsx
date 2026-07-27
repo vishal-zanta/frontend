@@ -113,7 +113,7 @@ export default function SkillSetTab() {
 
   return (
     <>
-      <div className="bg-card rounded-xl border border-border p-5">
+      <div className="bg-card rounded-xl border border-border px-5 py-3">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-foreground">Skill Sets</h3>
           <Button

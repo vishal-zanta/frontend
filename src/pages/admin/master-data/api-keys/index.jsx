@@ -187,14 +187,14 @@ export default function ApiKeysTab() {
   return (
     <>
       <div className="bg-card rounded-xl border border-border  space-y-0">
-        <div className="flex items-center justify-between py-4 px-5">
+        <div className="flex items-center justify-between px-5 py-3">
           <div>
             <h3 className="font-bold text-foreground flex items-center gap-2">
               <Key className="w-5 h-5 text-primary" /> API Keys
             </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            {/* <p className="text-xs text-muted-foreground mt-0.5">
               Manage system API keys for external integrations and authentication.
-            </p>
+            </p> */}
           </div>
           <Button
             size="sm"

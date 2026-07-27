@@ -119,8 +119,8 @@ export default function FieldVisitTable({
                 </td>
                 <td className="px-4 py-3 text-nowrap font-mono text-[10px] text-muted-foreground  text-center">
                   {(() => {
-                    const coords =
-                      fv.grievance?.geotaggedImages?.[0]?.coordinates;
+                    const coords = fv.grievance?.geotaggedImages.find(g=> g?.coordinates)?.coordinates
+                   
                     return coords?.latitude && coords?.longitude
                       ? `${String(coords.latitude).slice(0, 7)} | ${String(coords.longitude).slice(0, 7)}`
                       : "N/A";
