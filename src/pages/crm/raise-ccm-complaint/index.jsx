@@ -125,7 +125,9 @@ export default function CRMRaiseComplaint() {
 
   const handleSubmit = (data) => {
     const formData = getFormData(data, attachments);
+    console.log("JSON DATA", data);
     console.log("Final FormData:", Object.fromEntries(formData));
+
     postComplaintMutation.mutate(formData);
   };
 

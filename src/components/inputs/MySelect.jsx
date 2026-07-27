@@ -1,10 +1,12 @@
 import React from "react";
 import ReactSelect from "react-select";
 import CreatableSelect from "react-select/creatable";
+import AsyncSelect from "react-select/async";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
 import { Loader2 } from "lucide-react";
+import { MAX_LIMIT } from "@/utils/constants";
 
 const buildStyles = (hasError, disabled, colors, isMulti, customStyles) => ({
   control: (provided, state) => ({
@@ -175,10 +177,12 @@ export default function MySelect({
   isLoading = false,
   isMultiple = false,
   isCreatable = false,
+  isAsync = false,
+  asyncProps = {},
   error,
   colors,
   nonClearable = false,
-   customStyles= {}
+  customStyles = {},
 }) {
   const themeContext = useTheme();
   const _theme = themeContext?.theme; // Subscribe to ThemeContext updates
@@ -186,13 +190,46 @@ export default function MySelect({
   const isMulti = isCreatable ? true : isMultiple;
   const styles = buildStyles(!!error, disabled, colors, isMulti, customStyles);
 
+  const {
+    useApiQuery,
+    searchKey = "search",
+    labelKey = "title",
+    getOptions,
+  } = asyncProps || {};
+
+  const loadOptions = async (inputValue) => {
+    if (!useApiQuery) return [];
+    try {
+      const key = searchKey || "search";
+      const params = {
+        page: 1,
+        limit: MAX_LIMIT,
+        [key]: inputValue,
+      };
+      const res = await useApiQuery(params);
+      if (getOptions && typeof getOptions === "function") {
+        return getOptions(res?.data?.data) || [];
+      }
+      return (res?.data?.data?.docs || []).map((item) => ({
+        label: item?.[labelKey],
+        value: item?._id,
+      }));
+    } catch (err) {
+      console.error("AsyncSelect loadOptions error:", err);
+      return [];
+    }
+  };
+
   const selectOptions =
     isMulti && options.length > 0
       ? [{ label: "Select All", value: "SELECT_ALL" }, ...options]
       : options;
 
-  const toOption = (val) =>
-    selectOptions.find((o) => o.value === val) ?? { label: val, value: val };
+  const toOption = (val) => {
+    if (!val) return null;
+    if (typeof val === "object" && val.value !== undefined) return val;
+    return selectOptions.find((o) => o.value === val) ?? { label: val, value: val };
+  };
 
   const selectValue = isMulti
     ? Array.isArray(value)
@@ -274,7 +311,13 @@ export default function MySelect({
         <Loader2 className="animate-spin" />
       ) : (
         <>
-          {isCreatable ? (
+          {isAsync ? (
+            <AsyncSelect
+              {...commonProps}
+              loadOptions={loadOptions}
+              defaultOptions={options.length > 0 ? options : true}
+            />
+          ) : isCreatable ? (
             <CreatableSelect
               {...commonProps}
               isMulti
@@ -288,6 +331,12 @@ export default function MySelect({
             <ReactSelect {...commonProps} />
           )}
         </>
+      )}
+
+      {!!selectValue?.notExist && (
+        <span className="text-amber-600 dark:text-amber-400 text-xs font-medium">
+          NOTE : This option no longer exists.
+        </span>
       )}
 
       {error && (

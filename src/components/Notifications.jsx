@@ -61,7 +61,7 @@ const formatTime = (iso) => {
 };
 
 // ─── Component ───────────────────────────────────────────────────────────────
-const  Notifications = ({ title = "Notifications" }) =>  {
+const Notifications = ({ title = "Notifications" }) => {
   const { profiledata } = useAuth();
   const navigate = useNavigate();
   const isOfficer = profiledata?.isOfficer;
@@ -106,7 +106,7 @@ const  Notifications = ({ title = "Notifications" }) =>  {
     queryKey: [QUERY_KEYS.NOTIFICATIONS],
     refetchInterval: 5 * 1000,
     refetchOnMount: false,
-  refetchOnWindowFocus: false,
+    refetchOnWindowFocus: false,
   });
 
   const notificationList =
@@ -164,24 +164,39 @@ const  Notifications = ({ title = "Notifications" }) =>  {
     showNotifs,
   ]);
 
+  const navtoFieldVisit = (visitId) => {
+    if (isOfficer) {
+      navigate(`/officer/field-visits?visit=${visitId}`, {
+        state: { visit: visitId },
+        replace: true,
+      });
+    }
+  };
+
+  const navToComplaints = (compId) => {
+    if (isOfficer) {
+      navigate(`/officer/complaints?complaint=${compId}`, {
+        state: { grievanceId: compId },
+        replace: true,
+      });
+    } else {
+      navigate(`/crm/track-complaint?complaint=${compId}`, {
+        state: { grievanceId: compId },
+        replace: true,
+      });
+    }
+  };
+
   const handleClickNoti = (e, n) => {
     e.stopPropagation();
     if (!n.isRead) {
       readSingleMutation.mutate(n._id);
     }
-    if (n.metadata?.grievanceRef) {
+    if (n.metadata?.visitId && isOfficer) {
+      navtoFieldVisit(n.metadata?.visitId);
+    } else if (n.metadata?.grievanceRef) {
       const compId = n.metadata?.grievanceRef;
-      if (isOfficer) {
-        navigate(`/officer/complaints?complaint=${compId}`, {
-          state: { grievanceId: compId },
-          replace: true,
-        });
-      } else {
-        navigate(`/crm/track-complaint?complaint=${compId}`, {
-          state: { grievanceId: compId },
-          replace: true,
-        });
-      }
+      navToComplaints(compId);
     }
   };
 
@@ -275,23 +290,32 @@ const  Notifications = ({ title = "Notifications" }) =>  {
                       </p>
 
                       {/* Meta row */}
-                      <div className="flex items-center justify-between gap-2 mt-1.5 flex-wrap">
-                        {n.metadata?.grievanceRef && (
-                          <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground border border-border">
-                            #{n.metadata.grievanceRef}
-                          </span>
-                        )}
+                      <div className="flex items-end justify-between gap-2 mt-1.5 ">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {n.metadata?.visitId && (
+                            <span
+                              // onClick={(e) => {}}
+                              className="text-[10px]  font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground border border-border"
+                            >
+                              {n.metadata.visitId}
+                            </span>
+                          )}
+                          {n.metadata?.grievanceRef && (
+                            <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground border border-border">
+                              {n.metadata.grievanceRef}
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2">
-                           {!n.isRead && (
-                          <span
-                            className={`ml-auto w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`}
-                          />
-                        )}
+                          {!n.isRead && (
+                            <span
+                              className={`ml-auto w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`}
+                            />
+                          )}
 
-                        <span className="text-[10px] text-muted-foreground">
-                          {formatTime(n.createdAt)}
-                        </span>
-                       
+                          <span className="text-[10px] text-muted-foreground text-nowrap">
+                            {formatTime(n.createdAt)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -318,5 +342,5 @@ const  Notifications = ({ title = "Notifications" }) =>  {
       )}
     </div>
   );
-}
-export default  React.memo(Notifications)
+};
+export default React.memo(Notifications);

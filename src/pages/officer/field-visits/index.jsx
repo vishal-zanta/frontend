@@ -23,10 +23,14 @@ import { getSuccessToast, getErrorToast } from "@/utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { putFieldVisit } from "@/api/complaint.api";
 import { useLanguage } from "@/context/LanguageContext";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 export default function FieldVisits() {
   const { t } = useLanguage();
-  const [search, setSearch] = useState("");
+  const { state } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const visitInput = searchParams.get("visit") ?? "";
+  const [search, setSearch] = useState(visitInput);
   const [statusFilter, setStatusFilter] = useState(null);
   const [editVisit, setEditVisit] = useState(null);
   const [viewVisit, setViewVisit] = useState(null);
@@ -50,7 +54,12 @@ export default function FieldVisits() {
   const updateMutation = useMutation({
     mutationFn: putFieldVisit,
     onSuccess: () => {
-      getSuccessToast(t("Field visit updated successfully", "फील्ड विजिट सफलतापूर्वक अपडेट किया गया"));
+      getSuccessToast(
+        t(
+          "Field visit updated successfully",
+          "फील्ड विजिट सफलतापूर्वक अपडेट किया गया",
+        ),
+      );
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.FIELD_VISITS] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.VISIT_STATS] });
       setEditVisit(null);
@@ -67,11 +76,13 @@ export default function FieldVisits() {
     <PortalLayout role="officer">
       <div className="p-6 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{t("Field Visits", "फील्ड विजिट")}</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            {t("Field Visits", "फील्ड विजिट")}
+          </h1>
           <p className="text-sm text-muted-foreground">
             {t(
               "Track all scheduled, in-progress, and completed field visits with geo-tagged photo evidence.",
-              "भू-टैग की गई फोटो साक्ष्य के साथ सभी निर्धारित, प्रगति-पर और पूर्ण फील्ड विजिट को ट्रैक करें।"
+              "भू-टैग की गई फोटो साक्ष्य के साथ सभी निर्धारित, प्रगति-पर और पूर्ण फील्ड विजिट को ट्रैक करें।",
             )}
           </p>
         </div>
@@ -82,11 +93,18 @@ export default function FieldVisits() {
           <SearchDebounced
             handleDebouncedChange={(val) => {
               setSearch(val);
+              setSearchParams({ ...(val ?  {visit: val}: {}) }, { replace: true });
+
               pageProps.setPage(1);
             }}
+            initialValue={visitInput}
             delay={500}
             className="flex-1"
-            placeholder={t("Search by visit ID ...", "विजिट आईडी द्वारा खोजें ...")}
+            placeholder={t(
+              "Search by visit ID ...",
+              "विजिट आईडी द्वारा खोजें ...",
+            )}
+            isClearable
           />
 
           <SelectDebounced
@@ -137,11 +155,12 @@ export default function FieldVisits() {
             <RhfWrapper
               initialValues={{
                 status: editVisit.status || "PENDING",
-                schedule: (editVisit.schedule || editVisit.scheduledDate)
-                  ? new Date(editVisit.schedule || editVisit.scheduledDate)
-                      .toISOString()
-                      .split("T")[0]
-                  : "",
+                schedule:
+                  editVisit.schedule || editVisit.scheduledDate
+                    ? new Date(editVisit.schedule || editVisit.scheduledDate)
+                        .toISOString()
+                        .split("T")[0]
+                    : "",
                 remarks: editVisit.remarks || "",
               }}
               isValidation

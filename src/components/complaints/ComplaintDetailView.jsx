@@ -183,7 +183,7 @@ export default function ComplaintDetailView({
       reader.readAsDataURL(file);
     });
   };
-console.log({MAX_FILE_SIZE, maxMbAllowed})
+// console.log({MAX_FILE_SIZE, maxMbAllowed})
 
   const handleUpload = () => {
     if (selectedFiles.length === 0) return;

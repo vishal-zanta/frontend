@@ -29,9 +29,10 @@ export default function ComplaintList({
 }) {
   const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const complaintId = searchParams.get("complaint") ?? "";
   const { state } = useLocation();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(complaintId);
+  // console.log({complaintId, search})
   const isChangedOnce = useRef(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState("");
@@ -110,11 +111,11 @@ export default function ComplaintList({
       }
     }
   }, [complaints, onStatsChange]);
-  useEffect(() => {
-    if (!!searchParams.get("complaint")) {
-      setSearch(searchParams.get("complaint"));
-    }
-  }, [searchParams.get("complaint")]);
+  // useEffect(() => {
+  //   if (!!searchParams.get("complaint")) {
+  //     setSearch(searchParams.get("complaint"));
+  //   }
+  // }, [searchParams.get("complaint")]);
 
   return (
     <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
@@ -241,14 +242,15 @@ export default function ComplaintList({
           <SearchDebounced
             placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
             handleDebouncedChange={(val) => {
-              console.log({ val });
-              if (val !== searchParams.get("complaint")) {
-                setSearchParams({}, { replace: true });
-              }
+              // console.log({ val });
+              // if (val !== searchParams.get("complaint")) {
+              setSearchParams({ ...(!!val ?  {complaint: val}: {}) }, { replace: true });
+              // }
               setSearch(val);
             }}
-            initialValue={searchParams.get("complaint") || ""}
+            initialValue={complaintId}
             isClearable={true}
+            delay={500}
           />
         </div>
       </div>
@@ -296,9 +298,7 @@ export default function ComplaintList({
                       <div className="flex items-center gap-1 flex-wrap">
                         <SLATimer
                           createdAt={c.createdAt}
-                          slaHours={
-                            c.classification?.subService?.sla || null
-                          }
+                          slaHours={c.classification?.subService?.sla || null}
                           resolvedAt={
                             c.status == "RESOLVED"
                               ? c?.resolvedAt || null

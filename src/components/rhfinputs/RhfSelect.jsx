@@ -2,10 +2,12 @@ import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import CreatableSelect from "react-select/creatable";
+import AsyncSelect from "react-select/async";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
 import { Loader, Loader2 } from "lucide-react";
+import { MAX_LIMIT } from "@/utils/constants";
 
 const buildStyles = (hasError, disabled, colors, isMulti) => ({
   control: (provided, state) => ({
@@ -175,6 +177,8 @@ export default function RhfSelect({
   disabled = false,
   isMultiple = false,
   isCreatable = false,
+  isAsync = false,
+  asyncProps = {},
   isLoading = false,
   colors,
 }) {
@@ -184,6 +188,36 @@ export default function RhfSelect({
 
   // isCreatable always implies multiple
   const isMulti = !!isMultiple;
+
+  const {
+    useApiQuery,
+    searchKey = "search",
+    labelKey = "title",
+    getOptions,
+  } = asyncProps || {};
+
+  const loadOptions = async (inputValue) => {
+    if (!useApiQuery) return [];
+    try {
+      const key = searchKey || "search";
+      const params = {
+        page: 1,
+        limit: MAX_LIMIT,
+        [key]: inputValue,
+      };
+      const res = await useApiQuery(params);
+      if (getOptions && typeof getOptions === "function") {
+        return getOptions(res?.data?.data) || [];
+      }
+      return (res?.data?.data?.docs || []).map((item) => ({
+        label: item?.[labelKey],
+        value: item?._id,
+      }));
+    } catch (err) {
+      console.error("AsyncSelect loadOptions error:", err);
+      return [];
+    }
+  };
 
   return (
     <Controller
@@ -197,8 +231,13 @@ export default function RhfSelect({
             ? [{ label: "Select All", value: "SELECT_ALL" }, ...options]
             : options;
 
-        const toOption = (val) =>
-          options.find((o) => o.value === val) ?? { label: val, value: val };
+        const toOption = (val) => {
+          if (!val) return null;
+          if (typeof val === "object" && val.value !== undefined) return val;
+          return (
+            options.find((o) => o.value === val) ?? { label: val, value: val }
+          );
+        };
 
         const selectValue = isMulti
           ? Array.isArray(field.value)
@@ -207,7 +246,6 @@ export default function RhfSelect({
           : field.value
             ? toOption(field.value)
             : null;
-            // console.log({selectValue, field: field.value, options, name})
 
         const handleChange = (selected) => {
           if (isMulti) {
@@ -289,7 +327,13 @@ export default function RhfSelect({
               <Loader2 className="animate-spin" />
             ) : (
               <>
-                {isCreatable ? (
+                {isAsync ? (
+                  <AsyncSelect
+                    {...commonProps}
+                    loadOptions={loadOptions}
+                    defaultOptions={options.length > 0 ? options : true}
+                  />
+                ) : isCreatable ? (
                   <CreatableSelect
                     {...commonProps}
                     isMulti={isMultiple}
@@ -316,7 +360,6 @@ export default function RhfSelect({
                 {error.message}
               </span>
             )}
-            
           </div>
         );
       }}

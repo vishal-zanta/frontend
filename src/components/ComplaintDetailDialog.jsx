@@ -400,12 +400,16 @@ export function ComplaintDetailDialog({
                   )}
                 </div>
               )}
-              {/* <Link
-              to="#"
-              className="flex items-center gap-1 text-sm text-primary hover:underline"
-            >
-              View Full Timeline <ExternalLink className="w-3 h-3" />
-            </Link> */}
+              <Link
+                to={
+                  (isOfficer ? "/officer/complaints" : "/crm/track-complaint") +
+                  "?complaint=" +
+                  displayId
+                }
+                className="flex items-center gap-1 text-sm text-primary hover:underline"
+              >
+                View Full Timeline <ExternalLink className="w-3 h-3" />
+              </Link>
             </div>
           ) : (
             <p className="text-muted-foreground text-xs lg:text-sm">
