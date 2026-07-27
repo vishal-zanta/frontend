@@ -61,7 +61,7 @@ export default function ComplaintActionSection({
       await updateStatusMutation.mutateAsync({
         id: remark.id,
         status: remark.status,
-        remark: remark.value,
+        remarks: remark.value,
       });
       setRemark(initialRemark);
     }

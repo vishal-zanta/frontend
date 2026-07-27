@@ -27,7 +27,7 @@ const ServiceForm = ({
           notExist: true
         },
       ];
-      console.log({initialValues, departmentOptions, updatedDeptOptions})
+      // console.log({initialValues, departmentOptions, updatedDeptOptions})
   return (
     <RhfWrapper
       initialValues={initialValues}
