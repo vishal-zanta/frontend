@@ -114,15 +114,15 @@ export const STATUS_ACTIONS = [
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     disabled: ["RESOLVED", "CLOSED"],
   },
-  {
-    label: "Escalate",
-    value: "ESCALATED",
-    icon: AlertCircle,
-    color: "bg-red-600 hover:bg-red-700",
-    badgeLabel: "Escalated",
-    badgeClass: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
-    disabled: ["RESOLVED", "CLOSED"],
-  },
+  // {
+  //   label: "Escalate",
+  //   value: "ESCALATED",
+  //   icon: AlertCircle,
+  //   color: "bg-red-600 hover:bg-red-700",
+  //   badgeLabel: "Escalated",
+  //   badgeClass: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+  //   disabled: ["RESOLVED", "CLOSED"],
+  // },
 ];
 
 export const PRIORITY_ACTIONS = [

@@ -29,10 +29,10 @@ export default function ComplaintList({
 }) {
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
-  
-  const {state} = useLocation();
+
+  const { state } = useLocation();
   const [search, setSearch] = useState("");
-const isChangedOnce = useRef(false);
+  const isChangedOnce = useRef(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("");
@@ -110,11 +110,11 @@ const isChangedOnce = useRef(false);
       }
     }
   }, [complaints, onStatsChange]);
-  useEffect(()=> {
-    if(!!searchParams.get("complaint")){
+  useEffect(() => {
+    if (!!searchParams.get("complaint")) {
       setSearch(searchParams.get("complaint"));
     }
-  },[searchParams.get("complaint")])
+  }, [searchParams.get("complaint")]);
 
   return (
     <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
@@ -131,7 +131,9 @@ const isChangedOnce = useRef(false);
                 className="relative h-8 w-8 p-0 cursor-pointer"
               >
                 <Filter className="w-4 h-4" />
-                {(selectedStatus || selectedFeedback !== "" || selectedPriority) && (
+                {(selectedStatus ||
+                  selectedFeedback !== "" ||
+                  selectedPriority) && (
                   <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
                 )}
               </Button>
@@ -215,7 +217,9 @@ const isChangedOnce = useRef(false);
                   })}
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
-              {(selectedStatus || selectedFeedback !== "" || selectedPriority) && (
+              {(selectedStatus ||
+                selectedFeedback !== "" ||
+                selectedPriority) && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -238,7 +242,6 @@ const isChangedOnce = useRef(false);
             placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
             handleDebouncedChange={(val) => setSearch(val)}
             initialValue={searchParams.get("complaint") || ""}
-
           />
         </div>
       </div>
@@ -246,7 +249,7 @@ const isChangedOnce = useRef(false);
       <div
         style={{
           maxHeight: window.innerWidth < 768 ? "600px" : "calc(100vh - 385px)",
-          minHeight:"380px !important"
+          minHeight: "380px !important",
         }}
         className="flex-1 overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
       >
@@ -286,15 +289,19 @@ const isChangedOnce = useRef(false);
                       <div className="flex items-center gap-1 flex-wrap">
                         <SLATimer
                           createdAt={c.createdAt}
-                          slaHours={c.classification?.subService?.sla || c.slaHours}
+                          slaHours={
+                            c.classification?.subService?.sla || c.slaHours
+                          }
+                          resolvedAt={c?.resolvedAt || null}
                         />
-                        { (
+                        {
                           <SLATimer
                             createdAt={c?.assignedAt || null}
                             slaHours={c.slaHours}
                             customText="Officer SLA"
+                            resolvedAt={c?.resolvedAt || null}
                           />
-                        )}
+                        }
                       </div>
                     </div>
                     <div className="text-sm text-foreground truncate">

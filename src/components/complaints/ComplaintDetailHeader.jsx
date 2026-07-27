@@ -27,7 +27,7 @@ export function getResolvedDuration(createdAt, resolvedAt, t) {
   return `${minutes}m`;
 }
 
-export function SLATimer({ createdAt, slaHours, customText = "Service SLA" }) {
+export function SLATimer({ createdAt, slaHours, customText = "Service SLA", resolvedAt }) {
   const { t } = useLanguage();
   const [timeLeft, setTimeLeft] = useState("");
   const [isExpired, setIsExpired] = useState(false);
@@ -36,13 +36,19 @@ export function SLATimer({ createdAt, slaHours, customText = "Service SLA" }) {
   useEffect(() => {
     if (!createdAt) return;
 
+    const resolvedTime = resolvedAt ? new Date(resolvedAt).getTime() : NaN;
+    const hasValidResolvedAt = !isNaN(resolvedTime) && resolvedTime > 0;
+
     const calculate = () => {
       const createdAtTime = new Date(createdAt).getTime();
+      if (isNaN(createdAtTime)) return;
+
       const slaHrs = Number(slaHours || 24);
       const slaMs = slaHrs * 60 * 60 * 1000;
       const deadline = createdAtTime + slaMs;
-      const now = Date.now();
-      const diff = deadline - now;
+
+      const comparisonTime = hasValidResolvedAt ? resolvedTime : Date.now();
+      const diff = deadline - comparisonTime;
 
       if (diff <= 0) {
         setIsExpired(true);
@@ -52,7 +58,7 @@ export function SLATimer({ createdAt, slaHours, customText = "Service SLA" }) {
       }
 
       setIsExpired(false);
-      setIsUrgent(diff < 4 * 60 * 60 * 1000); // Urgent if less than 4 hours left
+      setIsUrgent(!hasValidResolvedAt && diff < 4 * 60 * 60 * 1000);
 
       const totalMinutes = Math.floor(diff / (1000 * 60));
       const hours = Math.floor(totalMinutes / 60);
@@ -62,10 +68,16 @@ export function SLATimer({ createdAt, slaHours, customText = "Service SLA" }) {
     };
 
     calculate();
+
+    if (hasValidResolvedAt) {
+      // Fixed time based on resolvedAt; no recurring interval needed
+      return;
+    }
+
     const interval = setInterval(calculate, 60000); // update every minute
 
     return () => clearInterval(interval);
-  }, [createdAt, slaHours, t]);
+  }, [createdAt, slaHours, resolvedAt, t]);
 
   if (!createdAt) return null;
 
@@ -138,11 +150,15 @@ export default function ComplaintDetailHeader({
                 <SLATimer
                   createdAt={c.createdAt}
                   slaHours={c.classification?.subService?.sla || c.slaHours}
+                            resolvedAt={c?.resolvedAt || null}
+
                 />
                 <SLATimer
                   createdAt={c?.assignedAt || null}
                   slaHours={c.slaHours}
                   customText="Officer SLA"
+                            resolvedAt={c?.resolvedAt || null}
+
                 />
               </>
             </div>
@@ -234,12 +250,16 @@ export default function ComplaintDetailHeader({
                 <SLATimer
                   createdAt={c.createdAt}
                   slaHours={c.classification?.subService?.sla || c.slaHours}
+                            resolvedAt={c?.resolvedAt || null}
+
                 />
                 {!!c.assignedAt && (
                   <SLATimer
                     createdAt={c.assignedAt}
                     slaHours={c.slaHours}
                     customText="Officer SLA"
+                            resolvedAt={c?.resolvedAt || null}
+
                   />
                 )}
               </>

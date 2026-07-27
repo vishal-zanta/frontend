@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { MapPin, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
@@ -56,7 +62,12 @@ const SearchComplaints = () => {
   const complaints = useMemo(() => {
     return (
       data?.pages?.flatMap(
-        (page) => page?.data?.docs || page?.data?.data?.docs || page?.data || page?.docs || [],
+        (page) =>
+          page?.data?.docs ||
+          page?.data?.data?.docs ||
+          page?.data ||
+          page?.docs ||
+          [],
       ) || []
     );
   }, [data]);
@@ -96,11 +107,13 @@ const SearchComplaints = () => {
     setSearch("");
     if (isOfficer) {
       navigate(`/officer/complaints?complaint=${complaint.grievanceId}`, {
-        state: { grievanceId: complaint.grievanceId }, replace: true,
+        state: { grievanceId: complaint.grievanceId },
+        replace: true,
       });
     } else {
       navigate(`/crm/track-complaint?complaint=${complaint.grievanceId}`, {
-        state: { grievanceId: complaint.grievanceId }, replace: true,
+        state: { grievanceId: complaint.grievanceId },
+        replace: true,
       });
     }
   };
@@ -154,12 +167,14 @@ const SearchComplaints = () => {
                           slaHours={
                             c.classification?.subService?.sla || c.slaHours
                           }
+                          resolvedAt={c?.resolvedAt || null}
                         />
                         {!!c.assignedAt && (
                           <SLATimer
                             createdAt={c.assignedAt}
                             slaHours={c.slaHours}
                             customText="Officer SLA"
+                            resolvedAt={c?.resolvedAt || null}
                           />
                         )}
                       </div>
