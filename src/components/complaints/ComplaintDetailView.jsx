@@ -152,11 +152,13 @@ export default function ComplaintDetailView({
     [
       "cce-officer-list",
       `subServices_${data?.data?.classification?.subService?._id}`,
+      `subdivisions_${data?.data?.address?.subdivision}`
     ],
     {
       page: 1,
       limit: MAX_LIMIT,
       subServices: data?.data?.classification?.subService?._id,
+      wards : data?.data?.address?.subdivision
     },
     isCCE && !!data?.data?.classification?.subService?._id,
   );

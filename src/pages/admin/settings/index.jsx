@@ -9,7 +9,7 @@ const index = () => {
       <div className="p-6 space-y-6">
         <SectionTitle
           title={"Admin Settings"}
-          subtitle={"Manage file size upload"}
+          subtitle={"Manage admin settings"}
         />
 
         <FileSizeSections/>

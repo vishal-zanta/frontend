@@ -13,6 +13,9 @@ import {
 export const ADMIN_ROLES = ["Admin"];
 export const CCE_ROLES = ["Call Centre Executive", "Call Centre Supervisor"];
 
+// export const ADMIN_LEVEL = ["Admin"];
+// export const CCE_LEVEL = ["CCE", "Supervisor"];
+
 export const USER_ROLES_EXECULDED = [...ADMIN_ROLES, ...CCE_ROLES];
 
 export const LANGUAGES = [

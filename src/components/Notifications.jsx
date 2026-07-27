@@ -104,7 +104,7 @@ const  Notifications = ({ title = "Notifications" }) =>  {
       return undefined;
     },
     queryKey: [QUERY_KEYS.NOTIFICATIONS],
-    refetchInterval: 60 * 1000,
+    refetchInterval: 5 * 1000,
     refetchOnMount: false,
   refetchOnWindowFocus: false,
   });
@@ -270,7 +270,7 @@ const  Notifications = ({ title = "Notifications" }) =>  {
                       <p className="text-sm font-medium text-foreground leading-snug">
                         {n.title}
                       </p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug line-clamp-2">
+                      <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug ">
                         {n.message}
                       </p>
 
