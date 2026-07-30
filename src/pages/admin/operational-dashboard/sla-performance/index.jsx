@@ -28,6 +28,7 @@ export default function SlaPerformanceTab() {
           value="1,953"
           color="red"
         />
+       
         <StatCard
           icon={TrendingUp}
           label="Compliance Rate"

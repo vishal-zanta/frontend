@@ -5,7 +5,7 @@ import { BarChartCard } from "@/components/Charts";
 export default function AgentPerformanceChart({ data, xKey }) {
   return (
     <ChartCard
-      title="Agent Performance Comparison"
+      title="Top Agent Performances"
       subtitle="Calls handled by agent"
     >
       <BarChartCard

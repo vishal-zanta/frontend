@@ -1,5 +1,6 @@
 import React from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import clsx from "clsx";
 
 export default function StatCard({
   icon: Icon,
@@ -9,40 +10,80 @@ export default function StatCard({
   trend,
   color = "blue",
   trendValue,
+  onClick,
+  isClicked = false
 }) {
   const colorMap = {
     blue: {
-      bg: "bg-blue-500/10",
+      bg: isClicked ? "bg-blue-500/20" : "bg-blue-500/10",
       text: "text-blue-600",
-      ring: "ring-blue-500/20",
+      ring: isClicked ? "ring-blue-500/40" : "ring-blue-500/20",
+      card: isClicked
+        ? "bg-blue-50/60 dark:bg-blue-950/30 border-blue-500 ring-2 ring-blue-500/20 shadow-md"
+        : "bg-card border-border hover:shadow-lg",
     },
     green: {
-      bg: "bg-emerald-500/10",
+      bg: isClicked ? "bg-emerald-500/20" : "bg-emerald-500/10",
       text: "text-emerald-600",
-      ring: "ring-emerald-500/20",
+      ring: isClicked ? "ring-emerald-500/40" : "ring-emerald-500/20",
+      card: isClicked
+        ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-500 ring-2 ring-emerald-500/20 shadow-md"
+        : "bg-card border-border hover:shadow-lg",
     },
     emerald: {
-      bg: "bg-emerald-500/10",
+      bg: isClicked ? "bg-emerald-500/20" : "bg-emerald-500/10",
       text: "text-emerald-600",
-      ring: "ring-emerald-500/20",
+      ring: isClicked ? "ring-emerald-500/40" : "ring-emerald-500/20",
+      card: isClicked
+        ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-500 ring-2 ring-emerald-500/20 shadow-md"
+        : "bg-card border-border hover:shadow-lg",
     },
     amber: {
-      bg: "bg-amber-500/10",
+      bg: isClicked ? "bg-amber-500/20" : "bg-amber-500/10",
       text: "text-amber-600",
-      ring: "ring-amber-500/20",
+      ring: isClicked ? "ring-amber-500/40" : "ring-amber-500/20",
+      card: isClicked
+        ? "bg-amber-50/60 dark:bg-amber-950/30 border-amber-500 ring-2 ring-amber-500/20 shadow-md"
+        : "bg-card border-border hover:shadow-lg",
     },
-    red: { bg: "bg-red-500/10", text: "text-red-600", ring: "ring-red-500/20" },
+    red: {
+      bg: isClicked ? "bg-red-500/20" : "bg-red-500/10",
+      text: "text-red-600",
+      ring: isClicked ? "ring-red-500/40" : "ring-red-500/20",
+      card: isClicked
+        ? "bg-red-50/60 dark:bg-red-950/30 border-red-500 ring-2 ring-red-500/20 shadow-md"
+        : "bg-card border-border hover:shadow-lg",
+    },
     purple: {
-      bg: "bg-purple-500/10",
+      bg: isClicked ? "bg-purple-500/20" : "bg-purple-500/10",
       text: "text-purple-600",
-      ring: "ring-purple-500/20",
+      ring: isClicked ? "ring-purple-500/40" : "ring-purple-500/20",
+      card: isClicked
+        ? "bg-purple-50/60 dark:bg-purple-950/30 border-purple-500 ring-2 ring-purple-500/20 shadow-md"
+        : "bg-card border-border hover:shadow-lg",
     },
-    sky: { bg: "bg-sky-500/10", text: "text-sky-600", ring: "ring-sky-500/20" },
+    sky: {
+      bg: isClicked ? "bg-sky-500/20" : "bg-sky-500/10",
+      text: "text-sky-600",
+      ring: isClicked ? "ring-sky-500/40" : "ring-sky-500/20",
+      card: isClicked
+        ? "bg-sky-50/60 dark:bg-sky-950/30 border-sky-500 ring-2 ring-sky-500/20 shadow-md"
+        : "bg-card border-border hover:shadow-lg",
+    },
   };
   const c = colorMap[color] || colorMap.blue;
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow relative flex flex-col items-center">
+    <div
+      onClick={(e) => {
+        onClick && onClick(e);
+      }}
+      className={clsx(
+        "rounded-xl border p-4 transition-all relative flex flex-col items-center",
+        c.card,
+        onClick && "cursor-pointer"
+      )}
+    >
       {Icon && (
         <div
           className={`w-9 h-9 rounded-lg ${c.bg} ${c.text} flex items-center justify-center ring-2 ${c.ring} mb-2`}
@@ -56,8 +97,8 @@ export default function StatCard({
             trend === "up"
               ? "text-emerald-600"
               : trend === "down"
-              ? "text-red-600"
-              : "text-muted-foreground"
+                ? "text-red-600"
+                : "text-muted-foreground"
           }`}
         >
           {trend === "up" ? (

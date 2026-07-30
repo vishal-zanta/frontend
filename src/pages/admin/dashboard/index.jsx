@@ -49,7 +49,7 @@ export default function AdminDashboard() {
 
         {/* StatsBoxes Summary Cards */}
         <LoaderErrWrapper isLoading={isLoading} error={error}>
-          <StatsBoxes metrics={dashboardData?.metrics} />
+          <StatsBoxes metrics={dashboardData?.metrics}  />
 
         {/* Volume & Category Charts */}
         <VolumeAndCategorySection
