@@ -1,14 +1,19 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, Eye, MoreVertical } from "lucide-react";
+import { Edit, Trash2, Eye, MoreVertical, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { apiPermissionOptions, CCE_ROLES, PERMISSIONS, ADMIN_ROLES } from "@/utils/constants";
+import {
+  apiPermissionOptions,
+  CCE_ROLES,
+  PERMISSIONS,
+  ADMIN_ROLES,
+} from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 
 export default function UserManageTable({
@@ -24,7 +29,9 @@ export default function UserManageTable({
     <table className="w-full text-sm">
       <thead className="bg-muted/50">
         <tr className="text-left text-xs text-muted-foreground">
-          <th className="px-4 py-3 font-medium bg-[#F4F7FA] dark:bg-[#172033] sticky left-0">User</th>
+          <th className="px-4 py-3 font-medium bg-[#F4F7FA] dark:bg-[#172033] sticky left-0">
+            User
+          </th>
           <th className="px-4 py-3 font-medium">Role</th>
           <th className="px-4 py-3 font-medium">District</th>
           <th className="px-4 py-3 font-medium min-w-[200px]">Skills</th>
@@ -32,7 +39,9 @@ export default function UserManageTable({
           {/* <th className="px-4 py-3 font-medium min-w-[280px]">Permissions</th> */}
           <th className="px-4 py-3 font-medium">Last Login</th>
           <th className="px-4 py-3 font-medium">Status</th>
-          <th className="px-4 py-3 font-medium text-center bg-[#F4F7FA] dark:bg-[#172033] sticky right-0">Actions</th>
+          <th className="px-4 py-3 font-medium text-center bg-[#F4F7FA] dark:bg-[#172033] sticky right-0">
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border">
@@ -49,9 +58,16 @@ export default function UserManageTable({
                 </div>
                 <div>
                   <div className="font-medium">{u.name}</div>
-                {!CCE_ROLES.includes(u.role) &&  <div className="text-xs text-muted-foreground">{u.email}</div>}
-                {CCE_ROLES.includes(u.role) &&   <div className="text-xs text-muted-foreground">{u?.loginId || u?.email}</div>}
-
+                  {!CCE_ROLES.includes(u.role) && (
+                    <div className="text-xs text-muted-foreground">
+                      {u.email}
+                    </div>
+                  )}
+                  {CCE_ROLES.includes(u.role) && (
+                    <div className="text-xs text-muted-foreground">
+                      {u?.loginId || u?.email}
+                    </div>
+                  )}
                 </div>
               </div>
             </td>
@@ -66,7 +82,11 @@ export default function UserManageTable({
             <td className="px-4 py-3 min-w-[200px]">
               <div className="flex flex-wrap gap-1 max-w-[300px] max-h-20 overflow-y-auto">
                 {(u.skills || []).map((sk) => (
-                  <Badge key={sk._id || sk} variant="secondary" className="text-[10px] bg-muted text-foreground text-nowrap">
+                  <Badge
+                    key={sk._id || sk}
+                    variant="secondary"
+                    className="text-[10px] bg-muted text-foreground text-nowrap"
+                  >
                     {sk.name || sk}
                   </Badge>
                 ))}
@@ -76,7 +96,11 @@ export default function UserManageTable({
             <td className="px-4 py-3 min-w-[150px]">
               <div className="flex flex-wrap gap-1 max-w-[200px] max-h-20 overflow-y-auto">
                 {(u.preferredLanguages || []).map((lang) => (
-                  <Badge key={lang} variant="outline" className="text-[10px] text-nowrap">
+                  <Badge
+                    key={lang}
+                    variant="outline"
+                    className="text-[10px] text-nowrap"
+                  >
                     {lang}
                   </Badge>
                 ))}
@@ -150,32 +174,43 @@ export default function UserManageTable({
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
-              {!ADMIN_ROLES.includes(u.role)  &&  <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDelete && handleDelete(u)}
-                  title="Delete User"
-                >
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                </Button>}
+                {
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDelete && handleDelete(u)}
+                    title="Delete User"
+                    disabled={ADMIN_ROLES.includes(u.role)}
+                  >
+                    <Trash2 className="w-4 h-4 text-red-500" />
+                  </Button>
+                }
                 {hasPermission(PERMISSIONS.LOGOUT_USERS) && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() =>
-                          handleLogoutClick && handleLogoutClick(u)
-                        }
-                        className="text-red-600 focus:text-red-700 cursor-pointer"
-                      >
-                        Logout
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  // <DropdownMenu>
+                  //   <DropdownMenuTrigger asChild>
+                  //     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  //       <MoreVertical className="w-4 h-4" />
+                  //     </Button>
+                  //   </DropdownMenuTrigger>
+                  //   <DropdownMenuContent align="end">
+                  //     <DropdownMenuItem
+                  //        onClick={() =>
+                  //         handleLogoutClick && handleLogoutClick(u)
+                  //       }
+                  //       className="text-red-600 focus:text-red-700 cursor-pointer"
+                  //     >
+                  //       Logout
+                  //     </DropdownMenuItem>
+                  //   </DropdownMenuContent>
+                  // </DropdownMenu>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleLogoutClick && handleLogoutClick(u)}
+                    title="Logout"
+                  >
+                    <LogOut className="w-4 h-4 text-red-500" />
+                  </Button>
                 )}
               </div>
             </td>

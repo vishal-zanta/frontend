@@ -161,3 +161,6 @@ body.high-contrast {
 th{
   text-wrap: nowrap;
 }
+input[type="date"]{
+  display: block !important;
+}

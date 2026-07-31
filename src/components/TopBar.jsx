@@ -27,6 +27,7 @@ import { useTheme } from "@/context/ThemeContext";
 import SearchComplaints from "@/components/SearchComplaints";
 import { LangSelectorSmall } from "@/components/LangSelector";
 import Notifications from "@/components/Notifications";
+import clsx from "clsx";
 
 const STAFF_NOTIFICATIONS = [
   {
@@ -203,7 +204,7 @@ export default function TopBar({
           <div className="text-[11px] text-muted-foreground font-medium hidden sm:block">
             {portalLabel}
           </div>
-          <div className="text-sm font-bold text-foreground -mt-0.5 hidden sm:block lg:hidden xl:block">
+          <div className={clsx("text-sm font-bold text-foreground  hidden sm:block lg:hidden xl:block", t("-mt-0.5", "mt-0"))}>
             {t(PORTAL_META.name, "बिहार ई-शिकायत पोर्टल")}
           </div>
         </div>

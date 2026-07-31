@@ -198,6 +198,7 @@ const Notifications = ({ title = "Notifications" }) => {
       const compId = n.metadata?.grievanceRef;
       navToComplaints(compId);
     }
+    setShowNotifs(false);
   };
 
   return (

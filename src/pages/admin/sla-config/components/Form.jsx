@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MySelect from "@/components/inputs/MySelect";
 import { isValidNumber } from "@/utils/helpers";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldAlert } from "lucide-react";
 
 export default function Form({
   editItem,
@@ -81,6 +81,18 @@ export default function Form({
         <Label className="block font-medium">
           Escalation Levels (SLA Hours)
         </Label>
+        {!roles || !roles.length ? (
+          <div className="flex flex-col items-center justify-center border  rounded-xl bg-muted/20 dark:bg-muted/10 py-7 px-4 text-center">
+            <div className="w-10 h-10 rounded-full bg-muted/60 dark:bg-muted/40 flex items-center justify-center mb-2 text-muted-foreground/80">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
+            <p className="text-sm font-medium text-foreground">No roles found</p>
+            <p className="text-xs text-muted-foreground mt-0.5 max-w-[250px]">
+              There are no escalation roles available to set SLA hours.
+            </p>
+          </div>
+        ) : (
+
         <div className="grid grid-cols-2 p-3 gap-3 max-h-[40vh] overflow-y-auto border rounded-lg bg-muted/10">
           {roles.map((role) => {
             const esc = dialog.escalations?.find(
@@ -163,6 +175,7 @@ export default function Form({
             );
           })}
         </div>
+        ) }
       </div>
 
       {/* <div className="flex items-center gap-2 pt-2">

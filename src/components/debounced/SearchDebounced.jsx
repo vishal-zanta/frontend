@@ -12,8 +12,9 @@ const SearchDebounced = ({
   inputClassName = "",
   inputProps = {},
   placeholder = "Search by name or email...",
-  icon = true,
+icon = true,
   isClearable = false,
+ onFocus
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialValue);
   const timerRef = useRef(null);
@@ -31,10 +32,16 @@ const SearchDebounced = ({
   }, [searchQuery]);
 
   useEffect(() => {
-    if (!!initialValue && !!initialValue.trim() && searchQuery !== initialValue) {
+    if (
+      !!initialValue &&
+      !!initialValue.trim() &&
+      searchQuery !== initialValue
+    ) {
       setSearchQuery(initialValue);
     }
   }, [initialValue]);
+
+
 
   return (
     <div className={clsx("relative", className)}>
@@ -48,15 +55,16 @@ const SearchDebounced = ({
         className={clsx(
           icon && "pl-9",
           isClearable && searchQuery && "pr-8",
-          inputClassName
+          inputClassName,
         )}
         {...inputProps}
       />
       {isClearable && searchQuery && (
         <button
           type="button"
-          onClick={() => {setSearchQuery("") 
-            handleDebouncedChange("")
+          onClick={() => {
+            setSearchQuery("");
+            handleDebouncedChange("");
           }}
           className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
         >

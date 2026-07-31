@@ -23,6 +23,7 @@ const SearchComplaints = () => {
   const { profiledata } = useAuth();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [resetFunction, setResetFunction] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const scrollRef = useRef(null);
@@ -85,7 +86,7 @@ const SearchComplaints = () => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setIsOpen(false);
+        reset();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -103,8 +104,7 @@ const SearchComplaints = () => {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleSelect = (complaint) => {
-    setIsOpen(false);
-    setSearch("");
+    if (!complaint) return null;
     if (isOfficer) {
       navigate(`/officer/complaints?complaint=${complaint.grievanceId}`, {
         state: { grievanceId: complaint.grievanceId },
@@ -116,7 +116,14 @@ const SearchComplaints = () => {
         replace: true,
       });
     }
+
+    reset();
   };
+
+  function reset() {
+    setIsOpen(false);
+    // setSearch("");
+  }
 
   return (
     <div ref={containerRef} className="hidden md:block relative">
@@ -126,6 +133,15 @@ const SearchComplaints = () => {
         delay={500}
         className="w-48 lg:w-64"
         inputClassName="h-9 bg-muted border-none text-sm"
+        initialValue={search}
+        inputProps={{
+          onFocus: () => {
+            // console.log("Input focused", search);
+            if(!!search ){
+              setIsOpen(true);
+            }
+          },
+        }}
       />
 
       {/* Results Popover */}
@@ -164,18 +180,23 @@ const SearchComplaints = () => {
                       <div className="flex items-center gap-1 flex-wrap">
                         <SLATimer
                           createdAt={c.createdAt}
-                          slaHours={
-                            c.classification?.subService?.sla || null
+                          slaHours={c.classification?.subService?.sla || null}
+                          resolvedAt={
+                            c.status == "RESOLVED"
+                              ? c?.resolvedAt || null
+                              : null
                           }
-                          resolvedAt={c.status == "RESOLVED" ?  (c?.resolvedAt || null) : null}
-
                         />
                         {!!c.assignedAt && (
                           <SLATimer
                             createdAt={c.assignedAt}
                             slaHours={c?.slaHours || null}
                             customText="Officer SLA"
-                            resolvedAt={c.status == "RESOLVED" ?  (c?.resolvedAt || null) : null}
+                            resolvedAt={
+                              c.status == "RESOLVED"
+                                ? c?.resolvedAt || null
+                                : null
+                            }
                           />
                         )}
                       </div>

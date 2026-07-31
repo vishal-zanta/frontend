@@ -27,6 +27,9 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import StatCard from "@/components/StatCard";
 import { jsPDF } from "jspdf";
 import { useGetMisReports, useGetMisStats } from "./hooks";
+import { useGetDemographics } from "../master-data/hooks";
+import { MAX_LIMIT } from "@/utils/constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 const reports = [
   {
@@ -254,6 +257,7 @@ export default function MISReports() {
   const [fromDate, setFromDate] = useState("2026-01-01");
   const [toDate, setToDate] = useState("2026-07-06");
   const selectedReport = searchParams.get("report") || "summary";
+  const { t } = useLanguage();
 
   const currentReport =
     reports.find((r) => r.id === selectedReport) || reports[0];
@@ -261,7 +265,7 @@ export default function MISReports() {
   const params = useMemo(() => {
     const next = {
       report: selectedReport,
-      district,
+      district : (!district ||  district == "all") ? "" : district,
       dateRange,
     };
     if (dateRange === "custom") {
@@ -272,6 +276,15 @@ export default function MISReports() {
   }, [selectedReport, district, dateRange, fromDate, toDate]);
 
   const queryEnabled = dateRange !== "custom" || (!!fromDate && !!toDate);
+  const {
+    data: demographics,
+    isLoading: demographicsLoading,
+    error: demographicsError,
+  } = useGetDemographics([], { page: 1, limit: MAX_LIMIT });
+  const districtOptions = (demographics?.data?.data?.docs || []).map((d) => ({
+    label: t(d.name, d.nameHindi),
+    value: d._id,
+  }));
 
   const { data, isLoading, error } = useGetMisReports(
     [selectedReport, district, dateRange, fromDate, toDate],
@@ -385,25 +398,30 @@ export default function MISReports() {
             <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
               <Filter className="w-4 h-4" /> District:
             </span>
-            <Select value={district} onValueChange={setDistrict}>
-              <SelectTrigger className="w-44 text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all" className="text-sm">
-                  All Districts
-                </SelectItem>
-                {DISTRICT_WISE.map((d) => (
-                  <SelectItem
-                    key={d.district}
-                    value={d.district}
-                    className="text-sm"
-                  >
-                    {d.district}
+            <LoaderErrWrapper
+              isLoading={demographicsLoading}
+              error={demographicsError}
+            >
+              <Select value={district} onValueChange={setDistrict}>
+                <SelectTrigger className="w-44 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all" className="text-sm">
+                    All Districts
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                  {districtOptions.map((d) => (
+                    <SelectItem
+                      key={d.value}
+                      value={d.value}
+                      className="text-sm"
+                    >
+                      {d.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </LoaderErrWrapper>
 
             <Select value={dateRange} onValueChange={setDateRange}>
               <SelectTrigger className="w-44 text-sm">
