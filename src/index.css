@@ -136,6 +136,9 @@
 :root {
   --font-scale: 1;
 }
+html{
+    scrollbar-gutter: stable;
+}
 
 body {
   font-size: calc(1rem * var(--font-scale));
