@@ -13,34 +13,28 @@ import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import SkillTable from "./components/SkillTable";
 import SkillForm from "./components/SkillForm";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SkillSetTab() {
-  const queryClient = useQueryClient();
+  const { t } = useLanguage();
   const { page, limit, ...paginationProps } = usePagination();
+  const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useGetSkills([page, limit], { page, limit });
+
   const rawSkills = data?.data?.data?.docs || [];
   const totalPages = data?.data?.data?.pagination?.totalPages || 1;
 
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
-  const [formData, setFormData] = useState({
-    name: "",
-  });
-  const [errors, setErrors] = useState({
-    name: "",
-  });
+  const [formData, setFormData] = useState({ name: "" });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (dialog) {
-      setErrors({ name: "" });
-      if (dialog.type === "edit") {
-        setFormData({
-          name: dialog.item?.name || "",
-        });
-      } else if (dialog.type === "add") {
-        setFormData({
-          name: "",
-        });
-      }
+    if (dialog && (dialog.type === "add" || dialog.type === "edit")) {
+      setFormData({
+        name: dialog.item ? dialog.item.name || "" : "",
+      });
+      setErrors({});
     }
   }, [dialog]);
 
@@ -103,10 +97,7 @@ export default function SkillSetTab() {
     } else {
       putMutation.mutate({
         skillId: dialog.item._id,
-        skill: {
-          ...dialog.item,
-          ...formData,
-        },
+        skill: formData,
       });
     }
   };
@@ -115,19 +106,19 @@ export default function SkillSetTab() {
     <>
       <div className="bg-card rounded-xl border border-border px-5 py-3">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-foreground">Skill Sets</h3>
+          <h3 className="font-bold text-foreground">{t("Skill Sets", "कौशल सेट")}</h3>
           <Button
             size="sm"
             onClick={() => setDialog({ type: "add" })}
             className="bg-primary hover:bg-primary/90 animate-fade-in cursor-pointer text-white"
           >
-            <Plus className="w-4 h-4 mr-1" /> Add Skill
+            <Plus className="w-4 h-4 mr-1" /> {t("Add Skill", "कौशल जोड़ें")}
           </Button>
         </div>
         <LoaderErrWrapper isLoading={isLoading} error={error}>
           {rawSkills.length === 0 ? (
             <div className="text-center py-6 text-sm text-muted-foreground bg-muted/10 rounded-lg border border-dashed border-border col-span-full">
-              No skill sets configured yet.
+              {t("No skill sets configured yet.", "अभी तक कोई कौशल सेट कॉन्फ़िगर नहीं किया गया है।")}
             </div>
           ) : (
             <>

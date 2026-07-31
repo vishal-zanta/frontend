@@ -1,6 +1,5 @@
 import React from "react";
 import PortalLayout from "@/components/PortalLayout";
-import { usePortalProfile } from "@/hooks/usePortalProfile";
 import AgentViewShift from "./components/AgentViewShift";
 import SupervisorViewShift from "./components/SupervisorViewShift";
 import { useAuth } from "@/context/AuthContext";

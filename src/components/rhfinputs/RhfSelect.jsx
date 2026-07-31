@@ -6,7 +6,7 @@ import AsyncSelect from "react-select/async";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
-import { Loader, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { MAX_LIMIT } from "@/utils/constants";
 
 const buildStyles = (hasError, disabled, colors, isMulti) => ({

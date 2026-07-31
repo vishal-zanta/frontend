@@ -21,7 +21,6 @@ import {
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
 import { getFieldVisitStatusClass } from "@/utils/constants";
 import {
-  User,
   Phone,
   MapPin,
   Building2,

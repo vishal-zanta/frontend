@@ -1,11 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   ShieldCheck,
-  Users,
-  UserCog,
-  Headphones,
-  ArrowRight,
   Zap,
 } from "lucide-react";
 import { PORTAL_META, DASHBOARD_KPIS } from "@/lib/biharData";

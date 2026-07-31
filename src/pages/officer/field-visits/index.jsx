@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import PortalLayout from "@/components/PortalLayout";
 import {
-  FIELD_VISIT_DATA,
   FieldVisitDetailDialog,
 } from "@/components/ComplaintDetailDialog";
 import FieldVisitCards from "./components/FieldVisitCards";

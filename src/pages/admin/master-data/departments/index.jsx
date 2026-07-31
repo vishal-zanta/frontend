@@ -13,8 +13,10 @@ import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import DepartmentTable from "./components/DepartmentTable";
 import DepartmentForm from "./components/DepartmentForm";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DepartmentsTab() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
   const { data, isLoading, error } = useGetDepartments([page, limit], { page, limit });
@@ -84,19 +86,19 @@ export default function DepartmentsTab() {
     <>
       <div className="bg-card rounded-xl border border-border">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-          <h3 className="font-bold text-foreground">Department Management</h3>
+          <h3 className="font-bold text-foreground">{t("Department Management", "विभाग प्रबंधन")}</h3>
           <Button
             size="sm"
             onClick={() => setDialog({ type: "add" })}
             className="bg-primary hover:bg-primary/90 animate-fade-in"
           >
-            <Plus className="w-4 h-4 mr-1" /> Add Department
+            <Plus className="w-4 h-4 mr-1" /> {t("Add Department", "विभाग जोड़ें")}
           </Button>
         </div>
         <LoaderErrWrapper isLoading={isLoading} error={error}>
           {departments.length === 0 ? (
             <div className="text-center py-6 text-sm text-muted-foreground bg-muted/10 rounded-lg border border-dashed border-border col-span-full">
-              No departments configured yet.
+              {t("No departments configured yet.", "अभी तक कोई विभाग कॉन्फ़िगर नहीं किया गया है।")}
             </div>
           ) : (
             <DepartmentTable

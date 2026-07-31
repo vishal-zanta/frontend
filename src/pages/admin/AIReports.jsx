@@ -18,7 +18,6 @@ import {
   DISTRICT_WISE,
 } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
-import StatCard from "@/components/StatCard";
 import { ChartCard, SectionTitle } from "@/components/ChartCard";
 import {
   LineChartCard,
@@ -30,8 +29,10 @@ import {
 import ComplaintMap from "@/components/ComplaintMap";
 import { Button } from "@/components/ui/button";
 import TimeRangeFilter from "@/components/TimeRangeFilter";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AIReports() {
+  const { t } = useLanguage();
   const [period, setPeriod] = useState("weekly");
   const [dateRange, setDateRange] = useState({});
   const [showInsights, setShowInsights] = useState(false);
@@ -58,43 +59,28 @@ export default function AIReports() {
       const doc = new jsPDF("p", "mm", "a4");
 
       const margin = 10; // 10mm margins
-      const pageWidth = 210; // A4 width
-      const pageHeight = 297; // A4 height
-      const usableWidth = pageWidth - (margin * 2); // 190mm
-      const usableHeight = pageHeight - (margin * 2); // 277mm
+      const usableWidth = 210 - margin * 2;
+      const pageHeight = 297 - margin * 2;
 
       let currentY = margin;
       let isFirstPage = true;
 
       for (let i = 0; i < children.length; i++) {
         const child = children[i];
-        
-        // Render the individual child element to a canvas
-        const canvas = await html2canvas(child, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          logging: false,
-        });
-
+        const canvas = await html2canvas(child, { scale: 2, useCORS: true });
         const imgData = canvas.toDataURL("image/png");
-        let childHeight = (canvas.height * usableWidth) / canvas.width;
+        const childHeight = (canvas.height * usableWidth) / canvas.width;
 
-        // If a single child is larger than the usable height, scale it down to fit
-        if (childHeight > usableHeight) {
-          childHeight = usableHeight;
-        }
-
-        // If the child doesn't fit in the remaining space of the current page, add a new page
-        if (currentY + childHeight > pageHeight - margin) {
+        if (currentY + childHeight > pageHeight + margin && !isFirstPage) {
+          doc.addPage();
+          currentY = margin;
+        } else if (currentY + childHeight > pageHeight + margin && isFirstPage) {
           doc.addPage();
           currentY = margin;
           isFirstPage = false;
         } else if (isFirstPage && i > 0) {
-          // Add spacing between elements on the same page
           currentY += 6;
         } else if (!isFirstPage && currentY > margin) {
-          // Add spacing between elements on subsequent pages
           currentY += 6;
         }
 
@@ -115,8 +101,8 @@ export default function AIReports() {
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <SectionTitle
-            title="AI Analytical Reports"
-            subtitle="Time-series analysis, category distribution, hotspot prediction & AI-powered insights"
+            title={t("AI Analytical Reports", "AI विश्लेषणात्मक रिपोर्ट")}
+            subtitle={t("Time-series analysis, category distribution, hotspot prediction & AI-powered insights", "समय-श्रृंखला विश्लेषण, श्रेणी वितरण, हॉटस्पॉट भविष्यवाणी और AI अंतर्दृष्टि")}
           />
           <div className="flex flex-col  items-end  gap-3">
             <TimeRangeFilter period={period} setPeriod={setPeriod} dateRange={dateRange} setDateRange={setDateRange} />
@@ -129,12 +115,12 @@ export default function AIReports() {
               {exporting ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Exporting...</span>
+                  <span>{t("Exporting...", "निर्यात किया जा रहा है...")}</span>
                 </>
               ) : (
                 <>
                   <FileDown className="w-3.5 h-3.5" />
-                  <span>Export PDF</span>
+                  <span>{t("Export PDF", "PDF निर्यात करें")}</span>
                 </>
               )}
             </Button>
@@ -153,11 +139,10 @@ export default function AIReports() {
               </div>
               <div className="flex-1">
                 <h2 className="text-lg font-bold mb-1">
-                  AI-Generated Insights
+                  {t("AI-Generated Insights", "AI द्वारा जनरेट की गई अंतर्दृष्टि")}
                 </h2>
                 <p className="text-white/80 text-sm">
-                  {period === "weekly" ? "Next Week" : "Next Month"} Volume
-                  Prediction & Key Recommendations
+                  {period === "weekly" ? t("Next Week", "अगले सप्ताह") : t("Next Month", "अगले महीने")} {t("Volume Prediction & Key Recommendations", "मात्रा पूर्वानुमान और मुख्य सिफारिशें")}
                 </p>
               </div>
             </div>
@@ -169,12 +154,12 @@ export default function AIReports() {
               {generating ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-1 animate-spin" />{" "}
-                  Generating...
+                  {t("Generating...", "जनरेट हो रहा है...")}
                 </>
               ) : showInsights ? (
-                "Regenerate"
+                t("Regenerate", "पुनः जनरेट करें")
               ) : (
-                "Generate Insights"
+                t("Generate Insights", "अंतर्दृष्टि जनरेट करें")
               )}
             </Button>
           </div>
@@ -193,8 +178,8 @@ export default function AIReports() {
         {/* Predictions */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard
-            title={`Volume Prediction - ${period === "weekly" ? "Next Week" : "Next Month"}`}
-            subtitle="AI-predicted complaint volume by department"
+            title={`${t("Volume Prediction", "मात्रा पूर्वाअनुमान")} - ${period === "weekly" ? t("Next Week", "अगले सप्ताह") : t("Next Month", "अगले महीने")}`}
+            subtitle={t("AI-predicted complaint volume by department", "विभाग द्वारा AI-पूर्वाअनुमानित शिकायत की मात्रा")}
           >
             <BarChartCard
               data={
@@ -206,7 +191,7 @@ export default function AIReports() {
               bars={[
                 {
                   key: "predicted",
-                  label: "Predicted Volume",
+                  label: t("Predicted Volume", "पूर्वाअनुमानित मात्रा"),
                   color: "#8b5cf6",
                 },
               ]}
@@ -214,8 +199,8 @@ export default function AIReports() {
             />
           </ChartCard>
           <ChartCard
-            title="Category-wise Distribution"
-            subtitle="Grievance distribution by service category"
+            title={t("Category-wise Distribution", "श्रेणी-वार विवरण")}
+            subtitle={t("Grievance distribution by service category", "सेवा श्रेणी द्वारा शिकायत विवरण")}
           >
             <PieChartCard data={CATEGORY_DISTRIBUTION} />
           </ChartCard>
@@ -224,28 +209,28 @@ export default function AIReports() {
         {/* Time-series */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard
-            title="Daily Trend Analysis"
-            subtitle="30-day time-series with trend line"
+            title={t("Daily Trend Analysis", "दैनिक रुझान विश्लेषण")}
+            subtitle={t("30-day time-series with trend line", "रुझान रेखा के साथ 30-दिवसीय समय-श्रृंखला")}
           >
             <LineChartCard
               data={DAILY_VOLUME}
               xKey="label"
               lines={[
-                { key: "raised", label: "Raised", color: "#1d4ed8" },
-                { key: "resolved", label: "Resolved", color: "#22c55e" },
+                { key: "raised", label: t("Raised", "दर्ज"), color: "#1d4ed8" },
+                { key: "resolved", label: t("Resolved", "निराकृत"), color: "#22c55e" },
               ]}
             />
           </ChartCard>
           <ChartCard
-            title="Monthly Volume Trend"
-            subtitle="6-month raised vs resolved"
+            title={t("Monthly Volume Trend", "मासिक मात्रा का रुझान")}
+            subtitle={t("6-month raised vs resolved", "6 महीने में दर्ज बनाम निराकृत")}
           >
             <AreaChartCard
               data={MONTHLY_VOLUME}
               xKey="month"
               areas={[
-                { key: "raised", label: "Raised", color: "#1d4ed8" },
-                { key: "resolved", label: "Resolved", color: "#22c55e" },
+                { key: "raised", label: t("Raised", "दर्ज"), color: "#1d4ed8" },
+                { key: "resolved", label: t("Resolved", "निराकृत"), color: "#22c55e" },
               ]}
             />
           </ChartCard>
@@ -254,8 +239,8 @@ export default function AIReports() {
         {/* Hotspot Analysis */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard
-            title="AI Hotspot & Cluster Map"
-            subtitle="Predicted complaint hotspots by ward"
+            title={t("AI Hotspot & Cluster Map", "AI हॉटस्पॉट और क्लस्टर मानचित्र")}
+            subtitle={t("Predicted complaint hotspots by ward", "वार्ड द्वारा पूर्वाअनुमानित शिकायत हॉटस्पॉट")}
           >
             <ComplaintMap
               height={320}
@@ -265,8 +250,8 @@ export default function AIReports() {
             />
           </ChartCard>
           <ChartCard
-            title="Hotspot Clusters"
-            subtitle="Top complaint density areas"
+            title={t("Hotspot Clusters", "हॉटस्पॉट क्लस्टर्स")}
+            subtitle={t("Top complaint density areas", "शीर्ष शिकायत घनत्व क्षेत्र")}
           >
             <div className="space-y-2 max-h-[320px] overflow-y-auto scrollbar-thin">
               {HOTSPOTS.map((h, i) => (
@@ -286,7 +271,7 @@ export default function AIReports() {
                   <div className="text-right">
                     <div className="font-bold text-lg">{h.complaints}</div>
                     <div className="text-xs text-muted-foreground">
-                      complaints
+                      {t("complaints", "शिकायतें")}
                     </div>
                   </div>
                 </div>
@@ -297,8 +282,8 @@ export default function AIReports() {
 
         {/* Scatter */}
         <ChartCard
-          title="Population vs Complaint Density"
-          subtitle="AI scatter analysis - ULB population rank vs complaint volume"
+          title={t("Population vs Complaint Density", "जनसंख्या बनाम शिकायत घनत्व")}
+          subtitle={t("AI scatter analysis - ULB population rank vs complaint volume", "AI प्रकीर्णन विश्लेषण - ULB जनसंख्या रैंक बनाम शिकायत मात्रा")}
         >
           <ScatterChartCard
             data={DISTRICT_WISE.map((d) => ({
@@ -307,15 +292,15 @@ export default function AIReports() {
               z: d.total,
               name: d.district,
             }))}
-            xLabel="Total Complaints"
-            yLabel="Escalated"
+            xLabel={t("Total Complaints", "कुल शिकायतें")}
+            yLabel={t("Escalated", "बढ़ाई गई")}
           />
         </ChartCard>
 
         {/* Prediction confidence with benchmark */}
         <div className="bg-white dark:bg-card rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-            <Zap className="w-5 h-5 text-purple-500" /> AI Model Confidence
+            <Zap className="w-5 h-5 text-purple-500" /> {t("AI Model Confidence", "AI मॉडल विश्वसनीयता")}
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {(period === "weekly"
@@ -352,10 +337,10 @@ export default function AIReports() {
                   </span>
                 </div>
                 <div className="text-[10px] text-muted-foreground mt-1 border-t border-border pt-1">
-                  Benchmark: 85% |{" "}
+                  {t("Benchmark: 85%", "मानक: 85%")} |{" "}
                   {p.confidence >= 85
-                    ? "✓ Above"
-                    : `${85 - p.confidence}% below`}
+                    ? t("✓ Above", "✓ ऊपर")
+                    : `${85 - p.confidence}% ${t("below", "नीचे")}`}
                 </div>
               </div>
             ))}

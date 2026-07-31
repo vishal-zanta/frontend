@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ChevronDown,
-  Bell,
   Menu,
   LogOut,
   Settings,
   CheckCircle2,
   AlertCircle,
   Info,
-  X,
   Shield,
   Loader2,
   Sun,

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { focusErrorElement, getFirstErrorEl } from "@/utils/helpers";
+import { focusErrorElement } from "@/utils/helpers";
 
 const RhfWrapper = ({
   children,

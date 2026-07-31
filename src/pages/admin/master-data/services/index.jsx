@@ -14,8 +14,10 @@ import usePagination from "@/hooks/usePagination";
 import ServiceTable from "./components/ServiceTable";
 import ServiceForm from "./components/ServiceForm";
 import Filter from "@/components/Filter";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ServicesTab() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState({});
   const { page, limit, ...paginationProps } = usePagination();

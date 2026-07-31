@@ -6,9 +6,6 @@ import {
   Trash2,
   Check,
   X,
-  Headphones,
-  Phone,
-  Clock,
 } from "lucide-react";
 import { CRM_AGENTS } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
@@ -18,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ExportButton from "@/components/ExportButton";
+import { useLanguage } from "@/context/LanguageContext";
 
 const exportColumns = [
   { key: "id", label: "Agent ID" },
@@ -32,6 +30,7 @@ const exportColumns = [
 ];
 
 export default function ManageAgents() {
+  const { t } = useLanguage();
   const [agents, setAgents] = useState(CRM_AGENTS);
   const [search, setSearch] = useState("");
   const [toast, setToast] = useState("");
@@ -58,15 +57,15 @@ export default function ManageAgents() {
 
   const handleDelete = (agent) => {
     setAgents((prev) => prev.filter((a) => a.id !== agent.id));
-    showToast(`"${agent.name}" deleted`);
+    showToast(`Agent "${agent.name}" deleted`);
   };
 
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <SectionTitle
-          title="Manage CCE Agents"
-          subtitle="CRUD management of all Customer Care Executives and Supervisors"
+          title={t("Manage CCE Agents", "CCE एजेंट प्रबंधित करें")}
+          subtitle={t("CRUD management of all Customer Care Executives and Supervisors", "सभी ग्राहक सेवा अधिकारियों और पर्यवेक्षकों का प्रबंधन")}
         />
 
         {toast && (
@@ -80,7 +79,7 @@ export default function ManageAgents() {
             <div className="text-2xl font-bold text-blue-600">
               {agents.length}
             </div>
-            <div className="text-sm text-muted-foreground">Total Agents</div>
+            <div className="text-sm text-muted-foreground">{t("Total Agents", "कुल एजेंट")}</div>
           </div>
           <div className="bg-white rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-emerald-600">
@@ -90,19 +89,19 @@ export default function ManageAgents() {
                 ).length
               }
             </div>
-            <div className="text-sm text-muted-foreground">Active Now</div>
+            <div className="text-sm text-muted-foreground">{t("Active Now", "अभी सक्रिय")}</div>
           </div>
           <div className="bg-white rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-purple-600">
               {agents.filter((a) => a.role === "Supervisor").length}
             </div>
-            <div className="text-sm text-muted-foreground">Supervisors</div>
+            <div className="text-sm text-muted-foreground">{t("Supervisors", "पर्यवेक्षक")}</div>
           </div>
           <div className="bg-white rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-amber-600">
               {agents.reduce((sum, a) => sum + a.callsToday, 0)}
             </div>
-            <div className="text-sm text-muted-foreground">Calls Today</div>
+            <div className="text-sm text-muted-foreground">{t("Calls Today", "आज की कॉलें")}</div>
           </div>
         </div>
 
@@ -112,7 +111,7 @@ export default function ManageAgents() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name or agent ID..."
+              placeholder={t("Search by name or agent ID...", "नाम या एजेंट आईडी से खोजें...")}
               className="pl-9"
             />
           </div>
@@ -132,7 +131,7 @@ export default function ManageAgents() {
               });
             }}
           >
-            <Plus className="w-4 h-4 mr-1" /> Add Agent
+            <Plus className="w-4 h-4 mr-1" /> {t("Add Agent", "एजेंट जोड़ें")}
           </Button>
           <ExportButton
             data={agents}
@@ -146,20 +145,20 @@ export default function ManageAgents() {
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">Agent ID</th>
-                  <th className="px-4 py-3 font-medium">Name</th>
-                  <th className="px-4 py-3 font-medium">Role</th>
-                  <th className="px-4 py-3 font-medium">Shift</th>
+                  <th className="px-4 py-3 font-medium">{t("Agent ID", "एजेंट आईडी")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Name", "नाम")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Role", "भूमिका")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Shift", "शिफ्ट")}</th>
                   <th className="px-4 py-3 font-medium text-center">
-                    Calls Today
+                    {t("Calls Today", "आज की कॉलें")}
                   </th>
                   <th className="px-4 py-3 font-medium text-center">
-                    Resolved
+                    {t("Resolved", "निराकृत")}
                   </th>
-                  <th className="px-4 py-3 font-medium">Avg Talk</th>
-                  <th className="px-4 py-3 font-medium text-center">CSAT</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium text-center">Actions</th>
+                  <th className="px-4 py-3 font-medium">{t("Avg Talk", "औसत बात समय")}</th>
+                  <th className="px-4 py-3 font-medium text-center">{t("CSAT", "CSAT")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Status", "स्थिति")}</th>
+                  <th className="px-4 py-3 font-medium text-center">{t("Actions", "कार्रवाई")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

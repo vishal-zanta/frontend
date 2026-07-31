@@ -16,7 +16,6 @@ import {
   MONTHLY_VOLUME,
 } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
-import TimeRangeFilter from "@/components/TimeRangeFilter";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/utils/constants";
 
@@ -26,47 +25,55 @@ import SlaPerformanceTab from "./sla-performance";
 import GrievanceTab from "./grievance";
 import CitizenInteractionTab from "./citizen-interaction";
 import SystemTab from "./system";
+import { useLanguage } from "@/context/LanguageContext";
 
 const tabs = [
   {
     id: "call-volume",
-    label: "Call Volume & Traffic",
+    labelEn: "Call Volume & Traffic",
+    labelHi: "कॉल मात्रा और ट्रैफ़िक",
     icon: Phone,
     permissions: PERMISSIONS.OPERATIONAL_CALL_VOLUME,
   },
   {
     id: "cce-performance",
-    label: "CCE Performance",
+    labelEn: "CCE Performance",
+    labelHi: "CCE प्रदर्शन",
     icon: Users,
     permissions: PERMISSIONS.OPERATIONAL_CCE_PERFORMANCE,
   },
   {
     id: "sla-performance",
-    label: "Service Level Performance",
+    labelEn: "Service Level Performance",
+    labelHi: "सेवा स्तर का प्रदर्शन",
     icon: Clock,
     permissions: PERMISSIONS.OPERATIONAL_SLA_PERFORMANCE,
   },
   {
     id: "grievance",
-    label: "Grievance & Ticket Management",
+    labelEn: "Grievance & Ticket Management",
+    labelHi: "शिकायत और टिकटिंग प्रबंधन",
     icon: Activity,
     permissions: PERMISSIONS.OPERATIONAL_GRIEVANCE,
   },
   {
     id: "citizen-interaction",
-    label: "Citizen Interaction Analytics",
+    labelEn: "Citizen Interaction Analytics",
+    labelHi: "नागरिक सहभागिता विश्लेषण",
     icon: BarChart3,
     permissions: PERMISSIONS.OPERATIONAL_CITIZEN_INTERACTION,
   },
   {
     id: "system",
-    label: "System & Infrastructure",
+    labelEn: "System & Infrastructure",
+    labelHi: "सिस्टम और अवसंरचना",
     icon: Server,
     permissions: PERMISSIONS.OPERATIONAL_SYSTEM,
   },
 ];
 
 export default function OperationalDashboard() {
+  const { t } = useLanguage();
   const { hasPermission } = useAuth();
   const [searchParams] = useSearchParams();
   const [period, setPeriod] = useState("daily");
@@ -82,8 +89,8 @@ export default function OperationalDashboard() {
 
   const periodData = {
     daily: {
-      label: "Today",
-      sub: "vs yesterday",
+      label: t("Today", "आज"),
+      sub: t("vs yesterday", "बनाम कल"),
       calls: IVR_STATS.totalCallsToday,
       answered: IVR_STATS.callsAnswered,
       missed: IVR_STATS.callsMissed,
@@ -101,8 +108,8 @@ export default function OperationalDashboard() {
       grievanceXKey: "label",
     },
     weekly: {
-      label: "This Week",
-      sub: "vs last week",
+      label: t("This Week", "इस सप्ताह"),
+      sub: t("vs last week", "बनाम पिछला सप्ताह"),
       calls: IVR_STATS.totalCallsToday * 7,
       answered: IVR_STATS.callsAnswered * 7,
       missed: IVR_STATS.callsMissed * 7,
@@ -124,8 +131,8 @@ export default function OperationalDashboard() {
       grievanceXKey: "week",
     },
     monthly: {
-      label: "This Month",
-      sub: "vs last month",
+      label: t("This Month", "इस महीने"),
+      sub: t("vs last month", "बनाम पिछला महीना"),
       calls: IVR_STATS.totalCallsToday * 30,
       answered: IVR_STATS.callsAnswered * 30,
       missed: IVR_STATS.callsMissed * 30,
@@ -155,11 +162,10 @@ export default function OperationalDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-foreground">
-              Operational Dashboard - {activeTab?.label}
+              {t("Operational Dashboard", "परिचालन डैशबोर्ड")} - {t(activeTab?.labelEn || "", activeTab?.labelHi || "")}
             </h1>
             <p className="text-sm text-muted-foreground">
-              Real-time operational metrics across call centre, SLA, grievances,
-              and infrastructure
+              {t("Real-time operational metrics across call centre, SLA, grievances, and infrastructure", "कॉल सेंटर, SLA, शिकायतों और अवसंरचना में वास्तविक समय के परिचालन मेट्रिक्स")}
             </p>
           </div>
           {/* <TimeRangeFilter period={period} setPeriod={setPeriod} dateRange={dateRange} setDateRange={setDateRange} /> */}

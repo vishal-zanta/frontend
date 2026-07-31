@@ -4,6 +4,7 @@ import StatCard from "@/components/StatCard";
 import SlaComplianceChart from "./components/SlaComplianceChart";
 import ExportButton from "@/components/ExportButton";
 import { SLA_PERFORMANCE } from "@/lib/biharData";
+import { useLanguage } from "@/context/LanguageContext";
 
 const slaExportColumns = [
   { key: "service", label: "Service" },
@@ -13,40 +14,41 @@ const slaExportColumns = [
 ];
 
 export default function SlaPerformanceTab() {
+  const { t } = useLanguage();
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={Clock}
-          label="Within SLA"
+          label={t("Within SLA", "SLA के भीतर")}
           value="38,290"
           color="green"
         />
         <StatCard
           icon={Activity}
-          label="Beyond SLA"
+          label={t("Beyond SLA", "SLA से बाहर")}
           value="1,953"
           color="red"
         />
        
         <StatCard
           icon={TrendingUp}
-          label="Compliance Rate"
+          label={t("Compliance Rate", "अनुपालन दर")}
           value="95.1%"
           color="blue"
-          sublabel="Target: 95%"
+          sublabel={t("Target: 95%", "लक्ष्य: 95%")}
         />
         <StatCard
           icon={BarChart3}
-          label="Worst Service"
-          value="Road (86.8%)"
+          label={t("Worst Service", "न्यूनतम सेवा")}
+          value={t("Road (86.8%)", "सड़क (86.8%)")}
           color="amber"
         />
       </div>
       <SlaComplianceChart data={SLA_PERFORMANCE} xKey="service" />
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-          <h3 className="font-bold text-foreground">SLA Performance Detail</h3>
+          <h3 className="font-bold text-foreground">{t("SLA Performance Detail", "SLA प्रदर्शन विवरण")}</h3>
           <ExportButton
             data={SLA_PERFORMANCE}
             columns={slaExportColumns}
@@ -56,11 +58,11 @@ export default function SlaPerformanceTab() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
-              <th className="px-4 py-2 font-medium">Service</th>
-              <th className="px-4 py-2 font-medium text-right">Within SLA</th>
-              <th className="px-4 py-2 font-medium text-right">Beyond SLA</th>
-              <th className="px-4 py-2 font-medium text-right">Compliance %</th>
-              <th className="px-4 py-2 font-medium text-right">Benchmark</th>
+              <th className="px-4 py-2 font-medium">{t("Service", "सेवा")}</th>
+              <th className="px-4 py-2 font-medium text-right">{t("Within SLA", "SLA के भीतर")}</th>
+              <th className="px-4 py-2 font-medium text-right">{t("Beyond SLA", "SLA से बाहर")}</th>
+              <th className="px-4 py-2 font-medium text-right">{t("Compliance %", "अनुपालन %")}</th>
+              <th className="px-4 py-2 font-medium text-right">{t("Benchmark", "मानक")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">

@@ -1,6 +1,4 @@
 import React, { useState, useRef } from "react";
-import { Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import ComplaintTimeline from "@/components/ComplaintTimeline";
 import {

@@ -1,9 +1,11 @@
 import React from "react";
-import { CheckCircle2, AlertTriangle, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
+  const { t } = useLanguage();
   console.log({ roles });
   return (
     <div className="overflow-x-auto">
@@ -11,7 +13,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
         <thead className="bg-muted/50">
           <tr className="text-left text-xs text-muted-foreground">
             <th className="px-3 py-3 font-medium min-w-40 sticky left-0 bg-[#F4F7FA] dark:bg-[#172033]">
-              Sub-Service
+              {t("Sub-Service", "उप-सेवा")}
             </th>
             {roles.map((role) => (
               <th
@@ -25,7 +27,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
               Officer
             </th> */}
             <th className="px-3 py-3 font-medium min-w-40 sticky right-0 bg-[#F4F7FA] dark:bg-[#172033] text-center">
-              Actions
+              {t("Actions", "कार्रवाई")}
             </th>
           </tr>
         </thead>
@@ -36,7 +38,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                 colSpan={roles.length + 3}
                 className="text-center py-8 text-muted-foreground"
               >
-                No SLA configurations found.
+                {t("No SLA configurations found.", "कोई SLA कॉन्फ़िगरेशन नहीं मिला।")}
               </td>
             </tr>
           ) : (
@@ -77,7 +79,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
                 <td className="px-3 py-2.5 sticky right-0 bg-white dark:bg-[#0f1729] text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="ghost" size="sm" onClick={() => onEdit(s)}>
-                      <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+                      <Pencil className="w-3.5 h-3.5 mr-1" /> {t("Edit", "संपादित करें")}
                     </Button>
                     <Button
                       variant="ghost"

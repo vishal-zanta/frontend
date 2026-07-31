@@ -11,7 +11,6 @@ import {
   FileCheck,
   Loader2,
 } from "lucide-react";
-import { DISTRICT_WISE } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
@@ -119,89 +118,89 @@ const aiSummary = [
   "5. Review pipe replacement work in Patna wards 7-8 as positive trend in Water Supply.",
 ].join("\n");
 
-function getReportColumns(reportId) {
+function getReportColumns(reportId, t) {
   switch (reportId) {
     case "officer":
       return [
-        { key: "rank", label: "Rank" },
-        { key: "name", label: "Officer" },
-        { key: "district", label: "District" },
-        { key: "resolved", label: "Resolved" },
-        { key: "slaCompliance", label: "SLA %" },
+        { key: "rank", label: t("Rank", "रैंक") },
+        { key: "name", label: t("Officer", "अधिकारी") },
+        { key: "district", label: t("District", "जिला") },
+        { key: "resolved", label: t("Resolved", "निराकृत") },
+        { key: "slaCompliance", label: t("SLA %", "SLA %") },
       ];
     case "service":
       return [
-        { key: "service", label: "Service" },
-        { key: "withinSLA", label: "Within SLA" },
-        { key: "beyondSLA", label: "Beyond SLA" },
-        { key: "compliance", label: "Compliance %" },
+        { key: "service", label: t("Service", "सेवा") },
+        { key: "withinSLA", label: t("Within SLA", "SLA के भीतर") },
+        { key: "beyondSLA", label: t("Beyond SLA", "SLA से बाहर") },
+        { key: "compliance", label: t("Compliance %", "अनुपालन %") },
       ];
     case "ulb":
     case "urban":
       return [
-        { key: "ulb", label: "ULB" },
-        { key: "complaints", label: "Complaints" },
-        { key: "slaCompliance", label: "SLA %" },
-        { key: "rating", label: "Rating" },
+        { key: "ulb", label: t("ULB", "ULB") },
+        { key: "complaints", label: t("Complaints", "शिकायतें") },
+        { key: "slaCompliance", label: t("SLA %", "SLA %") },
+        { key: "rating", label: t("Rating", "रेटिंग") },
       ];
     case "rural":
       return [
-        { key: "block", label: "Block" },
-        { key: "district", label: "District" },
-        { key: "total", label: "Total" },
-        { key: "resolved", label: "Resolved" },
-        { key: "pending", label: "Pending" },
-        { key: "escalated", label: "Escalated" },
+        { key: "block", label: t("Block", "प्रखंड") },
+        { key: "district", label: t("District", "जिला") },
+        { key: "total", label: t("Total", "कुल") },
+        { key: "resolved", label: t("Resolved", "निराकृत") },
+        { key: "pending", label: t("Pending", "लंबित") },
+        { key: "escalated", label: t("Escalated", "बढ़ाई गई") },
       ];
     case "agent":
       return [
-        { key: "agent", label: "Agent" },
-        { key: "calls", label: "Calls" },
-        { key: "resolved", label: "Resolved" },
-        { key: "csat", label: "CSAT" },
-        { key: "slaCompliance", label: "SLA %" },
+        { key: "agent", label: t("Agent", "एजेंट") },
+        { key: "calls", label: t("Calls", "कॉल") },
+        { key: "resolved", label: t("Resolved", "निराकृत") },
+        { key: "csat", label: t("CSAT", "CSAT") },
+        { key: "slaCompliance", label: t("SLA %", "SLA %") },
       ];
     case "ivr":
       return [
-        { key: "label", label: "Metric" },
-        { key: "value", label: "Value" },
+        { key: "label", label: t("Metric", "मीट्रिक") },
+        { key: "value", label: t("Value", "मान") },
       ];
     default:
       return [
-        { key: "district", label: "District" },
-        { key: "total", label: "Total" },
-        { key: "resolved", label: "Resolved" },
-        { key: "pending", label: "Pending" },
-        { key: "escalated", label: "Escalated" },
+        { key: "district", label: t("District", "जिला") },
+        { key: "total", label: t("Total", "कुल") },
+        { key: "resolved", label: t("Resolved", "निराकृत") },
+        { key: "pending", label: t("Pending", "लंबित") },
+        { key: "escalated", label: t("Escalated", "बढ़ाई गई") },
       ];
   }
 }
 
-function normalizeIvrRows(ivrStats) {
+function normalizeIvrRows(ivrStats, t) {
   if (!ivrStats || typeof ivrStats !== "object") return [];
   return [
     {
-      label: "Total Calls",
+      label: t("Total Calls", "कुल कॉल"),
       value: ivrStats.totalCalls ?? ivrStats.totalCallsToday,
     },
-    { label: "Calls Answered", value: ivrStats.callsAnswered },
-    { label: "Calls Missed", value: ivrStats.callsMissed },
+    { label: t("Calls Answered", "उत्तर दी गई कॉल"), value: ivrStats.callsAnswered },
+    { label: t("Calls Missed", "मिस कॉल"), value: ivrStats.callsMissed },
     {
-      label: "Success Rate",
+      label: t("Success Rate", "सफलता दर"),
       value: ivrStats.successRate != null ? `${ivrStats.successRate}%` : "-",
     },
-    { label: "Avg Talk Time", value: ivrStats.avgTalkTime ?? "-" },
-    { label: "Avg Wait Time", value: ivrStats.avgWaitTime ?? "-" },
-    { label: "Peak Hour", value: ivrStats.peakHour ?? "-" },
+    { label: t("Avg Talk Time", "औसत बात का समय"), value: ivrStats.avgTalkTime ?? "-" },
+    { label: t("Avg Wait Time", "औसत प्रतीक्षा समय"), value: ivrStats.avgWaitTime ?? "-" },
+    { label: t("Peak Hour", "पीक घंटा"), value: ivrStats.peakHour ?? "-" },
     {
-      label: "Active Agents",
+      label: t("Active Agents", "सक्रिय एजेंट"),
       value:
         ivrStats.activeAgents != null
           ? `${ivrStats.activeAgents}/${ivrStats.totalAgents ?? "-"}`
           : "-",
     },
     {
-      label: "IVR Completion Rate",
+      label: t("IVR Completion Rate", "आईवीआर समाप्ति दर"),
       value:
         ivrStats.ivrCompletionRate != null
           ? `${ivrStats.ivrCompletionRate}%`
@@ -250,17 +249,74 @@ function formatCell(reportId, key, row) {
 
 export default function MISReports() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [showSummary, setShowSummary] = useState(false);
-  const [generating, setGenerating] = useState(false);
   const [district, setDistrict] = useState("all");
+  const [generating, setGenerating] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
   const [dateRange, setDateRange] = useState("fy");
   const [fromDate, setFromDate] = useState("2026-01-01");
   const [toDate, setToDate] = useState("2026-07-06");
   const selectedReport = searchParams.get("report") || "summary";
   const { t } = useLanguage();
 
+  const reportsList = [
+    {
+      id: "summary",
+      name: t("Complaint Summary Report", "शिकायत सारांश रिपोर्ट"),
+      desc: t("Total complaints, bifurcation by status, district-wise breakdown", "कुल शिकायतें, स्थिति के अनुसार विभाजन, जिला-वार विवरण"),
+      icon: FileBarChart,
+    },
+    {
+      id: "officer",
+      name: t("Officer Ranking Report", "अधिकारी रैंकिंग रिपोर्ट"),
+      desc: t("Ranking based on complaints resolved in given time period", "दिए गए समय में निराकृत शिकायतों के आधार पर रैंकिंग"),
+      icon: FileText,
+    },
+    {
+      id: "service",
+      name: t("Service Performance Report", "सेवा प्रदर्शन रिपोर्ट"),
+      desc: t("SLA compliance, breach rate, resolution time by service", "सेवा द्वारा SLA अनुपालन, उल्लंघन दर, निस्तारण समय"),
+      icon: FileBarChart,
+    },
+    {
+      id: "urban",
+      name: t("Urban Performance Report", "शहरी प्रदर्शन रिपोर्ट"),
+      desc: t("ULB-wise performance, population rank, per-capita analysis", "ULB-वार प्रदर्शन, जनसंख्या रैंक, प्रति व्यक्ति विश्लेषण"),
+      icon: FileText,
+    },
+    {
+      id: "rural",
+      name: t("Rural Performance Report", "ग्रामीण प्रदर्शन रिपोर्ट"),
+      desc: t("Block-level grievance status & resolution metrics", "प्रखंड-स्तरीय शिकायत स्थिति और निस्तारण मीट्रिक"),
+      icon: FileText,
+    },
+    {
+      id: "ulb",
+      name: t("ULB Leadership Board", "ULB नेतृत्व बोर्ड"),
+      desc: t("Ranked ULB performance with trend indicators", "रुझान संकेतकों के साथ रैंक किया गया ULB प्रदर्शन"),
+      icon: FileBarChart,
+    },
+    {
+      id: "ivr",
+      name: t("IVR Report", "आईवीआर रिपोर्ट"),
+      desc: t("Call success rate, agent attendance, IVR metrics", "कॉल सफलता दर, एजेंट उपस्थिति, आईवीआर मीट्रिक"),
+      icon: FileText,
+    },
+    {
+      id: "agent",
+      name: t("Agent Performance Report", "एजेंट प्रदर्शन रिपोर्ट"),
+      desc: t("Individual agent stats - calls, resolution, CSAT, SLA", "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, CSAT, SLA"),
+      icon: FileText,
+    },
+  ];
+
+  const periodLabels = {
+    cy: t("Calendar Year 2026", "कैलेंडर वर्ष 2026"),
+    fy: t("FY 2025-26", "वित्तीय वर्ष 2025-26"),
+    custom: t("Custom Range", "कस्टम अवधि"),
+  };
+
   const currentReport =
-    reports.find((r) => r.id === selectedReport) || reports[0];
+    reportsList.find((r) => r.id === selectedReport) || reportsList[0];
 
   const params = useMemo(() => {
     const next = {
@@ -304,35 +360,35 @@ export default function MISReports() {
 
   const reportRows = useMemo(() => {
     if (selectedReport === "ivr") {
-      return normalizeIvrRows(rawRows);
+      return normalizeIvrRows(rawRows, t);
     }
     return Array.isArray(rawRows) ? rawRows : [];
-  }, [selectedReport, rawRows]);
+  }, [selectedReport, rawRows, t]);
 
-  const reportColumns = getReportColumns(selectedReport);
+  const reportColumns = getReportColumns(selectedReport, t);
 
   const stats = statsRes?.data?.data || {};
   const statTiles = [
     {
-      label: "Total Reports Generated",
+      label: t("Total Reports Generated", "कुल जनरेट की गई रिपोर्ट"),
       value: stats.totalReportsGenerated ?? 0,
       icon: FileText,
       color: "blue",
     },
     {
-      label: "This Month",
+      label: t("This Month", "इस महीने"),
       value: stats.thisMonth ?? 0,
       icon: Calendar,
       color: "emerald",
     },
     {
-      label: "Statutory Reports",
+      label: t("Statutory Reports", "वैधानिक रिपोर्ट"),
       value: stats.statutoryReports ?? 0,
       icon: FileCheck,
       color: "purple",
     },
     {
-      label: "Pending Reports",
+      label: t("Pending Reports", "लंबित रिपोर्ट"),
       value: stats.pendingReports ?? 0,
       icon: FileBarChart,
       color: "amber",
@@ -351,8 +407,8 @@ export default function MISReports() {
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <SectionTitle
-          title="MIS Reports"
-          subtitle="Downloadable reports for senior officials & statutory reporting"
+          title={t("MIS Reports", "एमआईएस रिपोर्ट")}
+          subtitle={t("Downloadable reports for senior officials & statutory reporting", "वरिष्ठ अधिकारियों और वैधानिक रिपोर्टिंग के लिए डाउनलोड करने योग्य रिपोर्ट")}
         />
 
         <LoaderErrWrapper
@@ -375,7 +431,7 @@ export default function MISReports() {
         <div className="bg-card rounded-xl border border-border p-4">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              <Filter className="w-4 h-4" /> Select Report:
+              <Filter className="w-4 h-4" /> {t("Select Report:", "रिपोर्ट चुनें:")}
             </span>
             <Select
               value={selectedReport}
@@ -385,7 +441,7 @@ export default function MISReports() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {reports.map((r) => (
+                {reportsList.map((r) => (
                   <SelectItem key={r.id} value={r.id} className="text-sm">
                     {r.name}
                   </SelectItem>
@@ -396,7 +452,7 @@ export default function MISReports() {
             <div className="w-px h-8 bg-border mx-1" />
 
             <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              <Filter className="w-4 h-4" /> District:
+              <Filter className="w-4 h-4" /> {t("District:", "जिला:")}
             </span>
             <LoaderErrWrapper
               isLoading={demographicsLoading}
@@ -408,7 +464,7 @@ export default function MISReports() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all" className="text-sm">
-                    All Districts
+                    {t("All Districts", "सभी जिले")}
                   </SelectItem>
                   {districtOptions.map((d) => (
                     <SelectItem
@@ -429,13 +485,13 @@ export default function MISReports() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="cy" className="text-sm">
-                  Calendar Year 2026
+                  {t("Calendar Year 2026", "कैलेंडर वर्ष 2026")}
                 </SelectItem>
                 <SelectItem value="fy" className="text-sm">
-                  FY 2025-26
+                  {t("FY 2025-26", "वित्तीय वर्ष 2025-26")}
                 </SelectItem>
                 <SelectItem value="custom" className="text-sm">
-                  Custom Date Range
+                  {t("Custom Date Range", "कस्टम अवधि")}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -447,7 +503,7 @@ export default function MISReports() {
                   onChange={(e) => setFromDate(e.target.value)}
                   className="px-2 py-1.5 text-sm border border-input rounded-md"
                 />
-                <span className="text-muted-foreground text-sm">to</span>
+                <span className="text-muted-foreground text-sm">{t("to", "तक")}</span>
                 <input
                   type="date"
                   value={toDate}
@@ -474,7 +530,7 @@ export default function MISReports() {
                 {currentReport.desc}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Period:{" "}
+                {t("Period:", "अवधि:")}{" "}
                 <span className="font-medium text-foreground">
                   {periodLabels[dateRange]}
                 </span>
@@ -528,7 +584,7 @@ export default function MISReports() {
                         colSpan={reportColumns.length}
                         className="px-3 py-8 text-center text-muted-foreground"
                       >
-                        No data found for selected filters
+                        {t("No data found for selected filters", "चयनित फ़िल्टर के लिए कोई डेटा नहीं मिला")}
                       </td>
                     </tr>
                   ) : (
@@ -595,10 +651,10 @@ export default function MISReports() {
               </div>
               <div>
                 <h3 className="font-bold text-lg">
-                  AI-Generated MIS Cover Note
+                  {t("AI-Generated MIS Cover Note", "AI द्वारा जनरेट किया गया MIS कवर नोट")}
                 </h3>
                 <p className="text-white/70 text-sm">
-                  Auto-generated summary with key insights & recommendations
+                  {t("Auto-generated summary with key insights & recommendations", "मुख्य अंतर्दृष्टि और सिफारिशों के साथ स्वचालित सारांश")}
                 </p>
               </div>
             </div>
@@ -610,12 +666,12 @@ export default function MISReports() {
               {generating ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-1 animate-spin" />{" "}
-                  Generating...
+                  {t("Generating...", "जनरेट हो रहा है...")}
                 </>
               ) : showSummary ? (
-                "Regenerate"
+                t("Regenerate", "पुनः जनरेट करें")
               ) : (
-                "Generate Summary"
+                t("Generate Summary", "सारांश जनरेट करें")
               )}
             </Button>
           </div>
@@ -651,7 +707,7 @@ export default function MISReports() {
                     doc.save("MIS_cover_note.pdf");
                   }}
                 >
-                  <Download className="w-4 h-4 mr-1" /> Download PDF
+                  <Download className="w-4 h-4 mr-1" /> {t("Download PDF", "PDF डाउनलोड करें")}
                 </Button>
                 <Button
                   className="bg-white/20 hover:bg-white/30 text-white"
@@ -665,7 +721,7 @@ export default function MISReports() {
                     URL.revokeObjectURL(url);
                   }}
                 >
-                  <FileSpreadsheet className="w-4 h-4 mr-1" /> Download Excel
+                  <FileSpreadsheet className="w-4 h-4 mr-1" /> {t("Download Excel", "एक्सेल डाउनलोड करें")}
                 </Button>
               </div>
             </div>

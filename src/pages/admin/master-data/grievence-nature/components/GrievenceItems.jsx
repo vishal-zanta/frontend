@@ -2,12 +2,14 @@ import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MyTable from "@/components/MyTable";
+import { useLanguage } from "@/context/LanguageContext";
 
 const GrievenceItems = ({ rawItems = [], setDialog , sortProps}) => {
+  const { t } = useLanguage();
   const tableHeaders = [
-    { id: "title", label: "Title" },
-    { id: "type", label: "Type", isSortable: true },
-    { id: "actions", label: "Actions", className: "text-center" },
+    { id: "title", label: t("Title", "शीर्षक") },
+    { id: "type", label: t("Type", "प्रकार"), isSortable: true },
+    { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-center" },
   ];
 
   const tableBody = rawItems.map((item) => ({

@@ -15,8 +15,10 @@ import DesignationTable from "./components/DesignationTable";
 import DesignationForm from "./components/DesignationForm";
 import { useGetDepartments } from "../hooks";
 import Filter from "@/components/Filter";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DesignationsTab() {
+  const { t } = useLanguage();
   const [filters, setFilters] = useState({});
   const { page, limit, ...paginationProps } = usePagination();
   const { data, isLoading, error } = useGetRoles(
@@ -104,14 +106,14 @@ export default function DesignationsTab() {
     <>
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-          <h3 className="font-bold text-foreground">Designations</h3>
+          <h3 className="font-bold text-foreground">{t("Designations", "पदनाम")}</h3>
           <div className="flex items-center gap-2">
             <Filter
               filters={filters}
               setFilters={setFilters}
               filterOptions={[
                 {
-                  label: "Department",
+                  label: t("Department", "विभाग"),
                   filterKey: "department",
                   options: departmentOptions,
                 },
@@ -122,7 +124,7 @@ export default function DesignationsTab() {
               onClick={() => setDialog({ type: "add" })}
               className="bg-primary hover:bg-primary/90"
             >
-              <Plus className="w-4 h-4 mr-1" /> Add Designation
+              <Plus className="w-4 h-4 mr-1" /> {t("Add Designation", "पदनाम जोड़ें")}
             </Button>
           </div>
         </div>

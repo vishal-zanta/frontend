@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
-import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 
 import { useGetDemographics } from "../hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -25,8 +17,10 @@ import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import DemographyTable from "./components/DemographyTable";
 import DemographyForm from "./components/DemographyForm";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DemographyTab() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
   const { data, isLoading, error } = useGetDemographics([page, limit], {
@@ -168,20 +162,20 @@ export default function DemographyTab() {
         <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
             <h3 className="font-bold text-foreground">
-              Districts & Demography
+              {t("Districts & Demography", "जिले और जनसांख्यिकी")}
             </h3>
             <Button
               size="sm"
               onClick={() => setDialog({ type: "add" })}
               className="bg-primary hover:bg-primary/90"
             >
-              <Plus className="w-4 h-4 mr-1" /> Add District
+              <Plus className="w-4 h-4 mr-1" /> {t("Add District", "जिला जोड़ें")}
             </Button>
           </div>
           <LoaderErrWrapper isLoading={isLoading} error={error}>
             {districts.length === 0 ? (
               <div className="text-center py-8 text-sm text-muted-foreground bg-muted/10 border-b border-border">
-                No districts configured yet.
+                {t("No districts configured yet.", "अभी तक कोई जिला कॉन्फ़िगर नहीं किया गया है।")}
               </div>
             ) : (
               <div className="overflow-x-auto">

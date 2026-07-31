@@ -1,12 +1,14 @@
 import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import MyTable from "@/components/MyTable";
+import { useLanguage } from "@/context/LanguageContext";
 
 const DepartmentTable = ({ departments = [], setDialog, pagination }) => {
+  const { t } = useLanguage();
   const tableHeaders = [
-    { id: "title", label: "Department (English)" },
-    { id: "titleHindi", label: "विभाग (Hindi)" },
-    { id: "actions", label: "Actions", className: "text-center w-28" },
+    { id: "title", label: t("Department (English)", "विभाग (अंग्रेज़ी)") },
+    { id: "titleHindi", label: t("Department (Hindi)", "विभाग (हिंदी)") },
+    { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-center w-28" },
   ];
 
   const tableBody = departments.map((d) => ({

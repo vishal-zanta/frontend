@@ -17,8 +17,10 @@ import TimeRangeFilter from "@/components/TimeRangeFilter";
 import { MAX_LIMIT } from "@/utils/constants";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function PerformanceDashboard() {
+  const { t } = useLanguage();
   const [period, setPeriod] = useState("daily");
   const [dateRange, setDateRange] = useState({});
   const [filters, setFilters] = useState({});
@@ -55,12 +57,12 @@ export default function PerformanceDashboard() {
   const filterOptions = [
     {
       filterKey: "role",
-      label: "By Role",
+      label: t("By Role", "भूमिका के अनुसार"),
       options: roleOptions,
     },
     {
       filterKey: "user",
-      label: "By User",
+      label: t("By User", "उपयोगकर्ता के अनुसार"),
       options: usersList.map((u) => ({
         label: u.name,
         value: u._id,
@@ -69,18 +71,18 @@ export default function PerformanceDashboard() {
   ];
   const sub =
     period === "daily"
-      ? "vs yesterday"
+      ? t("vs yesterday", "बनाम कल")
       : period === "weekly"
-        ? "vs last week"
-        : "vs last month";
+        ? t("vs last week", "बनाम पिछला सप्ताह")
+        : t("vs last month", "बनाम पिछला महीना");
 
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <SectionTitle
-            title="Performance Dashboard"
-            subtitle="Service-wise, district-wise, division-wise & ULB-wise performance analytics"
+            title={t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
+            subtitle={t("Service-wise, district-wise, division-wise & ULB-wise performance analytics", "सेवा-वार, जिला-वार, प्रमंडल-वार और ULB-वार प्रदर्शन विश्लेषण")}
           />
           <TimeRangeFilter
             period={period}
@@ -97,32 +99,32 @@ export default function PerformanceDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             icon={TrendingUp}
-            label="Avg SLA Compliance"
+            label={t("Avg SLA Compliance", "औसत SLA अनुपालन")}
             value="93.8%"
             color="green"
             trend="up"
             trendValue={`+1.2% (${sub})`}
-            sublabel="Target: 95%"
+            sublabel={t("Target: 95%", "लक्ष्य: 95%")}
           />
           <StatCard
             icon={AlertTriangle}
-            label="Avg Breach Rate"
+            label={t("Avg Breach Rate", "औसत उल्लंघन दर")}
             value="6.2%"
             color="red"
             trend="down"
             trendValue={`-0.8% (${sub})`}
-            sublabel="Target: <5%"
+            sublabel={t("Target: <5%", "लक्ष्य: <5%")}
           />
           <StatCard
             icon={Clock}
-            label="Avg Resolution"
-            value="2.4 days"
+            label={t("Avg Resolution", "औसत समाधान")}
+            value={t("2.4 days", "2.4 दिन")}
             color="blue"
-            sublabel="Target: <2 days"
+            sublabel={t("Target: <2 days", "लक्ष्य: <2 दिन")}
           />
           <StatCard
             icon={Award}
-            label="Top Officer"
+            label={t("Top Officer", "शीर्ष अधिकारी")}
             value="Prakash Jha"
             sublabel="98.5% SLA"
             color="purple"
@@ -132,28 +134,28 @@ export default function PerformanceDashboard() {
         {/* Service & District performance */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard
-            title="Service-wise Performance"
-            subtitle="SLA compliance by service category"
+            title={t("Service-wise Performance", "सेवा-वार प्रदर्शन")}
+            subtitle={t("SLA compliance by service category", "सेवा श्रेणी द्वारा SLA अनुपालन")}
           >
             <BarChartCard
               data={PERFORMANCE_DATA.serviceWise}
               xKey="service"
               bars={[
-                { key: "withinSLA", label: "Within SLA", color: "#22c55e" },
-                { key: "beyondSLA", label: "Beyond SLA", color: "#ef4444" },
+                { key: "withinSLA", label: t("Within SLA", "SLA के भीतर"), color: "#22c55e" },
+                { key: "beyondSLA", label: t("Beyond SLA", "SLA से बाहर"), color: "#ef4444" },
               ]}
             />
           </ChartCard>
           <ChartCard
-            title="Division-wise Performance"
-            subtitle="Complaints resolved vs total by division"
+            title={t("Division-wise Performance", "प्रमंडल-वार प्रदर्शन")}
+            subtitle={t("Complaints resolved vs total by division", "प्रमंडल द्वारा निराकृत बनाम कुल शिकायतें")}
           >
             <BarChartCard
               data={PERFORMANCE_DATA.divisionWise}
               xKey="division"
               bars={[
-                { key: "complaints", label: "Total", color: "#1d4ed8" },
-                { key: "resolved", label: "Resolved", color: "#22c55e" },
+                { key: "complaints", label: t("Total", "कुल"), color: "#1d4ed8" },
+                { key: "resolved", label: t("Resolved", "निराकृत"), color: "#22c55e" },
               ]}
             />
           </ChartCard>
@@ -161,14 +163,14 @@ export default function PerformanceDashboard() {
 
         {/* Time Delayed */}
         <ChartCard
-          title="Time-Delayed Services"
-          subtitle="Average delay & breach rate by service"
+          title={t("Time-Delayed Services", "समय-विलंबित सेवाएं")}
+          subtitle={t("Average delay & breach rate by service", "सेवा द्वारा औसत विलंब और उल्लंघन दर")}
         >
           <BarChartCard
             data={PERFORMANCE_DATA.timeDelayed}
             xKey="service"
             bars={[
-              { key: "breachRate", label: "Breach Rate %", color: "#ef4444" },
+              { key: "breachRate", label: t("Breach Rate %", "उल्लंघन दर %"), color: "#ef4444" },
             ]}
             legend={false}
           />
@@ -177,8 +179,8 @@ export default function PerformanceDashboard() {
         {/* Escalation */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard
-            title="Escalation Levels"
-            subtitle="Distribution by escalation level"
+            title={t("Escalation Levels", "वृद्धि के स्तर")}
+            subtitle={t("Distribution by escalation level", "वृद्धि स्तर द्वारा विवरण")}
           >
             <PieChartCard
               data={ESCALATION_DATA.map((e) => ({
@@ -191,14 +193,14 @@ export default function PerformanceDashboard() {
             />
           </ChartCard>
           <ChartCard
-            title="Escalation by Service Category"
-            subtitle="Escalation rate per service"
+            title={t("Escalation by Service Category", "सेवा श्रेणी द्वारा वृद्धि")}
+            subtitle={t("Escalation rate per service", "प्रति सेवा वृद्धि दर")}
           >
             <BarChartCard
               data={ESCALATION_BY_CATEGORY}
               xKey="category"
               bars={[
-                { key: "escalations", label: "Escalations", color: "#ef4444" },
+                { key: "escalations", label: t("Escalations", "वृद्धियां"), color: "#ef4444" },
               ]}
               legend={false}
             />
@@ -207,13 +209,13 @@ export default function PerformanceDashboard() {
 
         {/* Aging Analysis */}
         <ChartCard
-          title="Aging Analysis"
-          subtitle="How many complaints resolved in how many days"
+          title={t("Aging Analysis", "आयु विश्लेषण")}
+          subtitle={t("How many complaints resolved in how many days", "कितने दिनों में कितनी शिकायतें निराकृत हुईं")}
         >
           <BarChartCard
             data={AGING_ANALYSIS}
             xKey="range"
-            bars={[{ key: "count", label: "Complaints", color: "#0ea5e9" }]}
+            bars={[{ key: "count", label: t("Complaints", "शिकायतें"), color: "#0ea5e9" }]}
             legend={false}
           />
         </ChartCard>
@@ -222,22 +224,21 @@ export default function PerformanceDashboard() {
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="px-5 py-3 border-b border-border">
             <h3 className="font-bold text-foreground flex items-center gap-2">
-              <Award className="w-5 h-5 text-amber-500" /> Officer Ranking
-              Report
+              <Award className="w-5 h-5 text-amber-500" /> {t("Officer Ranking Report", "अधिकारी रैंकिंग रिपोर्ट")}
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-2 font-medium">Rank</th>
-                  <th className="px-4 py-2 font-medium">Officer</th>
-                  <th className="px-4 py-2 font-medium">Designation</th>
-                  <th className="px-4 py-2 font-medium">District</th>
-                  <th className="px-4 py-2 font-medium text-right">Resolved</th>
-                  <th className="px-4 py-2 font-medium text-right">SLA %</th>
-                  <th className="px-4 py-2 font-medium">Avg Resolution</th>
-                  <th className="px-4 py-2 font-medium">Rating</th>
+                  <th className="px-4 py-2 font-medium">{t("Rank", "रैंक")}</th>
+                  <th className="px-4 py-2 font-medium">{t("Officer", "अधिकारी")}</th>
+                  <th className="px-4 py-2 font-medium">{t("Designation", "पदनाम")}</th>
+                  <th className="px-4 py-2 font-medium">{t("District", "जिला")}</th>
+                  <th className="px-4 py-2 font-medium text-right">{t("Resolved", "निराकृत")}</th>
+                  <th className="px-4 py-2 font-medium text-right">{t("SLA %", "SLA %")}</th>
+                  <th className="px-4 py-2 font-medium">{t("Avg Resolution", "औसत निस्तारण")}</th>
+                  <th className="px-4 py-2 font-medium">{t("Rating", "रेटिंग")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -280,28 +281,27 @@ export default function PerformanceDashboard() {
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="px-5 py-3 border-b border-border">
             <h3 className="font-bold text-foreground flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-blue-500" /> ULB Intelligence
-              Report
+              <MapPin className="w-5 h-5 text-blue-500" /> {t("ULB Intelligence Report", "ULB बुद्धिमत्ता रिपोर्ट")}
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-2 font-medium">ULB</th>
+                  <th className="px-4 py-2 font-medium">{t("ULB", "ULB")}</th>
                   <th className="px-4 py-2 font-medium text-right">
-                    Population
+                    {t("Population", "जनसंख्या")}
                   </th>
-                  <th className="px-4 py-2 font-medium text-center">Rank</th>
+                  <th className="px-4 py-2 font-medium text-center">{t("Rank", "रैंक")}</th>
                   <th className="px-4 py-2 font-medium text-right">
-                    Complaints
+                    {t("Complaints", "शिकायतें")}
                   </th>
                   <th className="px-4 py-2 font-medium text-right">
-                    Per Capita
+                    {t("Per Capita", "प्रति व्यक्ति")}
                   </th>
-                  <th className="px-4 py-2 font-medium text-right">SLA %</th>
-                  <th className="px-4 py-2 font-medium">Rating</th>
-                  <th className="px-4 py-2 font-medium">Trend</th>
+                  <th className="px-4 py-2 font-medium text-right">{t("SLA %", "SLA %")}</th>
+                  <th className="px-4 py-2 font-medium">{t("Rating", "रेटिंग")}</th>
+                  <th className="px-4 py-2 font-medium">{t("Trend", "रुझान")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

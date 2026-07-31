@@ -3,7 +3,6 @@ import {
   ScrollText,
   Search,
   Download,
-  Filter,
   User,
   Clock,
   FileText,
@@ -26,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useLanguage } from "@/context/LanguageContext";
 
 const actionConfig = {
   "Status Updated": {
@@ -50,6 +50,7 @@ const actionConfig = {
 };
 
 export default function AuditTrail() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
 
   const filtered = AUDIT_TRAIL.filter(
@@ -64,11 +65,11 @@ export default function AuditTrail() {
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <SectionTitle
-            title="Audit Trail & Logging"
-            subtitle="Who viewed/updated complaint, status changes, reassignments & rejections - full traceability"
+            title={t("Audit Trail & Logging", "ऑडिट ट्रेल और लॉगिंग")}
+            subtitle={t("Who viewed/updated complaint, status changes, reassignments & rejections - full traceability", "शिकायत किसने देखी/अद्यतन की, स्थिति में बदलाव, पुनराबंटन और अस्वीकृति - पूरी ट्रैसेबिलिटी")}
           />
           <Button variant="outline">
-            <Download className="w-4 h-4 mr-1" /> Export Log
+            <Download className="w-4 h-4 mr-1" /> {t("Export Log", "लॉग निर्यात करें")}
           </Button>
         </div>
 
@@ -77,7 +78,7 @@ export default function AuditTrail() {
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search by user, action, or complaint ID..."
+              placeholder={t("Search by user, action, or complaint ID...", "उपयोगकर्ता, कार्रवाई या शिकायत आईडी से खोजें...")}
               className="pl-9"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -85,26 +86,26 @@ export default function AuditTrail() {
           </div>
           <Select defaultValue="all">
             <SelectTrigger className="w-44">
-              <SelectValue placeholder="Action Type" />
+              <SelectValue placeholder={t("Action Type", "कार्रवाई का प्रकार")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Actions</SelectItem>
-              <SelectItem value="status">Status Changes</SelectItem>
-              <SelectItem value="escalation">Escalations</SelectItem>
-              <SelectItem value="reassign">Reassignments</SelectItem>
-              <SelectItem value="config">Config Changes</SelectItem>
-              <SelectItem value="login">Logins</SelectItem>
+              <SelectItem value="all">{t("All Actions", "सभी कार्रवाइयां")}</SelectItem>
+              <SelectItem value="status">{t("Status Changes", "स्थिति परिवर्तन")}</SelectItem>
+              <SelectItem value="escalation">{t("Escalations", "वृद्धियां")}</SelectItem>
+              <SelectItem value="reassign">{t("Reassignments", "पुनराबंटन")}</SelectItem>
+              <SelectItem value="config">{t("Config Changes", "कॉन्फ़िगरेशन परिवर्तन")}</SelectItem>
+              <SelectItem value="login">{t("Logins", "लॉगिन")}</SelectItem>
             </SelectContent>
           </Select>
           <Select defaultValue="all">
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Date Range" />
+              <SelectValue placeholder={t("Date Range", "तिथि सीमा")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Time</SelectItem>
-              <SelectItem value="today">Today</SelectItem>
-              <SelectItem value="week">This Week</SelectItem>
-              <SelectItem value="month">This Month</SelectItem>
+              <SelectItem value="all">{t("All Time", "सभी समय")}</SelectItem>
+              <SelectItem value="today">{t("Today", "आज")}</SelectItem>
+              <SelectItem value="week">{t("This Week", "इस सप्ताह")}</SelectItem>
+              <SelectItem value="month">{t("This Month", "इस महीने")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -113,8 +114,8 @@ export default function AuditTrail() {
         <div className="bg-white rounded-xl border border-border">
           <div className="px-5 py-3 border-b border-border">
             <h3 className="font-bold text-foreground flex items-center gap-2">
-              <ScrollText className="w-5 h-5 text-blue-500" /> Audit Log (
-              {filtered.length} entries)
+              <ScrollText className="w-5 h-5 text-blue-500" /> {t("Audit Log", "ऑडिट लॉग")} (
+              {filtered.length} {t("entries", "प्रविष्टियां")})
             </h3>
           </div>
           <div className="divide-y divide-border max-h-[600px] overflow-y-auto scrollbar-thin">

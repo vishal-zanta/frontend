@@ -29,8 +29,10 @@ import {
 } from "./api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { MAX_LIMIT, QUERY_KEYS, USER_ROLES_EXECULDED } from "@/utils/constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function OfficerTagging() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
@@ -212,8 +214,8 @@ export default function OfficerTagging() {
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <SectionTitle
-          title="Officer Tagging"
-          subtitle="Tag officers to multiple services and multiple wards - manually assigned due to location restriction"
+          title={t("Officer Tagging", "अधिकारी मैपिंग")}
+          subtitle={t("Tag officers to multiple services and multiple wards - manually assigned due to location restriction", "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और कई वार्डों से मैप करें")}
         />
 
         <OfficerTagAnalytics
@@ -223,7 +225,6 @@ export default function OfficerTagging() {
           }))}
         />
 
-        {/* Search + Dept Filter + Add */}
         <div className="flex gap-3 items-center">
           <SearchDebounced
             handleDebouncedChange={(val) => {
@@ -232,12 +233,12 @@ export default function OfficerTagging() {
             }}
             delay={500}
             className="flex-1"
-            placeholder="Search officer by name..."
+            placeholder={t("Search officer by name...", "नाम से अधिकारी खोजें...")}
           />
           <LoaderErrWrapper isLoading={deptLoading}>
             <div className="flex items-center gap-1.5 shrink-0">
               <label className="text-xs font-semibold text-muted-foreground">
-                Department:
+                {t("Department:", "विभाग:")}
               </label>
               <select
                 value={selectedDept}
@@ -263,11 +264,10 @@ export default function OfficerTagging() {
               setDialogOpen(true);
             }}
           >
-            <Plus className="w-4 h-4 mr-1" /> Tag New Officer
+            <Plus className="w-4 h-4 mr-1" /> {t("Tag New Officer", "नया अधिकारी मैप करें")}
           </Button>
         </div>
 
-        {/* Tagging table */}
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <LoaderErrWrapper isLoading={isLoading} error={error}>
             <OfficerTagTable

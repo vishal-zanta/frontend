@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Plus, ArrowRight } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -20,8 +20,10 @@ import WorkflowFilter from "./components/WorkflowFilter";
 import { useGetDepartments } from "../master-data/hooks";
 import DeleteDialog from "@/components/DeleteDialog";
 import EditDialog from "@/components/EditDialog";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function WorkflowConfig() {
+  const { t } = useLanguage();
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit", item? }
   const [reOrderDialog, setReOrderDialog] = useState(null);
   const [workflowList, setWorkflowList] = useState([]);
@@ -234,7 +236,10 @@ export default function WorkflowConfig() {
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
-        <SectionTitle title="Workflow Configuration" subtitle="" />
+        <SectionTitle
+          title={t("Workflow Configuration", "कार्यप्रवाह कॉन्फ़िगरेशन")}
+          subtitle={t("Configure department escalation workflow levels and roles", "विभाग वृद्धि कार्यप्रवाह स्तर और भूमिकाएं कॉन्फ़िगर करें")}
+        />
 
         {/* Visual workflow */}
         <EscalationFlow levels={workflowList} />
@@ -242,13 +247,13 @@ export default function WorkflowConfig() {
         {/* Config table */}
         <div className="bg-card rounded-xl border border-border overflow-hidden mt-6">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground">Workflow Levels</h3>
+            <h3 className="font-bold text-foreground">{t("Workflow Levels", "कार्यप्रवाह स्तर")}</h3>
             <div className="flex items-center gap-2">
               <LoaderErrWrapper isLoading={deptLoading}>
                 <WorkflowFilter
                   filterOptions={[
                     {
-                      label: "Departments",
+                      label: t("Departments", "विभाग"),
                       options: depts,
                       filterKey: "department",
                     },
@@ -265,7 +270,7 @@ export default function WorkflowConfig() {
                   setDialog({ type: "add" });
                 }}
               >
-                <Plus className="w-4 h-4 mr-1" /> Add Level
+                <Plus className="w-4 h-4 mr-1" /> {t("Add Level", "स्तर जोड़ें")}
               </Button>
             </div>
           </div>

@@ -1,25 +1,15 @@
 import React from "react";
 import {
   Server,
-  Activity,
-  Users,
   Cpu,
   HardDrive,
   Database,
-  Wifi,
-  MapPin,
-  AlertTriangle,
-  PhoneCall,
-  Phone,
-  BarChart3,
 } from "lucide-react";
-import StatCard from "@/components/StatCard";
-import ResourceUsageChart from "./components/ResourceUsageChart";
 import { Badge } from "@/components/ui/badge";
-import ExportButton from "@/components/ExportButton";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import { SYSTEM_HEALTH } from "@/lib/biharData";
 import { useGetSystemHealth } from "../hooks";
+import { useLanguage } from "@/context/LanguageContext";
 
 const API_ENDPOINTS = [
   {
@@ -128,6 +118,7 @@ const statusBadge = (status) => {
 };
 
 export default function SystemTab() {
+  const { t } = useLanguage();
   const chartData = [
     { name: "CPU", usage: SYSTEM_HEALTH.cpuUsage, limit: 100 },
     {
@@ -146,7 +137,6 @@ export default function SystemTab() {
     { refetchInterval: 60 * 1000 },
   );
   const systemStats = data?.data?.data;
-  console.log({ systemStats });
   return (
     <div className="space-y-6">
       {/* <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -306,7 +296,7 @@ export default function SystemTab() {
       <div className="bg-card rounded-xl border border-border p-5">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="font-bold text-foreground flex items-center gap-2">
-            <Server className="w-5 h-5 text-blue-500" /> Infrastructure Details
+            <Server className="w-5 h-5 text-blue-500" /> {t("Infrastructure Details", "अवसंरचना विवरण")}
           </h3>
           {/* {systemStats?.time && (
             <span className="text-xs text-muted-foreground font-mono">
@@ -325,11 +315,11 @@ export default function SystemTab() {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground">
-                      CPU Usage
+                      {t("CPU Usage", "सीपीयू उपयोग")}
                     </h4>
                     <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
                       {systemStats?.cpu?.cores}{" "}
-                      {systemStats?.cpu?.cores === 1 ? "Core" : "Cores"}
+                      {systemStats?.cpu?.cores === 1 ? t("Core", "कोर") : t("Cores", "कोर्स")}
                     </p>
                   </div>
                 </div>
@@ -360,10 +350,10 @@ export default function SystemTab() {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground">
-                      Memory (RAM)
+                      {t("Memory (RAM)", "मेमोरी (रैम)")}
                     </h4>
                     <p className="text-[10px] text-purple-600 dark:text-purple-400 font-mono mt-0.5 bg-purple-500/10 px-1.5 py-0.5 rounded">
-                      {systemStats?.ram?.free?.toFixed(2) ?? "0.00"} GB free
+                      {systemStats?.ram?.free?.toFixed(2) ?? "0.00"} {t("GB free", "जीबी खाली")}
                     </p>
                   </div>
                 </div>
@@ -398,10 +388,10 @@ export default function SystemTab() {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground">
-                      Disk (Storage)
+                      {t("Disk (Storage)", "डिस्क (स्टोरेज)")}
                     </h4>
                     <p className="text-[10px] text-amber-600 dark:text-amber-400 font-mono mt-0.5 bg-amber-500/10 px-1.5 py-0.5 rounded">
-                      {systemStats?.disk?.free?.toFixed(2) ?? "0.00"} GB free
+                      {systemStats?.disk?.free?.toFixed(2) ?? "0.00"} {t("GB free", "जीबी खाली")}
                     </p>
                   </div>
                 </div>

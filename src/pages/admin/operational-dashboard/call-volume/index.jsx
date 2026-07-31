@@ -4,21 +4,23 @@ import StatCard from "@/components/StatCard";
 import CallTrafficChart from "./components/CallTrafficChart";
 import IvrFunnelChart from "./components/IvrFunnelChart";
 import PeakHourChart from "./components/PeakHourChart";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CallVolumeTab({ pd }) {
+  const { t } = useLanguage();
   const funnelData = [
     {
-      name: "IVR Completed",
+      name: t("IVR Completed", "आईवीआर पूरा हुआ"),
       value: Math.round(pd.calls * 0.87),
       color: "#22c55e",
     },
     {
-      name: "Transferred to Agent",
+      name: t("Transferred to Agent", "एजेंट को स्थानांतरित"),
       value: Math.round(pd.calls * 0.064),
       color: "#f59e0b",
     },
     {
-      name: "Dropped in IVR",
+      name: t("Dropped in IVR", "आईवीआर में ड्रॉप हुआ"),
       value: Math.round(pd.calls * 0.066),
       color: "#ef4444",
     },
@@ -29,7 +31,7 @@ export default function CallVolumeTab({ pd }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={PhoneCall}
-          label={`Total Calls (${pd.label})`}
+          label={`${t("Total Calls", "कुल कॉल")} (${pd.label})`}
           value={pd.calls.toLocaleString("en-IN")}
           color="blue"
           trend="up"
@@ -37,7 +39,7 @@ export default function CallVolumeTab({ pd }) {
         />
         <StatCard
           icon={PhoneMissed}
-          label="Missed Calls"
+          label={t("Missed Calls", "मिस कॉल")}
           value={pd.missed.toLocaleString("en-IN")}
           color="red"
           trend="down"
@@ -45,18 +47,18 @@ export default function CallVolumeTab({ pd }) {
         />
         <StatCard
           icon={Clock}
-          label="Avg Wait Time"
+          label={t("Avg Wait Time", "औसत प्रतीक्षा समय")}
           value={pd.avgWaitTime}
           color="amber"
         />
         <StatCard
           icon={TrendingUp}
-          label="Success Rate"
+          label={t("Success Rate", "सफलता दर")}
           value={`${pd.successRate}%`}
           color="green"
           trend="up"
           trendValue={`+1.2% (${pd.sub})`}
-          sublabel="Target: 95%"
+          sublabel={t("Target: 95%", "लक्ष्य: 95%")}
         />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -10,8 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
 import { Save, FileUp, AlertTriangle } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FileSizeSections = () => {
+  const { t } = useLanguage();
   const { hasPermission } = useAuth();
   const queryClient = useQueryClient();
 
@@ -60,7 +62,7 @@ const FileSizeSections = () => {
       grievanceMaxUploadSizeMB: Number(grievanceSize),
       fieldVisitMaxUploadSizeMB: Number(fieldVisitSize),
       chatMaxUploadSizeMB: Number(chatSize),
-      slaWarningPercentage: Number(slaWarningPercentage)
+      slaWarningPercentage: Number(slaWarningPercentage),
     });
   };
 
@@ -73,16 +75,16 @@ const FileSizeSections = () => {
             <div className="flex items-center gap-2 border-b border-border pb-3">
               <FileUp className="w-5 h-5 text-blue-500" />
               <div>
-                <h3 className="font-bold text-foreground">File Size Limits</h3>
+                <h3 className="font-bold text-foreground">{t("File Size Limits", "फ़ाइल आकार सीमाएँ")}</h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Configure individual upload limits across different modules (Max {defaultMaxUploadSizeMB} MB per input)
+                  {t(`Configure individual upload limits across different modules (Max ${defaultMaxUploadSizeMB} MB per input)`, `विभिन्न मॉड्यूल में अलग-अलग अपलोड सीमाएँ कॉन्फ़िगर करें (अधिकतम ${defaultMaxUploadSizeMB} MB प्रति इनपुट)`)}
                 </p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="grievanceSize">Citizen Attachment Max Upload Size (MB) <span className="text-red-500">*</span></Label>
+                <Label htmlFor="grievanceSize">{t("Citizen Attachment Max Upload Size (MB)", "नागरिक अनुलग्नक अधिकतम अपलोड आकार (MB)")} <span className="text-red-500">*</span></Label>
                 <Input
                   id="grievanceSize"
                   type="text"
@@ -102,7 +104,7 @@ const FileSizeSections = () => {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="fieldVisitSize">Field Visit Max Upload Size (MB) <span className="text-red-500">*</span></Label>
+                <Label htmlFor="fieldVisitSize">{t("Field Visit Max Upload Size (MB)", "क्षेत्र दौरे का अधिकतम अपलोड आकार (MB)")} <span className="text-red-500">*</span></Label>
                 <Input
                   id="fieldVisitSize"
                   type="text"
@@ -122,7 +124,7 @@ const FileSizeSections = () => {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="chatSize">Chat Max Upload Size (MB) <span className="text-red-500">*</span></Label>
+                <Label htmlFor="chatSize">{t("Chat Max Upload Size (MB)", "चैट का अधिकतम अपलोड आकार (MB)")} <span className="text-red-500">*</span></Label>
                 <Input
                   id="chatSize"
                   type="text"
@@ -148,9 +150,9 @@ const FileSizeSections = () => {
             <div className="flex items-center gap-2 border-b border-border pb-3">
               <AlertTriangle className="w-5 h-5 text-amber-500" />
               <div>
-                <h3 className="font-bold text-foreground">SLA Warning Inputs</h3>
+                <h3 className="font-bold text-foreground">{t("SLA Warning Inputs", "SLA चेतावनी इनपुट")}</h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Configure SLA threshold warning triggers (1% to 100%)
+                  {t("Configure SLA threshold warning triggers (1% to 100%)", "SLA सीमा चेतावनी ट्रिगर (1% से 100%) कॉन्फ़िगर करें")}
                 </p>
               </div>
             </div>
@@ -158,7 +160,7 @@ const FileSizeSections = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1.5">
                 <Label htmlFor="slaWarningPercentage">
-                  SLA Warning Percentage <span className="text-red-500">*</span>
+                  {t("SLA Warning Percentage", "SLA चेतावनी प्रतिशत")} <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
                   <Input
@@ -182,7 +184,7 @@ const FileSizeSections = () => {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                  <span className="font-medium text-foreground">Note:</span> Warning notification triggers when elapsed SLA time reaches this percentage (e.g. at 75%, notification fires after 18 hrs of a 24-hr SLA).
+                  <span className="font-medium text-foreground">{t("Note:", "नोट:")}</span> {t("Warning notification triggers when elapsed SLA time reaches this percentage (e.g. at 75%, notification fires after 18 hrs of a 24-hr SLA).", "बीता हुआ SLA समय इस प्रतिशत तक पहुँचने पर चेतावनी अधिसूचना ट्रिगर होती है (उदा. 75% पर, 24 घंटे के SLA में 18 घंटे के बाद सूचना भेजी जाती है)।")}
                 </p>
               </div>
             </div>
@@ -196,7 +198,7 @@ const FileSizeSections = () => {
               disabled={mutation.isPending}
             >
               <Save className="w-4 h-4 mr-1.5" />
-              {mutation.isPending ? "Saving..." : "Save Settings"}
+              {mutation.isPending ? t("Saving...", "सहेजा जा रहा है...") : t("Save Settings", "सेटिंग्स सहेजें")}
             </Button>
           </div>
         </form>

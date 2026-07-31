@@ -23,8 +23,10 @@ import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import ViewDialog from "./components/ViewDialog";
 import { postAdminLogout } from "@/api/auth.api";
 import { useGetSkills } from "../master-data/hooks";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function UserManagement() {
+  const { t } = useLanguage();
   const [filterRole, setFilterRole] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -128,46 +130,72 @@ export default function UserManagement() {
     setLogoutUser(user);
   };
 
+  const handleToggleStatus = (user) => {
+    const newStatus = user.status === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
+    putMutation.mutate({ id: user.id, data: { status: newStatus } });
+  };
+
   const handleDelete = (user) => {
     setDeleteUserRecord(user);
   };
+
+  const confirmDelete = () => {
+    if (deleteUserRecord) {
+      deleteMutation.mutate(deleteUserRecord.id);
+      setDeleteUserRecord(null);
+    }
+  };
+
   const handleView = (user) => {
     setViewUser(user);
   };
 
-  const handleToggleStatus = (user) => {
-    const newStatus = user.status === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
-    putMutation.mutate({
-      userId: user.id,
-      user: {
-        status: newStatus,
-      },
-    });
+  const handleCreateUser = (formData) => {
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      password: formData.password,
+      role: formData.role,
+      district: formData.district,
+      loginId: formData.loginId,
+      skills: formData.skills,
+      preferredLanguages: formData.preferredLanguages,
+    };
+    postMutation.mutate(payload);
   };
 
-  const tableData = (data?.data?.data?.docs || []).map((user) => {
-    const districtVal = user?.district;
-    const districtDisplay =
-      districtVal && typeof districtVal === "object"
-        ? districtVal.name || districtVal._id || ""
-        : districtVal || "";
+  const handleUpdateUser = (formData) => {
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      role: formData.role?._id || formData.role,
+      district: formData.district,
+      loginId: formData.loginId,
+      skills: formData.skills,
+      preferredLanguages: formData.preferredLanguages,
+    };
+    putMutation.mutate({ id: editUser.id, data: payload });
+  };
 
+  const tableData = (usersData || []).map((user) => {
     return {
       id: user?._id,
-      name: user?.name,
-      email: user?.email,
+      name: user?.name || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
       role: user?.role?.designationEnglish || "",
-      designation: user?.role?.designationEnglish || "",
-      district: districtDisplay,
+      district: typeof user?.district === "object" ? user?.district?.name || "-" : user?.district || "-",
       status: user?.status || "",
-      permissions: user?.role?.permissions || [],
+      permissions: user?.permissions || [],
+      lastLogin: user?.lastLogin
+        ? new Date(user.lastLogin).toLocaleString("en-IN")
+        : "Never",
       skills: user?.skills || [],
       preferredLanguages: user?.preferredLanguages || [],
+      loginId: CCE_ROLES.includes(user?.role?.designationEnglish) ? user?.loginId : "-",
       apiData: user,
-      lastLogin: user?.lastLogin
-        ? new Date(user?.lastLogin).toLocaleString() || ""
-        : "-",
-        loginId : CCE_ROLES.includes(user?.role?.designationEnglish)  ? user?.loginId : "-"
     };
   });
 
@@ -177,8 +205,8 @@ export default function UserManagement() {
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <SectionTitle
-            title="User Management & RBAC"
-            subtitle="Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control"
+            title={t("User Management & RBAC", "उपयोगकर्ता प्रबंधन और RBAC")}
+            subtitle={t("Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control", "भूमिका-आधारित पहुँच नियंत्रण के साथ कॉल-सेंटर एजेंटों, पर्यवेक्षकों, निगरानी टीम और सिस्टम व्यवस्थापकों को प्रबंधित करें")}
           />
           <div className="flex gap-2">
             <Button
@@ -197,7 +225,7 @@ export default function UserManagement() {
               }}
               className="bg-primary hover:bg-primary/90"
             >
-              <UserPlus className="w-4 h-4 mr-1" /> Add User
+              <UserPlus className="w-4 h-4 mr-1" /> {t("Add User", "उपयोगकर्ता जोड़ें")}
             </Button>
             <Button
               onClick={() => {
@@ -219,7 +247,7 @@ export default function UserManagement() {
               }}
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
-              <Shield className="w-4 h-4 mr-1" /> Create Admin
+              <Shield className="w-4 h-4 mr-1" /> {t("Create Admin", "एडमिन बनाएं")}
             </Button>
           </div>
         </div>
@@ -233,7 +261,7 @@ export default function UserManagement() {
             }}
             className="flex-1"
             delay={500}
-            placeholder="Search by name ..."
+            placeholder={t("Search by name ...", "नाम से खोजें ...")}
           />
 
           <SelectDebounced
@@ -246,9 +274,9 @@ export default function UserManagement() {
               label: r.designationEnglish,
               value: r._id,
             }))}
-            placeholder="Select a role"
+            placeholder={t("Select a role", "भूमिका चुनें")}
             isAll={true}
-            allLabel={"All Roles"}
+            allLabel={t("All Roles", "सभी भूमिकाएं")}
           />
         </div>
 

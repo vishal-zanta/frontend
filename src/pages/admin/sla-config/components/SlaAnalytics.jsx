@@ -1,7 +1,9 @@
 import React from "react";
 import StatCard from "@/components/StatCard";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SlaAnalytics({ docs = [], rolesCount = 0 }) {
+  const { t } = useLanguage();
   const configured = docs.length;
   const withOfficer = docs.filter((s) => s.officer).length;
   const missingOfficer = docs.filter((s) => !s.officer).length;
@@ -12,22 +14,22 @@ export default function SlaAnalytics({ docs = [], rolesCount = 0 }) {
       <StatCard
         color="blue"
         value={configured}
-        label="Sub-services Configured"
+        label={t("Sub-services Configured", "उप-सेवाएं कॉन्फ़िगर की गईं")}
       />
       <StatCard
         color="emerald"
         value={withOfficer}
-        label="With Officer Assigned"
+        label={t("With Officer Assigned", "अधिकारी आवंटित")}
       />
       <StatCard
         color="amber"
         value={missingOfficer}
-        label="Missing Officer"
+        label={t("Missing Officer", "बिना अधिकारी")}
       />
       <StatCard
         color="purple"
         value={rolesCountValue}
-        label="Escalation Levels"
+        label={t("Escalation Levels", "वृद्धि के स्तर")}
       />
     </div>
   );

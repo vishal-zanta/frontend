@@ -1,10 +1,5 @@
 import React from "react";
-import { MessageSquare, Newspaper, Bot } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ChartCard } from "@/components/ChartCard";
 import ModeWiseComplaintsChart from "./charts/ModeWiseComplaintsChart";
-import { SOCIAL_COMPLAINTS } from "@/lib/biharData";
 
 export default function ModesAndSocialSection({ modeData }) {
   return (

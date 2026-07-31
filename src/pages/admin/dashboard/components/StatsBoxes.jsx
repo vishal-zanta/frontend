@@ -10,8 +10,10 @@ import {
 import StatCard from "@/components/StatCard";
 import { getTrendProps } from "@/utils/helpers";
 import EscalatedDetails from "./EscalatedDetails";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function StatsBoxes({ metrics }) {
+  const { t } = useLanguage();
   const current = metrics?.currentPeriod || {};
   const previous = metrics?.previousPeriod || {};
   const [click, setClick] = useState(null);
@@ -52,28 +54,28 @@ export default function StatsBoxes({ metrics }) {
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         <StatCard
           icon={Inbox}
-          label="Total Complaints"
+          label={t("Total Complaints", "कुल शिकायतें")}
           value={total.toLocaleString("en-IN")}
           color="blue"
           {...totalTrend}
         />
         <StatCard
           icon={Activity}
-          label="Active"
+          label={t("Active", "सक्रिय")}
           value={active.toLocaleString("en-IN")}
           color="amber"
           {...activeTrend}
         />
         <StatCard
           icon={CheckCircle2}
-          label="Resolved"
+          label={t("Resolved", "निराकृत")}
           value={resolved.toLocaleString("en-IN")}
           color="green"
           {...resolvedTrend}
         />
         <StatCard
           icon={AlertTriangle}
-          label="Escalated"
+          label={t("Escalated", "बढ़ाई गई")}
           value={escalated.toLocaleString("en-IN")}
           color="red"
           {...escalatedTrend}
@@ -82,18 +84,18 @@ export default function StatsBoxes({ metrics }) {
         />
         <StatCard
           icon={Clock}
-          label="SLA Compliance"
+          label={t("SLA Compliance", "SLA अनुपालन")}
           value={`${slaCompliance}%`}
           color="purple"
-          sublabel="Target: 95%"
+          sublabel={t("Target: 95%", "लक्ष्य: 95%")}
           {...slaTrend}
         />
         <StatCard
           icon={Star}
-          label="Satisfaction"
+          label={t("Satisfaction", "संतुष्टि")}
           value={`${satisfaction}/5`}
           color="sky"
-          sublabel="Target: 4.5"
+          sublabel={t("Target: 4.5", "लक्ष्य: 4.5")}
           {...satisfactionTrend}
         />
       </div>

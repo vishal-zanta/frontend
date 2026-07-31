@@ -9,6 +9,7 @@ import {
 } from "../../master-data/hooks";
 import subDivisionsData from "@/utils/sub-divisions.json";
 import { MAX_LIMIT } from "@/utils/constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function QuickTagOfficer({
   officers = [],
@@ -16,6 +17,7 @@ export default function QuickTagOfficer({
   isLoading,
   department,
 }) {
+  const { t } = useLanguage();
   const [selectedOfficer, setSelectedOfficer] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [selectedSubservices, setSelectedSubservices] = useState([]);
@@ -58,53 +60,53 @@ export default function QuickTagOfficer({
   );
 
   // Fetch Districts (Demographics)
-  const { data: demographyData } = useGetDemographics([], {
+  const { data: demographicsData } = useGetDemographics([], {
     page: 1,
     limit: MAX_LIMIT,
   });
-  const districtOptions = (demographyData?.data?.data?.docs || []).map((d) => ({
-    label: d.name,
-    value: d._id,
-    name: d.name,
-  }));
-
-  // Map Subdivisions options based on selectedDistrict
-  const selectedDistrictObj = districtOptions.find(
-    (d) => d.value === selectedDistrict,
+  const districtOptions = (demographicsData?.data?.data?.docs || []).map(
+    (d) => ({
+      label: d.name,
+      value: d._id,
+    }),
   );
-  const districtLabel = selectedDistrictObj?.name;
-  const rawSubdivisions = districtLabel
-    ? subDivisionsData[districtLabel] || []
-    : [];
-  const subdivisionOptions = rawSubdivisions.map((sub) => ({
-    label: sub,
-    value: sub,
+
+  const subdivisionOptions = (
+    subDivisionsData[selectedDistrict] || []
+  ).map((sd) => ({
+    label: sd,
+    value: sd,
   }));
 
-  const  clearState = ()=> {
+  const clearState = () => {
     setSelectedOfficer("");
-    setSelectedService("");
+    setSelectedService([]);
     setSelectedSubservices([]);
     setSelectedDistrict("");
     setSelectedSubdivisions([]);
-  }
+  };
+
   const handleSubmit = () => {
     if (
       !selectedOfficer ||
-      selectedSubservices.length === 0 ||
-      selectedSubdivisions.length === 0
+      !selectedService.length ||
+      !selectedSubservices.length ||
+      !selectedDistrict ||
+      !selectedSubdivisions.length
     ) {
       return;
     }
+
     handleSaveTagging({
       officer: selectedOfficer,
-      service: selectedService,
-      services: selectedSubservices,
+      department: department,
+      services: selectedService,
+      subServices: selectedSubservices,
       district: selectedDistrict,
-      wards: selectedSubdivisions,
+      subDivisions: selectedSubdivisions,
     });
     // Clear state
-clearState();
+    clearState();
   };
   useEffect(()=> {
     if(department ){
@@ -115,22 +117,22 @@ clearState();
   return (
     <div className="bg-card rounded-xl border border-border p-5">
       <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-        <UserCog className="w-5 h-5 text-blue-500" /> Quick Tag Officer
+        <UserCog className="w-5 h-5 text-blue-500" /> {t("Quick Tag Officer", "त्वरित अधिकारी मैपिंग")}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div>
           <MySelect
-            label="Select Officer "
+            label={t("Select Officer ", "अधिकारी चुनें ")}
             options={officers}
             value={selectedOfficer}
             onValueChange={setSelectedOfficer}
-            placeholder="Select officer..."
+            placeholder={t("Select officer...", "अधिकारी चुनें...")}
             required
           />
         </div>
         <div>
           <MySelect
-            label={  "Service (Multi-select) "}
+            label={t("Service (Multi-select) ", "सेवा (बहु-चयन) ")}
             isMultiple
             options={servicesOptions}
             value={selectedService}
@@ -138,7 +140,7 @@ clearState();
               setSelectedService(val);
               setSelectedSubservices([]);
             }}
-            placeholder={!selectedOfficer ? "Select officer first" : "Select services..."}
+            placeholder={!selectedOfficer ? t("Select officer first", "पहले अधिकारी चुनें") : t("Select services...", "सेवाएं चुनें...")}
             required
             disabled={!selectedOfficer}
             isLoading={serviceLoading || serviceFetching}
@@ -146,15 +148,15 @@ clearState();
         </div>
         <div>
           <MySelect
-            label="Sub-services (Multi-select) "
+            label={t("Sub-services (Multi-select) ", "उप-सेवाएं (बहु-चयन) ")}
             isMultiple
             options={subservicesOptions}
             value={selectedSubservices}
             onValueChange={setSelectedSubservices}
             placeholder={
               !selectedService || selectedService.length === 0
-                ? "Select service first"
-                : "Select sub-services..."
+                ? t("Select service first", "पहले सेवा चुनें")
+                : t("Select sub-services...", "उप-सेवाएं चुनें...")
             }
             disabled={!selectedService || selectedService.length === 0}
             isLoading={subServiceFetching || subServiceLoading}
@@ -163,28 +165,28 @@ clearState();
         </div>
         <div>
           <MySelect
-            label="District "
+            label={t("District ", "जिला ")}
             options={districtOptions}
             value={selectedDistrict}
             onValueChange={(val) => {
               setSelectedDistrict(val);
               setSelectedSubdivisions([]);
             }}
-            placeholder="Select district..."
+            placeholder={t("Select district...", "जिला चुनें...")}
             required
           />
         </div>
         <div>
           <MySelect
-            label="Subdivision (Multi-select) "
+            label={t("Subdivision (Multi-select) ", "अनुमंडल (बहु-चयन) ")}
             isMultiple
             options={subdivisionOptions}
             value={selectedSubdivisions}
             onValueChange={setSelectedSubdivisions}
             placeholder={
               !selectedDistrict
-                ? "Select district first"
-                : "Select subdivisions..."
+                ? t("Select district first", "पहले जिला चुनें")
+                : t("Select subdivisions...", "अनुमंडल चुनें...")
             }
             disabled={!selectedDistrict}
             required
@@ -197,7 +199,7 @@ clearState();
         disabled={isLoading}
       >
         <Save className="w-4 h-4 mr-1" />{" "}
-        {isLoading ? "Saving..." : "Save Tagging"}
+        {isLoading ? t("Saving...", "सहेजा जा रहा है...") : t("Save Tagging", "मैपिंग सहेजें")}
       </Button>
     </div>
   );

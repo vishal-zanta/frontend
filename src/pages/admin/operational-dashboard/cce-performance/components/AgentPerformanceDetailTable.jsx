@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import ExportButton from "@/components/ExportButton";
 import EditDialog from "@/components/EditDialog";
 import AgentCallingMetricsDialogBody from "./AgentCallingMetricsDialogBody";
+import { useLanguage } from "@/context/LanguageContext";
 
 const agentExportColumns = [
   { key: "agent", label: "Agent" },
@@ -15,6 +16,7 @@ const agentExportColumns = [
 ];
 
 export default function AgentPerformanceDetailTable({ data = [] }) {
+  const { t } = useLanguage();
   const [selectedAgent, setSelectedAgent] = useState(null);
 
   return (
@@ -22,7 +24,7 @@ export default function AgentPerformanceDetailTable({ data = [] }) {
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground">
-            Agent Performance Detail
+            {t("Agent Performance Detail", "एजेंट प्रदर्शन विवरण")}
           </h3>
           <ExportButton
             data={data}
@@ -34,14 +36,14 @@ export default function AgentPerformanceDetailTable({ data = [] }) {
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
-                <th className="px-4 py-2 font-medium">Agent</th>
-                <th className="px-4 py-2 font-medium">Calls</th>
-                <th className="px-4 py-2 font-medium">Resolved</th>
-                <th className="px-4 py-2 font-medium">Avg Talk</th>
-                <th className="px-4 py-2 font-medium">CSAT</th>
-                <th className="px-4 py-2 font-medium">SLA %</th>
-                <th className="px-4 py-2 font-medium">Rating</th>
-                <th className="px-4 py-2 font-medium">Status</th>
+                <th className="px-4 py-2 font-medium">{t("Agent", "एजेंट")}</th>
+                <th className="px-4 py-2 font-medium">{t("Calls", "कॉल")}</th>
+                <th className="px-4 py-2 font-medium">{t("Resolved", "निराकृत")}</th>
+                <th className="px-4 py-2 font-medium">{t("Avg Talk", "औसत बात")}</th>
+                <th className="px-4 py-2 font-medium">{t("CSAT", "CSAT")}</th>
+                <th className="px-4 py-2 font-medium">{t("SLA %", "SLA %")}</th>
+                <th className="px-4 py-2 font-medium">{t("Rating", "रेटिंग")}</th>
+                <th className="px-4 py-2 font-medium">{t("Status", "स्थिति")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

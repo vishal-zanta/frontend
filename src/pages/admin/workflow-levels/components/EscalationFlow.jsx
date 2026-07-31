@@ -1,13 +1,15 @@
 import React from "react";
 import { GitBranch, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function EscalationFlow({ levels = [] }) {
+  const { t } = useLanguage();
   const sortedLevels = [...levels].sort((a, b) => a.order - b.order);
 
   return (
     <div className="bg-card rounded-xl border border-border p-6">
       <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-        <GitBranch className="w-5 h-5 text-blue-500" /> Escalation Flow
+        <GitBranch className="w-5 h-5 text-blue-500" /> {t("Escalation Flow", "वृद्धि प्रवाह")}
       </h3>
       <div className="flex items-center gap-2 flex-wrap">
         {sortedLevels.map((level, i) => {
@@ -29,7 +31,7 @@ export default function EscalationFlow({ levels = [] }) {
                   }}
                 >
                   <div className="text-xs opacity-80">
-                    Level {level.order} ({levelName})
+                    {t("Level", "स्तर")} {level.order} ({levelName})
                   </div>
                   <div className="text-xs font-bold leading-tight truncate max-w-[150px]">
                     {title}

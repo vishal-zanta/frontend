@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Trash2, Copy, ToggleLeft, ToggleRight, Loader2, Key } from "lucide-react";
+import { Plus, Trash2, Copy, Loader2, Key } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,13 +15,15 @@ import { postApiKey, toggleApiKeyStatus, deleteApiKey } from "../api";
 import { QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import clsx from "clsx";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ApiKeysTab() {
-  const queryClient = useQueryClient();
+  const { t } = useLanguage();
   const { page, limit, ...paginationProps } = usePagination();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useGetApiKeys([page, limit], { page, limit });
-  const rawKeys = data?.data?.data?.docs ||data?.data?.data ||  [];
+  const rawKeys = data?.data?.data?.docs || data?.data?.data || [];
   const totalPages = data?.data?.data?.pagination?.totalPages || 1;
 
   const [dialog, setDialog] = useState(null); // { type: "add" | "delete", item? }
@@ -91,11 +93,11 @@ export default function ApiKeysTab() {
   };
 
   const tableHeaders = [
-    { id: "name", label: "Name" },
-    { id: "createdBy", label: "Created By (Name, Role)" },
-    { id: "key", label: "API Key" },
-    { id: "status", label: "Status" },
-    { id: "actions", label: "Actions", className: "text-right" },
+    { id: "name", label: t("Name", "नाम") },
+    { id: "createdBy", label: t("Created By (Name, Role)", "द्वारा बनाया गया (नाम, भूमिका)") },
+    { id: "key", label: t("API Key", "API कुंजी") },
+    { id: "status", label: t("Status", "स्थिति") },
+    { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-right" },
   ];
 
   const tableBody = rawKeys.map((item) => {

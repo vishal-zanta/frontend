@@ -1,7 +1,8 @@
 import React from "react";
-import { CheckCircle2, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function OfficerTagTable({
   tagging = [],
@@ -9,16 +10,17 @@ export default function OfficerTagTable({
   setDialog,
   handleDelete,
 }) {
+  const { t } = useLanguage();
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead className="bg-muted/50">
           <tr className="text-left text-xs text-muted-foreground">
-            <th className="px-4 py-3 font-medium">Officer</th>
-            <th className="px-4 py-3 font-medium">Designation</th>
-            <th className="px-4 py-3 font-medium min-w-60">Sub-services</th>
-            <th className="px-4 py-3 font-medium min-w-48">Subdivisions</th>
-            <th className="px-4 py-3 font-medium text-center">Actions</th>
+            <th className="px-4 py-3 font-medium">{t("Officer", "अधिकारी")}</th>
+            <th className="px-4 py-3 font-medium">{t("Designation", "पदनाम")}</th>
+            <th className="px-4 py-3 font-medium min-w-60">{t("Sub-services", "उप-सेवाएं")}</th>
+            <th className="px-4 py-3 font-medium min-w-48">{t("Subdivisions", "अनुमंडल")}</th>
+            <th className="px-4 py-3 font-medium text-center">{t("Actions", "कार्रवाई")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -28,7 +30,7 @@ export default function OfficerTagTable({
                 colSpan={5}
                 className="text-center py-8 text-sm text-muted-foreground"
               >
-                No tagging found.
+                {t("No tagging found.", "कोई मैपिंग नहीं मिली।")}
               </td>
             </tr>
           ) : (
@@ -81,7 +83,7 @@ export default function OfficerTagTable({
                         });
                       }}
                     >
-                      <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+                      <Pencil className="w-3.5 h-3.5 mr-1" /> {t("Edit", "संपादित करें")}
                     </Button>
                     <Button
                       variant="ghost"

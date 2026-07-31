@@ -1,17 +1,10 @@
 import React, { useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 
 import PortalLayout from "@/components/PortalLayout";
 import RhfWrapper from "@/components/RhfWrapper";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+
 import { useLanguage } from "@/context/LanguageContext";
 
 import { useRaiseComplaintData } from "./hooks";
@@ -32,7 +25,6 @@ import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import SuccessScreen from "./components/SuccessScreen";
 import { postComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
-import LangSelector from "@/components/LangSelector";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
 
 export default function CRMRaiseComplaint() {

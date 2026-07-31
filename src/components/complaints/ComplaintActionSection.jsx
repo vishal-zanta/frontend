@@ -9,7 +9,6 @@ import { getErrorToast } from "@/utils/helpers";
 import { Label } from "../ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import useGetFileSize from "@/hooks/query/useGetFileSize";
 
 const initialRemark = { isOpen: false, value: "", id: null, status: null };
 

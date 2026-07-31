@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Network,
   Save,
   Check,
   Lock,
@@ -14,6 +13,7 @@ import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Internal staff menu items
 const staffMenuItems = [
@@ -255,6 +255,7 @@ const initialCitizenPermissions = {
 };
 
 function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
+  const { t } = useLanguage();
   const cols = Array.isArray(roles) ? roles : null;
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
@@ -263,7 +264,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
           <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
               <th className="px-3 py-3 font-medium sticky left-0 bg-[#F4F7FA] dark:bg-[#172033] z-10">
-                Menu Item
+                {t("Menu Item", "मेनू आइटम")}
               </th>
               {cols ? (
                 cols.map((r) => (
@@ -285,7 +286,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
                     variant="outline"
                     className="text-[10px] bg-muted/50 text-muted-foreground"
                   >
-                    Citizen
+                    {t("Citizen", "नागरिक")}
                   </Badge>
                 </th>
               )}
@@ -306,7 +307,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
                       <td key={r.name} className="px-3 py-2.5 text-center">
                         <button
                           onClick={() => togglePermission(r.name, menu)}
-                          title={`Click to change: ${cfg.label}`}
+                          title={`${t("Click to change", "बदलने के लिए क्लिक करें")}: ${cfg.label}`}
                           className={`w-9 h-9 rounded-lg ${cfg.color} flex items-center justify-center mx-auto transition-all hover:scale-110 cursor-pointer`}
                         >
                           <Icon className="w-4 h-4" />
@@ -318,7 +319,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
                   <td className="px-3 py-2.5 text-center">
                     <button
                       onClick={() => togglePermission(null, menu)}
-                      title={`Click to change: ${permConfig[permissions[menu] || "none"].label}`}
+                      title={`${t("Click to change", "बदलने के लिए क्लिक करें")}: ${permConfig[permissions[menu] || "none"].label}`}
                       className={`w-9 h-9 rounded-lg ${permConfig[permissions[menu] || "none"].color} flex items-center justify-center mx-auto transition-all hover:scale-110 cursor-pointer`}
                     >
                       {React.createElement(
@@ -338,6 +339,7 @@ function PermissionMatrix({ menuItems, roles, permissions, togglePermission }) {
 }
 
 export default function ManageLinks() {
+  const { t } = useLanguage();
   const [staffPerms, setStaffPerms] = useState(initialStaffPermissions);
   const [citizenPerms, setCitizenPerms] = useState(initialCitizenPermissions);
   const [saved, setSaved] = useState(false);
@@ -366,13 +368,20 @@ export default function ManageLinks() {
     setTimeout(() => setSaved(false), 3000);
   };
 
+  const permConfigLabels = {
+    edit: t("Full Access", "पूर्ण पहुंच"),
+    view: t("View Only", "केवल देखें"),
+    none: t("No Access", "कोई पहुंच नहीं"),
+    self: t("Own Records Only", "केवल अपने रिकॉर्ड"),
+  };
+
   return (
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <SectionTitle
-            title="Manage Links & Permissions"
-            subtitle="Click any cell to cycle through access levels. Citizen Access is managed separately from internal staff roles."
+            title={t("Manage Links & Permissions", "लिंक और अनुमतियां प्रबंधित करें")}
+            subtitle={t("Click any cell to cycle through access levels. Citizen Access is managed separately from internal staff roles.", "पहुंच स्तरों के माध्यम से चक्र करने के लिए किसी भी सेल पर क्लिक करें। नागरिक पहुंच आंतरिक कर्मचारियों की भूमिकाओं से अलग प्रबंधित की जाती है।")}
           />
           <Button
             onClick={handleSave}
@@ -380,11 +389,11 @@ export default function ManageLinks() {
           >
             {saved ? (
               <>
-                <Check className="w-4 h-4 mr-1" /> Saved!
+                <Check className="w-4 h-4 mr-1" /> {t("Saved!", "सहेजा गया!")}
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-1" /> Save Permissions
+                <Save className="w-4 h-4 mr-1" /> {t("Save Permissions", "अनुमतियां सहेजें")}
               </>
             )}
           </Button>
@@ -401,7 +410,7 @@ export default function ManageLinks() {
                 >
                   <Icon className="w-4 h-4" />
                 </div>
-                <span className="text-muted-foreground">{cfg.label}</span>
+                <span className="text-muted-foreground">{permConfigLabels[key] || cfg.label}</span>
               </div>
             );
           })}
@@ -410,17 +419,16 @@ export default function ManageLinks() {
         <Tabs defaultValue="staff">
           <TabsList>
             <TabsTrigger value="staff" className="gap-1">
-              <Users className="w-3.5 h-3.5" /> Internal Staff Roles
+              <Users className="w-3.5 h-3.5" /> {t("Internal Staff Roles", "आंतरिक कर्मचारी भूमिकाएं")}
             </TabsTrigger>
             <TabsTrigger value="citizen" className="gap-1">
-              <User className="w-3.5 h-3.5" /> Citizen Access
+              <User className="w-3.5 h-3.5" /> {t("Citizen Access", "नागरिक पहुंच")}
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="staff" className="space-y-3">
             <div className="text-sm text-muted-foreground">
-              Role-based access control (RBAC) for internal government staff -
-              SUDA, Division, ULB, Officers, and Call Centre personnel.
+              {t("Role-based access control (RBAC) for internal government staff - SUDA, Division, ULB, Officers, and Call Centre personnel.", "आंतरिक सरकारी कर्मचारियों - सूडा, प्रमंडल, यूएलबी, अधिकारियों और कॉल सेंटर कर्मियों के लिए भूमिका-आधारित पहुंच नियंत्रण (RBAC)।")}
             </div>
             <PermissionMatrix
               menuItems={staffMenuItems}
@@ -432,11 +440,8 @@ export default function ManageLinks() {
 
           <TabsContent value="citizen" className="space-y-3">
             <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
-              <strong>Citizen Access Model:</strong> This is a separate access
-              model for public citizens - not internal staff. Citizens access
-              the portal via a public-facing interface with limited,
-              self-service capabilities. They can only view/edit their own
-              records.
+              <strong>{t("Citizen Access Model:", "नागरिक पहुंच मॉडल:")}</strong>{" "}
+              {t("This is a separate access model for public citizens - not internal staff. Citizens access the portal via a public-facing interface with limited, self-service capabilities. They can only view/edit their own records.", "यह आम नागरिकों के लिए एक अलग पहुंच मॉडल है - आंतरिक कर्मचारियों के लिए नहीं। नागरिक सीमित स्व-सेवा क्षमताओं के साथ एक सार्वजनिक इंटरफेस के माध्यम से पोर्टल तक पहुंचते हैं। वे केवल अपने रिकॉर्ड देख/संपादित कर सकते हैं।")}
             </div>
             <PermissionMatrix
               menuItems={citizenMenuItems}
@@ -448,10 +453,8 @@ export default function ManageLinks() {
         </Tabs>
 
         <div className="bg-muted/50 border border-border rounded-xl p-4 text-sm text-muted-foreground">
-          <strong>Note:</strong> Citizen Access uses a fundamentally different
-          access model (public self-service with own-record-only visibility) vs.
-          internal staff RBAC (role-based hierarchical permissions). They are
-          intentionally separated to prevent conflating the two architectures.
+          <strong>{t("Note:", "नोट:")}</strong>{" "}
+          {t("Citizen Access uses a fundamentally different access model (public self-service with own-record-only visibility) vs. internal staff RBAC (role-based hierarchical permissions). They are intentionally separated to prevent conflating the two architectures.", "नागरिक पहुंच एक मौलिक रूप से भिन्न पहुंच मॉडल का उपयोग करती है (केवल अपने-रिकॉर्ड दृश्यता के साथ सार्वजनिक स्व-सेवा) बनाम आंतरिक कर्मचारी RBAC (भूमिका-आधारित पदानुक्रमित अनुमतियां)। वे दोनों वास्तुकलाओं के मिश्रण को रोकने के लिए जानबूझकर अलग किए गए हैं।")}
         </div>
       </div>
     </PortalLayout>

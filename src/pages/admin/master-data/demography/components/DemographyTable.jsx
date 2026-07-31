@@ -2,19 +2,21 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import EditButton from "@/components/EditButton";
 import React from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const DemographyTable = ({ districts = [], setDialog }) => {
+  const { t } = useLanguage();
   return (
     <table className="w-full text-sm">
       <thead className="bg-muted/50">
         <tr className="text-left text-xs text-muted-foreground">
-          <th className="px-4 py-2.5 font-medium">District</th>
-          <th className="px-4 py-2.5 font-medium">Hindi</th>
-          <th className="px-4 py-2.5 font-medium">Division</th>
-          <th className="px-4 py-2.5 font-medium">Zone</th>
-          <th className="px-4 py-2.5 font-medium text-right">Population</th>
-          <th className="px-4 py-2.5 font-medium text-center">Urban</th>
-          <th className="px-4 py-2.5 text-center font-medium">Actions</th>
+          <th className="px-4 py-2.5 font-medium">{t("District", "जिला")}</th>
+          <th className="px-4 py-2.5 font-medium">{t("Hindi", "हिंदी")}</th>
+          <th className="px-4 py-2.5 font-medium">{t("Division", "प्रमंडल")}</th>
+          <th className="px-4 py-2.5 font-medium">{t("Zone", "जोन")}</th>
+          <th className="px-4 py-2.5 font-medium text-right">{t("Population", "जनसंख्या")}</th>
+          <th className="px-4 py-2.5 font-medium text-center">{t("Urban", "शहरी")}</th>
+          <th className="px-4 py-2.5 text-center font-medium">{t("Actions", "कार्रवाई")}</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border">

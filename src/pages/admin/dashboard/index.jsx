@@ -9,8 +9,10 @@ import RecentComplaintsSection from "./components/RecentComplaintsSection";
 import QuickLinksSection from "./components/QuickLinksSection";
 import { useGetDashboardData } from "./query";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AdminDashboard() {
+  const { t } = useLanguage();
   const { data, error, isLoading } = useGetDashboardData();
   const dashboardData = data?.data?.data;
   // console.log({ dashboardData });
@@ -23,11 +25,10 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-1">
-                State Dashboard - Bihar
+                {t("State Dashboard - Bihar", "राज्य डैशबोर्ड - बिहार")}
               </h1>
               <p className="text-white/80 text-sm">
-                Real-time grievance overview • 12 districts • 6 ULBs • 6 months
-                of data
+                {t("Real-time grievance overview • 12 districts • 6 ULBs • 6 months of data", "वास्तविक समय शिकायत अवलोकन • 12 जिले • 6 ULB • 6 महीने का डेटा")}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -35,13 +36,13 @@ export default function AdminDashboard() {
                 <div className="text-2xl font-bold">
                   {DASHBOARD_KPIS.todayNew}
                 </div>
-                <div className="text-[11px] text-white/70">New Today</div>
+                <div className="text-[11px] text-white/70">{t("New Today", "आज नई दर्ज")}</div>
               </div>
               <div className="text-center bg-white/10 rounded-lg px-4 py-2">
                 <div className="text-2xl font-bold">
                   {DASHBOARD_KPIS.todayResolved}
                 </div>
-                <div className="text-[11px] text-white/70">Resolved Today</div>
+                <div className="text-[11px] text-white/70">{t("Resolved Today", "आज निराकृत")}</div>
               </div>
             </div>
           </div>

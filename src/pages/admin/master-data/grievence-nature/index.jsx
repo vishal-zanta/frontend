@@ -1,11 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { Plus, Trash2, Pencil, FileHeart } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
-import RhfWrapper from "@/components/RhfWrapper";
-import RhfInput from "@/components/rhfinputs/RhfInput";
-import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postOption, putOption, deleteOption } from "../api";
@@ -14,15 +11,17 @@ import { QUERY_KEYS } from "@/utils/constants";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
-import { grievanceNatureSchema, grievanceNatureDefaultValues } from "../schema";
+import { grievanceNatureDefaultValues } from "../schema";
 import GrievenceItems from "./components/GrievenceItems";
 import GrievenceForm from "./components/GrievenceForm";
 import useSort from "@/hooks/useSort";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function GrievenceNatureTab() {
   const sortProps = useSort();
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
+  const {t} = useLanguage();
 
   // Fetch paginated options list
   const { data, isLoading, error } = useGetOptions([page, limit, sortProps.sortBy, sortProps.sortOrder], {
@@ -135,13 +134,13 @@ export default function GrievenceNatureTab() {
       {/* ── List card ────────────────────────────────────────────────────── */}
       <div className="bg-card rounded-xl border border-border">
         <div className="flex items-center justify-between p-5 py-3">
-          <h3 className="font-bold text-foreground">Grievance Options</h3>
+          <h3 className="font-bold text-foreground">{t("Grievance Options", "शिकायत के विकल्प")}</h3>
           <Button
             size="sm"
             onClick={() => setDialog({ type: "add" })}
             className="bg-primary hover:bg-primary/90 animate-fade-in"
           >
-            <Plus className="w-4 h-4 mr-1" /> Add Option
+            <Plus className="w-4 h-4 mr-1" /> {t("Add Option", "विकल्प जोड़ें")}
           </Button>
         </div>
 

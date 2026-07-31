@@ -3,20 +3,22 @@ import { Button } from "@/components/ui/button";
 import { apiPermissionOptions, USER_ROLES_EXECULDED } from "@/utils/constants";
 import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const DesignationTable = ({ designations = [], setDialog }) => {
+  const { t } = useLanguage();
   const nonEditable = USER_ROLES_EXECULDED;
 
   return (
     <table className="w-full text-sm">
       <thead className="bg-muted/50">
         <tr className="text-left text-xs text-muted-foreground">
-          <th className="px-4 py-2 font-medium">Designation (English)</th>
-          <th className="px-4 py-2 font-medium">पदनाम (Hindi)</th>
-          <th className="px-4 py-2 font-medium">Department</th>
-          <th className="px-4 py-2 font-medium">Level</th>
-          <th className="px-4 py-2 font-medium min-w-[280px]">Permissions</th>
-          <th className="px-4 py-2 font-medium text-center">Actions</th>
+          <th className="px-4 py-2 font-medium">{t("Designation (English)", "पदनाम (अंग्रेज़ी)")}</th>
+          <th className="px-4 py-2 font-medium">{t("Designation (Hindi)", "पदनाम (हिंदी)")}</th>
+          <th className="px-4 py-2 font-medium">{t("Department", "विभाग")}</th>
+          <th className="px-4 py-2 font-medium">{t("Level", "स्तर")}</th>
+          <th className="px-4 py-2 font-medium min-w-[280px]">{t("Permissions", "अनुमतियाँ")}</th>
+          <th className="px-4 py-2 font-medium text-center">{t("Actions", "कार्रवाई")}</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-border">

@@ -16,7 +16,6 @@ import {
   useGetComplaintsOfOfiicer,
   useGetComplaintsForCCEandAdminInfinite,
 } from "@/hooks/query/useGetComplaints";
-import { Button } from "@/components/ui/button";
 
 const SearchComplaints = () => {
   const { t } = useLanguage();

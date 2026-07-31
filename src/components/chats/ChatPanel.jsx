@@ -75,7 +75,7 @@ export default function ChatPanel({ onClose, currentUserId }) {
     setCurrentPage(1);
     setHasMore(true);
     fetchConversations(1, search);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [search]);
 
   const handleLoadMore = useCallback(() => {

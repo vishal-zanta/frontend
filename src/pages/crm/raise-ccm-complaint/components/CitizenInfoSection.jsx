@@ -2,7 +2,7 @@ import React from "react";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import FormSection from "./FormSection";
-import { PREFERRED_LANGUAGE_OPTIONS, CHANNEL_OPTIONS } from "../schema";
+import { PREFERRED_LANGUAGE_OPTIONS } from "../schema";
 
 export default function CitizenInfoSection({ t, allChannels , complaintSourcesLoading }) {
   console.log({allChannels});

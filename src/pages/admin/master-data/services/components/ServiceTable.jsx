@@ -3,6 +3,7 @@ import SubServicesTable from "./SubServicesTable";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import EditButton from "@/components/EditButton";
+import { useLanguage } from "@/context/LanguageContext";
 
 const ServiceTable = ({
   services = [],
@@ -10,6 +11,7 @@ const ServiceTable = ({
   subServiceDialog,
   setSubServiceDialog,
 }) => {
+  const { t } = useLanguage();
   return (
     <div className="space-y-6">
       {services.map((s) => (
@@ -26,7 +28,7 @@ const ServiceTable = ({
                 </span>
               </div>
               <div className="text-xs text-muted-foreground mt-0.5">
-                Department:{" "}
+                {t("Department:", "विभाग:")}{" "}
                 <span className="font-semibold text-primary">
                   {s.department?.title || s.department}
                 </span>
@@ -48,7 +50,7 @@ const ServiceTable = ({
                 onClick={() => setSubServiceDialog({ type: "add", item: s })}
                 className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
               >
-                <Plus className="w-4 h-4 mr-1" /> Add Sub-service
+                <Plus className="w-4 h-4 mr-1" /> {t("Add Sub-service", "उप-सेवा जोड़ें")}
               </Button>
             </div>
           </div>

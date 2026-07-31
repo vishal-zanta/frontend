@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, GripVertical } from "lucide-react";
 import { ReactSortable } from "react-sortablejs";
+import { useLanguage } from "@/context/LanguageContext";
 
 const CustomComponent = forwardRef((props, ref) => {
   return (
@@ -19,17 +20,18 @@ export default function WorkflowTable({
   setDocs,
   handleOrderChange,
 }) {
+  const { t } = useLanguage();
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead className="bg-muted/50">
           <tr className="text-left text-xs text-muted-foreground">
             <th className="w-10 px-4 py-3"></th>
-            <th className="px-4 py-3 font-medium">Level </th>
-            <th className="px-4 py-3 font-medium">Department</th>
-            <th className="px-4 py-3 font-medium">Role</th>
-            <th className="px-4 py-3 font-medium">Description</th>
-            <th className="px-4 py-3 font-medium text-center">Actions</th>
+            <th className="px-4 py-3 font-medium">{t("Level", "स्तर")}</th>
+            <th className="px-4 py-3 font-medium">{t("Department", "विभाग")}</th>
+            <th className="px-4 py-3 font-medium">{t("Role", "भूमिका")}</th>
+            <th className="px-4 py-3 font-medium">{t("Description", "विवरण")}</th>
+            <th className="px-4 py-3 font-medium text-center">{t("Actions", "कार्रवाई")}</th>
           </tr>
         </thead>
 
@@ -50,7 +52,7 @@ export default function WorkflowTable({
                 colSpan={6}
                 className="text-center py-8 text-muted-foreground"
               >
-                No workflow levels found.
+                {t("No workflow levels found.", "कोई कार्यप्रवाह स्तर नहीं मिला।")}
               </td>
             </tr>
           ) : (
@@ -80,7 +82,7 @@ export default function WorkflowTable({
                       size="sm"
                       onClick={() => onEdit(level)}
                     >
-                      <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+                      <Pencil className="w-3.5 h-3.5 mr-1" /> {t("Edit", "संपादित करें")}
                     </Button>
                     <Button
                       variant="ghost"

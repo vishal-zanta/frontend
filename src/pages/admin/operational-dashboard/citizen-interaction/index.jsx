@@ -4,8 +4,10 @@ import StatCard from "@/components/StatCard";
 import ChannelSatisfactionChart from "./components/ChannelSatisfactionChart";
 import TopIssuesChart from "./components/TopIssuesChart";
 import { CITIZEN_INTERACTION } from "@/lib/biharData";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CitizenInteractionTab() {
+  const { t } = useLanguage();
   const radarData = CITIZEN_INTERACTION.channelSatisfaction.map((c) => ({
     subject: c.channel,
     A: c.satisfaction,
@@ -17,7 +19,7 @@ export default function CitizenInteractionTab() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={Users}
-          label="Total Interactions"
+          label={t("Total Interactions", "कुल सहभागिता")}
           value={CITIZEN_INTERACTION.totalInteractions.toLocaleString(
             "en-IN",
           )}
@@ -25,7 +27,7 @@ export default function CitizenInteractionTab() {
         />
         <StatCard
           icon={Users}
-          label="Unique Citizens"
+          label={t("Unique Citizens", "विशिष्ट नागरिक")}
           value={CITIZEN_INTERACTION.uniqueCitizens.toLocaleString(
             "en-IN",
           )}
@@ -33,13 +35,13 @@ export default function CitizenInteractionTab() {
         />
         <StatCard
           icon={Activity}
-          label="Repeat Rate"
+          label={t("Repeat Rate", "पुनरावृत्ति दर")}
           value={`${CITIZEN_INTERACTION.repeatRate}%`}
           color="amber"
         />
         <StatCard
           icon={TrendingUp}
-          label="Satisfaction"
+          label={t("Satisfaction", "संतुष्टि")}
           value={`${CITIZEN_INTERACTION.avgResolutionSatisfaction}/5`}
           color="purple"
         />

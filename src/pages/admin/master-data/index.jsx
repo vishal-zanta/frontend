@@ -76,6 +76,17 @@ const tabs = [
   },
 ];
 
+const tabLabels = {
+  designation: ["Designations", "पदनाम"],
+  departments: ["Departments", "विभाग"],
+  "skill-set": ["Skill Set", "कौशल सेट"],
+  "api-keys": ["API Keys", "API कुंजियाँ"],
+  service: ["Services & Sub-services", "सेवाएं और उप-सेवाएं"],
+  source: ["Complaint Sources", "शिकायत के स्रोत"],
+  demography: ["Demography & ULBs", "जनसांख्यिकी और ULBs"],
+  "grievances-nature": ["Grievance Nature", "शिकायत की प्रकृति"],
+};
+
 export default function MasterData() {
   const { hasPermission } = useAuth();
   const { t: translate } = useLanguage();
@@ -114,8 +125,8 @@ export default function MasterData() {
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <SectionTitle
-          title="Master Data Management"
-          subtitle="Manage designations, services, sub-services, complaint sources & demography"
+          title={translate("Master Data Management", "मास्टर डेटा प्रबंधन")}
+          subtitle={translate("Manage designations, services, sub-services, complaint sources & demography", "पदनाम, सेवाएं, उप-सेवाएं, शिकायत के स्रोत और जनसांख्यिकी प्रबंधित करें")}
         />
 
         <Tabs value={parentTab} onValueChange={handleParentTabChange} className="w-full">
@@ -138,10 +149,11 @@ export default function MasterData() {
                   .filter((t) => t.group === "internal")
                   .map((t) => {
                     const Icon = t.icon;
+                    const labelInfo = tabLabels[t.id] || [t.label, t.label];
                     return (
                       <TabsTrigger key={t.id} value={t.id} className="flex items-center gap-2 px-3 py-1.5 text-xs lg:text-sm">
                         <Icon className="w-4 h-4" />
-                        {t.label}
+                        {translate(labelInfo[0], labelInfo[1])}
                       </TabsTrigger>
                     );
                   })}
@@ -159,10 +171,11 @@ export default function MasterData() {
                   .filter((t) => t.group === "external")
                   .map((t) => {
                     const Icon = t.icon;
+                    const labelInfo = tabLabels[t.id] || [t.label, t.label];
                     return (
                       <TabsTrigger key={t.id} value={t.id} className="flex items-center gap-2 px-3 py-1.5 text-xs lg:text-sm">
                         <Icon className="w-4 h-4" />
-                        {t.label}
+                        {translate(labelInfo[0], labelInfo[1])}
                       </TabsTrigger>
                     );
                   })}

@@ -1,13 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { ComplaintId } from "@/components/ComplaintDetailDialog";
 import { useGetComplaintsForCCEandAdmin } from "@/hooks/query/useGetComplaints";
 import usePagination from "@/hooks/usePagination";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import Pagination from "@/components/Pagination";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function RecentComplaintsSection() {
+  const { t } = useLanguage();
   const pageProps = usePagination(1);
   const { data, isLoading, error } = useGetComplaintsForCCEandAdmin({
     page: pageProps.page,
@@ -20,7 +21,7 @@ export default function RecentComplaintsSection() {
   return (
     <div className="bg-white dark:bg-card rounded-xl border border-border">
       <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-        <h3 className="font-bold text-foreground">Recent Complaints</h3>
+        <h3 className="font-bold text-foreground">{t("Recent Complaints", "हाल की शिकायतें")}</h3>
         {/* <Link
           to="/admin/audit"
           className="text-sm text-primary hover:underline"
@@ -33,19 +34,19 @@ export default function RecentComplaintsSection() {
           <table className="w-full text-sm">
             <thead className="bg-muted/50 sticky top-0">
               <tr className="text-left text-xs text-muted-foreground">
-                <th className="px-4 py-2 font-medium">Complaint ID</th>
-                <th className="px-4 py-2 font-medium">Citizen</th>
-                <th className="px-4 py-2 font-medium">Service</th>
-                <th className="px-4 py-2 font-medium">District</th>
-                <th className="px-4 py-2 font-medium">Status</th>
-                <th className="px-4 py-2 font-medium">Priority</th>
+                <th className="px-4 py-2 font-medium">{t("Complaint ID", "शिकायत आईडी")}</th>
+                <th className="px-4 py-2 font-medium">{t("Citizen", "नागरिक")}</th>
+                <th className="px-4 py-2 font-medium">{t("Service", "सेवा")}</th>
+                <th className="px-4 py-2 font-medium">{t("District", "जिला")}</th>
+                <th className="px-4 py-2 font-medium">{t("Status", "स्थिति")}</th>
+                <th className="px-4 py-2 font-medium">{t("Priority", "प्राथमिकता")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {complaints.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center py-4 text-muted-foreground">
-                    No complaints found
+                    {t("No complaints found", "कोई शिकायत नहीं मिली")}
                   </td>
                 </tr>
               ) : (

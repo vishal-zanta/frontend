@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EditButton from "@/components/EditButton";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
-import { getErrorToast, getSuccessToast, isValidNumber } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSubservice, putSubservice, deleteSubservice } from "../../api";
 import { useGetSubservices } from "../../hooks";
@@ -16,8 +13,10 @@ import { QUERY_KEYS } from "@/utils/constants";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import SubServiceForm from "./SubServiceForm";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SubServicesTable({ service, dialog, setDialog }) {
+  const { t } = useLanguage();
   const { page, limit, ...paginationProps } = usePagination();
   const [subservices, setSubservices] = useState(service.subservices || []);
   const [anyMutationDone, setAnyMutationDone] = useState(false);
@@ -191,7 +190,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
     <>
       {subservices.length === 0 ? (
         <div className="text-center py-6 text-sm text-muted-foreground bg-muted/10 rounded-lg border border-dashed border-border">
-          No sub-services configured for this service yet.
+          {t("No sub-services configured for this service yet.", "इस सेवा के लिए अभी तक कोई उप-सेवा कॉन्फ़िगर नहीं की गई है।")}
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -199,17 +198,17 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
             <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
                 <th className="px-3 py-2.5 font-medium">
-                  Sub-Service (English)
+                  {t("Sub-Service (English)", "उप-सेवा (अंग्रेज़ी)")}
                 </th>
-                <th className="px-3 py-2.5 font-medium">उप-सेवा (Hindi)</th>
-                <th className="px-3 py-2.5 font-medium text-center">SLA</th>
+                <th className="px-3 py-2.5 font-medium">{t("Sub-Service (Hindi)", "उप-सेवा (हिंदी)")}</th>
+                <th className="px-3 py-2.5 font-medium text-center">{t("SLA", "SLA")}</th>
                 <th className="px-3 py-2.5 font-medium text-center">
-                  Geo-Tagged
+                  {t("Geo-Tagged", "भू-टैग किया गया")}
                 </th>
                 <th className="px-3 py-2.5 font-medium text-center">
-                  Field Visit
+                  {t("Field Visit", "क्षेत्र का दौरा")}
                 </th>
-                <th className="px-3 py-2.5 text-center font-medium">Actions</th>
+                <th className="px-3 py-2.5 text-center font-medium">{t("Actions", "कार्रवाई")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

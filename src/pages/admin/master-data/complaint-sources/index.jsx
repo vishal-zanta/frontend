@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Trash2, Pencil, Globe } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
@@ -15,8 +13,10 @@ import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import ComplaintTable from "./components/ComplaintTable";
 import ComplaintForm from "./components/ComplaintForm";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ComplaintSourcesTab() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
   const { data, isLoading, error } = useGetComplaintSources([page, limit], { page, limit });
@@ -32,17 +32,11 @@ export default function ComplaintSourcesTab() {
   });
 
   useEffect(() => {
-    if (dialog) {
-      setErrors({ title: "" });
-      if (dialog.type === "edit") {
-        setFormData({
-          title: dialog.item?.title || "",
-        });
-      } else if (dialog.type === "add") {
-        setFormData({
-          title: "",
-        });
-      }
+    if (dialog && (dialog.type === "add" || dialog.type === "edit")) {
+      setFormData({
+        title: dialog.item ? dialog.item.title || "" : "",
+      });
+      setErrors({});
     }
   }, [dialog]);
 
@@ -105,10 +99,7 @@ export default function ComplaintSourcesTab() {
     } else {
       putMutation.mutate({
         sourceId: dialog.item._id,
-        source: {
-          ...dialog.item,
-          ...formData,
-        },
+        source: formData,
       });
     }
   };
@@ -117,19 +108,19 @@ export default function ComplaintSourcesTab() {
     <>
       <div className="bg-card rounded-xl border border-border px-5 py-3">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-foreground">Complaint Sources</h3>
+          <h3 className="font-bold text-foreground">{t("Complaint Sources", "शिकायत के स्रोत")}</h3>
           <Button
             size="sm"
             onClick={() => setDialog({ type: "add" })}
             className="bg-primary hover:bg-primary/90 animate-fade-in"
           >
-            <Plus className="w-4 h-4 mr-1" /> Add Source
+            <Plus className="w-4 h-4 mr-1" /> {t("Add Source", "स्रोत जोड़ें")}
           </Button>
         </div>
         <LoaderErrWrapper isLoading={isLoading} error={error}>
           {rawSources.length === 0 ? (
             <div className="text-center py-6 text-sm text-muted-foreground bg-muted/10 rounded-lg border border-dashed border-border col-span-full">
-              No complaint sources configured yet.
+              {t("No complaint sources configured yet.", "अभी तक कोई शिकायत का स्रोत कॉन्फ़िगर नहीं किया गया है।")}
             </div>
           ) : (
             <>

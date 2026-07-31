@@ -3,8 +3,6 @@ import { MessageSquareDot, Loader2 } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import { formatDate } from "@/utils/helpers";
 import { usePutMarkMessagesAsRead } from "@/hooks/query/useGetChats";
-import { useQueryClient } from "@tanstack/react-query";
-import { QUERY_KEYS } from "@/utils/constants";
 import { normalizeMessage } from "./useChatData";
 import { useSockets } from "@/context/SocketContext";
 import { getConversationMessages } from "@/api/chats.api";

@@ -4,6 +4,7 @@ import ExportButton from "@/components/ExportButton";
 import { OfficerId } from "@/components/ComplaintDetailDialog";
 import EditDialog from "@/components/EditDialog";
 import AgentCallingMetricsDialogBody from "./AgentCallingMetricsDialogBody";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const HELPDESK_AGENTS = [
   {
@@ -63,7 +64,7 @@ export const HELPDESK_AGENTS = [
     calls: 0,
     resolved: 0,
     avgTalk: "-",
-    csat: 4.2,
+    csat: 0,
     shift: "Night",
   },
   {
@@ -109,25 +110,56 @@ export const HELPDESK_AGENTS = [
 ];
 
 export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
+  const { t } = useLanguage();
   const [selectedAgent, setSelectedAgent] = useState(null);
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "Available":
+        return t("Available", "उपलब्ध");
+      case "On Call":
+        return t("On Call", "कॉल पर");
+      case "Break":
+        return t("Break", "ब्रेक");
+      case "Offline":
+        return t("Offline", "ऑफ़लाइन");
+      default:
+        return status;
+    }
+  };
+
+  const getShiftText = (shift) => {
+    switch (shift) {
+      case "Morning":
+        return t("Morning", "सुबह");
+      case "Afternoon":
+        return t("Afternoon", "दोपहर");
+      case "Full Day":
+        return t("Full Day", "पूरा दिन");
+      case "Night":
+        return t("Night", "रात");
+      default:
+        return shift;
+    }
+  };
 
   return (
     <>
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <h3 className="font-bold text-foreground">
-            Helpdesk Agent Status Board
+            {t("Live Agent Availability", "लाइव एजेंट उपलब्धता")}
           </h3>
           <ExportButton
             data={agents}
             columns={[
-              { key: "name", label: "Agent" },
-              { key: "status", label: "Status" },
-              { key: "calls", label: "Calls" },
-              { key: "resolved", label: "Resolved" },
-              { key: "avgTalk", label: "Avg Talk" },
-              { key: "csat", label: "CSAT" },
-              { key: "shift", label: "Shift" },
+              { key: "name", label: t("Agent", "एजेंट") },
+              { key: "status", label: t("Status", "स्थिति") },
+              { key: "calls", label: t("Calls", "कॉल") },
+              { key: "resolved", label: t("Resolved", "निराकृत") },
+              { key: "avgTalk", label: t("Avg Talk", "औसत बात") },
+              { key: "csat", label: t("CSAT", "CSAT") },
+              { key: "shift", label: t("Shift", "शिफ्ट") },
             ]}
             filename="helpdesk_agent_status"
           />
@@ -136,14 +168,14 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr className="text-left text-xs text-muted-foreground">
-                <th className="px-4 py-2 font-medium">Agent</th>
-                <th className="px-4 py-2 font-medium">ID</th>
-                <th className="px-4 py-2 font-medium">Status</th>
-                <th className="px-4 py-2 font-medium">Calls</th>
-                <th className="px-4 py-2 font-medium">Resolved</th>
-                <th className="px-4 py-2 font-medium">Avg Talk</th>
-                <th className="px-4 py-2 font-medium">Rating</th>
-                <th className="px-4 py-2 font-medium">Shift</th>
+                <th className="px-4 py-2 font-medium">{t("Agent", "एजेंट")}</th>
+                <th className="px-4 py-2 font-medium">{t("ID", "आईडी")}</th>
+                <th className="px-4 py-2 font-medium">{t("Status", "स्थिति")}</th>
+                <th className="px-4 py-2 font-medium">{t("Calls", "कॉल")}</th>
+                <th className="px-4 py-2 font-medium">{t("Resolved", "निराकृत")}</th>
+                <th className="px-4 py-2 font-medium">{t("Avg Talk", "औसत बात")}</th>
+                <th className="px-4 py-2 font-medium">{t("Rating", "रेटिंग")}</th>
+                <th className="px-4 py-2 font-medium">{t("Shift", "शिफ्ट")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -171,7 +203,7 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
                               : "bg-muted/50 text-muted-foreground"
                       }`}
                     >
-                      {a.status}
+                      {getStatusText(a.status)}
                     </Badge>
                   </td>
                   <td className="px-4 py-2.5">{a.calls}</td>
@@ -183,7 +215,7 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
                     ★ {a.csat}/5
                   </td>
                   <td className="px-4 py-2.5 text-muted-foreground">
-                    {a.shift}
+                    {getShiftText(a.shift)}
                   </td>
                 </tr>
               ))}

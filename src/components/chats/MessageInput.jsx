@@ -3,7 +3,6 @@ import { Paperclip, Send, Loader2 } from "lucide-react";
 import AttachmentPreview from "./AttachmentPreview";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postChatMessage, postConversation } from "@/api/chats.api";
-import { QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast } from "@/utils/helpers";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
 

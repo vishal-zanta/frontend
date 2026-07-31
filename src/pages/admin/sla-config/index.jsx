@@ -20,8 +20,10 @@ import Pagination from "@/components/Pagination";
 import SearchDebounced from "@/components/debounced/SearchDebounced";
 import clsx from "clsx";
 import DeleteDialog from "@/components/DeleteDialog";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SLAConfig() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [dialog, setDialog] = useState(null);
   const [editItem, setEditItem] = useState(null);
@@ -237,8 +239,8 @@ export default function SLAConfig() {
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <SectionTitle
-          title="SLA Configuration"
-          subtitle="Define SLA timeline per level for each sub-service - breach triggers auto-escalation"
+          title={t("SLA Configuration", "SLA कॉन्फ़िगरेशन")}
+          subtitle={t("Define SLA timeline per level for each sub-service - breach triggers auto-escalation", "प्रत्येक उप-सेवा के लिए स्तर अनुसार SLA समय सीमा परिभाषित करें - उल्लंघन पर स्वतः वृद्धि होती है")}
         />
 
         {/* <LoaderErrWrapper isLoading={isSlaLoading || isRolesLoading} error={slaError || rolesError}> */}
@@ -256,14 +258,14 @@ export default function SLAConfig() {
             }}
             delay={500}
             className="flex-1"
-            placeholder="Search sub-service..."
+            placeholder={t("Search sub-service...", "उप-सेवा खोजें...")}
           />
           <LoaderErrWrapper isLoading={deptLoading}>
 
          
            <div className="flex items-center gap-1.5 shrink-0">
             <label className="text-xs font-semibold text-muted-foreground">
-              Department:
+              {t("Department:", "विभाग:")}
             </label>
             <select
               value={selectedDept}
@@ -295,7 +297,7 @@ export default function SLAConfig() {
               });
             }}
           >
-            <Plus className="w-4 h-4 mr-1" /> Add SLA Config
+            <Plus className="w-4 h-4 mr-1" /> {t("Add SLA Config", "SLA कॉन्फ़िगरेशन जोड़ें")}
           </Button>
         </div>
 

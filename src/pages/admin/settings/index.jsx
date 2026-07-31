@@ -2,20 +2,22 @@ import { SectionTitle } from "@/components/ChartCard";
 import PortalLayout from "@/components/PortalLayout";
 import React from "react";
 import FileSizeSections from "@/components/FileSizeSections";
+import { useLanguage } from "@/context/LanguageContext";
 
-const index = () => {
+const AdminSettings = () => {
+  const { t } = useLanguage();
   return (
     <PortalLayout>
       <div className="p-6 space-y-6">
         <SectionTitle
-          title={"Admin Settings"}
-          subtitle={"Manage admin settings"}
+          title={t("Admin Settings", "प्रशासनिक सेटिंग्स")}
+          subtitle={t("Manage admin settings", "प्रशासनिक सेटिंग्स प्रबंधित करें")}
         />
 
-        <FileSizeSections/>
+        <FileSizeSections />
       </div>
     </PortalLayout>
   );
 };
 
-export default index;
+export default AdminSettings;

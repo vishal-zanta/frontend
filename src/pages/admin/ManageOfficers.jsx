@@ -6,10 +6,6 @@ import {
   Trash2,
   Check,
   X,
-  Save,
-  HardHat,
-  Phone,
-  MapPin,
 } from "lucide-react";
 import { OFFICERS, DISTRICTS, SERVICES } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
@@ -20,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ExportButton from "@/components/ExportButton";
 import { OfficerId } from "@/components/ComplaintDetailDialog";
+import { useLanguage } from "@/context/LanguageContext";
 
 const exportColumns = [
   { key: "id", label: "Officer ID" },
@@ -34,6 +31,7 @@ const exportColumns = [
 ];
 
 export default function ManageOfficers() {
+  const { t } = useLanguage();
   const [officers, setOfficers] = useState(
     OFFICERS.map((o) => ({
       ...o,
@@ -73,8 +71,8 @@ export default function ManageOfficers() {
     <PortalLayout role="superadmin">
       <div className="p-6 space-y-6">
         <SectionTitle
-          title="Manage Officers"
-          subtitle="CRUD management of all field officers - L1, L2, Zone, Division & SUDA level"
+          title={t("Manage Officers", "अधिकारी प्रबंधित करें")}
+          subtitle={t("CRUD management of all field officers - L1, L2, Zone, Division & SUDA level", "क्षेत्रीय अधिकारियों का प्रबंधन - L1, L2, जोन, प्रमंडल और सूडा स्तर")}
         />
 
         {toast && (
@@ -88,13 +86,13 @@ export default function ManageOfficers() {
             <div className="text-2xl font-bold text-blue-600">
               {officers.length}
             </div>
-            <div className="text-sm text-muted-foreground">Total Officers</div>
+            <div className="text-sm text-muted-foreground">{t("Total Officers", "कुल अधिकारी")}</div>
           </div>
           <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-emerald-600">
               {officers.filter((o) => o.status === "active").length}
             </div>
-            <div className="text-sm text-muted-foreground">Active</div>
+            <div className="text-sm text-muted-foreground">{t("Active", "सक्रिय")}</div>
           </div>
           <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-purple-600">
@@ -106,13 +104,13 @@ export default function ManageOfficers() {
                 ).length
               }
             </div>
-            <div className="text-sm text-muted-foreground">Supervisory+</div>
+            <div className="text-sm text-muted-foreground">{t("Supervisory+", "पर्यवेक्षी+")}</div>
           </div>
           <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-amber-600">
               {officers.filter((o) => o.slaBreached > 0).length}
             </div>
-            <div className="text-sm text-muted-foreground">SLA Breach Risk</div>
+            <div className="text-sm text-muted-foreground">{t("SLA Breach Risk", "SLA उल्लंघन जोखिम")}</div>
           </div>
         </div>
 
@@ -122,7 +120,7 @@ export default function ManageOfficers() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name or officer ID..."
+              placeholder={t("Search by name or officer ID...", "नाम या अधिकारी आईडी से खोजें...")}
               className="pl-9"
             />
           </div>
@@ -145,7 +143,7 @@ export default function ManageOfficers() {
               });
             }}
           >
-            <Plus className="w-4 h-4 mr-1" /> Add Officer
+            <Plus className="w-4 h-4 mr-1" /> {t("Add Officer", "अधिकारी जोड़ें")}
           </Button>
           <ExportButton
             data={officers}
@@ -159,23 +157,23 @@ export default function ManageOfficers() {
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">Officer ID</th>
-                  <th className="px-4 py-3 font-medium">Name</th>
-                  <th className="px-4 py-3 font-medium">Designation</th>
+                  <th className="px-4 py-3 font-medium">{t("Officer ID", "अधिकारी आईडी")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Name", "नाम")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Designation", "पदनाम")}</th>
                   <th className="px-4 py-3 font-medium">
-                    Department / Services
+                    {t("Department / Services", "विभाग / सेवाएं")}
                   </th>
-                  <th className="px-4 py-3 font-medium">District</th>
-                  <th className="px-4 py-3 font-medium">Wards</th>
+                  <th className="px-4 py-3 font-medium">{t("District", "जिला")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Wards", "वार्ड")}</th>
                   <th className="px-4 py-3 font-medium text-center">
-                    Resolved
+                    {t("Resolved", "निराकृत")}
                   </th>
-                  <th className="px-4 py-3 font-medium text-center">Pending</th>
+                  <th className="px-4 py-3 font-medium text-center">{t("Pending", "लंबित")}</th>
                   <th className="px-4 py-3 font-medium text-center">
-                    SLA Breached
+                    {t("SLA Breached", "SLA उल्लंघन")}
                   </th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium text-center">Actions</th>
+                  <th className="px-4 py-3 font-medium">{t("Status", "स्थिति")}</th>
+                  <th className="px-4 py-3 font-medium text-center">{t("Actions", "कार्रवाई")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
