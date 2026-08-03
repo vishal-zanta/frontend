@@ -8,7 +8,12 @@ const MyTable = ({
   pagination = null,
   tableClassName = "",
   sortProps = null,
+  customTbody: CustomTbody = null,
+  customTbodyProps = {},
+  emptyText = "No data available",
 }) => {
+  const TBody = CustomTbody || "tbody";
+
   return (
     <div className={clsx(" overflow-hidden", tableClassName)}>
       <div className="overflow-x-auto">
@@ -16,36 +21,47 @@ const MyTable = ({
           <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
               {tableHeaders.map((h) => (
-                <SortHeader h={h} sortProps={sortProps} />
+                <SortHeader key={h.id} h={h} sortProps={sortProps} />
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
-            {tableBody.map((tb, bIdex) => {
-              return (
-                <tr key={bIdex} className="hover:bg-muted/30">
-                  {tableHeaders.map((h, hIdex) => {
-                    const currCell = tb[h.id];
-                    return (
-                      <td
-                        key={`${h.id}-${hIdex}-${bIdex}`}
-                        className={clsx(
-                          "px-4 py-3 text-sm",
-                          currCell?.className,
-                        )}
-                      >
-                        {currCell?.render ? (
-                          <currCell.render />
-                        ) : (
-                          currCell?.value || "N/A"
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+          <TBody className="divide-y divide-border" {...customTbodyProps}>
+            {tableBody.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={tableHeaders.length || 1}
+                  className="text-center py-8 text-sm text-muted-foreground"
+                >
+                  {emptyText}
+                </td>
+              </tr>
+            ) : (
+              tableBody.map((tb, bIdex) => {
+                return (
+                  <tr key={bIdex} className="hover:bg-muted/30">
+                    {tableHeaders.map((h, hIdex) => {
+                      const currCell = tb[h.id];
+                      return (
+                        <td
+                          key={`${h.id}-${hIdex}-${bIdex}`}
+                          className={clsx(
+                            "px-4 py-3 text-sm",
+                            currCell?.className,
+                          )}
+                        >
+                          {currCell?.render ? (
+                            <currCell.render />
+                          ) : (
+                            currCell?.value || "N/A"
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+            )}
+          </TBody>
         </table>
       </div>
       {pagination ? pagination : null}
@@ -76,7 +92,9 @@ const SortHeader = ({ h, sortProps }) => {
   const renderIcon = () => {
     if (!isSortable || !sortProps) return null;
     if (!isSorted || !sortProps.sortOrder) {
-      return <ArrowUpDown className="w-3.5 h-3.5 ml-1 text-muted-foreground/50 shrink-0" />;
+      return (
+        <ArrowUpDown className="w-3.5 h-3.5 ml-1 text-muted-foreground/50 shrink-0" />
+      );
     }
     if (sortProps.sortOrder === "asc") {
       return <ArrowUp className="w-3.5 h-3.5 ml-1 text-primary shrink-0" />;
@@ -84,7 +102,9 @@ const SortHeader = ({ h, sortProps }) => {
     if (sortProps.sortOrder === "desc") {
       return <ArrowDown className="w-3.5 h-3.5 ml-1 text-primary shrink-0" />;
     }
-    return <ArrowUpDown className="w-3.5 h-3.5 ml-1 text-muted-foreground/50 shrink-0" />;
+    return (
+      <ArrowUpDown className="w-3.5 h-3.5 ml-1 text-muted-foreground/50 shrink-0" />
+    );
   };
 
   return (
@@ -94,14 +114,15 @@ const SortHeader = ({ h, sortProps }) => {
       className={clsx(
         "px-4 py-2 font-medium",
         h.className,
-        isSortable && "cursor-pointer select-none hover:bg-muted/40 transition-colors"
+        isSortable &&
+          "cursor-pointer select-none hover:bg-muted/40 transition-colors",
       )}
     >
       <div
         className={clsx(
           "flex items-center gap-1",
           h.className?.includes("text-center") && "justify-center",
-          h.className?.includes("text-right") && "justify-end"
+          h.className?.includes("text-right") && "justify-end",
         )}
       >
         <span>{h.label}</span>

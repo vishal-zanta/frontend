@@ -9,7 +9,7 @@ import {
 import { CALL_TRACKER } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import StatCard from "@/components/StatCard";
-import { CallId } from "@/components/ComplaintDetailDialog";
+import { CallId, ComplaintId } from "@/components/ComplaintDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,9 +21,14 @@ import {
 } from "@/components/ui/select";
 import ExportButton from "@/components/ExportButton";
 import { useLanguage } from "@/context/LanguageContext";
+import { SectionTitle } from "@/components/ChartCard";
+import MyTable from "@/components/MyTable";
+import useIsMobile from "@/hooks/useIsMobile";
+import CallTrackerCards from "./components/CallTrackerCards";
 
 export default function CallTracker() {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const [search, setSearch] = useState("");
   const [agentFilter, setAgentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -52,29 +57,83 @@ export default function CallTracker() {
     return true;
   });
 
+  const tableHeaders = [
+    { id: "id", label: t("Call ID", "कॉल आईडी") },
+    { id: "time", label: t("Time", "समय") },
+    { id: "agent", label: t("Agent", "एजेंट") },
+    { id: "duration", label: t("Duration", "अवधि") },
+    { id: "complaint", label: t("Complaint ID", "शिकायत आईडी") },
+    { id: "disposition", label: t("Disposition", "निपटान") },
+    { id: "status", label: t("Status", "स्थिति") },
+  ];
+
+  const tableBody = filtered.map((c) => ({
+    id: {
+      render: () => <CallId id={c.id} />,
+    },
+    time: {
+      value: c.time || "N/A",
+      className: "text-muted-foreground",
+    },
+    agent: {
+      value: c.agent || "N/A",
+    },
+    duration: {
+      value: c.duration || "N/A",
+      className: "text-muted-foreground",
+    },
+    complaint: {
+      render: () =>
+        c.complaintId ? <ComplaintId id={c.complaintId} /> : "N/A",
+    },
+    disposition: {
+      value: c.disposition || "N/A",
+      className: "text-muted-foreground",
+    },
+    status: {
+      render: () => (
+        <Badge
+          variant="outline"
+          className={`text-xs ${
+            c.status === "Resolved"
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+              : c.status === "Missed"
+                ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                : c.status === "Escalated"
+                  ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                  : "bg-muted/50 text-muted-foreground border-border"
+          }`}
+        >
+          {c.status === "Resolved"
+            ? t("Resolved", "हल की गई")
+            : c.status === "Missed"
+              ? t("Missed", "छूटी हुई")
+              : c.status === "Escalated"
+                ? t("Escalated", "बढ़ाया गया")
+                : c.status || "N/A"}
+        </Badge>
+      ),
+    },
+  }));
+
   return (
     <PortalLayout role="crm">
-      <div className="p-6 space-y-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {t("Call Tracker", "कॉल ट्रैकर")}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {t(
-                "Real-time call tracking with disposition details and agent status.",
-                "कॉल स्थिति और एजेंट स्थिति विवरण के साथ वास्तविक समय कॉल ट्रैकिंग।",
-              )}
-            </p>
-          </div>
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <SectionTitle
+          title={t("Call Tracker", "कॉल ट्रैकर")}
+          subtitle={t(
+            "Real-time call tracking with disposition details and agent status.",
+            "कॉल स्थिति और एजेंट स्थिति विवरण के साथ वास्तविक समय कॉल ट्रैकिंग।"
+          )}
+        >
           <ExportButton
             data={filtered}
             columns={exportColumns}
             filename="call_tracker_report"
           />
-        </div>
+        </SectionTitle>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <StatCard
             icon={PhoneCall}
             label={t("Total Calls Today", "आज की कुल कॉल")}
@@ -108,21 +167,21 @@ export default function CallTracker() {
         </div>
 
         {/* Filters */}
-        <div className="bg-card rounded-xl border border-border p-4 flex flex-wrap gap-3">
-          <div className="relative">
+        <div className="bg-card rounded-xl border border-border p-3 xs:p-4 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-2.5 sm:gap-3">
+          <div className="relative w-full xs:w-auto flex-1 max-w-full sm:max-w-xs">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t(
                 "Search by call ID or complaint...",
-                "कॉल आईडी या शिकायत द्वारा खोजें...",
+                "कॉल आईडी या शिकायत द्वारा खोजें..."
               )}
-              className="pl-8 max-w-xs"
+              className="pl-8 w-full"
             />
           </div>
           <Select value={agentFilter} onValueChange={setAgentFilter}>
-            <SelectTrigger className="w-40 bg-background">
+            <SelectTrigger className="w-full xs:w-36 sm:w-40 bg-background">
               <SelectValue placeholder={t("Agent", "एजेंट")} />
             </SelectTrigger>
             <SelectContent>
@@ -135,7 +194,7 @@ export default function CallTracker() {
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40 bg-background">
+            <SelectTrigger className="w-full xs:w-32 sm:w-36 bg-background">
               <SelectValue placeholder={t("Status", "स्थिति")} />
             </SelectTrigger>
             <SelectContent>
@@ -151,83 +210,26 @@ export default function CallTracker() {
               </SelectItem>
             </SelectContent>
           </Select>
-          <div className="ml-auto text-sm text-muted-foreground self-center">
+          <div className="xs:ml-auto text-xs xs:text-sm text-muted-foreground self-center">
             {t("Showing", "दिखा रहा है")} {filtered.length} {t("of", "का")}{" "}
             {CALL_TRACKER.length} {t("calls", "कॉल")}
           </div>
         </div>
 
-        {/* Call table */}
+        {/* Call table / cards */}
         <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">
-                    {t("Call ID", "कॉल आईडी")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">{t("Time", "समय")}</th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Agent", "एजेंट")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Duration", "अवधि")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Complaint ID", "शिकायत आईडी")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Disposition", "निपटान")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Status", "स्थिति")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filtered.map((c, i) => (
-                  <tr key={i} className="hover:bg-muted/30">
-                    <td className="px-4 py-3">
-                      <CallId id={c.id} />
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {c.time}
-                    </td>
-                    <td className="px-4 py-3">{c.agent}</td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {c.duration}
-                    </td>
-                    <td className="px-4 py-3">{c.complaintId}</td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {c.disposition}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge
-                        variant="outline"
-                        className={`text-xs ${
-                          c.status === "Resolved"
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                            : c.status === "Missed"
-                              ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
-                              : c.status === "Escalated"
-                                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
-                                : "bg-muted/50 text-muted-foreground border-border"
-                        }`}
-                      >
-                        {c.status === "Resolved"
-                          ? t("Resolved", "हल की गई")
-                          : c.status === "Missed"
-                            ? t("Missed", "छूटी हुई")
-                            : c.status === "Escalated"
-                              ? t("Escalated", "बढ़ाया गया")
-                              : c.status}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {isMobile ? (
+            <CallTrackerCards calls={filtered} />
+          ) : (
+            <MyTable
+              tableHeaders={tableHeaders}
+              tableBody={tableBody}
+              emptyText={t(
+                "No calls match your filters.",
+                "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।"
+              )}
+            />
+          )}
         </div>
       </div>
     </PortalLayout>

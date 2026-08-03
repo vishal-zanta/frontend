@@ -5,14 +5,20 @@ import PortalLayout from "@/components/PortalLayout";
 import StatsCards from "./components/StatsCards";
 import ComplaintList from "@/components/complaints/ComplaintList";
 import ComplaintDetailView from "@/components/complaints/ComplaintDetailView";
-import { 
+import {
   useGetComplaintsForCCEandAdminInfinite,
-  useGetComplaintAnalyticsSummary 
+  useGetComplaintAnalyticsSummary,
 } from "@/hooks/query/useGetComplaints";
+import useIsMobile from "@/hooks/useIsMobile";
+import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function TrackCCMComplaint() {
+  const { t } = useLanguage();
   const [selected, setSelected] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState(null);
+  const isMobile = useIsMobile();
+
   const [stats, setStats] = useState({
     totalAssigned: 0,
     pendingAction: 0,
@@ -25,23 +31,26 @@ export default function TrackCCMComplaint() {
 
   return (
     <PortalLayout role="crm" isHideOverflow={true}>
-      <div className="p-6 space-y-6 relative">
-        {/* Stats */}
-        <StatsCards
-          totalAssigned={analytics.totalAssigned ?? 0}
-          pendingAction={analytics.pendingCount ?? 0}
-          resolved={analytics.resolvedCount ?? 0}
-          slaBreachRisk={analytics.escalatedCount ?? 0}
-        />
+      <div className="p-3 lg:p-6 space-y-4 lg:space-y-6 relative">
+        {/* Stats — desktop only */}
+       {(isMobile ? !selected : true) && <div className="block">
+          <StatsCards
+            totalAssigned={analytics.totalAssigned ?? 0}
+            pendingAction={analytics.pendingCount ?? 0}
+            resolved={analytics.resolvedCount ?? 0}
+            slaBreachRisk={analytics.escalatedCount ?? 0}
+          />
+        </div>}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0 items-start">
-          {/* Complaint list */}
+        {/* Desktop layout */}
+        <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0 items-start">
           <ComplaintList
             selected={selected}
             onSelect={setSelected}
             setStatusUpdate={setStatusUpdate}
             onStatsChange={setStats}
             useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
+            autoSelect={!isMobile}
           />
 
           {/* Detail panel */}
@@ -51,6 +60,36 @@ export default function TrackCCMComplaint() {
             setStatusUpdate={setStatusUpdate}
             isCCE={true}
           />
+        </div>
+
+        {/* Mobile layout */}
+        <div className="md:hidden">
+          {selected ? (
+            <div className="space-y-2">
+              <div
+                onClick={() => setSelected(null)}
+                className="text-primary font-medium hover:underline cursor-pointer text-xs"
+              >
+                <ArrowLeft className="w-3 h-3 inline mr-1" />
+                {t("Back to Complaints", "शिकायतों पर वापस जाएं")}
+              </div>
+              <ComplaintDetailView
+                selected={selected}
+                statusUpdate={statusUpdate}
+                setStatusUpdate={setStatusUpdate}
+                isCCE={true}
+              />
+            </div>
+          ) : (
+            <ComplaintList
+              selected={selected}
+              onSelect={setSelected}
+              setStatusUpdate={setStatusUpdate}
+              onStatsChange={setStats}
+              useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
+              autoSelect={false}
+            />
+          )}
         </div>
       </div>
     </PortalLayout>

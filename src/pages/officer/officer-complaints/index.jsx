@@ -20,6 +20,7 @@ export default function OfficerComplaints() {
   const [selected, setSelected] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState(null);
   const isMobile = useIsMobile();
+  
 
   const {
     data: analyticsData,

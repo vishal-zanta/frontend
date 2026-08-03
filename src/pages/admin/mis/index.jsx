@@ -29,6 +29,14 @@ import { useGetMisReports, useGetMisStats } from "./hooks";
 import { useGetDemographics } from "../master-data/hooks";
 import { MAX_LIMIT } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
+import DistrictSummaryTable from "./components/DistrictSummaryTable";
+import OfficerRankingTable from "./components/OfficerRankingTable";
+import ServicePerformanceTable from "./components/ServicePerformanceTable";
+import UlbPerformanceTable from "./components/UlbPerformanceTable";
+import BlockPerformanceTable from "./components/BlockPerformanceTable";
+import AgentPerformanceTable from "./components/AgentPerformanceTable";
+import IvrReportTable from "./components/IvrReportTable";
+import { Input } from "@/components/ui/input";
 
 const reports = [
   {
@@ -183,14 +191,23 @@ function normalizeIvrRows(ivrStats, t) {
       label: t("Total Calls", "कुल कॉल"),
       value: ivrStats.totalCalls ?? ivrStats.totalCallsToday,
     },
-    { label: t("Calls Answered", "उत्तर दी गई कॉल"), value: ivrStats.callsAnswered },
+    {
+      label: t("Calls Answered", "उत्तर दी गई कॉल"),
+      value: ivrStats.callsAnswered,
+    },
     { label: t("Calls Missed", "मिस कॉल"), value: ivrStats.callsMissed },
     {
       label: t("Success Rate", "सफलता दर"),
       value: ivrStats.successRate != null ? `${ivrStats.successRate}%` : "-",
     },
-    { label: t("Avg Talk Time", "औसत बात का समय"), value: ivrStats.avgTalkTime ?? "-" },
-    { label: t("Avg Wait Time", "औसत प्रतीक्षा समय"), value: ivrStats.avgWaitTime ?? "-" },
+    {
+      label: t("Avg Talk Time", "औसत बात का समय"),
+      value: ivrStats.avgTalkTime ?? "-",
+    },
+    {
+      label: t("Avg Wait Time", "औसत प्रतीक्षा समय"),
+      value: ivrStats.avgWaitTime ?? "-",
+    },
     { label: t("Peak Hour", "पीक घंटा"), value: ivrStats.peakHour ?? "-" },
     {
       label: t("Active Agents", "सक्रिय एजेंट"),
@@ -262,49 +279,73 @@ export default function MISReports() {
     {
       id: "summary",
       name: t("Complaint Summary Report", "शिकायत सारांश रिपोर्ट"),
-      desc: t("Total complaints, bifurcation by status, district-wise breakdown", "कुल शिकायतें, स्थिति के अनुसार विभाजन, जिला-वार विवरण"),
+      desc: t(
+        "Total complaints, bifurcation by status, district-wise breakdown",
+        "कुल शिकायतें, स्थिति के अनुसार विभाजन, जिला-वार विवरण",
+      ),
       icon: FileBarChart,
     },
     {
       id: "officer",
       name: t("Officer Ranking Report", "अधिकारी रैंकिंग रिपोर्ट"),
-      desc: t("Ranking based on complaints resolved in given time period", "दिए गए समय में निराकृत शिकायतों के आधार पर रैंकिंग"),
+      desc: t(
+        "Ranking based on complaints resolved in given time period",
+        "दिए गए समय में निराकृत शिकायतों के आधार पर रैंकिंग",
+      ),
       icon: FileText,
     },
     {
       id: "service",
       name: t("Service Performance Report", "सेवा प्रदर्शन रिपोर्ट"),
-      desc: t("SLA compliance, breach rate, resolution time by service", "सेवा द्वारा SLA अनुपालन, उल्लंघन दर, निस्तारण समय"),
+      desc: t(
+        "SLA compliance, breach rate, resolution time by service",
+        "सेवा द्वारा SLA अनुपालन, उल्लंघन दर, निस्तारण समय",
+      ),
       icon: FileBarChart,
     },
     {
       id: "urban",
       name: t("Urban Performance Report", "शहरी प्रदर्शन रिपोर्ट"),
-      desc: t("ULB-wise performance, population rank, per-capita analysis", "ULB-वार प्रदर्शन, जनसंख्या रैंक, प्रति व्यक्ति विश्लेषण"),
+      desc: t(
+        "ULB-wise performance, population rank, per-capita analysis",
+        "ULB-वार प्रदर्शन, जनसंख्या रैंक, प्रति व्यक्ति विश्लेषण",
+      ),
       icon: FileText,
     },
     {
       id: "rural",
       name: t("Rural Performance Report", "ग्रामीण प्रदर्शन रिपोर्ट"),
-      desc: t("Block-level grievance status & resolution metrics", "प्रखंड-स्तरीय शिकायत स्थिति और निस्तारण मीट्रिक"),
+      desc: t(
+        "Block-level grievance status & resolution metrics",
+        "प्रखंड-स्तरीय शिकायत स्थिति और निस्तारण मीट्रिक",
+      ),
       icon: FileText,
     },
     {
       id: "ulb",
       name: t("ULB Leadership Board", "ULB नेतृत्व बोर्ड"),
-      desc: t("Ranked ULB performance with trend indicators", "रुझान संकेतकों के साथ रैंक किया गया ULB प्रदर्शन"),
+      desc: t(
+        "Ranked ULB performance with trend indicators",
+        "रुझान संकेतकों के साथ रैंक किया गया ULB प्रदर्शन",
+      ),
       icon: FileBarChart,
     },
     {
       id: "ivr",
       name: t("IVR Report", "आईवीआर रिपोर्ट"),
-      desc: t("Call success rate, agent attendance, IVR metrics", "कॉल सफलता दर, एजेंट उपस्थिति, आईवीआर मीट्रिक"),
+      desc: t(
+        "Call success rate, agent attendance, IVR metrics",
+        "कॉल सफलता दर, एजेंट उपस्थिति, आईवीआर मीट्रिक",
+      ),
       icon: FileText,
     },
     {
       id: "agent",
       name: t("Agent Performance Report", "एजेंट प्रदर्शन रिपोर्ट"),
-      desc: t("Individual agent stats - calls, resolution, CSAT, SLA", "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, CSAT, SLA"),
+      desc: t(
+        "Individual agent stats - calls, resolution, CSAT, SLA",
+        "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, CSAT, SLA",
+      ),
       icon: FileText,
     },
   ];
@@ -321,7 +362,7 @@ export default function MISReports() {
   const params = useMemo(() => {
     const next = {
       report: selectedReport,
-      district : (!district ||  district == "all") ? "" : district,
+      district: !district || district == "all" ? "" : district,
       dateRange,
     };
     if (dateRange === "custom") {
@@ -405,10 +446,13 @@ export default function MISReports() {
 
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
           title={t("MIS Reports", "एमआईएस रिपोर्ट")}
-          subtitle={t("Downloadable reports for senior officials & statutory reporting", "वरिष्ठ अधिकारियों और वैधानिक रिपोर्टिंग के लिए डाउनलोड करने योग्य रिपोर्ट")}
+          subtitle={t(
+            "Downloadable reports for senior officials & statutory reporting",
+            "वरिष्ठ अधिकारियों और वैधानिक रिपोर्टिंग के लिए डाउनलोड करने योग्य रिपोर्ट",
+          )}
         />
 
         <LoaderErrWrapper
@@ -431,7 +475,8 @@ export default function MISReports() {
         <div className="bg-card rounded-xl border border-border p-4">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              <Filter className="w-4 h-4" /> {t("Select Report:", "रिपोर्ट चुनें:")}
+              <Filter className="w-4 h-4" />{" "}
+              {t("Select Report:", "रिपोर्ट चुनें:")}
             </span>
             <Select
               value={selectedReport}
@@ -497,14 +542,16 @@ export default function MISReports() {
             </Select>
             {dateRange === "custom" && (
               <div className="flex items-center gap-2">
-                <input
+                <Input
                   type="date"
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
                   className="px-2 py-1.5 text-sm border border-input rounded-md"
                 />
-                <span className="text-muted-foreground text-sm">{t("to", "तक")}</span>
-                <input
+                <span className="text-muted-foreground text-sm">
+                  {t("to", "तक")}
+                </span>
+                <Input
                   type="date"
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
@@ -515,9 +562,9 @@ export default function MISReports() {
           </div>
         </div>
 
-        <div className="bg-card rounded-xl border border-border p-6">
-          <div className="flex items-start gap-4 mb-4">
-            <div className="w-11 h-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        <div className="bg-card rounded-xl border border-border">
+          <div className="flex items-start gap-4 mb-4  p-4 sm:p-6 pb-0 sm:pb-0">
+            <div className="hidden sm:flex w-11 h-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
               {React.createElement(currentReport.icon, {
                 className: "w-5 h-5",
               })}
@@ -542,126 +589,70 @@ export default function MISReports() {
               filename={`MIS_${currentReport.id}_report`}
             />
           </div>
-
-          <LoaderErrWrapper
-            isLoading={isLoading}
-            error={error?.response?.data?.message || error?.message}
-          >
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/50">
-                  <tr className="text-left text-xs text-muted-foreground">
-                    {reportColumns.map((col) => (
-                      <th
-                        key={col.key}
-                        className={`px-3 py-2 font-medium ${
-                          [
-                            "total",
-                            "resolved",
-                            "pending",
-                            "escalated",
-                            "withinSLA",
-                            "beyondSLA",
-                            "compliance",
-                            "slaCompliance",
-                            "complaints",
-                            "calls",
-                            "value",
-                          ].includes(col.key)
-                            ? "text-right"
-                            : ""
-                        }`}
-                      >
-                        {col.label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {reportRows.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={reportColumns.length}
-                        className="px-3 py-8 text-center text-muted-foreground"
-                      >
-                        {t("No data found for selected filters", "चयनित फ़िल्टर के लिए कोई डेटा नहीं मिला")}
-                      </td>
-                    </tr>
-                  ) : (
-                    reportRows.map((row, i) => (
-                      <tr key={i} className="hover:bg-muted/30">
-                        {reportColumns.map((col) => (
-                          <td
-                            key={col.key}
-                            className={`px-3 py-2 ${
-                              col.key === "name" ||
-                              col.key === "agent" ||
-                              col.key === "district" ||
-                              col.key === "block" ||
-                              col.key === "service" ||
-                              col.key === "ulb" ||
-                              col.key === "label"
-                                ? "font-medium"
-                                : ""
-                            } ${
-                              [
-                                "total",
-                                "resolved",
-                                "pending",
-                                "escalated",
-                                "withinSLA",
-                                "beyondSLA",
-                                "compliance",
-                                "slaCompliance",
-                                "complaints",
-                                "calls",
-                                "value",
-                              ].includes(col.key)
-                                ? "text-right"
-                                : ""
-                            } ${
-                              col.key === "resolved" || col.key === "withinSLA"
-                                ? "text-emerald-600"
-                                : ""
-                            } ${
-                              col.key === "pending" ? "text-amber-600" : ""
-                            } ${
-                              col.key === "escalated" || col.key === "beyondSLA"
-                                ? "text-red-600"
-                                : ""
-                            }`}
-                          >
-                            {formatCell(selectedReport, col.key, row)}
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </LoaderErrWrapper>
+          <div>
+            <LoaderErrWrapper
+              isLoading={isLoading}
+              error={error?.response?.data?.message || error?.message}
+            >
+              {selectedReport === "officer" && (
+                <OfficerRankingTable reportRows={reportRows} />
+              )}
+              {selectedReport === "service" && (
+                <ServicePerformanceTable reportRows={reportRows} />
+              )}
+              {(selectedReport === "urban" || selectedReport === "ulb") && (
+                <UlbPerformanceTable reportRows={reportRows} />
+              )}
+              {selectedReport === "rural" && (
+                <BlockPerformanceTable reportRows={reportRows} />
+              )}
+              {selectedReport === "agent" && (
+                <AgentPerformanceTable reportRows={reportRows} />
+              )}
+              {selectedReport === "ivr" && (
+                <IvrReportTable reportRows={reportRows} />
+              )}
+              {(selectedReport === "summary" ||
+                ![
+                  "officer",
+                  "service",
+                  "urban",
+                  "ulb",
+                  "rural",
+                  "agent",
+                  "ivr",
+                ].includes(selectedReport)) && (
+                <DistrictSummaryTable reportRows={reportRows} />
+              )}
+            </LoaderErrWrapper>
+          </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-6 text-white">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
-                <Sparkles className="w-6 h-6" />
+        <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6 mb-3">
+            <div className="flex items-center gap-2.5 xs:gap-3">
+              <div className="w-8 h-8 xs:w-10 xs:h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
               </div>
               <div>
-                <h3 className="font-bold text-lg">
-                  {t("AI-Generated MIS Cover Note", "AI द्वारा जनरेट किया गया MIS कवर नोट")}
+                <h3 className="font-bold text-base xs:text-lg sm:text-xl">
+                  {t(
+                    "AI-Generated MIS Cover Note",
+                    "AI द्वारा जनरेट किया गया MIS कवर नोट",
+                  )}
                 </h3>
-                <p className="text-white/70 text-sm">
-                  {t("Auto-generated summary with key insights & recommendations", "मुख्य अंतर्दृष्टि और सिफारिशों के साथ स्वचालित सारांश")}
+                <p className="text-white/70 text-xs xs:text-sm">
+                  {t(
+                    "Auto-generated summary with key insights & recommendations",
+                    "मुख्य अंतर्दृष्टि और सिफारिशों के साथ स्वचालित सारांश",
+                  )}
                 </p>
               </div>
             </div>
             <Button
               onClick={handleGenerate}
               disabled={generating}
-              className="bg-white/20 hover:bg-white/30 text-white"
+              className="w-full sm:w-auto bg-white/20 hover:bg-white/30 text-white text-xs xs:text-sm px-3 py-1.5 xs:px-4 xs:py-2"
             >
               {generating ? (
                 <>
@@ -707,7 +698,8 @@ export default function MISReports() {
                     doc.save("MIS_cover_note.pdf");
                   }}
                 >
-                  <Download className="w-4 h-4 mr-1" /> {t("Download PDF", "PDF डाउनलोड करें")}
+                  <Download className="w-4 h-4 mr-1" />{" "}
+                  {t("Download PDF", "PDF डाउनलोड करें")}
                 </Button>
                 <Button
                   className="bg-white/20 hover:bg-white/30 text-white"
@@ -721,7 +713,8 @@ export default function MISReports() {
                     URL.revokeObjectURL(url);
                   }}
                 >
-                  <FileSpreadsheet className="w-4 h-4 mr-1" /> {t("Download Excel", "एक्सेल डाउनलोड करें")}
+                  <FileSpreadsheet className="w-4 h-4 mr-1" />{" "}
+                  {t("Download Excel", "एक्सेल डाउनलोड करें")}
                 </Button>
               </div>
             </div>

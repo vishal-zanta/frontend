@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EditButton from "@/components/EditButton";
-
+import MyTable from "@/components/MyTable";
+import useIsMobile from "@/hooks/useIsMobile";
+import UrbanLocalBodiesCards from "./UrbanLocalBodiesCards";
 
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
@@ -18,6 +20,7 @@ import UrbanLocalBodiesForm from "./UrbanLocalBodiesForm";
 
 export default function UrbanLocalBodiesTable({ districts = [] }) {
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
   const { page, limit, ...paginationProps } = usePagination();
   const {
     data: ulbsData,
@@ -152,6 +155,53 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
     }
   };
 
+  const tableHeaders = [
+    { id: "name", label: "ULB Name" },
+    { id: "hindi", label: "Hindi" },
+    { id: "district", label: "District" },
+    { id: "wards", label: "Wards", className: "text-right" },
+    { id: "population", label: "Population", className: "text-right" },
+    { id: "actions", label: "Actions", className: "text-center" },
+  ];
+
+  const tableBody = ulbs.map((u) => {
+    const districtObj =
+      typeof u.district === "object"
+        ? u.district
+        : districts.find(
+            (d) => d._id === u.district || d.id === u.district,
+          );
+    const districtName = districtObj?.name || "N/A";
+    const districtPopulation = districtObj?.population;
+
+    return {
+      name: { className: "font-medium", value: u.name },
+      hindi: { className: "text-muted-foreground", value: u.nameHindi || "N/A" },
+      district: { className: "text-muted-foreground capitalize", value: districtName },
+      wards: { className: "text-right", value: u.wards },
+      population: {
+        className: "text-right font-semibold",
+        value: districtPopulation ? districtPopulation.toLocaleString("en-IN") : "N/A",
+      },
+      actions: {
+        className: "text-center",
+        value: (
+          <div className="flex gap-1 justify-center">
+            <EditButton onClick={() => setDialog({ type: "edit", item: u })} />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
+              onClick={() => setDialog({ type: "delete", item: u })}
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
+          </div>
+        ),
+      },
+    };
+  });
+
   return (
     <>
       <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
@@ -177,75 +227,13 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
             <div className="text-center py-8 text-sm text-muted-foreground bg-muted/10 border-b border-border">
               No ULBs configured yet.
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/50">
-                  <tr className="text-left text-xs text-muted-foreground">
-                    <th className="px-4 py-2.5 font-medium">ULB Name</th>
-                    <th className="px-4 py-2.5 font-medium">Hindi</th>
-                    <th className="px-4 py-2.5 font-medium">District</th>
-                    <th className="px-4 py-2.5 font-medium text-right">
-                      Wards
-                    </th>
-                    <th className="px-4 py-2.5 font-medium text-right">
-                      Population
-                    </th>
-                    <th className="px-4 py-2.5 text-center font-medium">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {ulbs.map((u) => {
-                    const districtObj =
-                      typeof u.district === "object"
-                        ? u.district
-                        : districts.find(
-                            (d) => d._id === u.district || d.id === u.district,
-                          );
-                    const districtName = districtObj?.name || "N/A";
-                    const districtPopulation = districtObj?.population;
-
-                    return (
-                      <tr key={u._id} className="hover:bg-muted/30">
-                        <td className="px-4 py-2.5 font-medium">{u.name}</td>
-                        <td className="px-4 py-2.5 text-muted-foreground">
-                          {u.nameHindi || "N/A"}
-                        </td>
-                        <td className="px-4 py-2.5 text-muted-foreground capitalize">
-                          {districtName}
-                        </td>
-                        <td className="px-4 py-2.5 text-right">{u.wards}</td>
-                        <td className="px-4 py-2.5 text-right font-semibold">
-                          {districtPopulation
-                            ? districtPopulation.toLocaleString("en-IN")
-                            : "N/A"}
-                        </td>
-                        <td className="px-4 py-2.5">
-                          <div className="flex gap-1 justify-center">
-                            <EditButton
-                              onClick={() =>
-                                setDialog({ type: "edit", item: u })
-                              }
-                            />
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
-                              onClick={() =>
-                                setDialog({ type: "delete", item: u })
-                              }
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+          ) : isMobile ? (
+            <>
+              <UrbanLocalBodiesCards
+                ulbs={ulbs}
+                districts={districts}
+                setDialog={setDialog}
+              />
               <Pagination
                 page={page}
                 limit={limit}
@@ -253,7 +241,21 @@ export default function UrbanLocalBodiesTable({ districts = [] }) {
                 isLoading={ulbsLoading}
                 {...paginationProps}
               />
-            </div>
+            </>
+          ) : (
+            <MyTable
+              tableHeaders={tableHeaders}
+              tableBody={tableBody}
+              pagination={
+                <Pagination
+                  page={page}
+                  limit={limit}
+                  totalPage={totalPages}
+                  isLoading={ulbsLoading}
+                  {...paginationProps}
+                />
+              }
+            />
           )}
         </LoaderErrWrapper>
       </div>

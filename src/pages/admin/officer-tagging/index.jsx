@@ -42,7 +42,11 @@ export default function OfficerTagging() {
   const { page, limit, ...pageProps } = usePagination();
   const queryClient = useQueryClient();
 
-  const { data: deptApiData, isLoading: deptLoading, error: deptError } = useGetDepartments([], {
+  const {
+    data: deptApiData,
+    isLoading: deptLoading,
+    error: deptError,
+  } = useGetDepartments([], {
     page: 1,
     limit: MAX_LIMIT,
   });
@@ -166,7 +170,7 @@ export default function OfficerTagging() {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
       });
-       queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.USERS],
         refetchType: "active",
       });
@@ -212,10 +216,13 @@ export default function OfficerTagging() {
 
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
           title={t("Officer Tagging", "अधिकारी मैपिंग")}
-          subtitle={t("Tag officers to multiple services and multiple wards - manually assigned due to location restriction", "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और कई वार्डों से मैप करें")}
+          subtitle={t(
+            "Tag officers to multiple services and multiple wards - manually assigned due to location restriction",
+            "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और कई वार्डों से मैप करें",
+          )}
         />
 
         <OfficerTagAnalytics
@@ -225,46 +232,53 @@ export default function OfficerTagging() {
           }))}
         />
 
-        <div className="flex gap-3 items-center">
-          <SearchDebounced
-            handleDebouncedChange={(val) => {
-              setSearch(val);
-              pageProps.setPage(1);
-            }}
-            delay={500}
-            className="flex-1"
-            placeholder={t("Search officer by name...", "नाम से अधिकारी खोजें...")}
-          />
-          <LoaderErrWrapper isLoading={deptLoading}>
-            <div className="flex items-center gap-1.5 shrink-0">
-              <label className="text-xs font-semibold text-muted-foreground">
-                {t("Department:", "विभाग:")}
-              </label>
-              <select
-                value={selectedDept}
-                onChange={(e) => {
-                  setSelectedDept(e.target.value);
-                  pageProps.setPage(1);
-                }}
-                className="text-xs h-8 rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
-              >
-                {depts.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </LoaderErrWrapper>
+        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 sm:items-center justify-between">
+          <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch xs:items-center flex-1">
+            <SearchDebounced
+              handleDebouncedChange={(val) => {
+                setSearch(val);
+                pageProps.setPage(1);
+              }}
+              delay={500}
+              className="w-full xs:flex-1"
+              placeholder={t(
+                "Search officer by name...",
+                "नाम से अधिकारी खोजें...",
+              )}
+            />
+            <LoaderErrWrapper isLoading={deptLoading}>
+              <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
+                <label className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
+                  {t("Department:", "विभाग:")}
+                </label>
+                <select
+                  value={selectedDept}
+                  onChange={(e) => {
+                    setSelectedDept(e.target.value);
+                    pageProps.setPage(1);
+                  }}
+                  className="text-xs h-8 w-full xs:w-auto rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
+                >
+                  {depts.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </LoaderErrWrapper>
+          </div>
+
           <Button
-            className="bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 w-full sm:w-auto shrink-0"
             disabled={!selectedDept}
             onClick={() => {
               setEditItem(null);
               setDialogOpen(true);
             }}
           >
-            <Plus className="w-4 h-4 mr-1" /> {t("Tag New Officer", "नया अधिकारी मैप करें")}
+            <Plus className="w-4 h-4 mr-1" />{" "}
+            {t("Tag New Officer", "नया अधिकारी मैप करें")}
           </Button>
         </div>
 

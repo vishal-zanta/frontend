@@ -202,7 +202,7 @@ export default function TopBar({
           <div className="text-[11px] text-muted-foreground font-medium hidden sm:block">
             {portalLabel}
           </div>
-          <div className={clsx("text-sm font-bold text-foreground  hidden sm:block lg:hidden xl:block", t("-mt-0.5", "mt-0"))}>
+          <div className={clsx("text-xs lg:text-sm font-bold text-foreground  hidden sm:block lg:hidden xl:block", t("-mt-0.5", "mt-0"))}>
             {t(PORTAL_META.name, "बिहार ई-शिकायत पोर्टल")}
           </div>
         </div>
@@ -260,13 +260,13 @@ export default function TopBar({
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
+          className="min-w-4 w-4 sm:min-w-4 sm:w-4 lg:w-5 lg:min-w-5 aspect-square flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground transition-colors"
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
           {theme === "dark" ? (
-            <Sun className="w-5 h-5" />
+            <Sun className="" />
           ) : (
-            <Moon className="w-5 h-5" />
+            <Moon className="" />
           )}
         </button>
 
@@ -275,7 +275,7 @@ export default function TopBar({
         <button
           onClick={() => toggleBreakMutation.mutate()}
           disabled={toggleBreakMutation.isPending}
-          className="px-3 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
+          className="px-3 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 text-nowrap"
         >
           {toggleBreakMutation.isPending && (
             <Loader2 className="w-3 h-3 animate-spin" />
@@ -304,7 +304,7 @@ export default function TopBar({
             onClick={() => setShowProfile(!showProfile)}
             className="flex items-center gap-2 pl-3 border-l border-border"
           >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
+            <div className="min-w-9 min-h-9 w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
               {profileData?.name?.slice(0, 2)?.toUpperCase()}
             </div>
             <div className="hidden sm:block text-left">

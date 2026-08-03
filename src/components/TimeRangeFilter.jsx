@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { useLanguage } from "@/context/LanguageContext";
 import Filter from "@/components/Filter";
+import clsx from "clsx";
 
 export default function TimeRangeFilter({
   period,
@@ -17,7 +18,8 @@ export default function TimeRangeFilter({
   setDateRange,
   filters, 
   setFilters,
-  filterOptions
+  filterOptions,
+  boxClassName= ""
 }) {
   const { t } = useLanguage();
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -54,8 +56,8 @@ export default function TimeRangeFilter({
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex items-center gap-1 bg-white dark:bg-card border border-border rounded-lg p-0.5">
+    <div className="flex items-center gap-2 text-nowrap">
+      <div className={clsx("flex items-center gap-1 bg-white dark:bg-card border border-border rounded-lg p-0.5", boxClassName)}>
         {options.map((opt) => (
           <button
             key={opt.id}

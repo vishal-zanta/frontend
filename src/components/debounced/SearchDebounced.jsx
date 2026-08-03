@@ -13,7 +13,7 @@ const SearchDebounced = ({
   inputProps = {},
   placeholder = "Search by name or email...",
 icon = true,
-  isClearable = false,
+  isClearable = true,
  onFocus
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialValue);
@@ -46,15 +46,15 @@ icon = true,
   return (
     <div className={clsx("relative", className)}>
       {icon && (
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
       )}
       <Input
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder={placeholder}
         className={clsx(
-          icon && "pl-9",
-          isClearable && searchQuery && "pr-8",
+          icon && "pl-8 sm:pl-9",
+          isClearable && searchQuery && "pr-7 sm:pr-8",
           inputClassName,
         )}
         {...inputProps}

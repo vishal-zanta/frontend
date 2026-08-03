@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-  Phone,
-  Users,
-  Clock,
-  Activity,
-  BarChart3,
-  Server,
-} from "lucide-react";
+import { Phone, Users, Clock, Activity, BarChart3, Server } from "lucide-react";
 import {
   IVR_STATS,
   HOURLY_DISPOSITION,
@@ -26,6 +19,8 @@ import GrievanceTab from "./grievance";
 import CitizenInteractionTab from "./citizen-interaction";
 import SystemTab from "./system";
 import { useLanguage } from "@/context/LanguageContext";
+
+import { SectionTitle } from "@/components/ChartCard";
 
 const tabs = [
   {
@@ -81,9 +76,12 @@ export default function OperationalDashboard() {
 
   const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
 
-  const tab = (filteredTabs.map((t) => t.id).includes(searchParams.get("tab"))
-    ? searchParams.get("tab")
-    : undefined) ?? filteredTabs?.[0]?.id ?? "call-volume";
+  const tab =
+    (filteredTabs.map((t) => t.id).includes(searchParams.get("tab"))
+      ? searchParams.get("tab")
+      : undefined) ??
+    filteredTabs?.[0]?.id ??
+    "call-volume";
 
   const activeTab = filteredTabs.find((t) => t.id === tab);
 
@@ -158,18 +156,15 @@ export default function OperationalDashboard() {
 
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-foreground">
-              {t("Operational Dashboard", "परिचालन डैशबोर्ड")} - {t(activeTab?.labelEn || "", activeTab?.labelHi || "")}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {t("Real-time operational metrics across call centre, SLA, grievances, and infrastructure", "कॉल सेंटर, SLA, शिकायतों और अवसंरचना में वास्तविक समय के परिचालन मेट्रिक्स")}
-            </p>
-          </div>
-          {/* <TimeRangeFilter period={period} setPeriod={setPeriod} dateRange={dateRange} setDateRange={setDateRange} /> */}
-        </div>
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <SectionTitle
+          title={`${t("Operational Dashboard", "परिचालन डैशबोर्ड")} -
+              ${t(activeTab?.labelEn || "", activeTab?.labelHi || "")}`}
+          subtitle={t(
+            "Real-time operational metrics across call centre, SLA, grievances, and infrastructure",
+            "कॉल सेंटर, SLA, शिकायतों और अवसंरचना में वास्तविक समय के परिचालन मेट्रिक्स",
+          )}
+        />
 
         {tab === "call-volume" && <CallVolumeTab pd={pd} />}
         {tab === "cce-performance" && <CcePerformanceTab pd={pd} />}

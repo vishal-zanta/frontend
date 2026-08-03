@@ -105,8 +105,8 @@ export default function DesignationsTab() {
   return (
     <>
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-          <h3 className="font-bold text-foreground">{t("Designations", "पदनाम")}</h3>
+        <div className="px-5 py-3 border-b border-border flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 xs:gap-0">
+          <h3 className="font-bold text-foreground ">{t("Designations", "पदनाम")}</h3>
           <div className="flex items-center gap-2">
             <Filter
               filters={filters}

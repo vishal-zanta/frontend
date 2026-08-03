@@ -51,7 +51,7 @@ export default function StatsBoxes({ metrics }) {
   }
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2.5 xs:gap-3 sm:gap-4">
         <StatCard
           icon={Inbox}
           label={t("Total Complaints", "कुल शिकायतें")}

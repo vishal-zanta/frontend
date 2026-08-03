@@ -3,99 +3,98 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
+import MyTable from "@/components/MyTable";
+import useIsMobile from "@/hooks/useIsMobile";
+import SlaCards from "./SlaCards";
 
 export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
   const { t } = useLanguage();
-  console.log({ roles });
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead className="bg-muted/50">
-          <tr className="text-left text-xs text-muted-foreground">
-            <th className="px-3 py-3 font-medium min-w-40 sticky left-0 bg-[#F4F7FA] dark:bg-[#172033]">
-              {t("Sub-Service", "उप-सेवा")}
-            </th>
-            {roles.map((role) => (
-              <th
-                key={role._id}
-                className="px-3 py-3 font-medium text-center min-w-40"
-              >
-                {role.designationEnglish}
-              </th>
-            ))}
-            {/* <th className="px-3 py-3 font-medium text-center min-w-40">
-              Officer
-            </th> */}
-            <th className="px-3 py-3 font-medium min-w-40 sticky right-0 bg-[#F4F7FA] dark:bg-[#172033] text-center">
-              {t("Actions", "कार्रवाई")}
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {docs.length === 0 ? (
-            <tr>
-              <td
-                colSpan={roles.length + 3}
-                className="text-center py-8 text-muted-foreground"
-              >
-                {t("No SLA configurations found.", "कोई SLA कॉन्फ़िगरेशन नहीं मिला।")}
-              </td>
-            </tr>
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <SlaCards
+        docs={docs}
+        roles={roles}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    );
+  }
+
+  const tableHeaders = [
+    {
+      id: "subService",
+      label: t("Sub-Service", "उप-सेवा"),
+      className: "min-w-40 sticky left-0 bg-[#F4F7FA] dark:bg-[#172033]",
+    },
+    ...roles.map((role) => ({
+      id: role._id,
+      label: role.designationEnglish,
+      className: "text-center min-w-40",
+    })),
+    {
+      id: "actions",
+      label: t("Actions", "कार्रवाई"),
+      className: "min-w-40 sticky right-0 bg-[#F4F7FA] dark:bg-[#172033] text-center",
+    },
+  ];
+
+  const tableBody = docs.map((s) => {
+    const row = {
+      subService: {
+        value:
+          s.subService?.title ||
+          s.subService?.name ||
+          s.subService ||
+          "N/A",
+        className: "font-medium sticky left-0 bg-white dark:bg-[#0f1729]",
+      },
+    };
+
+    roles.forEach((role) => {
+      const esc = (s.escalations || []).find(
+        (e) => (e.role?._id || e.role) === role._id
+      );
+
+      row[role._id] = {
+        className: "text-center",
+        render: () =>
+          esc ? (
+            <Badge
+              variant="outline"
+              className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/20"
+            >
+              {esc?.slaType === "days" ? esc.slaHours / 24 : esc.slaHours}
+              {esc?.slaType === "days" ? "d" : "h"}
+            </Badge>
           ) : (
-            docs.map((s, i) => (
-              <tr key={s._id || i} className="hover:bg-muted/30">
-                <td className="px-3 py-2.5 font-medium sticky left-0 bg-white dark:bg-[#0f1729] ">
-                  {s.subService?.title ||
-                    s.subService?.name ||
-                    s.subService ||
-                    "N/A"}
-                </td>
-                {roles.map((role) => {
-                  const esc = (s.escalations || []).find(
-                    (e) => (e.role?._id || e.role) === role._id,
-                  );
-                  return (
-                    <td key={role._id} className="px-3 py-2.5 text-center">
-                      {esc ? (
-                        <Badge
-                          variant="outline"
-                          className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/20"
-                        >
-                          {esc?.slaType == "days" ?  esc.slaHours/24 : esc.slaHours}{esc?.slaType == "days" ? "d" : "h"}
-                        </Badge>
-                      ) : (
-                        "N/A"
-                      )}
-                    </td>
-                  );
-                })}
-                {/* <td className="px-3 py-2.5 text-center">
-                  {s.officer ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" />
-                  ) : (
-                    <AlertTriangle className="w-4 h-4 text-red-500 mx-auto" />
-                  )}
-                </td> */}
-                <td className="px-3 py-2.5 sticky right-0 bg-white dark:bg-[#0f1729] text-center">
-                  <div className="flex gap-1 justify-center">
-                    <Button variant="ghost" size="sm" onClick={() => onEdit(s)}>
-                      <Pencil className="w-3.5 h-3.5 mr-1" /> {t("Edit", "संपादित करें")}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-600"
-                      onClick={() => onDelete(s)}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
+            "N/A"
+          ),
+      };
+    });
+
+    row.actions = {
+      className: "sticky right-0 bg-white dark:bg-[#0f1729] text-center",
+      render: () => (
+        <div className="flex gap-1 justify-center">
+          <Button variant="ghost" size="sm" onClick={() => onEdit(s)}>
+            <Pencil className="w-3.5 h-3.5 mr-1" /> {t("Edit", "संपादित करें")}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-red-600 hover:text-red-700 hover:bg-destructive/10"
+            onClick={() => onDelete(s)}
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+      ),
+    };
+
+    return row;
+  });
+
+  return <MyTable tableHeaders={tableHeaders} tableBody={tableBody} />;
 }

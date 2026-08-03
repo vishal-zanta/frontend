@@ -26,9 +26,13 @@ import { Input } from "@/components/ui/input";
 import { ComplaintId } from "@/components/ComplaintDetailDialog";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
 import { useLanguage } from "@/context/LanguageContext";
+import MyTable from "@/components/MyTable";
+import useIsMobile from "@/hooks/useIsMobile";
+import PreviousCallCards from "./components/PreviousCallCards";
 
 export default function IncomingCall() {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const [callState, setCallState] = useState("ringing"); // ringing -> connected -> rerouting -> ended
   const [callDuration, setCallDuration] = useState(0);
   const [rerouteTarget, setRerouteTarget] = useState(null); // { type: "agent"|"dept", id }
@@ -171,7 +175,7 @@ export default function IncomingCall() {
 
   return (
     <PortalLayout role="crm">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
             {t("Incoming Call - Agent Desktop", "आगमन कॉल - एजेंट डेस्कटॉप")}
@@ -436,59 +440,65 @@ export default function IncomingCall() {
                   )}
                 </h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/50">
-                    <tr className="text-left text-xs text-muted-foreground">
-                      <th className="px-4 py-2 font-medium">
-                        {t("Call ID", "कॉल आईडी")}
-                      </th>
-                      <th className="px-4 py-2 font-medium">
-                        {t("Date / Time", "दिनांक / समय")}
-                      </th>
-                      <th className="px-4 py-2 font-medium">
-                        {t("Agent", "एजेंट")}
-                      </th>
-                      <th className="px-4 py-2 font-medium">
-                        {t("Duration", "अवधि")}
-                      </th>
-                      <th className="px-4 py-2 font-medium">
-                        {t("Disposition", "निपटान")}
-                      </th>
-                      <th className="px-4 py-2 font-medium">
-                        {t("Complaint", "शिकायत")}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {repeatCaller.previousCalls.map((c, i) => (
-                      <tr key={i} className="hover:bg-muted/30">
-                        <td className="px-4 py-2.5 font-mono text-xs text-primary">
-                          {c.id}
-                        </td>
-                        <td className="px-4 py-2.5 text-muted-foreground">
-                          {c.time}
-                        </td>
-                        <td className="px-4 py-2.5">{c.agent}</td>
-                        <td className="px-4 py-2.5 text-muted-foreground">
-                          {c.duration}
-                        </td>
-                        <td className="px-4 py-2.5">
-                          <Badge
-                            variant="outline"
-                            className={`text-xs ${c.disposition.includes("Escalat") ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : c.disposition.includes("Supervisor") ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"}`}
-                          >
-                            {c.disposition}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-2.5">
+              {isMobile ? (
+                <PreviousCallCards calls={repeatCaller.previousCalls} />
+              ) : (
+                <MyTable
+                  tableHeaders={[
+                    { id: "id", label: t("Call ID", "कॉल आईडी") },
+                    { id: "time", label: t("Date / Time", "दिनांक / समय") },
+                    { id: "agent", label: t("Agent", "एजेंट") },
+                    { id: "duration", label: t("Duration", "अवधि") },
+                    { id: "disposition", label: t("Disposition", "निपटान") },
+                    { id: "complaint", label: t("Complaint", "शिकायत") },
+                  ]}
+                  tableBody={(repeatCaller?.previousCalls || []).map((c) => ({
+                    id: {
+                      value: c.id || "N/A",
+                      className: "font-mono text-xs text-primary font-semibold",
+                    },
+                    time: {
+                      value: c.time || "N/A",
+                      className: "text-muted-foreground",
+                    },
+                    agent: {
+                      value: c.agent || "N/A",
+                    },
+                    duration: {
+                      value: c.duration || "N/A",
+                      className: "text-muted-foreground",
+                    },
+                    disposition: {
+                      render: () => (
+                        <Badge
+                          variant="outline"
+                          className={`text-xs ${
+                            (c.disposition || "").includes("Escalat")
+                              ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                              : (c.disposition || "").includes("Supervisor")
+                                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                                : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
+                          }`}
+                        >
+                          {c.disposition || "N/A"}
+                        </Badge>
+                      ),
+                    },
+                    complaint: {
+                      render: () =>
+                        c.complaintId ? (
                           <ComplaintId id={c.complaintId} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        ) : (
+                          "N/A"
+                        ),
+                    },
+                  }))}
+                  emptyText={t(
+                    "No previous calls found.",
+                    "कोई पिछला कॉल नहीं मिला।"
+                  )}
+                />
+              )}
             </div>
 
             {/* Past complaint history */}

@@ -14,9 +14,13 @@ import usePagination from "@/hooks/usePagination";
 import Pagination from "@/components/Pagination";
 import SubServiceForm from "./SubServiceForm";
 import { useLanguage } from "@/context/LanguageContext";
+import MyTable from "@/components/MyTable";
+import useIsMobile from "@/hooks/useIsMobile";
+import SubServicesCards from "./SubServicesCards";
 
 export default function SubServicesTable({ service, dialog, setDialog }) {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const { page, limit, ...paginationProps } = usePagination();
   const [subservices, setSubservices] = useState(service.subservices || []);
   const [anyMutationDone, setAnyMutationDone] = useState(false);
@@ -186,70 +190,65 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
       : dialog.item?.service?._id === service._id ||
         dialog.item?.service === service._id);
 
+  const tableHeaders = [
+    { id: "english", label: t("Sub-Service (English)", "उप-सेवा (अंग्रेज़ी)") },
+    { id: "hindi", label: t("Sub-Service (Hindi)", "उप-सेवा (हिंदी)") },
+    { id: "sla", label: t("SLA", "SLA"), className: "text-center" },
+    { id: "geoTagged", label: t("Geo-Tagged", "भू-टैग किया गया"), className: "text-center" },
+    { id: "fieldVisit", label: t("Field Visit", "क्षेत्र का दौरा"), className: "text-center" },
+    { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-center" },
+  ];
+
+  const tableBody = subservices.map((ss) => ({
+    english: { className: "font-medium", value: ss.title },
+    hindi: { className: "text-muted-foreground", value: ss.titleHindi || "N/A" },
+    sla: {
+      className: "text-center",
+      value: (
+        <Badge
+          variant="outline"
+          className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/30"
+        >
+          {ss?.slaType === "days" ? ss.sla / 24 : ss.sla}
+          {ss?.slaType === "days" ? "d" : "h"}
+        </Badge>
+      ),
+    },
+    geoTagged: {
+      className: "text-center",
+      value: ss.geoTagged ? "✅" : "N/A",
+    },
+    fieldVisit: {
+      className: "text-center",
+      value: ss.fieldVisit ? "✅" : "N/A",
+    },
+    actions: {
+      className: "text-center",
+      value: (
+        <div className="flex gap-1 justify-center">
+          <EditButton onClick={() => setDialog({ type: "edit", item: ss })} />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
+            onClick={() => setDialog({ type: "delete", item: ss })}
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+      ),
+    },
+  }));
+
   return (
     <>
       {subservices.length === 0 ? (
         <div className="text-center py-6 text-sm text-muted-foreground bg-muted/10 rounded-lg border border-dashed border-border">
           {t("No sub-services configured for this service yet.", "इस सेवा के लिए अभी तक कोई उप-सेवा कॉन्फ़िगर नहीं की गई है।")}
         </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/50">
-              <tr className="text-left text-xs text-muted-foreground">
-                <th className="px-3 py-2.5 font-medium">
-                  {t("Sub-Service (English)", "उप-सेवा (अंग्रेज़ी)")}
-                </th>
-                <th className="px-3 py-2.5 font-medium">{t("Sub-Service (Hindi)", "उप-सेवा (हिंदी)")}</th>
-                <th className="px-3 py-2.5 font-medium text-center">{t("SLA", "SLA")}</th>
-                <th className="px-3 py-2.5 font-medium text-center">
-                  {t("Geo-Tagged", "भू-टैग किया गया")}
-                </th>
-                <th className="px-3 py-2.5 font-medium text-center">
-                  {t("Field Visit", "क्षेत्र का दौरा")}
-                </th>
-                <th className="px-3 py-2.5 text-center font-medium">{t("Actions", "कार्रवाई")}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {subservices.map((ss) => (
-                <tr key={ss._id} className="hover:bg-muted/30">
-                  <td className="px-3 py-2.5 font-medium">{ss.title}</td>
-                  <td className="px-3 py-2.5 text-muted-foreground">
-                    {ss.titleHindi || "N/A"}
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <Badge
-                      variant="outline"
-                      className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/30"
-                    >
-                      {ss?.slaType === "days" ? ss.sla / 24 : ss.sla}
-                      {ss?.slaType === "days" ? "d" : "h"}
-                    </Badge>
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    {ss.geoTagged ? "✅" : "N/A"}
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    {ss.fieldVisit ? "✅" : "N/A"}
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <div className="flex gap-1 justify-center">
-                      <EditButton onClick={() => setDialog({ type: "edit", item: ss })} />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-destructive/10"
-                        onClick={() => setDialog({ type: "delete", item: ss })}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      ) : isMobile ? (
+        <>
+          <SubServicesCards subservices={subservices} setDialog={setDialog} />
           <Pagination
             page={page}
             limit={limit}
@@ -257,7 +256,21 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
             isLoading={isLoading}
             {...paginationProps}
           />
-        </div>
+        </>
+      ) : (
+        <MyTable
+          tableHeaders={tableHeaders}
+          tableBody={tableBody}
+          pagination={
+            <Pagination
+              page={page}
+              limit={limit}
+              totalPage={totalPages}
+              isLoading={isLoading}
+              {...paginationProps}
+            />
+          }
+        />
       )}
 
       {isDialogActive && dialog && dialog.type === "delete" && (

@@ -26,6 +26,7 @@ import SuccessScreen from "./components/SuccessScreen";
 import { postComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
+import { SectionTitle } from "@/components/ChartCard";
 
 export default function CRMRaiseComplaint() {
   const role = "crm";
@@ -139,22 +140,16 @@ export default function CRMRaiseComplaint() {
 
   return (
     <PortalLayout role={role}>
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="mb-6 flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {t("Register Grievance", "शिकायत दर्ज करें")}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {t(
+      <div className="max-w-6xl mx-auto p-4 sm:p-6">
+        <SectionTitle
+        title= {t("Register Grievance", "शिकायत दर्ज करें")}
+        subtitle=  {t(
                 "Fields marked * are required.",
                 "* चिह्नित फ़ील्ड अनिवार्य हैं।",
               )}
-            </p>
-          </div>
-
-          {/* <LangSelector/> */}
-        </div>
+              className="!mb-4 !sm:mb-6"
+        />
+       
 
         <RhfWrapper
           initialValues={defaultValues}
@@ -162,7 +157,7 @@ export default function CRMRaiseComplaint() {
           validationSchema={grievanceSchema}
           validationOn="onChange"
           onSubmit={handleSubmit}
-          className="space-y-6"
+          className="!space-y-4 !sm:space-y-6"
         >
           <FormWizard
             t={t}

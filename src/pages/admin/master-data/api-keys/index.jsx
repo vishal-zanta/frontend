@@ -17,7 +17,11 @@ import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import clsx from "clsx";
 import { useLanguage } from "@/context/LanguageContext";
 
+import useIsMobile from "@/hooks/useIsMobile";
+import ApiKeyCards from "./components/ApiKeyCards";
+
 export default function ApiKeysTab() {
+  const isMobile = useIsMobile();
   const { t } = useLanguage();
   const { page, limit, ...paginationProps } = usePagination();
   const queryClient = useQueryClient();
@@ -212,6 +216,22 @@ export default function ApiKeysTab() {
             <div className="text-center py-8 text-sm text-muted-foreground bg-muted/10 rounded-lg border border-dashed border-border">
               No API Keys generated yet. Click "Generate API Key" to create one.
             </div>
+          ) : isMobile ? (
+            <>
+              <ApiKeyCards
+                rawKeys={rawKeys}
+                setDialog={setDialog}
+                toggleMutation={toggleMutation}
+                deleteMutation={deleteMutation}
+              />
+              <Pagination
+                page={page}
+                limit={limit}
+                totalPage={totalPages}
+                isLoading={isLoading}
+                {...paginationProps}
+              />
+            </>
           ) : (
             <>
               <MyTable tableHeaders={tableHeaders} tableBody={tableBody} />

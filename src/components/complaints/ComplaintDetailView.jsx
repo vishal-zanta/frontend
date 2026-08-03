@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import ComplaintTimeline from "@/components/ComplaintTimeline";
 import {
@@ -208,6 +208,9 @@ export default function ComplaintDetailView({
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+  useEffect(()=>{
+  window.scrollTo({top: 0, behavior : "instant"});
+},[])
 
   if (!selected) {
     return (

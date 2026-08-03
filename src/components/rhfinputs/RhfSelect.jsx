@@ -84,9 +84,7 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     opacity: state.isDisabled ? 0.45 : 1,
     pointerEvents: state.isDisabled ? "none" : "auto",
     fontSize: "0.875rem",
-    "@media (max-width: 768px)": {
-      fontSize: "1rem",
-    },
+    lineHeight: "1.25rem",
     padding: "8px 12px",
     "&:active": {
       backgroundColor: state.isDisabled ? "transparent" : "hsl(var(--accent))",
@@ -96,12 +94,14 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
     ...provided,
     backgroundColor: "hsl(var(--secondary))",
     borderRadius: "calc(var(--radius) - 2px)",
-    fontSize: "13px",
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem",
   }),
   multiValueLabel: (provided) => ({
     ...provided,
     color: "hsl(var(--secondary-foreground))",
-    fontSize: "13px",
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem",
     padding: "2px 6px",
   }),
   multiValueRemove: (provided) => ({
@@ -117,29 +117,23 @@ const buildStyles = (hasError, disabled, colors, isMulti) => ({
   singleValue: (provided) => ({
     ...provided,
     fontSize: "0.875rem",
+    lineHeight: "1.25rem",
     color: "hsl(var(--foreground))",
-    "@media (max-width: 768px)": {
-      fontSize: "1rem",
-    },
   }),
   input: (provided) => ({
     ...provided,
     fontSize: "0.875rem",
+    lineHeight: "1.25rem",
     color: "hsl(var(--foreground))",
     margin: 0,
     padding: 0,
-    "@media (max-width: 768px)": {
-      fontSize: "1rem",
-    },
   }),
   placeholder: (provided) => ({
     ...provided,
     position: "absolute",
     fontSize: "0.875rem",
+    lineHeight: "1.25rem",
     color: colors?.placeholder ?? "hsl(var(--muted-foreground))",
-    "@media (max-width: 768px)": {
-      fontSize: "1rem",
-    },
   }),
   indicatorSeparator: () => ({ display: "none" }),
   indicatorsContainer: (provided) => ({

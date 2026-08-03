@@ -33,8 +33,8 @@ export default function MyShiftDetails({ agentViewShift }) {
 
   return (
     <>
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3">
-        <Lock className="w-5 h-5 text-blue-600 flex-shrink-0" />
+      <div className="bg-card rounded-xl p-4 flex items-center gap-3">
+        <Lock className="w-5 h-5 text-primary flex-shrink-0" />
         <div>
           <div className="font-medium text-sm text-primary">
             {t("Read-Only View", "केवल-पठन दृश्य")}

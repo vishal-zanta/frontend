@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-  Check,
-  X,
-} from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Check, X } from "lucide-react";
 import { OFFICERS, DISTRICTS, SERVICES } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -69,10 +62,13 @@ export default function ManageOfficers() {
 
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
           title={t("Manage Officers", "अधिकारी प्रबंधित करें")}
-          subtitle={t("CRUD management of all field officers - L1, L2, Zone, Division & SUDA level", "क्षेत्रीय अधिकारियों का प्रबंधन - L1, L2, जोन, प्रमंडल और सूडा स्तर")}
+          subtitle={t(
+            "CRUD management of all field officers - L1, L2, Zone, Division & SUDA level",
+            "क्षेत्रीय अधिकारियों का प्रबंधन - L1, L2, जोन, प्रमंडल और सूडा स्तर",
+          )}
         />
 
         {toast && (
@@ -86,13 +82,17 @@ export default function ManageOfficers() {
             <div className="text-2xl font-bold text-blue-600">
               {officers.length}
             </div>
-            <div className="text-sm text-muted-foreground">{t("Total Officers", "कुल अधिकारी")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("Total Officers", "कुल अधिकारी")}
+            </div>
           </div>
           <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-emerald-600">
               {officers.filter((o) => o.status === "active").length}
             </div>
-            <div className="text-sm text-muted-foreground">{t("Active", "सक्रिय")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("Active", "सक्रिय")}
+            </div>
           </div>
           <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-purple-600">
@@ -104,13 +104,17 @@ export default function ManageOfficers() {
                 ).length
               }
             </div>
-            <div className="text-sm text-muted-foreground">{t("Supervisory+", "पर्यवेक्षी+")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("Supervisory+", "पर्यवेक्षी+")}
+            </div>
           </div>
           <div className="bg-card rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-amber-600">
               {officers.filter((o) => o.slaBreached > 0).length}
             </div>
-            <div className="text-sm text-muted-foreground">{t("SLA Breach Risk", "SLA उल्लंघन जोखिम")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("SLA Breach Risk", "SLA उल्लंघन जोखिम")}
+            </div>
           </div>
         </div>
 
@@ -120,7 +124,10 @@ export default function ManageOfficers() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("Search by name or officer ID...", "नाम या अधिकारी आईडी से खोजें...")}
+              placeholder={t(
+                "Search by name or officer ID...",
+                "नाम या अधिकारी आईडी से खोजें...",
+              )}
               className="pl-9"
             />
           </div>
@@ -143,7 +150,8 @@ export default function ManageOfficers() {
               });
             }}
           >
-            <Plus className="w-4 h-4 mr-1" /> {t("Add Officer", "अधिकारी जोड़ें")}
+            <Plus className="w-4 h-4 mr-1" />{" "}
+            {t("Add Officer", "अधिकारी जोड़ें")}
           </Button>
           <ExportButton
             data={officers}
@@ -157,23 +165,37 @@ export default function ManageOfficers() {
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">{t("Officer ID", "अधिकारी आईडी")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Officer ID", "अधिकारी आईडी")}
+                  </th>
                   <th className="px-4 py-3 font-medium">{t("Name", "नाम")}</th>
-                  <th className="px-4 py-3 font-medium">{t("Designation", "पदनाम")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Designation", "पदनाम")}
+                  </th>
                   <th className="px-4 py-3 font-medium">
                     {t("Department / Services", "विभाग / सेवाएं")}
                   </th>
-                  <th className="px-4 py-3 font-medium">{t("District", "जिला")}</th>
-                  <th className="px-4 py-3 font-medium">{t("Wards", "वार्ड")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("District", "जिला")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Wards", "वार्ड")}
+                  </th>
                   <th className="px-4 py-3 font-medium text-center">
                     {t("Resolved", "निराकृत")}
                   </th>
-                  <th className="px-4 py-3 font-medium text-center">{t("Pending", "लंबित")}</th>
+                  <th className="px-4 py-3 font-medium text-center">
+                    {t("Pending", "लंबित")}
+                  </th>
                   <th className="px-4 py-3 font-medium text-center">
                     {t("SLA Breached", "SLA उल्लंघन")}
                   </th>
-                  <th className="px-4 py-3 font-medium">{t("Status", "स्थिति")}</th>
-                  <th className="px-4 py-3 font-medium text-center">{t("Actions", "कार्रवाई")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Status", "स्थिति")}
+                  </th>
+                  <th className="px-4 py-3 font-medium text-center">
+                    {t("Actions", "कार्रवाई")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

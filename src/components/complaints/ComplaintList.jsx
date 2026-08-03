@@ -260,7 +260,7 @@ export default function ComplaintList({
           maxHeight: window.innerWidth < 768 ? "600px" : "calc(100vh - 385px)",
           minHeight: "380px !important",
         }}
-        className="flex-1 overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
+        className="flex-1 md:overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
       >
         <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
           {complaints.length === 0 ? (

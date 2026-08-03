@@ -15,7 +15,7 @@ export default function ButtonsFooter({
   const isNextDisabled = step === 1 && !feedbackConsent;
 
   return (
-    <div className="flex justify-center gap-4 items-center mt-6 pt-4 border-t border-border">
+    <div className="flex justify-between sm:justify-center gap-2 xs:gap-3 sm:gap-4 items-center mt-4 xs:mt-5 sm:mt-6 pt-3 xs:pt-4 border-t border-border w-full">
       <div>
         {step > 1 && (
           <Button

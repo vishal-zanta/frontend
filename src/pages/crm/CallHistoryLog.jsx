@@ -23,6 +23,10 @@ import {
 } from "@/components/ui/select";
 import ExportButton from "@/components/ExportButton";
 import { useLanguage } from "@/context/LanguageContext";
+import { SectionTitle } from "@/components/ChartCard";
+import MyTable from "@/components/MyTable";
+import useIsMobile from "@/hooks/useIsMobile";
+import CrmCallCards from "./components/CrmCallCards";
 
 // Extend call tracker with recording metadata and evidence tags
 const callHistoryLog = CALL_TRACKER.map((c, i) => ({
@@ -39,6 +43,7 @@ const callHistoryLog = CALL_TRACKER.map((c, i) => ({
 
 export default function CallHistoryLog() {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const [search, setSearch] = useState("");
   const [agentFilter, setAgentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -83,7 +88,7 @@ export default function CallHistoryLog() {
 
   const toggleSelect = (id) => {
     setSelected((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
   };
 
@@ -98,21 +103,134 @@ export default function CallHistoryLog() {
 
   const evidenceCount = callHistoryLog.filter((c) => c.evidenceTagged).length;
 
+  const tableHeaders = [
+    {
+      id: "checkbox",
+      label: (
+        <input
+          type="checkbox"
+          checked={selected.length === filtered.length && filtered.length > 0}
+          onChange={toggleAll}
+          className="rounded cursor-pointer"
+        />
+      ),
+      className: "w-10",
+    },
+    { id: "id", label: t("Call ID", "कॉल आईडी") },
+    { id: "type", label: t("Type", "प्रकार") },
+    { id: "time", label: t("Date / Time", "दिनांक / समय") },
+    { id: "mobile", label: t("Citizen Mobile", "नागरिक मोबाइल") },
+    { id: "agent", label: t("Agent", "एजेंट") },
+    { id: "duration", label: t("Duration", "अवधि") },
+    { id: "complaint", label: t("Complaint", "शिकायत") },
+    { id: "status", label: t("Status", "स्थिति") },
+    { id: "evidence", label: t("Evidence", "साक्ष्य") },
+  ];
+
+  const tableBody = filtered.map((c) => ({
+    checkbox: {
+      render: () => (
+        <input
+          type="checkbox"
+          checked={selected.includes(c.id)}
+          onChange={() => toggleSelect(c.id)}
+          className="rounded cursor-pointer"
+        />
+      ),
+    },
+    id: {
+      render: () => <CallId id={c.id} />,
+    },
+    type: {
+      render: () => (
+        <Badge
+          variant="outline"
+          className={`text-[10px] ${
+            c.callType === "Outbound"
+              ? "bg-sky-500/10 text-sky-600 dark:text-sky-400"
+              : "bg-primary/10 text-primary"
+          }`}
+        >
+          {c.callType === "Outbound"
+            ? t("Outbound", "आउटबाउंड")
+            : t("Inbound", "इनबाउंड")}
+        </Badge>
+      ),
+    },
+    time: {
+      value: c.time || "N/A",
+      className: "text-muted-foreground",
+    },
+    mobile: {
+      value: c.citizenMobile || "N/A",
+      className: "font-mono text-xs",
+    },
+    agent: {
+      value: c.agent || "N/A",
+    },
+    duration: {
+      value: c.duration || "N/A",
+      className: "text-muted-foreground",
+    },
+    complaint: {
+      render: () =>
+        c.complaintId ? <ComplaintId id={c.complaintId} /> : "N/A",
+    },
+    status: {
+      render: () => (
+        <Badge
+          variant="outline"
+          className={`text-xs ${
+            c.status === "Resolved"
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+              : c.status === "Missed"
+                ? "bg-destructive/10 text-destructive"
+                : c.status === "Escalated"
+                  ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                  : "bg-muted/50 text-muted-foreground"
+          }`}
+        >
+          {c.status === "Resolved"
+            ? t("Resolved", "हल की गई")
+            : c.status === "Missed"
+              ? t("Missed", "छूटी हुई")
+              : c.status === "Escalated"
+                ? t("Escalated", "बढ़ाया गया")
+                : c.status || "N/A"}
+        </Badge>
+      ),
+    },
+    evidence: {
+      render: () =>
+        c.evidenceTagged ? (
+          <div className="flex items-center gap-1">
+            <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+              {t("Tagged", "चिह्नित")}
+            </span>
+          </div>
+        ) : (
+          <button
+            onClick={() => setTagDialog({ ids: [c.id] })}
+            className="text-xs text-muted-foreground hover:text-primary underline cursor-pointer"
+          >
+            {t("Tag", "चिह्नित")}
+          </button>
+        ),
+    },
+  }));
+
   return (
     <PortalLayout role="crm">
-      <div className="p-6 space-y-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {t("Call History Log", "कॉल इतिहास लॉग")}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {t(
-                "Complete call archive with recording metadata, bulk export, and evidence-tagging for legal/audit purposes.",
-                "रिकॉर्डिंग मेटाडेटा, थोक निर्यात और कानूनी/लेखापरीक्षा उद्देश्यों के लिए साक्ष्य-टैगिंग के साथ पूर्ण कॉल संग्रह।",
-              )}
-            </p>
-          </div>
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <SectionTitle
+            title={t("Call History Log", "कॉल इतिहास लॉग")}
+            subtitle={t(
+              "Complete call archive with recording metadata, bulk export, and evidence-tagging for legal/audit purposes.",
+              "रिकॉर्डिंग मेटाडेटा, थोक निर्यात और कानूनी/लेखापरीक्षा उद्देश्यों के लिए साक्ष्य-टैगिंग के साथ पूर्ण कॉल संग्रह।"
+            )}
+          />
           <ExportButton
             data={filtered}
             columns={exportColumns}
@@ -122,7 +240,7 @@ export default function CallHistoryLog() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <StatCard
             icon={PhoneCall}
             label={t("Total Calls Logged", "कुल दर्ज कॉल")}
@@ -150,21 +268,21 @@ export default function CallHistoryLog() {
         </div>
 
         {/* Filters */}
-        <div className="bg-card rounded-xl border border-border p-4 flex flex-wrap items-center gap-3">
-          <div className="relative">
+        <div className="bg-card rounded-xl border border-border p-3 xs:p-4 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-2.5 sm:gap-3">
+          <div className="relative w-full xs:w-auto flex-1 max-w-full sm:max-w-xs">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t(
                 "Search by call ID, complaint, or mobile...",
-                "कॉल आईडी, शिकायत या मोबाइल द्वारा खोजें...",
+                "कॉल आईडी, शिकायत या मोबाइल द्वारा खोजें..."
               )}
-              className="pl-8 max-w-xs"
+              className="pl-8 w-full"
             />
           </div>
           <Select value={agentFilter} onValueChange={setAgentFilter}>
-            <SelectTrigger className="w-40 bg-background">
+            <SelectTrigger className="w-full xs:w-36 sm:w-40 bg-background">
               <SelectValue placeholder={t("Agent", "एजेंट")} />
             </SelectTrigger>
             <SelectContent>
@@ -177,7 +295,7 @@ export default function CallHistoryLog() {
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-36 bg-background">
+            <SelectTrigger className="w-full xs:w-32 sm:w-36 bg-background">
               <SelectValue placeholder={t("Status", "स्थिति")} />
             </SelectTrigger>
             <SelectContent>
@@ -197,9 +315,9 @@ export default function CallHistoryLog() {
             variant={evidenceOnly ? "default" : "outline"}
             size="sm"
             onClick={() => setEvidenceOnly(!evidenceOnly)}
-            className="ml-auto"
+            className="w-full xs:w-auto xs:ml-auto text-xs"
           >
-            <ShieldCheck className="w-4 h-4 mr-1" />{" "}
+            <ShieldCheck className="w-4 h-4 mr-1" />
             {evidenceOnly
               ? t("Showing Evidence Only", "केवल साक्ष्य दिखा रहा है")
               : t("Show Evidence Only", "केवल साक्ष्य दिखाएं")}
@@ -208,7 +326,7 @@ export default function CallHistoryLog() {
             <Button
               size="sm"
               onClick={() => setTagDialog({ ids: selected })}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="w-full xs:w-auto bg-purple-600 hover:bg-purple-700 text-xs"
             >
               <Tag className="w-4 h-4 mr-1" /> {t("Tag", "चिह्नित करें")}{" "}
               {selected.length} {t("as Evidence", "साक्ष्य के रूप में")}
@@ -216,146 +334,35 @@ export default function CallHistoryLog() {
           )}
         </div>
 
-        {/* Call history table */}
+        {/* Call history table / cards */}
         <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-3 py-3 font-medium">
-                    <input
-                      type="checkbox"
-                      checked={
-                        selected.length === filtered.length &&
-                        filtered.length > 0
-                      }
-                      onChange={toggleAll}
-                      className="rounded cursor-pointer"
-                    />
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Call ID", "कॉल आईडी")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Type", "प्रकार")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Date / Time", "दिनांक / समय")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Citizen Mobile", "नागरिक मोबाइल")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Agent", "एजेंट")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Duration", "अवधि")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Complaint", "शिकायत")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Status", "स्थिति")}
-                  </th>
-                  <th className="px-3 py-3 font-medium">
-                    {t("Evidence", "साक्ष्य")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filtered.map((c, i) => (
-                  <tr
-                    key={i}
-                    className={`hover:bg-muted/30 ${selected.includes(c.id) ? "bg-purple-50/40 dark:bg-purple-950/20" : ""}`}
-                  >
-                    <td className="px-3 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(c.id)}
-                        onChange={() => toggleSelect(c.id)}
-                        className="rounded cursor-pointer"
-                      />
-                    </td>
-                    <td className="px-3 py-3">
-                      <CallId id={c.id} />
-                    </td>
-                    <td className="px-3 py-3">
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${c.callType === "Outbound" ? "bg-sky-500/10 text-sky-600 dark:text-sky-400" : "bg-primary/10 text-primary"}`}
-                      >
-                        {c.callType === "Outbound"
-                          ? t("Outbound", "आउटबाउंड")
-                          : t("Inbound", "इनबाउंड")}
-                      </Badge>
-                    </td>
-                    <td className="px-3 py-3 text-muted-foreground">
-                      {c.time}
-                    </td>
-                    <td className="px-3 py-3 font-mono text-xs">
-                      {c.citizenMobile}
-                    </td>
-                    <td className="px-3 py-3">{c.agent}</td>
-                    <td className="px-3 py-3 text-muted-foreground">
-                      {c.duration}
-                    </td>
-                    <td className="px-3 py-3">
-                      {c.complaintId ? <ComplaintId id={c.complaintId} /> : "-"}
-                    </td>
-                    <td className="px-3 py-3">
-                      <Badge
-                        variant="outline"
-                        className={`text-xs ${c.status === "Resolved" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : c.status === "Missed" ? "bg-destructive/10 text-destructive" : c.status === "Escalated" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted/50 text-muted-foreground"}`}
-                      >
-                        {c.status === "Resolved"
-                          ? t("Resolved", "हल की गई")
-                          : c.status === "Missed"
-                            ? t("Missed", "छूटी हुई")
-                            : c.status === "Escalated"
-                              ? t("Escalated", "बढ़ाया गया")
-                              : c.status}
-                      </Badge>
-                    </td>
-                    <td className="px-3 py-3">
-                      {c.evidenceTagged ? (
-                        <div className="flex items-center gap-1">
-                          <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                          <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
-                            {t("Tagged", "चिह्नित")}
-                          </span>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => setTagDialog({ ids: [c.id] })}
-                          className="text-xs text-muted-foreground hover:text-primary underline cursor-pointer"
-                        >
-                          {t("Tag", "चिह्नित")}
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {filtered.length === 0 && (
-            <div className="text-center py-8 text-sm text-muted-foreground">
-              {t(
+          {isMobile ? (
+            <CrmCallCards
+              calls={filtered}
+              selected={selected}
+              toggleSelect={toggleSelect}
+              setTagDialog={setTagDialog}
+            />
+          ) : (
+            <MyTable
+              tableHeaders={tableHeaders}
+              tableBody={tableBody}
+              emptyText={t(
                 "No calls match your filters.",
-                "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।",
+                "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।"
               )}
-            </div>
+            />
           )}
         </div>
 
         {/* Bulk actions bar */}
-        <div className="bg-muted/50 rounded-xl border border-border p-4 flex items-center justify-between">
+        <div className="bg-muted/50 rounded-xl border border-border p-3 xs:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
             {selected.length > 0
               ? `${selected.length} ${t("call(s) selected", "कॉल चयनित")}`
               : t(
                   "Click checkboxes to select calls for bulk actions",
-                  "थोक कार्यों के लिए कॉल चुनने के लिए चेकबॉक्स पर क्लिक करें",
+                  "थोक कार्यों के लिए कॉल चुनने के लिए चेकबॉक्स पर क्लिक करें"
                 )}
           </div>
           <div className="flex gap-2">
@@ -398,7 +405,7 @@ export default function CallHistoryLog() {
               <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 text-sm text-purple-600 dark:text-purple-400">
                 {t(
                   "Evidence-tagged calls are preserved with enhanced retention (7 years) and flagged for legal/audit review. Recordings cannot be deleted while tagged.",
-                  "साक्ष्य-चिह्नित कॉल को बढ़ी हुई अवधारण (7 वर्ष) के साथ संरक्षित किया जाता है और कानूनी/लेखापरीक्षा समीक्षा के लिए चिह्नित किया जाता है। चिह्नित होने के दौरान रिकॉर्डिंग हटाई नहीं जा सकती।",
+                  "साक्ष्य-चिह्नित कॉल को बढ़ी हुई अवधारण (7 वर्ष) के साथ संरक्षित किया जाता है और कानूनी/लेखापरीक्षा समीक्षा के लिए चिह्नित किया जाता है। चिह्नित होने के दौरान रिकॉर्डिंग हटाई नहीं जा सकती।"
                 )}
               </div>
               <div>

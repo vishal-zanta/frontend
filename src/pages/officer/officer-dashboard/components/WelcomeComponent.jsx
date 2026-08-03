@@ -23,19 +23,19 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
   );
 
   return (
-    <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-4 lg:p-6 text-white">
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <h1 className="text-lg lg:text-2xl font-bold mb-0.5 truncate">
+    <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
+        <div className="min-w-0 space-y-1">
+          <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight truncate">
             {t("Welcome,", "स्वागत है,")} {displayName}
           </h1>
-          <p className="text-white/80 text-xs lg:text-sm line-clamp-2">{subtitle}</p>
+          <p className="text-xs xs:text-sm md:text-base text-white/80 line-clamp-2">{subtitle}</p>
         </div>
-        <div className="text-right shrink-0">
-          <div className="text-2xl lg:text-3xl font-bold">
+        <div className="text-left sm:text-right shrink-0 bg-white/10 rounded-lg px-3 py-1.5 xs:px-4 xs:py-2 w-full sm:w-auto">
+          <div className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold">
             {(0).toLocaleString("en-IN")}
           </div>
-          <div className="text-xs lg:text-sm text-white/80 whitespace-nowrap">{t("Active Complaints", "सक्रिय शिकायतें")}</div>
+          <div className="text-[10px] xs:text-[11px] sm:text-xs text-white/80 whitespace-nowrap">{t("Active Complaints", "सक्रिय शिकायतें")}</div>
         </div>
       </div>
     </div>

@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-  Check,
-  X,
-} from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Check, X } from "lucide-react";
 import { CRM_AGENTS } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
@@ -62,10 +55,13 @@ export default function ManageAgents() {
 
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
           title={t("Manage CCE Agents", "CCE एजेंट प्रबंधित करें")}
-          subtitle={t("CRUD management of all Customer Care Executives and Supervisors", "सभी ग्राहक सेवा अधिकारियों और पर्यवेक्षकों का प्रबंधन")}
+          subtitle={t(
+            "CRUD management of all Customer Care Executives and Supervisors",
+            "सभी ग्राहक सेवा अधिकारियों और पर्यवेक्षकों का प्रबंधन",
+          )}
         />
 
         {toast && (
@@ -79,7 +75,9 @@ export default function ManageAgents() {
             <div className="text-2xl font-bold text-blue-600">
               {agents.length}
             </div>
-            <div className="text-sm text-muted-foreground">{t("Total Agents", "कुल एजेंट")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("Total Agents", "कुल एजेंट")}
+            </div>
           </div>
           <div className="bg-white rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-emerald-600">
@@ -89,19 +87,25 @@ export default function ManageAgents() {
                 ).length
               }
             </div>
-            <div className="text-sm text-muted-foreground">{t("Active Now", "अभी सक्रिय")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("Active Now", "अभी सक्रिय")}
+            </div>
           </div>
           <div className="bg-white rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-purple-600">
               {agents.filter((a) => a.role === "Supervisor").length}
             </div>
-            <div className="text-sm text-muted-foreground">{t("Supervisors", "पर्यवेक्षक")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("Supervisors", "पर्यवेक्षक")}
+            </div>
           </div>
           <div className="bg-white rounded-xl border border-border p-4">
             <div className="text-2xl font-bold text-amber-600">
               {agents.reduce((sum, a) => sum + a.callsToday, 0)}
             </div>
-            <div className="text-sm text-muted-foreground">{t("Calls Today", "आज की कॉलें")}</div>
+            <div className="text-sm text-muted-foreground">
+              {t("Calls Today", "आज की कॉलें")}
+            </div>
           </div>
         </div>
 
@@ -111,7 +115,10 @@ export default function ManageAgents() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("Search by name or agent ID...", "नाम या एजेंट आईडी से खोजें...")}
+              placeholder={t(
+                "Search by name or agent ID...",
+                "नाम या एजेंट आईडी से खोजें...",
+              )}
               className="pl-9"
             />
           </div>
@@ -145,20 +152,34 @@ export default function ManageAgents() {
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">{t("Agent ID", "एजेंट आईडी")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Agent ID", "एजेंट आईडी")}
+                  </th>
                   <th className="px-4 py-3 font-medium">{t("Name", "नाम")}</th>
-                  <th className="px-4 py-3 font-medium">{t("Role", "भूमिका")}</th>
-                  <th className="px-4 py-3 font-medium">{t("Shift", "शिफ्ट")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Role", "भूमिका")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Shift", "शिफ्ट")}
+                  </th>
                   <th className="px-4 py-3 font-medium text-center">
                     {t("Calls Today", "आज की कॉलें")}
                   </th>
                   <th className="px-4 py-3 font-medium text-center">
                     {t("Resolved", "निराकृत")}
                   </th>
-                  <th className="px-4 py-3 font-medium">{t("Avg Talk", "औसत बात समय")}</th>
-                  <th className="px-4 py-3 font-medium text-center">{t("CSAT", "CSAT")}</th>
-                  <th className="px-4 py-3 font-medium">{t("Status", "स्थिति")}</th>
-                  <th className="px-4 py-3 font-medium text-center">{t("Actions", "कार्रवाई")}</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Avg Talk", "औसत बात समय")}
+                  </th>
+                  <th className="px-4 py-3 font-medium text-center">
+                    {t("CSAT", "CSAT")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("Status", "स्थिति")}
+                  </th>
+                  <th className="px-4 py-3 font-medium text-center">
+                    {t("Actions", "कार्रवाई")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

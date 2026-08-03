@@ -1,9 +1,16 @@
 import PortalLayout from "@/components/PortalLayout";
 import React from "react";
-import LayoutHeading from "@/components/LayoutHeading";
 import MyTable from "@/components/MyTable";
-import { LoginPhoneCell, MonitorCell, SpendingTimeCell } from "./components/CustomTableCells";
+import {
+  LoginPhoneCell,
+  MonitorCell,
+  SpendingTimeCell,
+} from "./components/CustomTableCells";
 import { useLanguage } from "@/context/LanguageContext";
+import { SectionTitle } from "@/components/ChartCard";
+import useIsMobile from "@/hooks/useIsMobile";
+import CallStatsCards from "./components/CallStatsCards";
+import AgentLiveCards from "./components/AgentLiveCards";
 
 const callStatsData = {
   tableHeaders: [
@@ -92,7 +99,11 @@ const agentLiveData = {
     { id: "agent", label: "Agent", labelHindi: "एजेंट" },
     { id: "userName", label: "User Name", labelHindi: "उपयोगकर्ता का नाम" },
     { id: "loginPhone", label: "Login Phone", labelHindi: "लॉगिन फोन" },
-    { id: "customerPhone", label: "Customer Phone Number", labelHindi: "ग्राहक का फोन नंबर" },
+    {
+      id: "customerPhone",
+      label: "Customer Phone Number",
+      labelHindi: "ग्राहक का फोन नंबर",
+    },
     { id: "spendingTime", label: "Spending Time", labelHindi: "व्यतीत समय" },
     { id: "campaign", label: "Campaign", labelHindi: "अभियान" },
     { id: "skillGroup", label: "Skill Group", labelHindi: "कौशल समूह" },
@@ -100,9 +111,22 @@ const agentLiveData = {
     { id: "breakCode", label: "Break Code", labelHindi: "ब्रेक कोड" },
     { id: "outbound", label: "Outbound", labelHindi: "आउटबाउंड" },
     { id: "inbound", label: "Inbound", labelHindi: "इनबाउंड" },
-    { id: "maxDispoTime", label: "Max Dispo Time", labelHindi: "अधिकतम डिस्पो समय" },
-    { id: "totalBreakTime", label: "Total Break Time", labelHindi: "कुल ब्रेक समय" },
-    { id: "monitor", label: "Monitor", labelHindi: "निगरानी", className: "text-center" },
+    {
+      id: "maxDispoTime",
+      label: "Max Dispo Time",
+      labelHindi: "अधिकतम डिस्पो समय",
+    },
+    {
+      id: "totalBreakTime",
+      label: "Total Break Time",
+      labelHindi: "कुल ब्रेक समय",
+    },
+    {
+      id: "monitor",
+      label: "Monitor",
+      labelHindi: "निगरानी",
+      className: "text-center",
+    },
   ],
   tableBody: [
     {
@@ -127,15 +151,13 @@ const agentLiveData = {
       status: {
         value: "INCALL",
       },
-      breakCode: { value: "-" },
+      breakCode: { value: "N/A" },
       outbound: { value: "0" },
       inbound: { value: "4" },
       maxDispoTime: { value: "00:00:17" },
       totalBreakTime: { value: "00:00:09" },
       monitor: {
-        render: () => (
-         <MonitorCell/>
-        ),
+        render: () => <MonitorCell />,
       },
     },
   ],
@@ -143,6 +165,7 @@ const agentLiveData = {
 
 const CallStats = () => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   const callStatsHeaders = callStatsData.tableHeaders.map((h) => ({
     ...h,
@@ -156,19 +179,40 @@ const CallStats = () => {
 
   return (
     <PortalLayout>
-      <div className="p-6 space-y-6">
-        <LayoutHeading title={t("Call Statistics", "कॉल सांख्यिकी")} />
-        <MyTable
-          tableHeaders={callStatsHeaders}
-          tableBody={callStatsData.tableBody}
-          tableClassName="rounded-xl border border-border bg-white dark:bg-card"
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <SectionTitle title={t("Call Statistics", "कॉल सांख्यिकी")} />
+        {isMobile ? (
+          <div className="rounded-xl border border-border bg-white dark:bg-card">
+            <CallStatsCards
+              headers={callStatsHeaders}
+              body={callStatsData.tableBody}
+            />
+          </div>
+        ) : (
+          <MyTable
+            tableHeaders={callStatsHeaders}
+            tableBody={callStatsData.tableBody}
+            tableClassName="rounded-xl border border-border bg-white dark:bg-card"
+          />
+        )}
+
+        <SectionTitle
+          title={t("Agent Live Statistics", "एजेंट लाइव सांख्यिकी")}
         />
-        <LayoutHeading title={t("Agent Live Statistics", "एजेंट लाइव सांख्यिकी")} />
-        <MyTable
-          tableHeaders={agentLiveHeaders}
-          tableBody={agentLiveData.tableBody}
-          tableClassName="rounded-xl border border-border bg-white dark:bg-card"
-        />
+        {isMobile ? (
+          <div className="rounded-xl border border-border bg-white dark:bg-card">
+            <AgentLiveCards
+              headers={agentLiveHeaders}
+              body={agentLiveData.tableBody}
+            />
+          </div>
+        ) : (
+          <MyTable
+            tableHeaders={agentLiveHeaders}
+            tableBody={agentLiveData.tableBody}
+            tableClassName="rounded-xl border border-border bg-white dark:bg-card"
+          />
+        )}
       </div>
     </PortalLayout>
   );

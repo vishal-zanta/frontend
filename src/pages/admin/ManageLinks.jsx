@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Save,
-  Check,
-  Lock,
-  Eye,
-  Edit,
-  Users,
-  User,
-} from "lucide-react";
+import { Save, Check, Lock, Eye, Edit, Users, User } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { Button } from "@/components/ui/button";
@@ -53,11 +45,23 @@ const citizenMenuItems = [
 
 const staffRoles = [
   { name: "SUDA Admin", color: "bg-destructive/10 text-destructive" },
-  { name: "Division Admin", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
+  {
+    name: "Division Admin",
+    color: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+  },
   { name: "ULB Admin", color: "bg-primary/10 text-primary" },
-  { name: "L2 Officer", color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400" },
-  { name: "L1 Officer", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
-  { name: "CC Supervisor", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
+  {
+    name: "L2 Officer",
+    color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400",
+  },
+  {
+    name: "L1 Officer",
+    color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  },
+  {
+    name: "CC Supervisor",
+    color: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  },
   { name: "CCE Agent", color: "bg-sky-500/10 text-sky-600 dark:text-sky-400" },
 ];
 
@@ -79,7 +83,8 @@ const permConfig = {
   },
   self: {
     icon: User,
-    color: "text-purple-600 dark:text-purple-400 bg-purple-500/10 hover:bg-purple-500/20",
+    color:
+      "text-purple-600 dark:text-purple-400 bg-purple-500/10 hover:bg-purple-500/20",
     label: "Own Records Only",
   },
 };
@@ -377,11 +382,17 @@ export default function ManageLinks() {
 
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div className="flex items-center justify-between">
           <SectionTitle
-            title={t("Manage Links & Permissions", "लिंक और अनुमतियां प्रबंधित करें")}
-            subtitle={t("Click any cell to cycle through access levels. Citizen Access is managed separately from internal staff roles.", "पहुंच स्तरों के माध्यम से चक्र करने के लिए किसी भी सेल पर क्लिक करें। नागरिक पहुंच आंतरिक कर्मचारियों की भूमिकाओं से अलग प्रबंधित की जाती है।")}
+            title={t(
+              "Manage Links & Permissions",
+              "लिंक और अनुमतियां प्रबंधित करें",
+            )}
+            subtitle={t(
+              "Click any cell to cycle through access levels. Citizen Access is managed separately from internal staff roles.",
+              "पहुंच स्तरों के माध्यम से चक्र करने के लिए किसी भी सेल पर क्लिक करें। नागरिक पहुंच आंतरिक कर्मचारियों की भूमिकाओं से अलग प्रबंधित की जाती है।",
+            )}
           />
           <Button
             onClick={handleSave}
@@ -393,7 +404,8 @@ export default function ManageLinks() {
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-1" /> {t("Save Permissions", "अनुमतियां सहेजें")}
+                <Save className="w-4 h-4 mr-1" />{" "}
+                {t("Save Permissions", "अनुमतियां सहेजें")}
               </>
             )}
           </Button>
@@ -410,25 +422,32 @@ export default function ManageLinks() {
                 >
                   <Icon className="w-4 h-4" />
                 </div>
-                <span className="text-muted-foreground">{permConfigLabels[key] || cfg.label}</span>
+                <span className="text-muted-foreground">
+                  {permConfigLabels[key] || cfg.label}
+                </span>
               </div>
             );
           })}
         </div>
 
         <Tabs defaultValue="staff">
-          <TabsList>
-            <TabsTrigger value="staff" className="gap-1">
-              <Users className="w-3.5 h-3.5" /> {t("Internal Staff Roles", "आंतरिक कर्मचारी भूमिकाएं")}
+          <TabsList className="grid w-full grid-cols-1 xs:grid-cols-2 sm:w-fit h-auto p-1 gap-1 border border-border/40">
+            <TabsTrigger value="staff" className="gap-1 px-3 py-1.5 text-xs sm:text-sm truncate">
+              <Users className="w-3.5 h-3.5 shrink-0" />{" "}
+              <span>{t("Internal Staff Roles", "आंतरिक कर्मचारी भूमिकाएं")}</span>
             </TabsTrigger>
-            <TabsTrigger value="citizen" className="gap-1">
-              <User className="w-3.5 h-3.5" /> {t("Citizen Access", "नागरिक पहुंच")}
+            <TabsTrigger value="citizen" className="gap-1 px-3 py-1.5 text-xs sm:text-sm truncate">
+              <User className="w-3.5 h-3.5 shrink-0" />{" "}
+              <span>{t("Citizen Access", "नागरिक पहुंच")}</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="staff" className="space-y-3">
             <div className="text-sm text-muted-foreground">
-              {t("Role-based access control (RBAC) for internal government staff - SUDA, Division, ULB, Officers, and Call Centre personnel.", "आंतरिक सरकारी कर्मचारियों - सूडा, प्रमंडल, यूएलबी, अधिकारियों और कॉल सेंटर कर्मियों के लिए भूमिका-आधारित पहुंच नियंत्रण (RBAC)।")}
+              {t(
+                "Role-based access control (RBAC) for internal government staff - SUDA, Division, ULB, Officers, and Call Centre personnel.",
+                "आंतरिक सरकारी कर्मचारियों - सूडा, प्रमंडल, यूएलबी, अधिकारियों और कॉल सेंटर कर्मियों के लिए भूमिका-आधारित पहुंच नियंत्रण (RBAC)।",
+              )}
             </div>
             <PermissionMatrix
               menuItems={staffMenuItems}
@@ -440,8 +459,13 @@ export default function ManageLinks() {
 
           <TabsContent value="citizen" className="space-y-3">
             <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-sm text-primary">
-              <strong>{t("Citizen Access Model:", "नागरिक पहुंच मॉडल:")}</strong>{" "}
-              {t("This is a separate access model for public citizens - not internal staff. Citizens access the portal via a public-facing interface with limited, self-service capabilities. They can only view/edit their own records.", "यह आम नागरिकों के लिए एक अलग पहुंच मॉडल है - आंतरिक कर्मचारियों के लिए नहीं। नागरिक सीमित स्व-सेवा क्षमताओं के साथ एक सार्वजनिक इंटरफेस के माध्यम से पोर्टल तक पहुंचते हैं। वे केवल अपने रिकॉर्ड देख/संपादित कर सकते हैं।")}
+              <strong>
+                {t("Citizen Access Model:", "नागरिक पहुंच मॉडल:")}
+              </strong>{" "}
+              {t(
+                "This is a separate access model for public citizens - not internal staff. Citizens access the portal via a public-facing interface with limited, self-service capabilities. They can only view/edit their own records.",
+                "यह आम नागरिकों के लिए एक अलग पहुंच मॉडल है - आंतरिक कर्मचारियों के लिए नहीं। नागरिक सीमित स्व-सेवा क्षमताओं के साथ एक सार्वजनिक इंटरफेस के माध्यम से पोर्टल तक पहुंचते हैं। वे केवल अपने रिकॉर्ड देख/संपादित कर सकते हैं।",
+              )}
             </div>
             <PermissionMatrix
               menuItems={citizenMenuItems}
@@ -454,7 +478,10 @@ export default function ManageLinks() {
 
         <div className="bg-muted/50 border border-border rounded-xl p-4 text-sm text-muted-foreground">
           <strong>{t("Note:", "नोट:")}</strong>{" "}
-          {t("Citizen Access uses a fundamentally different access model (public self-service with own-record-only visibility) vs. internal staff RBAC (role-based hierarchical permissions). They are intentionally separated to prevent conflating the two architectures.", "नागरिक पहुंच एक मौलिक रूप से भिन्न पहुंच मॉडल का उपयोग करती है (केवल अपने-रिकॉर्ड दृश्यता के साथ सार्वजनिक स्व-सेवा) बनाम आंतरिक कर्मचारी RBAC (भूमिका-आधारित पदानुक्रमित अनुमतियां)। वे दोनों वास्तुकलाओं के मिश्रण को रोकने के लिए जानबूझकर अलग किए गए हैं।")}
+          {t(
+            "Citizen Access uses a fundamentally different access model (public self-service with own-record-only visibility) vs. internal staff RBAC (role-based hierarchical permissions). They are intentionally separated to prevent conflating the two architectures.",
+            "नागरिक पहुंच एक मौलिक रूप से भिन्न पहुंच मॉडल का उपयोग करती है (केवल अपने-रिकॉर्ड दृश्यता के साथ सार्वजनिक स्व-सेवा) बनाम आंतरिक कर्मचारी RBAC (भूमिका-आधारित पदानुक्रमित अनुमतियां)। वे दोनों वास्तुकलाओं के मिश्रण को रोकने के लिए जानबूझकर अलग किए गए हैं।",
+          )}
         </div>
       </div>
     </PortalLayout>

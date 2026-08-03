@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/select";
 import ExportButton from "@/components/ExportButton";
 import { useLanguage } from "@/context/LanguageContext";
+import MyTable from "@/components/MyTable";
+import useIsMobile from "@/hooks/useIsMobile";
+import { SectionTitle } from "@/components/ChartCard";
 
 const callHistoryLog = CALL_TRACKER.map((c, i) => ({
   ...c,
@@ -44,6 +47,7 @@ const getExportColumns = (t) => [
 
 export default function AdminCallHistory() {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const [search, setSearch] = useState("");
   const [agentFilter, setAgentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -63,18 +67,95 @@ export default function AdminCallHistory() {
     return true;
   });
 
+  const tableHeaders = [
+    { id: "id", label: t("Call ID", "कॉल आईडी") },
+    { id: "type", label: t("Type", "प्रकार") },
+    { id: "time", label: t("Date / Time", "तिथि / समय") },
+    { id: "mobile", label: t("Citizen Mobile", "नागरिक मोबाइल") },
+    { id: "agent", label: t("Agent", "एजेंट") },
+    { id: "duration", label: t("Duration", "अवधि") },
+    { id: "complaint", label: t("Complaint", "शिकायत") },
+    { id: "status", label: t("Status", "स्थिति") },
+    { id: "evidence", label: t("Evidence", "साक्ष्य") },
+  ];
+
+  const tableBody = filtered.map((c) => ({
+    id: {
+      render: () => <CallId id={c.id} />,
+    },
+    type: {
+      render: () => (
+        <Badge
+          variant="outline"
+          className={`text-[10px] ${
+            c.callType === "Outbound"
+              ? "bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-400"
+              : "bg-blue-50 text-primary dark:bg-blue-950/30 dark:text-blue-400"
+          }`}
+        >
+          {c.callType}
+        </Badge>
+      ),
+    },
+    time: {
+      value: c.time || "N/A",
+      className: "text-muted-foreground",
+    },
+    mobile: {
+      value: c.citizenMobile || "N/A",
+      className: "font-mono text-xs",
+    },
+    agent: {
+      value: c.agent || "N/A",
+    },
+    duration: {
+      value: c.duration || "N/A",
+      className: "text-muted-foreground",
+    },
+    complaint: {
+      render: () =>
+        c.complaintId ? <ComplaintId id={c.complaintId} /> : "N/A",
+    },
+    status: {
+      render: () => (
+        <Badge
+          variant="outline"
+          className={`text-xs ${
+            c.status === "Resolved"
+              ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"
+              : c.status === "Missed"
+                ? "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+                : c.status === "Escalated"
+                  ? "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"
+                  : "bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-400"
+          }`}
+        >
+          {c.status}
+        </Badge>
+      ),
+    },
+    evidence: {
+      render: () =>
+        c.evidenceTagged ? (
+          <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+        ) : (
+          "N/A"
+        ),
+    },
+  }));
+
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {t("Call History Log", "कॉल इतिहास लॉग")}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {t("Complete call centre call archive with recording metadata and export for audit.", "रिकॉर्डिंग मेटाडेटा और ऑडिट के लिए निर्यात के साथ पूरा कॉल सेंटर कॉल संग्रह।")}
-            </p>
-          </div>
+          <SectionTitle
+          title={t("Call History Log", "कॉल इतिहास लॉग")}
+          subtitle={t(
+                "Complete call centre call archive with recording metadata and export for audit.",
+                "रिकॉर्डिंग मेटाडेटा और ऑडिट के लिए निर्यात के साथ पूरा कॉल सेंटर कॉल संग्रह।",
+              )}
+          />
+         
           <ExportButton
             data={filtered}
             columns={getExportColumns(t)}
@@ -116,7 +197,10 @@ export default function AdminCallHistory() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("Search by call ID, complaint, or mobile...", "कॉल आईडी, शिकायत या मोबाइल द्वारा खोजें...")}
+              placeholder={t(
+                "Search by call ID, complaint, or mobile...",
+                "कॉल आईडी, शिकायत या मोबाइल द्वारा खोजें...",
+              )}
               className="pl-8 max-w-xs"
             />
           </div>
@@ -125,7 +209,9 @@ export default function AdminCallHistory() {
               <SelectValue placeholder={t("Agent", "एजेंट")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("All Agents", "सभी एजेंट")}</SelectItem>
+              <SelectItem value="all">
+                {t("All Agents", "सभी एजेंट")}
+              </SelectItem>
               <SelectItem value="priya">Priya Sharma</SelectItem>
               <SelectItem value="amit">Amit Verma</SelectItem>
               <SelectItem value="neha">Neha Singh</SelectItem>
@@ -137,84 +223,142 @@ export default function AdminCallHistory() {
               <SelectValue placeholder={t("Status", "स्थिति")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("All Status", "सभी स्थितियां")}</SelectItem>
-              <SelectItem value="resolved">{t("Resolved", "निराकृत")}</SelectItem>
+              <SelectItem value="all">
+                {t("All Status", "सभी स्थितियां")}
+              </SelectItem>
+              <SelectItem value="resolved">
+                {t("Resolved", "निराकृत")}
+              </SelectItem>
               <SelectItem value="missed">{t("Missed", "छूटी हुई")}</SelectItem>
-              <SelectItem value="escalated">{t("Escalated", "बढ़ाई गई")}</SelectItem>
+              <SelectItem value="escalated">
+                {t("Escalated", "बढ़ाई गई")}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="bg-white dark:bg-card rounded-xl border border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-3 py-3 font-medium">{t("Call ID", "कॉल आईडी")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Type", "प्रकार")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Date / Time", "तिथि / समय")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Citizen Mobile", "नागरिक मोबाइल")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Agent", "एजेंट")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Duration", "अवधि")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Complaint", "शिकायत")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Status", "स्थिति")}</th>
-                  <th className="px-3 py-3 font-medium">{t("Evidence", "साक्ष्य")}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filtered.map((c, i) => (
-                  <tr key={i} className="hover:bg-muted/30">
-                    <td className="px-3 py-3">
-                      <CallId id={c.id} />
-                    </td>
-                    <td className="px-3 py-3">
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${c.callType === "Outbound" ? "bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-400" : "bg-blue-50 text-primary dark:bg-blue-950/30 dark:text-blue-400"}`}
-                      >
-                        {c.callType}
-                      </Badge>
-                    </td>
-                    <td className="px-3 py-3 text-muted-foreground">
-                      {c.time}
-                    </td>
-                    <td className="px-3 py-3 font-mono text-xs">
-                      {c.citizenMobile}
-                    </td>
-                    <td className="px-3 py-3">{c.agent}</td>
-                    <td className="px-3 py-3 text-muted-foreground">
-                      {c.duration}
-                    </td>
-                    <td className="px-3 py-3">
-                      {c.complaintId ? <ComplaintId id={c.complaintId} /> : "-"}
-                    </td>
-                    <td className="px-3 py-3">
-                      <Badge
-                        variant="outline"
-                        className={`text-xs ${c.status === "Resolved" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : c.status === "Missed" ? "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400" : c.status === "Escalated" ? "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400" : "bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}
-                      >
-                        {c.status}
-                      </Badge>
-                    </td>
-                    <td className="px-3 py-3">
-                      {c.evidenceTagged ? (
-                        <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                      ) : (
-                        <span className="text-xs text-muted-foreground">-</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {filtered.length === 0 && (
-            <div className="text-center py-8 text-sm text-muted-foreground">
-              {t("No calls match your filters.", "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।")}
-            </div>
+          {isMobile ? (
+            <CallCards calls={filtered} t={t} />
+          ) : (
+            <MyTable
+              tableHeaders={tableHeaders}
+              tableBody={tableBody}
+              emptyText={t(
+                "No calls match your filters.",
+                "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।",
+              )}
+            />
           )}
         </div>
       </div>
     </PortalLayout>
+  );
+}
+
+function CallCards({ calls = [], t }) {
+  if (!calls || calls.length === 0) {
+    return (
+      <div className="p-6 text-center text-xs xs:text-sm text-muted-foreground">
+        {t("No calls match your filters.", "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।")}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 xs:p-4">
+      {calls.map((c, i) => (
+        <div
+          key={c.id || i}
+          className="rounded-xl border border-border bg-background dark:bg-[#0c1427] shadow-sm hover:shadow-md transition-all overflow-hidden"
+        >
+          {/* Header */}
+          <div className="p-3 xs:p-3.5 border-b border-border/60 flex items-center justify-between gap-2">
+            <CallId id={c.id} />
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Badge
+                variant="outline"
+                className={`text-[10px] ${
+                  c.callType === "Outbound"
+                    ? "bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-400"
+                    : "bg-blue-50 text-primary dark:bg-blue-950/30 dark:text-blue-400"
+                }`}
+              >
+                {c.callType}
+              </Badge>
+              <Badge
+                variant="outline"
+                className={`text-[10px] ${
+                  c.status === "Resolved"
+                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"
+                    : c.status === "Missed"
+                      ? "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+                      : c.status === "Escalated"
+                        ? "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"
+                        : "bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-400"
+                }`}
+              >
+                {c.status}
+              </Badge>
+            </div>
+          </div>
+
+          {/* Body */}
+          <div className="p-3 xs:p-3.5 space-y-2">
+            <div className="grid grid-cols-2 gap-2 text-xs bg-muted/40 p-2.5 rounded-lg border border-border/50">
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-medium">
+                  {t("Citizen Mobile", "नागरिक मोबाइल")}
+                </span>
+                <span className="font-mono text-xs text-foreground block truncate">
+                  {c.citizenMobile || "N/A"}
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-medium">
+                  {t("Agent", "एजेंट")}
+                </span>
+                <span className="font-medium text-foreground text-xs block truncate">
+                  {c.agent || "N/A"}
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-medium">
+                  {t("Duration", "अवधि")}
+                </span>
+                <span className="font-medium text-foreground text-xs block truncate">
+                  {c.duration || "N/A"}
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-medium">
+                  {t("Complaint", "शिकायत")}
+                </span>
+                {c.complaintId ? (
+                  <ComplaintId id={c.complaintId} />
+                ) : (
+                  <span className="text-muted-foreground text-xs font-medium">N/A</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="p-3 xs:p-3.5 border-t border-border/60 flex items-center justify-between text-xs">
+            <span className="text-muted-foreground text-[11px]">
+              {c.time || "N/A"}
+            </span>
+            {c.evidenceTagged ? (
+              <div className="flex items-center gap-1 text-purple-600 dark:text-purple-400 font-medium text-[11px]">
+                <ShieldCheck className="w-4 h-4" />
+                <span>{t("Evidence Tagged", "साक्ष्य टैग किया गया")}</span>
+              </div>
+            ) : (
+              <span className="text-muted-foreground text-[11px]">N/A</span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

@@ -3,9 +3,17 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MyTable from "@/components/MyTable";
 import { useLanguage } from "@/context/LanguageContext";
+import useIsMobile from "@/hooks/useIsMobile";
+import GrievenceCards from "./GrievenceCards";
 
-const GrievenceItems = ({ rawItems = [], setDialog , sortProps}) => {
+const GrievenceItems = ({ rawItems = [], setDialog, sortProps }) => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <GrievenceCards rawItems={rawItems} setDialog={setDialog} />;
+  }
+
   const tableHeaders = [
     { id: "title", label: t("Title", "शीर्षक") },
     { id: "type", label: t("Type", "प्रकार"), isSortable: true },

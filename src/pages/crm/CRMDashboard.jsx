@@ -83,30 +83,30 @@ export default function CRMDashboard() {
   if (isSupervisor) {
     return (
       <PortalLayout role="crm">
-        <div className="p-6 space-y-6">
-          <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold mb-1">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
+              <div className="space-y-1">
+                <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
                   {t("Supervisor Dashboard", "पर्यवेक्षक डैशबोर्ड")}
                 </h1>
-                <p className="text-white/80 text-sm">
+                <p className="text-xs xs:text-sm md:text-base text-white/80">
                   {t(
                     "Call centre performance overview • Shift: Full Day (08:00-20:00) • Supervisor: Sneha Gupta",
                     "कॉल सेंटर प्रदर्शन अवलोकन • शिफ्ट: पूरा दिन (08:00-20:00) • पर्यवेक्षक: स्नेहा गुप्ता",
                   )}
                 </p>
               </div>
-              <div className="flex gap-2">
-                <Link to="/admin/performance">
-                  <Button className="bg-card text-primary hover:bg-white/90">
-                    <BarChart3 className="w-4 h-4 mr-1" />{" "}
+              <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
+                <Link to="/admin/performance" className="flex-1 sm:flex-none">
+                  <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                    <BarChart3 className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
                     {t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
                   </Button>
                 </Link>
-                <Link to="/crm/shift">
-                  <Button className="bg-amber-500 hover:bg-amber-600 text-white">
-                    <Users className="w-4 h-4 mr-1" />{" "}
+                <Link to="/crm/shift" className="flex-1 sm:flex-none">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                    <Users className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
                     {t("Manage Agents", "एजेंटों का प्रबंधन करें")}
                   </Button>
                 </Link>
@@ -361,28 +361,29 @@ export default function CRMDashboard() {
 
   return (
     <PortalLayout role="crm">
-      <div className="p-6 space-y-6">
-        <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-2xl p-6 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold mb-1">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
+            <div className="space-y-1">
+              <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
                 {t("My Scorecard", "मेरा स्कोरकार्ड")}
               </h1>
-              <p className="text-white/80 text-sm">
+              <p className="text-xs xs:text-sm md:text-base text-white/80">
                 {agentName} • CCE Agent • Morning Shift (06:00–14:00) • Agent
                 ID: cce-001
               </p>
             </div>
-            <div className="flex gap-2">
-              <Link to="/crm/incoming-call">
-                <Button className="bg-amber-500 hover:bg-amber-600 text-white">
-                  <Phone className="w-4 h-4 mr-1" />{" "}
+            <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
+              <Link to="/crm/incoming-call" className="flex-1 sm:flex-none">
+                <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                  <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
                   {t("Incoming Call", "आगमन कॉल")}
                 </Button>
               </Link>
-              <Link to="/crm/raise">
-                <Button className="bg-card text-primary hover:bg-white/90">
-                  <Headphones className="w-4 h-4 mr-1" />{" "}
+              <Link to="/crm/raise" className="flex-1 sm:flex-none">
+                <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                  <Headphones className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
                   {t("Raise Complaint", "शिकायत दर्ज करें")}
                 </Button>
               </Link>
@@ -458,7 +459,9 @@ export default function CRMDashboard() {
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{sc.calls}</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {sc.calls}
+              </div>
               <div className="text-xs text-muted-foreground">
                 {t("Total Calls", "कुल कॉल")}
               </div>

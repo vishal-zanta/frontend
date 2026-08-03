@@ -206,18 +206,18 @@ const Notifications = ({ title = "Notifications" }) => {
       {/* Bell button */}
       <button
         onClick={() => setShowNotifs(!showNotifs)}
-        className="p-2 rounded-lg hover:bg-muted text-muted-foreground relative cursor-pointer"
+        className="min-w-4 w-4 sm:min-w-4 sm:w-4 lg:w-5 lg:min-w-5 aspect-square flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground relative cursor-pointer"
         aria-label="Toggle notifications"
       >
-        <Bell className="w-5 h-5" />
+        <Bell className="" />
         {hasUnread && (
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+          <span className="absolute top-0.5 right-0.5    w-1 h-1 sm:w-1 sm:h-1 lg:w-2 lg:h-2 bg-red-500 rounded-full" />
         )}
       </button>
 
       {/* Dropdown panel */}
       {showNotifs && (
-        <div className="absolute right-0 top-12 w-80 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50">
+        <div className="absolute right-1/2 translate-x-1/2 sm:translate-x-0 sm:right-0 top-12 w-72 xs:w-80 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50">
           {/* Header */}
           <div className="px-4 py-3 border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-2">

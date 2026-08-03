@@ -2,9 +2,17 @@ import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import MyTable from "@/components/MyTable";
 import { useLanguage } from "@/context/LanguageContext";
+import useIsMobile from "@/hooks/useIsMobile";
+import DepartmentCards from "./DepartmentCards";
 
 const DepartmentTable = ({ departments = [], setDialog, pagination }) => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <DepartmentCards departments={departments} setDialog={setDialog} />;
+  }
+
   const tableHeaders = [
     { id: "title", label: t("Department (English)", "विभाग (अंग्रेज़ी)") },
     { id: "titleHindi", label: t("Department (Hindi)", "विभाग (हिंदी)") },

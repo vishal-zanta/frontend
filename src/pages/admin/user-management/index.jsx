@@ -24,16 +24,26 @@ import ViewDialog from "./components/ViewDialog";
 import { postAdminLogout } from "@/api/auth.api";
 import { useGetSkills } from "../master-data/hooks";
 import { useLanguage } from "@/context/LanguageContext";
+import useIsMobile from "@/hooks/useIsMobile";
+import UserManageCards from "./components/UserManageCards";
+import clsx from "clsx";
 
 export default function UserManagement() {
   const { t } = useLanguage();
   const [filterRole, setFilterRole] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+    const isMobile = useIsMobile();
 
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
-  const {data : skillsApiData} = useGetSkills([1,MAX_LIMIT], {page:1, limit : MAX_LIMIT});
-  const skillsOptions = (skillsApiData?.data?.data?.docs || []).map(s=> ({label : s.name, value : s._id}));
-  
+  const { data: skillsApiData } = useGetSkills([1, MAX_LIMIT], {
+    page: 1,
+    limit: MAX_LIMIT,
+  });
+  const skillsOptions = (skillsApiData?.data?.data?.docs || []).map((s) => ({
+    label: s.name,
+    value: s._id,
+  }));
+
   const { page, limit, ...pageProps } = usePagination();
 
   const { data, isLoading, error } = useGetUsers(
@@ -186,7 +196,10 @@ export default function UserManagement() {
       email: user?.email || "",
       phone: user?.phone || "",
       role: user?.role?.designationEnglish || "",
-      district: typeof user?.district === "object" ? user?.district?.name || "-" : user?.district || "-",
+      district:
+        typeof user?.district === "object"
+          ? user?.district?.name || "-"
+          : user?.district || "-",
       status: user?.status || "",
       permissions: user?.permissions || [],
       lastLogin: user?.lastLogin
@@ -194,7 +207,9 @@ export default function UserManagement() {
         : "Never",
       skills: user?.skills || [],
       preferredLanguages: user?.preferredLanguages || [],
-      loginId: CCE_ROLES.includes(user?.role?.designationEnglish) ? user?.loginId : "-",
+      loginId: CCE_ROLES.includes(user?.role?.designationEnglish)
+        ? user?.loginId
+        : "-",
       apiData: user,
     };
   });
@@ -202,12 +217,15 @@ export default function UserManagement() {
   console.log({ editUser });
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        {/* <div className="flex items-center justify-between"> */}
           <SectionTitle
             title={t("User Management & RBAC", "उपयोगकर्ता प्रबंधन और RBAC")}
-            subtitle={t("Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control", "भूमिका-आधारित पहुँच नियंत्रण के साथ कॉल-सेंटर एजेंटों, पर्यवेक्षकों, निगरानी टीम और सिस्टम व्यवस्थापकों को प्रबंधित करें")}
-          />
+            subtitle={t(
+              "Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control",
+              "भूमिका-आधारित पहुँच नियंत्रण के साथ कॉल-सेंटर एजेंटों, पर्यवेक्षकों, निगरानी टीम और सिस्टम व्यवस्थापकों को प्रबंधित करें",
+            )}
+          >
           <div className="flex gap-2">
             <Button
               onClick={() => {
@@ -223,9 +241,11 @@ export default function UserManagement() {
                 });
                 setAddUserOpen(true);
               }}
+              size={"sm"}
               className="bg-primary hover:bg-primary/90"
             >
-              <UserPlus className="w-4 h-4 mr-1" /> {t("Add User", "उपयोगकर्ता जोड़ें")}
+              <UserPlus className="w-4 h-4 mr-1" />{" "}
+              {t("Add User", "उपयोगकर्ता जोड़ें")}
             </Button>
             <Button
               onClick={() => {
@@ -245,15 +265,19 @@ export default function UserManagement() {
                 });
                 setAddUserOpen(true);
               }}
+              size={"sm"}
+
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
-              <Shield className="w-4 h-4 mr-1" /> {t("Create Admin", "एडमिन बनाएं")}
+              <Shield className="w-4 h-4 mr-1" />{" "}
+              {t("Create Admin", "एडमिन बनाएं")}
             </Button>
           </div>
-        </div>
+          </SectionTitle>
+        {/* </div> */}
 
         {/* Filters */}
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 sm:flex gap-3">
           <SearchDebounced
             handleDebouncedChange={(val) => {
               setSearchQuery(val);
@@ -280,11 +304,20 @@ export default function UserManagement() {
           />
         </div>
 
-
         {/* Users table */}
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-            <LoaderErrWrapper isLoading={isLoading} error={error}>
-          <div className="overflow-x-auto">
+        <div className={clsx(isMobile ? "" : "bg-card rounded-xl border border-border overflow-hidden" )}>
+          <LoaderErrWrapper isLoading={isLoading} error={error}>
+          {isMobile ?(
+            <UserManageCards 
+            users={tableData}
+                handleToggleStatus={handleToggleStatus}
+                setEditUser={setEditUser}
+                handleDelete={handleDelete}
+                handleView={handleView}
+                handleLogoutClick={handleLogoutClick}
+            
+            />
+          ) :  <div className="overflow-x-auto">
               <UserManageTable
                 users={tableData}
                 handleToggleStatus={handleToggleStatus}
@@ -293,8 +326,8 @@ export default function UserManagement() {
                 handleView={handleView}
                 handleLogoutClick={handleLogoutClick}
               />
-          </div>
-            </LoaderErrWrapper>
+            </div>}
+          </LoaderErrWrapper>
           <Pagination
             page={page}
             limit={limit}
@@ -323,7 +356,9 @@ export default function UserManagement() {
                   editUser?.apiData?.district ||
                   "",
                 status: editUser?.apiData?.status || "",
-                skills: (editUser?.apiData?.skills || []).map(s => s._id || s),
+                skills: (editUser?.apiData?.skills || []).map(
+                  (s) => s._id || s,
+                ),
                 preferredLanguages: editUser?.apiData?.preferredLanguages || [],
               }}
               isValidation={true}

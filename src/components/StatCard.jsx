@@ -79,21 +79,21 @@ export default function StatCard({
         onClick && onClick(e);
       }}
       className={clsx(
-        "rounded-xl border p-4 transition-all relative flex flex-col items-center",
+        "rounded-lg xs:rounded-xl border p-2.5 xs:p-3 sm:p-4 md:p-5 transition-all relative flex flex-col items-center justify-between",
         c.card,
         onClick && "cursor-pointer"
       )}
     >
       {Icon && (
         <div
-          className={`w-9 h-9 rounded-lg ${c.bg} ${c.text} flex items-center justify-center ring-2 ${c.ring} mb-2`}
+          className={`w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg ${c.bg} ${c.text} flex items-center justify-center ring-2 ${c.ring} mb-1.5 xs:mb-2`}
         >
-          <Icon className="w-4 h-4" />
+          <Icon className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" />
         </div>
       )}
       {trend && (
         <div
-          className={`flex items-center justify-center gap-1 text-xs font-medium mb-2 ${
+          className={`flex items-center justify-center gap-1 text-[10px] xs:text-[11px] sm:text-xs font-medium mb-1 xs:mb-1.5 sm:mb-2 ${
             trend === "up"
               ? "text-emerald-600"
               : trend === "down"
@@ -102,25 +102,25 @@ export default function StatCard({
           }`}
         >
           {trend === "up" ? (
-            <TrendingUp className="w-3.5 h-3.5" />
+            <TrendingUp className="w-3 h-3 xs:w-3.5 xs:h-3.5" />
           ) : trend === "down" ? (
-            <TrendingDown className="w-3.5 h-3.5" />
+            <TrendingDown className="w-3 h-3 xs:w-3.5 xs:h-3.5" />
           ) : (
-            <Minus className="w-3.5 h-3.5" />
+            <Minus className="w-3 h-3 xs:w-3.5 xs:h-3.5" />
           )}
           {trendValue}
         </div>
       )}
       <div
-        className={`text-2xl font-bold text-center ${!Icon ? c.text : "text-foreground"}`}
+        className={`text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-center leading-tight ${!Icon ? c.text : "text-foreground"}`}
       >
         {value}
       </div>
-      <div className="text-sm text-muted-foreground mt-0.5 text-center">
+      <div className="text-xs xs:text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 text-center font-medium line-clamp-2">
         {label}
       </div>
       {sublabel && (
-        <div className="text-[11px] text-muted-foreground/70 mt-1 text-center">
+        <div className="text-[10px] xs:text-[11px] sm:text-xs text-muted-foreground/70 mt-0.5 xs:mt-1 text-center">
           {sublabel}
         </div>
       )}

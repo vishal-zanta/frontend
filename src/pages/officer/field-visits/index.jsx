@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import PortalLayout from "@/components/PortalLayout";
-import {
-  FieldVisitDetailDialog,
-} from "@/components/ComplaintDetailDialog";
+import { FieldVisitDetailDialog } from "@/components/ComplaintDetailDialog";
 import FieldVisitCards from "./components/FieldVisitCards";
 import FieldVisitTable from "./components/FieldVisitTable";
 
@@ -73,7 +71,7 @@ export default function FieldVisits() {
 
   return (
     <PortalLayout role="officer">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
             {t("Field Visits", "फील्ड विजिट")}
@@ -92,7 +90,10 @@ export default function FieldVisits() {
           <SearchDebounced
             handleDebouncedChange={(val) => {
               setSearch(val);
-              setSearchParams({ ...(val ?  {visit: val}: {}) }, { replace: true });
+              setSearchParams(
+                { ...(val ? { visit: val } : {}) },
+                { replace: true },
+              );
 
               pageProps.setPage(1);
             }}

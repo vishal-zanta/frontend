@@ -160,7 +160,12 @@ export default function WorkflowConfig() {
     });
   };
 
-  const handleOrderChange = (oldIndex, newIndex, isPopupConfirmed = false, oldWorkFlowList = null) => {
+  const handleOrderChange = (
+    oldIndex,
+    newIndex,
+    isPopupConfirmed = false,
+    oldWorkFlowList = null,
+  ) => {
     if (oldIndex === newIndex) return;
     // console.log({workflowList, oldWorkFlowList, isPopupConfirmed});
 
@@ -168,7 +173,7 @@ export default function WorkflowConfig() {
       setReOrderDialog({
         oldIndex,
         newIndex,
-        workflowList : [...workflowList],
+        workflowList: [...workflowList],
       });
       return;
     }
@@ -235,10 +240,13 @@ export default function WorkflowConfig() {
   // console.log({ editLevel });
   return (
     <PortalLayout role="superadmin">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
           title={t("Workflow Configuration", "कार्यप्रवाह कॉन्फ़िगरेशन")}
-          subtitle={t("Configure department escalation workflow levels and roles", "विभाग वृद्धि कार्यप्रवाह स्तर और भूमिकाएं कॉन्फ़िगर करें")}
+          subtitle={t(
+            "Configure department escalation workflow levels and roles",
+            "विभाग वृद्धि कार्यप्रवाह स्तर और भूमिकाएं कॉन्फ़िगर करें",
+          )}
         />
 
         {/* Visual workflow */}
@@ -247,7 +255,9 @@ export default function WorkflowConfig() {
         {/* Config table */}
         <div className="bg-card rounded-xl border border-border overflow-hidden mt-6">
           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground">{t("Workflow Levels", "कार्यप्रवाह स्तर")}</h3>
+            <h3 className="font-bold text-foreground">
+              {t("Workflow Levels", "कार्यप्रवाह स्तर")}
+            </h3>
             <div className="flex items-center gap-2">
               <LoaderErrWrapper isLoading={deptLoading}>
                 <WorkflowFilter
@@ -270,7 +280,8 @@ export default function WorkflowConfig() {
                   setDialog({ type: "add" });
                 }}
               >
-                <Plus className="w-4 h-4 mr-1" /> {t("Add Level", "स्तर जोड़ें")}
+                <Plus className="w-4 h-4 mr-1" />{" "}
+                {t("Add Level", "स्तर जोड़ें")}
               </Button>
             </div>
           </div>
@@ -318,7 +329,7 @@ export default function WorkflowConfig() {
                 reOrderDialog.oldIndex,
                 reOrderDialog.newIndex,
                 true,
-                reOrderDialog.workflowList
+                reOrderDialog.workflowList,
               )
             }
             onClose={() => {
@@ -331,12 +342,9 @@ export default function WorkflowConfig() {
           >
             <div className="space-y-4 text-sm text-muted-foreground">
               <p className="text-foreground font-medium">
-                Are you sure you want to change the sequence of this escalation level?
+                Are you sure you want to change the sequence of this escalation
+                level?
               </p>
-
-            
-
-             
             </div>
           </EditDialog>
         )}
