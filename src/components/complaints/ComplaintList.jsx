@@ -244,7 +244,10 @@ export default function ComplaintList({
             handleDebouncedChange={(val) => {
               // console.log({ val });
               // if (val !== searchParams.get("complaint")) {
-              setSearchParams({ ...(!!val ?  {complaint: val}: {}) }, { replace: true });
+              setSearchParams(
+                { ...(!!val ? { complaint: val } : {}) },
+                { replace: true },
+              );
               // }
               setSearch(val);
             }}
@@ -276,62 +279,14 @@ export default function ComplaintList({
                 const id = c._id || c.id;
                 const isSelected = selected?._id == id;
                 return (
-                  <button
-                    key={id || i}
-                    onClick={() => {
+                  <ComplaintListCard
+                    c={c}
+                    onClick={(c) => {
                       onSelect(c);
                       setStatusUpdate(null);
                     }}
-                    className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors cursor-pointer ${
-                      isSelected
-                        ? "bg-primary/10 border-l-4 border-primary"
-                        : "bg-card"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                      <div className="flex items-center flex-wrap gap-2">
-                        <h2 className="text-xs font-bold text-primary font-mono">
-                          {c.grievanceId || c.id}
-                        </h2>
-                        <StatusBadge status={c.status} />
-                      </div>
-                      <div className="flex items-center gap-1 flex-wrap">
-                        <SLATimer
-                          createdAt={c.createdAt}
-                          slaHours={c.classification?.subService?.sla || null}
-                          resolvedAt={
-                            c.status == "RESOLVED"
-                              ? c?.resolvedAt || null
-                              : null
-                          }
-                        />
-                        {
-                          <SLATimer
-                            createdAt={c?.assignedAt || null}
-                            slaHours={c?.slaHours || null}
-                            customText="Officer SLA"
-                            resolvedAt={
-                              c.status == "RESOLVED"
-                                ? c?.resolvedAt || null
-                                : null
-                            }
-                          />
-                        }
-                      </div>
-                    </div>
-                    <div className="text-sm text-foreground truncate">
-                      {c.classification?.subService?.title ||
-                        c.subserviceName ||
-                        c.serviceName ||
-                        "N/A"}
-                    </div>
-                    <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
-                      <MapPin className="w-3 h-3" />{" "}
-                      {`  ${c.address?.villageOrWard || c.ward || "N/A"}, 
-                      ${c.address?.district?.name || "N/A"},
-                      ${c.address?.state || "N/A"}`.replaceAll("N/A,", "")}
-                    </div>
-                  </button>
+                    isSelected={isSelected}
+                  />
                 );
               })}
 
@@ -357,3 +312,53 @@ export default function ComplaintList({
     </div>
   );
 }
+
+export const ComplaintListCard = ({ c, onClick, isSelected }) => {
+  return (
+    <button
+      key={c?._id || c.id}
+      onClick={() => {
+        onClick(c);
+      }}
+      className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors cursor-pointer ${
+        isSelected ? "bg-primary/10 border-l-4 border-primary" : "bg-card"
+      }`}
+    >
+      <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+        <div className="flex items-center flex-wrap gap-2">
+          <h2 className="text-xs font-bold text-primary font-mono">
+            {c.grievanceId || c.id}
+          </h2>
+          <StatusBadge status={c.status} />
+        </div>
+        <div className="flex items-center gap-1 flex-wrap">
+          <SLATimer
+            createdAt={c.createdAt}
+            slaHours={c.classification?.subService?.sla || null}
+            resolvedAt={c.status == "RESOLVED" ? c?.resolvedAt || null : null}
+          />
+          {
+            <SLATimer
+              createdAt={c?.assignedAt || null}
+              slaHours={c?.slaHours || null}
+              customText="Officer SLA"
+              resolvedAt={c.status == "RESOLVED" ? c?.resolvedAt || null : null}
+            />
+          }
+        </div>
+      </div>
+      <div className="text-sm text-foreground truncate">
+        {c.classification?.subService?.title ||
+          c.subserviceName ||
+          c.serviceName ||
+          "N/A"}
+      </div>
+      <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
+        <MapPin className="w-3 h-3" />{" "}
+        {`  ${c.address?.villageOrWard || c.ward || "N/A"}, 
+                      ${c.address?.district?.name || "N/A"},
+                      ${c.address?.state || "N/A"}`.replaceAll("N/A,", "")}
+      </div>
+    </button>
+  );
+};

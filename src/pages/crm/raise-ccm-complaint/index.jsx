@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Building2, CheckCircle2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 
 import PortalLayout from "@/components/PortalLayout";
 import RhfWrapper from "@/components/RhfWrapper";
-
 
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -27,11 +27,38 @@ import { postComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
 import { SectionTitle } from "@/components/ChartCard";
+import { useSearchParams } from "react-router-dom";
+import Department104Form from "./department-forms/Department-104";
+import {departmentsList} from "@/utils/departments";
+
+// let departmentsList = [
+//   {
+//     id: 1,
+//     name: "CM Helpline",
+//     key: "cm-helpline",
+//     component: null,
+//   },
+//   {
+//     id: 2,
+//     name: "Department 104",
+//     key: "department-104",
+//     component: Department104Form,
+//   },
+// ];
+
+import MySelect from "@/components/inputs/MySelect";
 
 export default function CRMRaiseComplaint() {
   const role = "crm";
   const { t, lang, setLang } = useLanguage();
   const qc = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [dept, setDept] = useState(() => {
+    const searchDept = searchParams.get("dept");
+    return searchDept
+      ? departmentsList.find((item) => item?.key === searchDept)?.key || ""
+      : "";
+  });
 
   const {
     servicesOptions,
@@ -51,9 +78,8 @@ export default function CRMRaiseComplaint() {
   const [fileError, setFileError] = useState("");
   const { data, isLoading, error } = useGetFileSize();
 
- const grievanceMaxUploadSizeMB = data?.data?.grievanceMaxUploadSizeMB || 1;
- const MAX_FILE_SIZE = grievanceMaxUploadSizeMB * 1024 * 1024;
- 
+  const grievanceMaxUploadSizeMB = data?.data?.grievanceMaxUploadSizeMB || 1;
+  const MAX_FILE_SIZE = grievanceMaxUploadSizeMB * 1024 * 1024;
 
   const handleFileChange = (e) => {
     setFileError("");
@@ -81,7 +107,7 @@ export default function CRMRaiseComplaint() {
       return;
     }
 
-    const oversized = files.find((f) => f.size > MAX_FILE_SIZE );
+    const oversized = files.find((f) => f.size > MAX_FILE_SIZE);
     if (oversized) {
       const errMsg = t(
         `File too large. Max ${grievanceMaxUploadSizeMB} MB.`,
@@ -124,6 +150,30 @@ export default function CRMRaiseComplaint() {
     postComplaintMutation.mutate(formData);
   };
 
+  const handleDepartmentFormSubmit = useCallback((formData)=> {
+formData.append("departmentId", dept);
+console.log("Department formData", formData);
+    // postComplaintMutation.mutate(formData);
+
+  }, [postComplaintMutation, dept])
+
+  useEffect(() => {
+    const searchDept = searchParams?.get("dept");
+    if (searchDept) {
+      const found = departmentsList.find((item) => item?.key === searchDept);
+      if (found && found.key !== dept) {
+        setDept(found.key);
+      }
+    } else if (!searchDept && dept !== "") {
+      setDept("");
+    }
+  }, [searchParams]);
+
+  const SelectedDept = useMemo(() => {
+    if (!dept) return null;
+    return departmentsList.find((d) => d.key === dept) || null;
+  }, [dept]);
+
   if (submitted) {
     return (
       <SuccessScreen
@@ -142,45 +192,77 @@ export default function CRMRaiseComplaint() {
     <PortalLayout role={role}>
       <div className="max-w-6xl mx-auto p-4 sm:p-6">
         <SectionTitle
-        title= {t("Register Grievance", "शिकायत दर्ज करें")}
-        subtitle=  {t(
-                "Fields marked * are required.",
-                "* चिह्नित फ़ील्ड अनिवार्य हैं।",
-              )}
-              className="!mb-4 !sm:mb-6"
+          title={t("Register Grievance", "शिकायत दर्ज करें")}
+          subtitle={t(
+            "Fields marked * are required.",
+            "* चिह्नित फ़ील्ड अनिवार्य हैं।",
+          )}
+          className="!mb-4 !sm:mb-6"
         />
-       
 
-        <RhfWrapper
-          initialValues={defaultValues}
-          isValidation
-          validationSchema={grievanceSchema}
-          validationOn="onChange"
-          onSubmit={handleSubmit}
-          className="!space-y-4 !sm:space-y-6"
-        >
-          <FormWizard
-            t={t}
-            lang={lang}
-            servicesOptions={servicesOptions}
-            grievanceNatureOptions={grievanceNatureOptions}
-            servicesLoading={servicesLoading}
-            naturesLoading={naturesLoading}
-            frequencyOptions={frequencyOptions}
-            affectedBeneficiaryOptions={affectedBeneficiaryOptions}
-            fileInputRef={fileInputRef}
-            attachments={attachments}
-            fileError={fileError}
-            handleFileChange={handleFileChange}
-            removeAttachment={removeAttachment}
-            postComplaintMutation={postComplaintMutation}
-            allChannels={allChannels}
-            complaintSourcesLoading={complaintSourcesLoading}
-            allDemography={allDemography}
-            demographyLoading={demographyLoading}
-            grievanceMaxUploadSizeMB={grievanceMaxUploadSizeMB}
-          />
-        </RhfWrapper>
+        <DepartmentSelect
+          list={departmentsList}
+          selectedKey={typeof dept === "string" ? dept : dept?.key}
+          onSelect={(key) => {
+            if (key) {
+              setSearchParams({ dept: key }, { replace: true });
+            } else {
+              setSearchParams({}, { replace: true });
+            }
+            setDept(key || "");
+          }}
+          t={t}
+        />
+
+        {!SelectedDept ? (
+          <div className="flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-2xl border border-dashed border-border bg-card/60 shadow-sm my-6">
+            <div className="p-4 rounded-full bg-primary/10 text-primary mb-3">
+              <Building2 className="w-10 h-10 stroke-[1.5]" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-1">
+              {t("No Department Selected", "कोई विभाग नहीं चुना गया")}
+            </h3>
+            <p className="text-sm text-muted-foreground max-w-md">
+              {t(
+                "Please select a department from the dropdown above to proceed with registering a complaint.",
+                "शिकायत दर्ज करने के लिए कृपया ऊपर दिए गए ड्रॉपडाउन से एक विभाग चुनें।"
+              )}
+            </p>
+          </div>
+        ) : SelectedDept?.component ? (
+          <SelectedDept.component onSuccess={handleDepartmentFormSubmit}/>
+        ) : (
+          <RhfWrapper
+            initialValues={defaultValues}
+            isValidation
+            validationSchema={grievanceSchema}
+            validationOn="onChange"
+            onSubmit={handleSubmit}
+            className="!space-y-4 !sm:space-y-6"
+          >
+            <FormWizard
+              t={t}
+              lang={lang}
+              servicesOptions={servicesOptions}
+              grievanceNatureOptions={grievanceNatureOptions}
+              servicesLoading={servicesLoading}
+              naturesLoading={naturesLoading}
+              frequencyOptions={frequencyOptions}
+              affectedBeneficiaryOptions={affectedBeneficiaryOptions}
+              fileInputRef={fileInputRef}
+              attachments={attachments}
+              fileError={fileError}
+              handleFileChange={handleFileChange}
+              removeAttachment={removeAttachment}
+              postComplaintMutation={postComplaintMutation}
+              allChannels={allChannels}
+              complaintSourcesLoading={complaintSourcesLoading}
+              allDemography={allDemography}
+              demographyLoading={demographyLoading}
+              grievanceMaxUploadSizeMB={grievanceMaxUploadSizeMB}
+            />
+          </RhfWrapper>
+        )}
       </div>
     </PortalLayout>
   );
@@ -205,7 +287,7 @@ function FormWizard({
   complaintSourcesLoading,
   allDemography,
   demographyLoading,
-  grievanceMaxUploadSizeMB
+  grievanceMaxUploadSizeMB,
 }) {
   const methods = useFormContext();
   const [step, setStep] = useState(1);
@@ -240,7 +322,6 @@ function FormWizard({
         "citizenInfo.preferredLanguage",
         "communication.feedbackConsent",
       ]);
-
     } else if (step === 2) {
       isValid = await methods.trigger([
         "address.state",
@@ -384,6 +465,26 @@ function FormWizard({
         handleNext={handleNext}
         isSubmitting={postComplaintMutation.isPending}
         t={t}
+      />
+    </div>
+  );
+}
+
+function DepartmentSelect({ list = [], selectedKey, onSelect, t }) {
+  const options = list.map((item) => ({
+    label: item.name,
+    value: item.key ?? item.id,
+  }));
+
+  return (
+    <div className="mb-6 max-w-md">
+      <MySelect
+        label={t ? t("Select Department", "विभाग चुनें") : "Select Department"}
+        placeholder={t ? t("Choose a department...", "विभाग चुनें...") : "Choose a department..."}
+        options={options}
+        value={selectedKey || ""}
+        onValueChange={(val) => onSelect?.(val)}
+        nonClearable
       />
     </div>
   );

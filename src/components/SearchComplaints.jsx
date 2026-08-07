@@ -16,6 +16,7 @@ import {
   useGetComplaintsOfOfiicer,
   useGetComplaintsForCCEandAdminInfinite,
 } from "@/hooks/query/useGetComplaints";
+import { ComplaintListCard } from "./complaints/ComplaintList";
 
 const SearchComplaints = () => {
   const { t } = useLanguage();
@@ -136,7 +137,7 @@ const SearchComplaints = () => {
         inputProps={{
           onFocus: () => {
             // console.log("Input focused", search);
-            if(!!search ){
+            if (!!search) {
               setIsOpen(true);
             }
           },
@@ -164,56 +165,11 @@ const SearchComplaints = () => {
               {complaints.map((c, i) => {
                 const id = c._id || c.id;
                 return (
-                  <button
-                    key={id || i}
-                    onClick={() => handleSelect(c)}
-                    className="w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-xs font-bold text-primary font-mono">
-                          {c.grievanceId || c.id}
-                        </h2>
-                        <StatusBadge status={c.status} />
-                      </div>
-                      <div className="flex items-center gap-1 flex-wrap">
-                        <SLATimer
-                          createdAt={c.createdAt}
-                          slaHours={c.classification?.subService?.sla || null}
-                          resolvedAt={
-                            c.status == "RESOLVED"
-                              ? c?.resolvedAt || null
-                              : null
-                          }
-                        />
-                        {!!c.assignedAt && (
-                          <SLATimer
-                            createdAt={c.assignedAt}
-                            slaHours={c?.slaHours || null}
-                            customText="Officer SLA"
-                            resolvedAt={
-                              c.status == "RESOLVED"
-                                ? c?.resolvedAt || null
-                                : null
-                            }
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-sm text-foreground truncate">
-                      {c.classification?.subService?.title ||
-                        c.subserviceName ||
-                        c.serviceName ||
-                        "N/A"}
-                    </div>
-                    <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
-                      <MapPin className="w-3 h-3" />{" "}
-                      {`${c.address?.villageOrWard || c.ward || "N/A"}, ${c.address?.district?.name || "N/A"}, ${c.address?.state || "N/A"}`.replaceAll(
-                        "N/A,",
-                        "",
-                      )}
-                    </div>
-                  </button>
+                  <ComplaintListCard
+                    c={c}
+                    onClick={handleSelect}
+                    isSelected={false}
+                  />
                 );
               })}
 

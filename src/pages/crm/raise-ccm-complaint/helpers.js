@@ -68,3 +68,25 @@ export const getFormData = (data, attachments = []) => {
   attachments.forEach((file) => formData.append("attachments[]", file));
   return formData;
 };
+
+export const convertJSONToFormdata = (data = {}) => {
+  let formData = new FormData();
+  Object.entries(data).forEach(([key, value]) => {
+    let modifiedValue = value;
+    if (modifiedValue == null) {
+      return;
+    } else if (Array.isArray(modifiedValue)) {
+      modifiedValue.forEach((item) => {
+        formData.append(`${key}[]`, item);
+      });
+    } else if (
+      typeof modifiedValue === "object" &&
+      modifiedValue !== null &&
+      !(modifiedValue instanceof File)
+    ) {
+      modifiedValue = JSON.stringify(modifiedValue);
+    }
+    formData.append(key, modifiedValue);
+  });
+  return formData;
+};
