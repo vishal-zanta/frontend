@@ -5,9 +5,9 @@ const LoaderErrWrapper = ({ isLoading, error, children, customLoader, loadingTex
   if (isLoading) {
     if (customLoader) return customLoader;
     return (
-      <div className="flex items-center justify-center h-full py-4">
+      <div className="flex items-center flex-col gap-1 justify-center h-full py-4">
         <ClipLoader color="#0A5ADB" size={32} />
-        <p className="text-foreground text-lg font-semibold">{loadingText}</p>
+        <p className="text-foreground text-sm font-medium">{loadingText}</p>
       </div>
     );
   }
