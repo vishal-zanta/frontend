@@ -11,8 +11,8 @@ import { usePortalProfile } from "@/hooks/usePortalProfile";
 import { ArrowLeft } from "lucide-react";
 import useIsMobile from "@/hooks/useIsMobile";
 import { useLanguage } from "@/context/LanguageContext";
-
-
+import useSelectExternalDepartment from "@/hooks/useSelectExternalDepartment";
+import ExternalComplaintView from "@/components/complaints/department-view";
 
 export default function OfficerComplaints() {
   const { t } = useLanguage();
@@ -20,7 +20,7 @@ export default function OfficerComplaints() {
   const [selected, setSelected] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState(null);
   const isMobile = useIsMobile();
-  
+  const externalDeptProps = useSelectExternalDepartment();
 
   const {
     data: analyticsData,
@@ -48,14 +48,22 @@ export default function OfficerComplaints() {
             setStatusUpdate={setStatusUpdate}
             useGetComplaintsOfOfiicer={useGetComplaintsOfOfiicer}
             autoSelect={!isMobile}
+            externalDeptProps={externalDeptProps}
           />
 
           {/* Detail panel */}
-          <ComplaintDetailView
-            selected={selected}
-            statusUpdate={statusUpdate}
-            setStatusUpdate={setStatusUpdate}
-          />
+          {/* {externalDeptProps.isExternalDepartment ? (
+            <ExternalComplaintView
+              selected={selected}
+              externalDeptProps={externalDeptProps}
+            />
+          ) : ( */}
+            <ComplaintDetailView
+              selected={selected}
+              statusUpdate={statusUpdate}
+              setStatusUpdate={setStatusUpdate}
+            />
+          {/* )} */}
         </div>
 
         {/* Mobile layout */}
@@ -69,11 +77,18 @@ export default function OfficerComplaints() {
                 <ArrowLeft className="w-3 h-3 inline mr-1" />
                 {t("Back to Complaints", "शिकायतों पर वापस जाएं")}
               </div>
-              <ComplaintDetailView
-                selected={selected}
-                statusUpdate={statusUpdate}
-                setStatusUpdate={setStatusUpdate}
-              />
+              {/* {externalDeptProps.isExternalDepartment ? (
+                <ExternalComplaintView
+                  selected={selected}
+                  externalDeptProps={externalDeptProps}
+                />
+              ) : ( */}
+                <ComplaintDetailView
+                  selected={selected}
+                  statusUpdate={statusUpdate}
+                  setStatusUpdate={setStatusUpdate}
+                />
+              {/* )} */}
             </div>
           ) : (
             <ComplaintList
@@ -82,6 +97,7 @@ export default function OfficerComplaints() {
               setStatusUpdate={setStatusUpdate}
               useGetComplaintsOfOfiicer={useGetComplaintsOfOfiicer}
               autoSelect={false}
+              externalDeptProps={externalDeptProps}
             />
           )}
         </div>

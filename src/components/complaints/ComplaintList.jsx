@@ -18,6 +18,8 @@ import {
 import { STATUS_ACTIONS, PRIORITY_ACTIONS } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { useLocation, useSearchParams } from "react-router-dom";
+import MySelect from "@/components/inputs/MySelect";
+import ExternalDepartmentList from "./department-list";
 
 export default function ComplaintList({
   selected,
@@ -26,6 +28,8 @@ export default function ComplaintList({
   onStatsChange,
   useGetComplaintsOfOfiicer,
   autoSelect = true,
+  isCCE = false,
+  externalDeptProps,
 }) {
   const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,6 +41,11 @@ export default function ComplaintList({
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("");
+
+  const { dept, setDept, selectedDept, departmentsList, isExternalDepartment } =
+    externalDeptProps || {};
+  // console.log({dept, isExternalDepartment});
+
   const {
     data,
     isLoading,
@@ -44,13 +53,18 @@ export default function ComplaintList({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGetComplaintsOfOfiicer({
-    limit: 10,
-    search,
-    status: selectedStatus || undefined,
-    feedback: selectedFeedback !== "" ? selectedFeedback : undefined,
-    priority: selectedPriority || undefined,
-  });
+  } = useGetComplaintsOfOfiicer(
+    {
+      limit: 10,
+      search,
+      status: selectedStatus || undefined,
+      feedback: selectedFeedback !== "" ? selectedFeedback : undefined,
+      priority: selectedPriority || undefined,
+    },
+    {
+      enabled: !isExternalDepartment,
+    },
+  );
 
   const complaints = useMemo(() => {
     return (
@@ -64,7 +78,7 @@ export default function ComplaintList({
 
   // Automatically select the first complaint when the list loads
   useEffect(() => {
-    if (!autoSelect) return;
+    if (!autoSelect || isExternalDepartment) return;
     if (complaints.length > 0) {
       const isSelectedInList = complaints.some(
         (c) => (c._id || c.id) === (selected?._id || selected?.id),
@@ -73,9 +87,10 @@ export default function ComplaintList({
         onSelect(complaints[0], true);
       }
     } else {
+      // console.log("Selected NULL")
       onSelect(null);
     }
-  }, [complaints, selected, onSelect, autoSelect]);
+  }, [complaints, selected, onSelect, autoSelect, isExternalDepartment]);
 
   // Compute and report stats up
   useEffect(() => {
@@ -120,140 +135,175 @@ export default function ComplaintList({
   return (
     <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
       <div className="px-4 py-3 border-b border-border ">
-        <div className="flex items-center justify-between shrink-0">
+        <div className="flex items-center justify-between shrink-0 h-8">
           <h3 className="font-bold text-foreground text-sm">
             {t("My Complaints", "मेरी शिकायतें")} ({complaints.length})
           </h3>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative h-8 w-8 p-0 cursor-pointer"
-              >
-                <Filter className="w-4 h-4" />
+          {!isExternalDepartment && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="relative h-8 w-8 p-0 cursor-pointer"
+                >
+                  <Filter className="w-4 h-4" />
+                  {(selectedStatus ||
+                    selectedFeedback !== "" ||
+                    selectedPriority) && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-card">
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <span>{t("Status", "स्थिति")}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent className="w-40 bg-card">
+                    <DropdownMenuItem
+                      onClick={() => setSelectedStatus("")}
+                      className={`cursor-pointer ${!selectedStatus ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                    >
+                      {t("All Statuses", "सभी स्थितियाँ")}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {STATUS_ACTIONS.map((action) => {
+                      const isSelected = selectedStatus === action.value;
+                      return (
+                        <DropdownMenuItem
+                          key={action.value}
+                          onClick={() => setSelectedStatus(action.value)}
+                          className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                        >
+                          {action.badgeLabel || action.label}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <span>{t("Feedback", "प्रतिक्रिया")}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent className="w-44 bg-card">
+                    <DropdownMenuItem
+                      onClick={() => setSelectedFeedback("")}
+                      className={`cursor-pointer ${selectedFeedback === "" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                    >
+                      {t("All", "सभी")}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => setSelectedFeedback("true")}
+                      className={`cursor-pointer ${selectedFeedback === "true" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                    >
+                      {t("Feedback Done", "प्रतिक्रिया समाप्त")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setSelectedFeedback("false")}
+                      className={`cursor-pointer ${selectedFeedback === "false" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                    >
+                      {t("Feedback Left", "प्रतिक्रिया शेष")}
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <span>{t("Priority", "प्राथमिकता")}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent className="w-40 bg-card">
+                    <DropdownMenuItem
+                      onClick={() => setSelectedPriority("")}
+                      className={`cursor-pointer ${!selectedPriority ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                    >
+                      {t("All Priorities", "सभी प्राथमिकताएं")}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {PRIORITY_ACTIONS.map((action) => {
+                      const isSelected = selectedPriority === action.value;
+                      return (
+                        <DropdownMenuItem
+                          key={action.value}
+                          onClick={() => setSelectedPriority(action.value)}
+                          className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                        >
+                          {action.badgeLabel || action.label}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
                 {(selectedStatus ||
                   selectedFeedback !== "" ||
                   selectedPriority) && (
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedStatus("");
+                        setSelectedFeedback("");
+                        setSelectedPriority("");
+                      }}
+                      className="text-destructive focus:text-destructive cursor-pointer"
+                    >
+                      {t("Clear Filters", "फ़िल्टर हटाएं")}
+                    </DropdownMenuItem>
+                  </>
                 )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 bg-card">
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="cursor-pointer">
-                  <span>{t("Status", "स्थिति")}</span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-40 bg-card">
-                  <DropdownMenuItem
-                    onClick={() => setSelectedStatus("")}
-                    className={`cursor-pointer ${!selectedStatus ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                  >
-                    {t("All Statuses", "सभी स्थितियाँ")}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  {STATUS_ACTIONS.map((action) => {
-                    const isSelected = selectedStatus === action.value;
-                    return (
-                      <DropdownMenuItem
-                        key={action.value}
-                        onClick={() => setSelectedStatus(action.value)}
-                        className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                      >
-                        {action.badgeLabel || action.label}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="cursor-pointer">
-                  <span>{t("Feedback", "प्रतिक्रिया")}</span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-44 bg-card">
-                  <DropdownMenuItem
-                    onClick={() => setSelectedFeedback("")}
-                    className={`cursor-pointer ${selectedFeedback === "" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                  >
-                    {t("All", "सभी")}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => setSelectedFeedback("true")}
-                    className={`cursor-pointer ${selectedFeedback === "true" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                  >
-                    {t("Feedback Done", "प्रतिक्रिया समाप्त")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedFeedback("false")}
-                    className={`cursor-pointer ${selectedFeedback === "false" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                  >
-                    {t("Feedback Left", "प्रतिक्रिया शेष")}
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="cursor-pointer">
-                  <span>{t("Priority", "प्राथमिकता")}</span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-40 bg-card">
-                  <DropdownMenuItem
-                    onClick={() => setSelectedPriority("")}
-                    className={`cursor-pointer ${!selectedPriority ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                  >
-                    {t("All Priorities", "सभी प्राथमिकताएं")}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  {PRIORITY_ACTIONS.map((action) => {
-                    const isSelected = selectedPriority === action.value;
-                    return (
-                      <DropdownMenuItem
-                        key={action.value}
-                        onClick={() => setSelectedPriority(action.value)}
-                        className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                      >
-                        {action.badgeLabel || action.label}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-              {(selectedStatus ||
-                selectedFeedback !== "" ||
-                selectedPriority) && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedStatus("");
-                      setSelectedFeedback("");
-                      setSelectedPriority("");
-                    }}
-                    className="text-destructive focus:text-destructive cursor-pointer"
-                  >
-                    {t("Clear Filters", "फ़िल्टर हटाएं")}
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
+        {isCCE && (
+          <div className="mt-2 flex items-center gap-2 ">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">
+              {t("Ext. Dept", "विभाग")}
+            </p>
+            <div className="flex-1 min-w-0">
+              <MySelect
+                placeholder={t("Select Department", "विभाग चुनें")}
+                options={departmentsList.map((d) => ({
+                  label: d.name,
+                  value: d.key,
+                }))}
+                value={dept}
+                onValueChange={(key) => {
+                  setDept(key, true);
+                  onSelect(null);
+                  setSearch("");
+                }}
+                nonClearable
+              />
+            </div>
+          </div>
+        )}
         <div className="mt-2">
           <SearchDebounced
             placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
             handleDebouncedChange={(val) => {
-              // console.log({ val });
-              // if (val !== searchParams.get("complaint")) {
-              setSearchParams(
-                { ...(!!val ? { complaint: val } : {}) },
-                { replace: true },
-              );
+              val !== search &&
+                setSearchParams(
+                  (p) => {
+                    const params = new URLSearchParams(p);
+
+                    if (val) {
+                      params.set("complaint", val);
+                    } else {
+                      params.delete("complaint");
+                    }
+
+                    return params;
+                  },
+                  { replace: true },
+                );
               // }
               setSearch(val);
             }}
             initialValue={complaintId}
             isClearable={true}
             delay={500}
+            isLog={true}
           />
         </div>
       </div>
@@ -265,49 +315,64 @@ export default function ComplaintList({
         }}
         className="flex-1 md:overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
       >
-        <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
-          {complaints.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-muted-foreground">
-              {t(
-                "No complaints assigned to you.",
-                "आपको कोई शिकायत नहीं सौंपी गई है।",
-              )}
-            </div>
-          ) : (
-            <>
-              {complaints.map((c, i) => {
-                const id = c._id || c.id;
-                const isSelected = selected?._id == id;
-                return (
-                  <ComplaintListCard
-                    c={c}
-                    onClick={(c) => {
-                      onSelect(c);
-                      setStatusUpdate(null);
-                    }}
-                    isSelected={isSelected}
-                  />
-                );
-              })}
+        {isExternalDepartment ? (
+          <ExternalDepartmentList
+            selectedDept={selectedDept}
+            onSelect={onSelect}
+            autoSelect={autoSelect}
+            selected={selected}
+            params={{
+              search,
+            }}
+          />
+        ) : (
+          <LoaderErrWrapper
+            isLoading={isLoading}
+            error={error?.message || error}
+          >
+            {complaints.length === 0 ? (
+              <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+                {t(
+                  "No complaints assigned to you.",
+                  "आपको कोई शिकायत नहीं सौंपी गई है।",
+                )}
+              </div>
+            ) : (
+              <>
+                {complaints.map((c, i) => {
+                  const id = c._id || c.id;
+                  const isSelected = selected?._id == id;
+                  return (
+                    <ComplaintListCard
+                      c={c}
+                      onClick={(c) => {
+                        onSelect(c);
+                        setStatusUpdate(null);
+                      }}
+                      isSelected={isSelected}
+                    />
+                  );
+                })}
 
-              {hasNextPage && (
-                <div className="p-3 bg-muted/10 text-center">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                    className="w-full text-xs cursor-pointer"
-                  >
-                    {isFetchingNextPage
-                      ? t("Loading more...", "और लोड हो रहा है...")
-                      : t("Load More", "और लोड करें")}
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </LoaderErrWrapper>
+                {hasNextPage && (
+                  <div className="p-3 bg-muted/10 text-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fetchNextPage()}
+                      disabled={isFetchingNextPage}
+                      className="w-full text-xs cursor-pointer"
+                    >
+                      {isFetchingNextPage
+                        ? t("Loading more...", "और लोड हो रहा है...")
+                        : t("Load More", "और लोड करें")}
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </LoaderErrWrapper>
+        )}
       </div>
     </div>
   );

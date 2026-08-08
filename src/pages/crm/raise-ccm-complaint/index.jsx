@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Building2, CheckCircle2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 
@@ -23,13 +29,13 @@ import ButtonsFooter from "./components/ButtonsFooter";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import SuccessScreen from "./components/SuccessScreen";
-import { postComplaint } from "@/api/complaint.api";
+import { postComplaint, postExternalComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
 import { SectionTitle } from "@/components/ChartCard";
 import { useSearchParams } from "react-router-dom";
-import Department104Form from "./department-forms/Department-104";
-import {departmentsList} from "@/utils/departments";
+import Department104Form from "./department-forms/health-department";
+import { departmentsList } from "@/utils/departments";
 
 // let departmentsList = [
 //   {
@@ -142,6 +148,20 @@ export default function CRMRaiseComplaint() {
     },
   });
 
+  const postExternalComplaintMutation = useMutation({
+    mutationFn: postExternalComplaint,
+    onSuccess: (data) => {
+      getSuccessToast("Complaint registered successfully");
+      qc.invalidateQueries({ queryKey: [QUERY_KEYS.EXTERNAL_COMPLAINTS] });
+
+      console.log(data);
+      setSubmitted(true);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
   const handleSubmit = (data) => {
     const formData = getFormData(data, attachments);
     console.log("JSON DATA", data);
@@ -149,13 +169,6 @@ export default function CRMRaiseComplaint() {
 
     postComplaintMutation.mutate(formData);
   };
-
-  const handleDepartmentFormSubmit = useCallback((formData)=> {
-formData.append("departmentId", dept);
-console.log("Department formData", formData);
-    // postComplaintMutation.mutate(formData);
-
-  }, [postComplaintMutation, dept])
 
   useEffect(() => {
     const searchDept = searchParams?.get("dept");
@@ -225,12 +238,17 @@ console.log("Department formData", formData);
             <p className="text-sm text-muted-foreground max-w-md">
               {t(
                 "Please select a department from the dropdown above to proceed with registering a complaint.",
-                "शिकायत दर्ज करने के लिए कृपया ऊपर दिए गए ड्रॉपडाउन से एक विभाग चुनें।"
+                "शिकायत दर्ज करने के लिए कृपया ऊपर दिए गए ड्रॉपडाउन से एक विभाग चुनें।",
               )}
             </p>
           </div>
         ) : SelectedDept?.component ? (
-          <SelectedDept.component onSuccess={handleDepartmentFormSubmit}/>
+          <SelectedDept.component
+            onSuccess={(payload) =>
+              postExternalComplaintMutation.mutate(payload)
+            }
+            isLoading={postExternalComplaintMutation.isPending}
+          />
         ) : (
           <RhfWrapper
             initialValues={defaultValues}
@@ -480,7 +498,11 @@ function DepartmentSelect({ list = [], selectedKey, onSelect, t }) {
     <div className="mb-6 max-w-md">
       <MySelect
         label={t ? t("Select Department", "विभाग चुनें") : "Select Department"}
-        placeholder={t ? t("Choose a department...", "विभाग चुनें...") : "Choose a department..."}
+        placeholder={
+          t
+            ? t("Choose a department...", "विभाग चुनें...")
+            : "Choose a department..."
+        }
         options={options}
         value={selectedKey || ""}
         onValueChange={(val) => onSelect?.(val)}

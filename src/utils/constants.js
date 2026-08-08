@@ -57,6 +57,8 @@ export const QUERY_KEYS = {
   FIELD_VISITS: "field-visits",
   VISIT_STATS: "visit-stats",
   API_KEYS: "api-keys",
+  EXTERNAL_COMPLAINTS : "external-complaints",
+  
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [

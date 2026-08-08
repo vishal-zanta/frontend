@@ -104,7 +104,7 @@ const Notifications = ({ title = "Notifications" }) => {
       return undefined;
     },
     queryKey: [QUERY_KEYS.NOTIFICATIONS],
-    refetchInterval: 5 * 1000,
+    refetchInterval: 30 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

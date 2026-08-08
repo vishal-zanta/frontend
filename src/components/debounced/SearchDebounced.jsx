@@ -12,11 +12,13 @@ const SearchDebounced = ({
   inputClassName = "",
   inputProps = {},
   placeholder = "Search by name or email...",
-icon = true,
+  icon = true,
   isClearable = true,
- onFocus
+  onFocus,
+  isLog = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialValue);
+  // isLog && console.log({ initialValue, searchQuery });
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -33,15 +35,14 @@ icon = true,
 
   useEffect(() => {
     if (
-      !!initialValue &&
-      !!initialValue.trim() &&
+      // !!initialValue &&
+      // !!initialValue.trim() &&
+      (!!initialValue || initialValue === "") &&
       searchQuery !== initialValue
     ) {
-      setSearchQuery(initialValue);
+      setSearchQuery(initialValue || "");
     }
   }, [initialValue]);
-
-
 
   return (
     <div className={clsx("relative", className)}>

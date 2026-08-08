@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import RhfTextarea from "@/components/rhfinputs/RhfTextarea";
 import RhfFileUpload from "@/components/rhfinputs/RhfFileUpload";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { Loader2, Send } from "lucide-react";
+import { useFormContext, useWatch } from "react-hook-form";
 import { usePostPreCall } from "../hooks";
 
-export default function Form() {
-  usePostPreCall();
+export default function Form({ fields , isLoading}) {
+  // console.log({ fields });
   return (
     <div className="bg-card border border-border rounded-xl px-0 sm:px-0 p-4 sm:p-6 shadow-sm space-y-6">
       <h2 className="text-xl font-bold text-foreground border-b border-border pb-3 px-4">
@@ -35,13 +35,13 @@ export default function Form() {
         {/* Complainant Name & Mobile */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RhfInput
-            name="complainantName"
+            name="citizen.name"
             label="Complainant Name"
             placeholder="Enter complainant name"
             required
           />
           <RhfInput
-            name="complainantMobile"
+            name="citizen.mobileNumber"
             label="Complainant Mobile Number"
             placeholder="Enter 10-digit mobile number"
             required
@@ -53,44 +53,30 @@ export default function Form() {
         {/* Gender & Complainant Type */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RhfSelect
-            name="gender"
+            name="citizen.gender"
             label="Gender"
             placeholder="Select Gender"
-            options={[
-              { label: "MALE", value: "MALE" },
-              { label: "FEMALE", value: "FEMALE" },
-              { label: "TRANSGENDER", value: "TRANSGENDER" },
-            ]}
+            options={fields?.gender || []}
           />
           <RhfSelect
             name="complainantType"
             label="Complainant Type"
             placeholder="Select Complainant Type"
             required
-            options={[
-              { label: "Citizen", value: "citizen" },
-              { label: "Public Representative", value: "public_representative" },
-              { label: "Government Employee", value: "government_employee" },
-              { label: "Other", value: "other" },
-            ]}
+            options={fields?.complainantType || []}
           />
         </div>
 
         {/* Grievance Type & Sub-Type */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
           <RhfSelect
             name="grievanceType"
             label="Grievance Type"
             placeholder="Select Grievance Type"
             required
-            options={[
-              { label: "General", value: "general" },
-              { label: "Service Related", value: "service_related" },
-              { label: "Infrastructure", value: "infrastructure" },
-              { label: "Staff Misbehavior", value: "staff_misbehavior" },
-            ]}
+            options={fields?.grievanceType || []}
           />
-          <RhfSelect
+          {/* <RhfSelect
             name="grievanceSubType"
             label="Grievance Sub-Type"
             placeholder="Select Grievance Sub-Type"
@@ -101,49 +87,11 @@ export default function Form() {
               { label: "Quality Issue", value: "quality_issue" },
               { label: "Others", value: "others" },
             ]}
-          />
+          /> */}
         </div>
 
         {/* District, Block, Village */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RhfSelect
-            name="district"
-            label="District"
-            placeholder="Select District"
-            required
-            options={[
-              { label: "Patna", value: "patna" },
-              { label: "Gaya", value: "gaya" },
-              { label: "Muzaffarpur", value: "muzaffarpur" },
-              { label: "Purnia", value: "purnia" },
-              { label: "Bhagalpur", value: "bhagalpur" },
-              { label: "Araria", value: "araria" },
-            ]}
-          />
-          <RhfSelect
-            name="block"
-            label="Block"
-            placeholder="Select Block"
-            required
-            options={[
-              { label: "Forbesganj", value: "forbesganj" },
-              { label: "Araria", value: "araria" },
-              { label: "Raniganj", value: "raniganj" },
-              { label: "Sikti", value: "sikti" },
-            ]}
-          />
-         
-        </div>
-         <RhfSelect
-            name="village"
-            label="Village"
-            placeholder="Select Village"
-            options={[
-              { label: "Amauna", value: "amauna" },
-              { label: "Rampur", value: "rampur" },
-              { label: "Phulwaria", value: "phulwaria" },
-            ]}
-          />
+        <DistrictPart fields={fields} />
 
         {/* Institution Type & Institution Name */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -152,22 +100,13 @@ export default function Form() {
             label="Institution Type"
             placeholder="Select Institution Type"
             required
-            options={[
-              { label: "Primary Health Centre (PHC)", value: "phc" },
-              { label: "Community Health Centre (CHC)", value: "chc" },
-              { label: "District Hospital", value: "district_hospital" },
-              { label: "Sub Divisional Hospital", value: "sdh" },
-            ]}
+            options={fields?.institutionType || []}
           />
           <RhfSelect
             name="institutionName"
             label="Institution Name"
             placeholder="Select Institution Name"
-            options={[
-              { label: "PHC Forbesganj", value: "phc_forbesganj" },
-              { label: "CHC Araria", value: "chc_araria" },
-              { label: "Sadar Hospital", value: "sadar_hospital" },
-            ]}
+            options={fields?.institutionName || []}
           />
         </div>
 
@@ -180,7 +119,7 @@ export default function Form() {
 
         {/* Brief of Grievance */}
         <RhfTextarea
-          name="briefOfGrievance"
+          name="description"
           label="Brief of Grievance"
           placeholder="Enter brief description of grievance..."
           required
@@ -188,20 +127,68 @@ export default function Form() {
         />
 
         {/* Upload Related Document */}
-        <RhfFileUpload
+        {/* <RhfFileUpload
           name="uploadRelatedDocument"
           label="Upload Related Document"
           accept="image/*,application/pdf"
           MAX_SIZE={10}
-        />
+        /> */}
       </div>
 
       <div className="flex justify-center pt-4 border-t border-border">
-        <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-          <Send className="w-4 h-4 mr-2" />
+        <Button
+          type="submit"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          disabled={isLoading}
+        >
+          {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
           Submit Grievance
         </Button>
       </div>
     </div>
   );
 }
+
+const DistrictPart = ({ fields }) => {
+  const { watch, setValue, control } = useFormContext();
+  const districtValue = useWatch({ name: "address.district", control });
+  const blockValue = useWatch({ name: "address.block", control });
+
+  useEffect(() => {
+    setValue("address.block", "");
+    setValue("address.village", "");
+  }, [districtValue]);
+  useEffect(() => {
+    setValue("address.village", "");
+  }, [blockValue]);
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <RhfSelect
+          name="address.district"
+          label="District"
+          placeholder="Select District"
+          required
+          options={fields?.district || []}
+        />
+        <RhfSelect
+          name="address.block"
+          label="Block"
+          placeholder="Select Block"
+          required
+          options={(fields?.block || []).filter(
+            (o) => o.district === districtValue,
+          )}
+          disabled={!districtValue}
+        />
+      </div>
+      <RhfSelect
+        name="address.village"
+        label="Village"
+        placeholder="Select Village"
+        options={(fields?.village || []).filter((o) => o.block === blockValue)}
+        disabled={!blockValue || !districtValue}
+      />
+    </>
+  );
+};

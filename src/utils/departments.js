@@ -1,4 +1,7 @@
-import Department104Form from "../pages/crm/raise-ccm-complaint/department-forms/Department-104";
+import Department104Form from "../pages/crm/raise-ccm-complaint/department-forms/health-department";
+import HealthDepartmentListCard from "@/components/complaints/department-list/health-department"
+import HealthDepartmentViewCard from "@/components/complaints/department-view/health-department"
+
 
 //component = form component
 // listComponent = track -complaints list component,
@@ -10,15 +13,15 @@ export let departmentsList = [
     name: "CM Helpline",
     key: "cm-helpline",
     component: null,
-        listComponent : null,
-    viewComponent : null
+    listComponent: null,
+    viewComponent: null,
   },
   {
     id: 2,
-    name: "Department 104",
-    key: "department-104",
+    name: "Health Department",
+    key: "HEALTH",
     component: Department104Form, // onSuccess(data : formData),
-    listComponent : null,
-    viewComponent : null
+    listComponent: HealthDepartmentListCard,
+    viewComponent: HealthDepartmentViewCard,
   },
 ];

@@ -40,7 +40,18 @@ export const updateComplaintPriority = async ({ id, assignedPriority }) => {
 export const postComplaint = async (body)=> {
   return instance.post("/grievances/officer/create", body);
 }
+//external
+export const postExternalComplaint = async (body)=> {
+  return instance.post("/external-grievances", body);
+}
 
+export const getExternalComplaints = async(params= {})=> {
+  return instance.get("/external-grievances", {params})
+}
+
+export const getExternalComplaintsById = async( id)=> {
+  return instance.get(`/external-grievances/${id}`)
+}
 // --- field visits
 
 export const getFieldVisits = async (params = {})=> {

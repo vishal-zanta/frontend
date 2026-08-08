@@ -12,12 +12,15 @@ import {
 import useIsMobile from "@/hooks/useIsMobile";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import useSelectExternalDepartment from "@/hooks/useSelectExternalDepartment";
+import ExternalComplaintView from "@/components/complaints/department-view";
 
 export default function TrackCCMComplaint() {
   const { t } = useLanguage();
   const [selected, setSelected] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState(null);
   const isMobile = useIsMobile();
+  const externalDeptProps = useSelectExternalDepartment();
 
   const [stats, setStats] = useState({
     totalAssigned: 0,
@@ -28,6 +31,7 @@ export default function TrackCCMComplaint() {
 
   const { data: analyticsData } = useGetComplaintAnalyticsSummary();
   const analytics = analyticsData?.data || {};
+  // console.log({selected});
 
   return (
     <PortalLayout role="crm" isHideOverflow={true}>
@@ -51,15 +55,24 @@ export default function TrackCCMComplaint() {
             onStatsChange={setStats}
             useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
             autoSelect={!isMobile}
+            isCCE={true}
+            externalDeptProps={externalDeptProps}
           />
 
           {/* Detail panel */}
-          <ComplaintDetailView
-            selected={selected}
-            statusUpdate={statusUpdate}
-            setStatusUpdate={setStatusUpdate}
-            isCCE={true}
-          />
+          {externalDeptProps.isExternalDepartment ? (
+            <ExternalComplaintView
+              selected={selected}
+              externalDeptProps={externalDeptProps}
+            />
+          ) : (
+            <ComplaintDetailView
+              selected={selected}
+              statusUpdate={statusUpdate}
+              setStatusUpdate={setStatusUpdate}
+              isCCE={true}
+            />
+          )}
         </div>
 
         {/* Mobile layout */}
@@ -73,12 +86,19 @@ export default function TrackCCMComplaint() {
                 <ArrowLeft className="w-3 h-3 inline mr-1" />
                 {t("Back to Complaints", "शिकायतों पर वापस जाएं")}
               </div>
-              <ComplaintDetailView
-                selected={selected}
-                statusUpdate={statusUpdate}
-                setStatusUpdate={setStatusUpdate}
-                isCCE={true}
-              />
+              {externalDeptProps.isExternalDepartment ? (
+                <ExternalComplaintView
+                  selected={selected}
+                  externalDeptProps={externalDeptProps}
+                />
+              ) : (
+                <ComplaintDetailView
+                  selected={selected}
+                  statusUpdate={statusUpdate}
+                  setStatusUpdate={setStatusUpdate}
+                  isCCE={true}
+                />
+              )}
             </div>
           ) : (
             <ComplaintList
@@ -88,6 +108,8 @@ export default function TrackCCMComplaint() {
               onStatsChange={setStats}
               useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
               autoSelect={false}
+              isCCE={true}
+              externalDeptProps={externalDeptProps}
             />
           )}
         </div>

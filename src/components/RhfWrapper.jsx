@@ -13,13 +13,15 @@ const RhfWrapper = ({
   className,
   schemaKey, // Add a key to track schema changes
   resetForm,
+ 
   validationOn = "onChange",
 }) => {
   const lastFocusedEl = useRef(null);
   // Create resolver that updates when validationSchema changes
   const resolver = useMemo(() => {
     if (!isValidation || !validationSchema) return undefined;
-    return zodResolver(validationSchema);
+  
+    return zodResolver(validationSchema, undefined, {raw: true});
   }, [isValidation, validationSchema]);
 
   const defaultValues = useMemo(
@@ -31,6 +33,7 @@ const RhfWrapper = ({
     defaultValues: defaultValues,
     resolver,
     mode: validationOn,
+   
   });
 
   // Reset form with initial values when they change
