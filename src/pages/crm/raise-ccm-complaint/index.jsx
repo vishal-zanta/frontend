@@ -63,7 +63,7 @@ export default function CRMRaiseComplaint() {
     const searchDept = searchParams.get("dept");
     return searchDept
       ? departmentsList.find((item) => item?.key === searchDept)?.key || ""
-      : "";
+      : departmentsList?.[0]?.key;
   });
 
   const {
@@ -178,7 +178,7 @@ export default function CRMRaiseComplaint() {
         setDept(found.key);
       }
     } else if (!searchDept && dept !== "") {
-      setDept("");
+      setDept(departmentsList?.[0]?.key);
     }
   }, [searchParams]);
 
@@ -211,7 +211,8 @@ export default function CRMRaiseComplaint() {
             "* चिह्नित फ़ील्ड अनिवार्य हैं।",
           )}
           className="!mb-4 !sm:mb-6"
-        />
+
+        >
 
         <DepartmentSelect
           list={departmentsList}
@@ -226,6 +227,7 @@ export default function CRMRaiseComplaint() {
           }}
           t={t}
         />
+        </SectionTitle>
 
         {!SelectedDept ? (
           <div className="flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-2xl border border-dashed border-border bg-card/60 shadow-sm my-6">
@@ -495,19 +497,23 @@ function DepartmentSelect({ list = [], selectedKey, onSelect, t }) {
   }));
 
   return (
-    <div className="mb-6 max-w-md">
-      <MySelect
-        label={t ? t("Select Department", "विभाग चुनें") : "Select Department"}
-        placeholder={
-          t
-            ? t("Choose a department...", "विभाग चुनें...")
-            : "Choose a department..."
-        }
-        options={options}
-        value={selectedKey || ""}
-        onValueChange={(val) => onSelect?.(val)}
-        nonClearable
-      />
+    <div className="mb-0 max-w-xs w-full flex flex-col  gap-1 ">
+      <p className="text-[10px] text-left font-semibold uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">
+        {t ? t("Select Department", "विभाग") : "Dept"}
+      </p>
+      <div className="flex-1 min-w-0">
+        <MySelect
+          placeholder={
+            t
+              ? t("Choose a department...", "विभाग चुनें...")
+              : "Choose a department..."
+          }
+          options={options}
+          value={selectedKey || ""}
+          onValueChange={(val) => onSelect?.(val)}
+          nonClearable
+        />
+      </div>
     </div>
   );
 }

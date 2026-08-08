@@ -66,7 +66,7 @@ const index = ({ onSuccess, isLoading }) => {
   console.log({ fields });
 
   return (
-    <LoaderErrWrapper isLoading={isFormOptionsLoading} error={error}>
+    <LoaderErrWrapper isLoading={isFormOptionsLoading} error={error} loadingText={"Loading fields options...."}>
       <RhfWrapper
         initialValues={defaultValues}
         isValidation
