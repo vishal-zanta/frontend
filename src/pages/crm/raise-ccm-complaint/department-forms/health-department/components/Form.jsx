@@ -8,6 +8,7 @@ import { Loader2, Send } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { usePostPreCall } from "../hooks";
 
+
 export default function Form({ fields , isLoading}) {
   // console.log({ fields });
   return (
@@ -15,6 +16,7 @@ export default function Form({ fields , isLoading}) {
       <h2 className="text-xl font-bold text-foreground border-b border-border pb-3 px-4">
         Raise New Grievance
       </h2>
+   
 
       <div className="space-y-4 px-4">
         {/* Date & Location */}
