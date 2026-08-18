@@ -91,7 +91,7 @@ const HealthDepartmentDetailView = ({ data }) => {
                 {data.mobile}
               </span>
             )}
-            {data?.apiSyncStatus && (
+            {/* {data?.apiSyncStatus && (
               <span className="flex items-center gap-1">
                 {data.apiSyncStatus === "SUCCESS" ? (
                   <CheckCircle2 className="w-3 h-3 text-green-500" />
@@ -100,7 +100,7 @@ const HealthDepartmentDetailView = ({ data }) => {
                 )}
                 Sync: {data.apiSyncStatus}
               </span>
-            )}
+            )} */}
           </div>
         </div>
 

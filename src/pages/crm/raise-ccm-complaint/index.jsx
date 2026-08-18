@@ -65,6 +65,7 @@ export default function CRMRaiseComplaint() {
       ? departmentsList.find((item) => item?.key === searchDept)?.key || ""
       : departmentsList?.[0]?.key;
   });
+  const [externalComplaintId , setExternalComplaintId] = useState(null);
 
   const {
     servicesOptions,
@@ -151,10 +152,11 @@ export default function CRMRaiseComplaint() {
   const postExternalComplaintMutation = useMutation({
     mutationFn: postExternalComplaint,
     onSuccess: (data) => {
-      getSuccessToast("Complaint registered successfully");
+      getSuccessToast("Complaint registered successfully", data?.data?.data?.externalComplaintId);
       qc.invalidateQueries({ queryKey: [QUERY_KEYS.EXTERNAL_COMPLAINTS] });
 
       console.log(data);
+      setExternalComplaintId(data?.data?.data?.externalComplaintId);
       setSubmitted(true);
     },
     onError: (err) => {
@@ -192,8 +194,10 @@ export default function CRMRaiseComplaint() {
       <SuccessScreen
         role={role}
         t={t}
+        externalComplaintId={externalComplaintId}
         onReset={() => {
           setSubmitted(false);
+          setExternalComplaintId(null);
           setAttachments([]);
           setFileError("");
         }}
