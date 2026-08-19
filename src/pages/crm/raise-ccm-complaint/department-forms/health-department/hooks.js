@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getMappedMasterData, getDistrictMappedData } from "./helpers";
 import { getFormsFields, postFormFields } from "@/lib/idb";
 import moment from "moment";
+import { checkIdbDataExpiry } from "../../helpers";
 
 const getMasterData = async (departmentCode = "HEALTH") => {
   const res = await instance.get(
@@ -39,11 +40,13 @@ export const usePostPreCall = (departmentCode = "HEALTH") => {
       setIsLoading(true);
       setError(null);
       try {
-        const dataFromDb = await getFormsFields(departmentCode);
-        const isExpired =
-          dataFromDb?.cachedAt &&
-          moment(dataFromDb.cachedAt).isValid() &&
-          moment().diff(moment(dataFromDb.cachedAt), "hours") >= 24;
+        // const dataFromDb = await getFormsFields(departmentCode);
+        // const isExpired =
+        //   dataFromDb?.cachedAt &&
+        //   moment(dataFromDb.cachedAt).isValid() &&
+        //   moment().diff(moment(dataFromDb.cachedAt), "hours") >= 24;
+
+        const { dataFromDb, isExpired } =await  checkIdbDataExpiry(departmentCode);
 
         if (!dataFromDb || isExpired) {
           console.log("Fetching Data from server");

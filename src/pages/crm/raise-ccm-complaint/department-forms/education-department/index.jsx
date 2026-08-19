@@ -2,15 +2,15 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import React from "react";
 import Form from "./components/Form";
 import RhfWrapper from "@/components/RhfWrapper";
-import {useGetFieldsOptions} from "./hooks";
+import { useGetFieldsOptions } from "./hooks";
+import {getFinalData} from "./helpers";
 
 const defaultValue = {
-  externalRef: "UCH-2026-0001234",
+  externalRef: "",
   type: "COMPLAINT",
   categoryId: "",
-  categoryOther: "",
-  complaint:
-    "",
+  // categoryOther: "",
+  complaint: "",
   complainant: {
     name: "",
     mobile: "",
@@ -33,8 +33,13 @@ const defaultValue = {
   registeredAt: "",
 };
 
-const index = ({ onSuccess, isLoading }) => {
-  const { fields, error, isLoading: isFieldsLoading } = useGetFieldsOptions();
+const index = ({ onSuccess, isLoading, selectedDept }) => {
+  // console.log({selectedDept})
+  const {
+    fields,
+    error,
+    isLoading: isFieldsLoading,
+  } = useGetFieldsOptions(selectedDept);
 
   return (
     <LoaderErrWrapper
@@ -45,13 +50,15 @@ const index = ({ onSuccess, isLoading }) => {
       <RhfWrapper
         initialValues={defaultValue}
         onSubmit={(data) => {
-          console.log("Education Grievance Data:", data);
-        //   if (onSuccess) {
-        //     onSuccess(data);
-        //   }
+          const finalData = getFinalData(data, selectedDept);
+          console.log("Education Grievance Data:", data, finalData);
+          if (onSuccess) {
+            onSuccess(finalData);
+          }
         }}
         onError={(error) => {
           console.log("Form Error:", error);
+
         }}
       >
         <Form fields={fields} isLoading={isLoading} />
@@ -61,7 +68,6 @@ const index = ({ onSuccess, isLoading }) => {
 };
 
 export default index;
-
 
 /**
  * 

@@ -24,16 +24,16 @@ export let departmentsList = [
     id: 2,
     name: "Health Department",
     key: "HEALTH",
-    component: Department104Form, // onSuccess(data : formData),
-    listComponent: HealthDepartmentListCard,
-    viewComponent: HealthDepartmentViewCard,
+    component: Department104Form, // onSuccess(data : formData), isLoading, selectedDept
+    listComponent: HealthDepartmentListCard, // data, onClick, isSelected
+    viewComponent: HealthDepartmentViewCard, // data
   },
   {
     id: 3,
     name: "Education Department",
-    key: "Education",
-    component: EducationDeptForm, // onSuccess(data : formData),
-    listComponent: EduDeptListCard,
+    key: "EDUCATION",
+    component: EducationDeptForm, // onSuccess(data : formData),isLoading, selectedDept
+    listComponent: EduDeptListCard, 
     viewComponent: EduDeptViewCard,
   },
 ];

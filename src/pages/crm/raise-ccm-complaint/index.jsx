@@ -250,6 +250,7 @@ export default function CRMRaiseComplaint() {
           </div>
         ) : SelectedDept?.component ? (
           <SelectedDept.component
+            selectedDept={SelectedDept?.key}
             onSuccess={(payload) =>
               postExternalComplaintMutation.mutate(payload)
             }

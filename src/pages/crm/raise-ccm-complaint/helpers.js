@@ -1,3 +1,6 @@
+import { getFormsFields } from "@/lib/idb";
+import moment from "moment";
+
 export const getFormData = (data, attachments = []) => {
   const formData = new FormData();
 
@@ -89,4 +92,26 @@ export const convertJSONToFormdata = (data = {}) => {
     formData.append(key, modifiedValue);
   });
   return formData;
+};
+
+export const checkIdbDataExpiry = async (departmentCode) => {
+  const dataFromDb = await getFormsFields(departmentCode);
+  const isExpired =
+    dataFromDb?.cachedAt &&
+    moment(dataFromDb.cachedAt).isValid() &&
+    moment().diff(moment(dataFromDb.cachedAt), "hours") >= 24;
+
+  return { dataFromDb, isExpired };
+};
+
+export const finalMappedDataOfExternalDept = (
+  departmentCode,
+  mobile,
+  departmentPayload,
+) => {
+  return {
+    departmentCode,
+    mobile,
+    departmentPayload,
+  };
 };
