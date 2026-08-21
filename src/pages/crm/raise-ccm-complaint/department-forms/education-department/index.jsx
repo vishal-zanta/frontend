@@ -5,7 +5,7 @@ import RhfWrapper from "@/components/RhfWrapper";
 import { useGetFieldsOptions } from "./hooks";
 import {getFinalData} from "./helpers";
 import validationSchema from "./schema";
-import { getSuccessToast } from "@/utils/helpers";
+// import { getSuccessToast } from "@/utils/helpers";
 
 const defaultValue = {
   externalRef: "",
@@ -55,7 +55,7 @@ const index = ({ onSuccess, isLoading, selectedDept }) => {
           const finalData = getFinalData(data, selectedDept);
           console.log("Education Grievance Data:", data, finalData);
           if (onSuccess) {
-            getSuccessToast("Dummy submitted");
+            // getSuccessToast("Dummy submitted");
             onSuccess(finalData);
           }
         }}
