@@ -63,7 +63,7 @@ export const useGetFieldsOptions = (departmentCode = "EDUCATION") => {
   const isLoading = false;
   const error = null;
 
-  const [fields, setFields] = useState(dummy);
+  const [fields, setFields] = useState({});
 
   const types = [
     "categories",
@@ -113,6 +113,10 @@ export const useGetFieldsOptions = (departmentCode = "EDUCATION") => {
               label: s.source,
               value: s.source,
             })),
+            type : ["COMPLAINT", "QUERY"].map(v=> ({
+              label : v,
+              value : v
+            }))
             // status: statusesData.map(s=> ({label: s.name, value: s.key}))
           };
           await postFormFields(departmentCode, mappedData);

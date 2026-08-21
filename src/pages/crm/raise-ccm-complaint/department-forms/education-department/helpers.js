@@ -3,9 +3,10 @@ import { finalMappedDataOfExternalDept } from "../../helpers";
 
 export function generateUCHId() {
   const year = new Date().getFullYear();
+  const month = String(new Date().getMonth() + 1).padStart(2, "0");
   const randomNumber = Math.floor(1000000 + Math.random() * 9000000);
 
-  return `UCH-${year}-${randomNumber}`;
+  return `UCH-${month}${year}-${randomNumber}`;
 }
 
 export const getFinalData = (data = {}, departmentCode = "EDUCATION") => {
@@ -13,7 +14,7 @@ export const getFinalData = (data = {}, departmentCode = "EDUCATION") => {
     externalRef: generateUCHId(),
     type: data?.type || "COMPLAINT",
     categoryId: Number(data?.categoryId) || 0,
-    // categoryOther : "",
+    categoryOther : String(data?.categoryOther || ""),
     complaint: String(data?.complaint || ""),
     complainant: {
       name: String(data?.complainant?.name || ""),

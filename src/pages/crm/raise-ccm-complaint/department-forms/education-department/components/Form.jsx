@@ -27,18 +27,27 @@ const Form = ({ fields, isLoading }) => {
             <span>Complaint Information</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          <RhfSelect
+            name="type"
+            label="Type"
+            placeholder="Select Type"
+            options={fields?.type || []}
+            required
+
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RhfSelect
               name="categoryId"
               label="Category"
               placeholder="Select Category"
               options={fields?.categoryId || []}
+              required
             />
-            {/* <RhfInput
+            <RhfInput
               name="categoryOther"
               label="Category (Other)"
               placeholder="Enter category details if other"
-            /> */}
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -48,7 +57,12 @@ const Form = ({ fields, isLoading }) => {
               placeholder="Select Source"
               options={fields?.source || []}
             />
-            <RhfInput name="registeredAt" label="Registered At" type="date" />
+            <RhfInput
+              name="registeredAt"
+              label="Registered At"
+              type="date"
+              isDisableFutureDates
+            />
           </div>
 
           <RhfTextarea
@@ -56,6 +70,7 @@ const Form = ({ fields, isLoading }) => {
             label="Complaint Description"
             placeholder="Enter detailed description of the complaint..."
             rows={4}
+            required
           />
         </div>
 
@@ -71,6 +86,7 @@ const Form = ({ fields, isLoading }) => {
               name="complainant.name"
               label="Complainant Name"
               placeholder="Enter complainant name"
+              required
             />
             <RhfInput
               name="complainant.mobile"
@@ -78,6 +94,7 @@ const Form = ({ fields, isLoading }) => {
               placeholder="Enter 10-digit mobile number"
               isNumsOnly={true}
               maxLength={10}
+              required
             />
           </div>
 
@@ -101,6 +118,7 @@ const Form = ({ fields, isLoading }) => {
               label="District"
               placeholder="Select District"
               options={fields?.districtCode || fields?.district || []}
+              required
             />
             <BlockCode />
             <RhfSelect
@@ -112,16 +130,17 @@ const Form = ({ fields, isLoading }) => {
             <PanchayatCode />
             <VillageCode />
             <SchoolCode />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <RhfSelect
+             <RhfSelect
               name="location.teacherCode"
               label="Teacher"
               placeholder="Select Teacher"
               options={fields?.teacherCode || fields?.teacher || []}
             />
           </div>
+
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           
+          </div> */}
         </div>
 
         {/* Section 4: Accused Details */}

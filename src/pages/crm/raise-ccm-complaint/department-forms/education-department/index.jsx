@@ -4,6 +4,8 @@ import Form from "./components/Form";
 import RhfWrapper from "@/components/RhfWrapper";
 import { useGetFieldsOptions } from "./hooks";
 import {getFinalData} from "./helpers";
+import validationSchema from "./schema";
+import { getSuccessToast } from "@/utils/helpers";
 
 const defaultValue = {
   externalRef: "",
@@ -53,6 +55,7 @@ const index = ({ onSuccess, isLoading, selectedDept }) => {
           const finalData = getFinalData(data, selectedDept);
           console.log("Education Grievance Data:", data, finalData);
           if (onSuccess) {
+            getSuccessToast("Dummy submitted");
             onSuccess(finalData);
           }
         }}
@@ -60,6 +63,8 @@ const index = ({ onSuccess, isLoading, selectedDept }) => {
           console.log("Form Error:", error);
 
         }}
+        isValidation={true}
+        validationSchema={validationSchema}
       >
         <Form fields={fields} isLoading={isLoading} />
       </RhfWrapper>
