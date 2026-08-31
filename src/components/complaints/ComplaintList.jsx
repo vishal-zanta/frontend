@@ -15,11 +15,12 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { STATUS_ACTIONS, PRIORITY_ACTIONS } from "@/utils/constants";
+import { STATUS_ACTIONS, PRIORITY_ACTIONS, MAX_LIMIT } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { useLocation, useSearchParams } from "react-router-dom";
 import MySelect from "@/components/inputs/MySelect";
 import ExternalDepartmentList from "./department-list";
+import { useGetComplaintSources } from "@/pages/admin/master-data/hooks";
 
 export default function ComplaintList({
   selected,
@@ -31,7 +32,7 @@ export default function ComplaintList({
   isCCE = false,
   externalDeptProps,
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const complaintId = searchParams.get("complaint") ?? "";
   const { state } = useLocation();
@@ -41,6 +42,22 @@ export default function ComplaintList({
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("");
+  const [selectedChannel, setSelectedChannel] = useState("");
+
+  const API_PARAMS = useMemo(
+    () => ({ page: 1, limit: MAX_LIMIT, select: "title,titleHindi,name,nameHindi" }),
+    [],
+  );
+  const { data: complaintSourcesData, isLoading: complaintSourcesLoading } =
+    useGetComplaintSources([API_PARAMS], API_PARAMS);
+
+  const channelOptions = useMemo(() => {
+    const docs = complaintSourcesData?.data?.data?.docs ?? [];
+    return docs.map((v) => ({
+      label: lang === "hi" && v.titleHindi ? v.titleHindi : v.title,
+      value: v?._id,
+    }));
+  }, [complaintSourcesData, lang]);
 
   const { dept, setDept, selectedDept, departmentsList, isExternalDepartment } =
     externalDeptProps || {};
@@ -60,6 +77,7 @@ export default function ComplaintList({
       status: selectedStatus || undefined,
       feedback: selectedFeedback !== "" ? selectedFeedback : undefined,
       priority: selectedPriority || undefined,
+      channel: selectedChannel || undefined,
     },
     {
       enabled: !isExternalDepartment,
@@ -150,7 +168,8 @@ export default function ComplaintList({
                   <Filter className="w-4 h-4" />
                   {(selectedStatus ||
                     selectedFeedback !== "" ||
-                    selectedPriority) && (
+                    selectedPriority ||
+                    selectedChannel) && (
                     <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
                   )}
                 </Button>
@@ -234,9 +253,42 @@ export default function ComplaintList({
                     })}
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <span>{t("Mode of Complaint", "शिकायत का माध्यम")}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent className="w-48 bg-card max-h-60 overflow-y-auto">
+                    <DropdownMenuItem
+                      onClick={() => setSelectedChannel("")}
+                      className={`cursor-pointer ${!selectedChannel ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                    >
+                      {t("All Modes", "सभी माध्यम")}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {complaintSourcesLoading ? (
+                      <DropdownMenuItem disabled className="text-muted-foreground text-xs">
+                        {t("Loading...", "लोड हो रहा है...")}
+                      </DropdownMenuItem>
+                    ) : (
+                      channelOptions.map((channel) => {
+                        const isSelected = selectedChannel === channel.value;
+                        return (
+                          <DropdownMenuItem
+                            key={channel.value}
+                            onClick={() => setSelectedChannel(channel.value)}
+                            className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
+                          >
+                            {channel.label}
+                          </DropdownMenuItem>
+                        );
+                      })
+                    )}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
                 {(selectedStatus ||
                   selectedFeedback !== "" ||
-                  selectedPriority) && (
+                  selectedPriority ||
+                  selectedChannel) && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
@@ -244,6 +296,7 @@ export default function ComplaintList({
                         setSelectedStatus("");
                         setSelectedFeedback("");
                         setSelectedPriority("");
+                        setSelectedChannel("");
                       }}
                       className="text-destructive focus:text-destructive cursor-pointer"
                     >

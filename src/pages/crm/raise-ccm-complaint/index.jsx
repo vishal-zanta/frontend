@@ -65,7 +65,7 @@ export default function CRMRaiseComplaint() {
       ? departmentsList.find((item) => item?.key === searchDept)?.key || ""
       : departmentsList?.[0]?.key;
   });
-  const [externalComplaintId , setExternalComplaintId] = useState(null);
+  const [externalComplaintId, setExternalComplaintId] = useState(null);
 
   const {
     servicesOptions,
@@ -152,7 +152,10 @@ export default function CRMRaiseComplaint() {
   const postExternalComplaintMutation = useMutation({
     mutationFn: postExternalComplaint,
     onSuccess: (data) => {
-      getSuccessToast("Complaint registered successfully", data?.data?.data?.externalComplaintId);
+      getSuccessToast(
+        "Complaint registered successfully",
+        data?.data?.data?.externalComplaintId,
+      );
       qc.invalidateQueries({ queryKey: [QUERY_KEYS.EXTERNAL_COMPLAINTS] });
 
       console.log(data);
@@ -215,22 +218,28 @@ export default function CRMRaiseComplaint() {
             "* चिह्नित फ़ील्ड अनिवार्य हैं।",
           )}
           className="!mb-4 !sm:mb-6"
-
         >
+          <DepartmentSelect
+            list={departmentsList}
+            selectedKey={typeof dept === "string" ? dept : dept?.key}
+            onSelect={(key) => {
+              setSearchParams(
+                (params) => {
+                  if (key) {
+                    params.set("dept", key);
+                  } else {
+                    params.delete("dept");
+                  }
 
-        <DepartmentSelect
-          list={departmentsList}
-          selectedKey={typeof dept === "string" ? dept : dept?.key}
-          onSelect={(key) => {
-            if (key) {
-              setSearchParams({ dept: key }, { replace: true });
-            } else {
-              setSearchParams({}, { replace: true });
-            }
-            setDept(key || "");
-          }}
-          t={t}
-        />
+                  return params;
+                },
+                { replace: true },
+              );
+
+              setDept(key || "");
+            }}
+            t={t}
+          />
         </SectionTitle>
 
         {!SelectedDept ? (

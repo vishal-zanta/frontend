@@ -12,6 +12,7 @@ import {
   Activity,
   Ticket,
   PhoneMissed,
+  PhoneOff,
 } from "lucide-react";
 import {
   IVR_STATS,
@@ -35,6 +36,7 @@ const CCE_SCORECARD = {
     calls: 42,
     answered: 40,
     missed: 2,
+    rejected : 2,
     ticketsRaised: 38,
     resolved: 38,
     avgTalk: "4m 12s",
@@ -48,6 +50,7 @@ const CCE_SCORECARD = {
     calls: 298,
     answered: 282,
     missed: 16,
+    rejected : 8,
     ticketsRaised: 265,
     resolved: 260,
     avgTalk: "4m 18s",
@@ -61,6 +64,7 @@ const CCE_SCORECARD = {
     calls: 1240,
     answered: 1180,
     missed: 60,
+    rejected : 20,
     ticketsRaised: 1120,
     resolved: 1090,
     avgTalk: "4m 22s",
@@ -405,7 +409,7 @@ export default function CRMDashboard() {
         </div>
 
         {/* Personal stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <StatCard
             icon={Phone}
             label={`${t("Calls", "कॉल")} (${t(sc.label, sc.labelHindi)})`}
@@ -426,6 +430,12 @@ export default function CRMDashboard() {
             icon={PhoneMissed}
             label={t("Missed", "छूटी हुई")}
             value={sc.missed}
+            color="red"
+          />
+            <StatCard
+            icon={PhoneOff}
+            label={t("Rejected", "अस्वीकृत")}
+            value={sc.rejected}
             color="red"
           />
           <StatCard

@@ -17,7 +17,7 @@ import TimeRangeFilter from "@/components/TimeRangeFilter";
 import { MAX_LIMIT } from "@/utils/constants";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext"; 
 
 export default function PerformanceDashboard() {
   const { t } = useLanguage();
@@ -83,7 +83,7 @@ export default function PerformanceDashboard() {
           <SectionTitle
             title={t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
             subtitle={t(
-              "Service-wise, district-wise, division-wise & ULB-wise performance analytics",
+              "Service-wise, district-wise & ULB-wise performance analytics",
               "सेवा-वार, जिला-वार, प्रमंडल-वार और ULB-वार प्रदर्शन विश्लेषण",
             )}
           >
@@ -163,10 +163,10 @@ export default function PerformanceDashboard() {
             />
           </ChartCard>
           <ChartCard
-            title={t("Division-wise Performance", "प्रमंडल-वार प्रदर्शन")}
+            title={t("District-wise Performance", "जिला-वार प्रदर्शन")}
             subtitle={t(
-              "Complaints resolved vs total by division",
-              "प्रमंडल द्वारा निराकृत बनाम कुल शिकायतें",
+              "Complaints resolved vs total by District",
+              "जिला द्वारा निराकृत बनाम कुल शिकायतें",
             )}
           >
             <BarChartCard
@@ -182,6 +182,11 @@ export default function PerformanceDashboard() {
                   key: "resolved",
                   label: t("Resolved", "निराकृत"),
                   color: "#22c55e",
+                },
+                {
+                  key: "pending",
+                  label: t("Pending", "लंबित"),
+                  color: "#f59e0b",
                 },
               ]}
             />

@@ -28,6 +28,12 @@ export const getFormData = (data, attachments = []) => {
   formData.append("classification[subService]", data.classification.subService);
   formData.append("classification[nature]", data.classification.nature);
   formData.append("classification[subject]", data.classification.subject);
+  if (data.classification.isSeasonal !== undefined) {
+    formData.append(
+      "classification[isSeasonal]",
+      String(data.classification.isSeasonal ?? false),
+    );
+  }
 
   if (data.evidence.details)
     formData.append("evidence[details]", data.evidence.details);

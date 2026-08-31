@@ -20,6 +20,7 @@ import {
   X,
   History,
   ClipboardList,
+  MessageSquare,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
 import { PERMISSIONS } from "@/utils/constants";
@@ -150,6 +151,13 @@ export const sidebarSections = [
         path: "/crm/track-complaint",
         icon: Search,
         permissions: PERMISSIONS.TRACK_COMPLAINTS,
+      },
+      {
+        label: "InMail",
+        labelHindi: "इनमेल",
+        path: "/crm/inmail",
+        icon: MessageSquare,
+        // permissions: PERMISSIONS.TRACK_COMPLAINTS,
       },
     ],
   },

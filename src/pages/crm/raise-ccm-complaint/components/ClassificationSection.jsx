@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
+import RhfBoolean from "@/components/rhfinputs/RhfBoolean";
 import MySelect from "@/components/inputs/MySelect";
 import { useGetSubservices } from "../../../admin/master-data/hooks";
 import FormSection from "./FormSection";
@@ -85,6 +86,13 @@ export default function ClassificationSection({
           className="md:col-span-2"
           isLettersAllowed
         />
+
+        <div className="md:col-span-2">
+          <RhfBoolean
+            name="classification.isSeasonal"
+            label={t("Seasonal Complaint", "मौसमी शिकायत")}
+          />
+        </div>
       </div>
     </FormSection>
   );

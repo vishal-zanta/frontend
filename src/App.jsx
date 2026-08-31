@@ -27,6 +27,7 @@ import ShiftManagement from "./pages/crm/shift-management";
 import IncomingCall from "./pages/crm/IncomingCall";
 import CallHistoryLog from "./pages/crm/CallHistoryLog";
 import TrackCCMComplaint from "./pages/crm/track-ccm-complaint";
+import Inmail from "./pages/crm/inmail";
 import AdminDashboard from "./pages/admin/dashboard";
 import OperationalDashboards from "./pages/admin/operational-dashboard";
 import AIReports from "./pages/admin/AIReports";
@@ -68,7 +69,6 @@ const RootLayout = () => {
     </>
   );
 };
-
 
 const RouteErrorPage = () => {
   const err = useRouteError();
@@ -204,6 +204,10 @@ const router = createBrowserRouter([
                   </PermissionChecker>
                 ),
               },
+              {
+                path: "inmail",
+                element: <Inmail />,
+              },
             ],
           },
           {
@@ -335,10 +339,10 @@ const router = createBrowserRouter([
                   </PermissionChecker>
                 ),
               },
-               {
+              {
                 path: "settings",
                 element: (
-                  <PermissionChecker >
+                  <PermissionChecker>
                     <AdminSettings />
                   </PermissionChecker>
                 ),
