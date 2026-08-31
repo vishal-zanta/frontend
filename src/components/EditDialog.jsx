@@ -10,6 +10,7 @@ export default function EditDialog({
   children,
   saving,
   isHideFooter = false,
+  bodyClassname=""
 }) {
   const handleSave = () => {
     onSave();
@@ -41,7 +42,7 @@ export default function EditDialog({
       onClick={onClose}
     >
       <div
-        className="bg-card rounded-2xl shadow-2xl w-full max-w-md"
+        className={clsx("bg-card rounded-2xl shadow-2xl w-full max-w-md", bodyClassname)}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">

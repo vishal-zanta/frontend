@@ -341,7 +341,7 @@ export default function Inmail() {
   const tableBody = filteredInmails.map((m) => ({
     inmailId: {
       render: () => (
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 text-nowrap whitespace-nowrap">
           <button
             onClick={() => setPreviewMail(m)}
             className="font-mono text-xs font-semibold text-primary hover:underline cursor-pointer"
@@ -637,6 +637,7 @@ export default function Inmail() {
           title={`${previewMail.id}: ${previewMail.subject}`}
           onClose={() => setPreviewMail(null)}
           isHideFooter={true}
+          bodyClassname={"max-w-xl"}
         >
           <div className="space-y-4 text-xs">
             {/* Header info */}
