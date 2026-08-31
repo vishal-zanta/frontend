@@ -34,6 +34,12 @@ export const getFormData = (data, attachments = []) => {
       String(data.classification.isSeasonal ?? false),
     );
   }
+  if (data.classification.seasonalType) {
+    formData.append(
+      "classification[seasonalType]",
+      data.classification.seasonalType,
+    );
+  }
 
   if (data.evidence.details)
     formData.append("evidence[details]", data.evidence.details);

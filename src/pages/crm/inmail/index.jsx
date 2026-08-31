@@ -14,6 +14,7 @@ import {
   Send,
   ShieldAlert,
   Inbox,
+  CheckSquare,
 } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import StatCard from "@/components/StatCard";
@@ -157,11 +158,11 @@ const INITIAL_INMAILS = [
     to: "grievance-support@bihar.gov.in",
     cc: "",
     bcc: "",
-    subject: "Test email - please ignore this test submission",
-    body: `This is an automated test email sent to verify SMTP inbound routing. Kindly disregard.\n\nRegards,\nIT Team`,
+    subject: "Information request regarding municipal trade license renewals",
+    body: `Respected Sir,\n\nKindly provide details on the online portal link and deadline for commercial trade license renewal for retail establishments in Patna.\n\nRegards,\nSanjay Sahay`,
     receivedAt: "2026-08-29T14:15:00Z",
-    status: "REJECTED",
-    rejectionReason: "Test submission / Non-actionable",
+    status: "CLOSED",
+    closeReason: "Information / Clarification Provided - Answered directly via phone & email",
     complaintId: null,
     attachments: [],
   },
@@ -180,8 +181,13 @@ export default function Inmail() {
 
   // Inmail targeted for rejection dialog
   const [rejectMail, setRejectMail] = useState(null);
-  const [rejectionReason, setRejectionReason] = useState("Incomplete Information");
+  const [rejectionReason, setRejectionReason] = useState("Commercial Spam / Promotional");
   const [customRemarks, setCustomRemarks] = useState("");
+
+  // Inmail targeted for closure dialog
+  const [closeMail, setCloseMail] = useState(null);
+  const [closeReason, setCloseReason] = useState("Resolved Directly via Call / Counter");
+  const [closeRemarks, setCloseRemarks] = useState("");
 
   // Summary counts
   const stats = useMemo(() => {
@@ -189,7 +195,8 @@ export default function Inmail() {
     const pending = inmails.filter((m) => m.status === "PENDING").length;
     const converted = inmails.filter((m) => m.status === "CONVERTED").length;
     const rejected = inmails.filter((m) => m.status === "REJECTED").length;
-    return { total, pending, converted, rejected };
+    const closed = inmails.filter((m) => m.status === "CLOSED").length;
+    return { total, pending, converted, rejected, closed };
   }, [inmails]);
 
   // Filtered inmails
@@ -199,6 +206,7 @@ export default function Inmail() {
       if (activeTab === "pending" && mail.status !== "PENDING") return false;
       if (activeTab === "converted" && mail.status !== "CONVERTED") return false;
       if (activeTab === "rejected" && mail.status !== "REJECTED") return false;
+      if (activeTab === "closed" && mail.status !== "CLOSED") return false;
 
       // Status dropdown
       if (statusFilter !== "all" && mail.status !== statusFilter) return false;
@@ -228,7 +236,7 @@ export default function Inmail() {
 
   const handleOpenReject = (mail) => {
     setRejectMail(mail);
-    setRejectionReason("Incomplete Information");
+    setRejectionReason("Commercial Spam / Promotional");
     setCustomRemarks("");
   };
 
@@ -253,6 +261,37 @@ export default function Inmail() {
         ...prev,
         status: "REJECTED",
         rejectionReason: finalReason,
+      }));
+    }
+  };
+
+  const handleOpenClose = (mail) => {
+    setCloseMail(mail);
+    setCloseReason("Resolved Directly via Call / Counter");
+    setCloseRemarks("");
+  };
+
+  const confirmClose = () => {
+    if (!closeMail) return;
+    const finalReason = closeRemarks.trim()
+      ? `${closeReason} - ${closeRemarks.trim()}`
+      : closeReason;
+
+    setInmails((prev) =>
+      prev.map((m) =>
+        m.id === closeMail.id
+          ? { ...m, status: "CLOSED", closeReason: finalReason }
+          : m
+      )
+    );
+
+    getSuccessToast(`Inmail ${closeMail.id} marked as closed`);
+    setCloseMail(null);
+    if (previewMail?.id === closeMail.id) {
+      setPreviewMail((prev) => ({
+        ...prev,
+        status: "CLOSED",
+        closeReason: finalReason,
       }));
     }
   };
@@ -294,7 +333,7 @@ export default function Inmail() {
     {
       id: "actions",
       label: t("Actions", "कार्रवाई"),
-      className: "w-44 text-center",
+      className: "w-52 text-center",
     },
   ];
 
@@ -403,6 +442,16 @@ export default function Inmail() {
             </div>
           );
         }
+        if (m.status === "CLOSED") {
+          return (
+            <div className="inline-flex flex-col items-center">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
+                <CheckCircle2 className="w-3 h-3" />
+                {t("Closed", "बंद")}
+              </span>
+            </div>
+          );
+        }
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
             <Clock className="w-3 h-3" />
@@ -415,8 +464,6 @@ export default function Inmail() {
       className: "text-right",
       render: () => (
         <div className="flex items-center justify-end gap-1">
-       
-
           {m.status === "PENDING" && (
             <>
               <Button
@@ -437,6 +484,15 @@ export default function Inmail() {
                 <XCircle className="w-3 h-3 mr-1" />
                 {t("Reject", "अस्वीकार")}
               </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 px-2 text-[11px] bg-slate-500/10 text-slate-600 hover:bg-slate-500/20 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-200 border-slate-500/30 cursor-pointer font-medium rounded-md"
+                onClick={() => handleOpenClose(m)}
+              >
+                <CheckCircle2 className="w-3 h-3 mr-1" />
+                {t("Close", "बंद")}
+              </Button>
             </>
           )}
 
@@ -447,19 +503,16 @@ export default function Inmail() {
           )}
 
           {m.status === "REJECTED" && (
-            <span className="text-[11px] text-muted-foreground px-1">
-              {t("Closed", "बंद")}
+            <span className="text-[11px] text-destructive font-medium px-1">
+              ✕ {t("Rejected", "अस्वीकृत")}
             </span>
           )}
-             {/* <Button
-            size="sm"
-            variant="ghost"
-            className="h-7 w-7 p-0 text-muted-foreground hover:text-white cursor-pointer rounded-md"
-            onClick={() => setPreviewMail(m)}
-            title={t("View Inmail", "इनमेल देखें")}
-          >
-            <Eye className="w-3.5 h-3.5" />
-          </Button> */}
+
+          {m.status === "CLOSED" && (
+            <span className="text-[11px] text-muted-foreground font-medium px-1">
+              ✓ {t("Closed", "बंद")}
+            </span>
+          )}
         </div>
       ),
     },
@@ -472,29 +525,14 @@ export default function Inmail() {
         <SectionTitle
           title={t("InMail", "इनमेल")}
           subtitle={t(
-            "Review incoming grievance emails, raise complaints, or reject non-actionable mails.",
-            "आने वाले ईमेल की समीक्षा करें, शिकायत दर्ज करें या अस्वीकार करें।"
+            "Review incoming grievance emails, raise complaints, close inquiries, or reject spam mails.",
+            "आने वाले ईमेल की समीक्षा करें, शिकायत दर्ज करें, पूछताछ बंद करें या स्पैम अस्वीकार करें।"
           )}
           className="!mb-2"
-        >
-          {/* <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setInmails(INITIAL_INMAILS);
-                getSuccessToast("Inmails list refreshed");
-              }}
-              className="cursor-pointer text-xs flex items-center gap-1.5"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              {t("Refresh", "रिफ्रेश")}
-            </Button>
-          </div> */}
-        </SectionTitle>
+        />
 
         {/* Quick Stat Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           <StatCard
             icon={Inbox}
             label={t("Total Inmails", "कुल इनमेल")}
@@ -521,11 +559,19 @@ export default function Inmail() {
           />
           <StatCard
             icon={XCircle}
-            label={t("Rejected / Closed", "अस्वीकृत / बंद")}
+            label={t("Rejected", "अस्वीकृत")}
             value={stats.rejected}
             color="red"
             isClicked={activeTab === "rejected"}
             onClick={() => setActiveTab("rejected")}
+          />
+          <StatCard
+            icon={CheckCircle2}
+            label={t("Closed", "बंद")}
+            value={stats.closed}
+            color="purple"
+            isClicked={activeTab === "closed"}
+            onClick={() => setActiveTab("closed")}
           />
         </div>
 
@@ -554,6 +600,7 @@ export default function Inmail() {
                     <SelectItem value="PENDING">{t("Pending", "लंबित")}</SelectItem>
                     <SelectItem value="CONVERTED">{t("Converted", "शिकायत दर्ज")}</SelectItem>
                     <SelectItem value="REJECTED">{t("Rejected", "अस्वीकृत")}</SelectItem>
+                    <SelectItem value="CLOSED">{t("Closed", "बंद")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -627,6 +674,17 @@ export default function Inmail() {
               </div>
             )}
 
+            {/* Closure Note Banner */}
+            {previewMail.status === "CLOSED" && previewMail.closeReason && (
+              <div className="p-3 rounded-lg bg-slate-500/10 border border-slate-500/20 text-slate-700 dark:text-slate-300 flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-slate-500" />
+                <div>
+                  <p className="font-semibold">{t("Closure Reason / Note:", "बंद करने का कारण / विवरण:")}</p>
+                  <p>{previewMail.closeReason}</p>
+                </div>
+              </div>
+            )}
+
             {/* Email Body */}
             <div>
               <p className="font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
@@ -673,11 +731,24 @@ export default function Inmail() {
                 onClick={() => setPreviewMail(null)}
                 className="cursor-pointer text-xs"
               >
-                {t("Close", "बंद करें")}
+                {t("Close Window", "खिड़की बंद करें")}
               </Button>
 
               {previewMail.status === "PENDING" && (
                 <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const mail = previewMail;
+                      setPreviewMail(null);
+                      handleOpenClose(mail);
+                    }}
+                    className="cursor-pointer text-xs bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                    {t("Close Inmail", "इनमेल बंद करें")}
+                  </Button>
                   <Button
                     variant="destructive"
                     size="sm"
@@ -720,7 +791,7 @@ export default function Inmail() {
           <div className="space-y-3 text-xs">
             <p className="text-muted-foreground">
               {t(
-                "Specify the reason for rejecting this email. This will mark the inmail as closed without raising a grievance.",
+                "Specify the reason for rejecting this email. This will mark the inmail as rejected without raising a grievance.",
                 "इस ईमेल को अस्वीकार करने का कारण बताएं।"
               )}
             </p>
@@ -734,20 +805,20 @@ export default function Inmail() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Incomplete Information">
-                    {t("Incomplete / Missing Citizen Information", "अधूरी जानकारी")}
+                  <SelectItem value="Commercial Spam / Promotional">
+                    {t("Commercial Spam / Promotional Offer", "स्पैम / प्रचार ईमेल")}
                   </SelectItem>
                   <SelectItem value="Outside Department Scope">
                     {t("Outside Department Scope / Other Jurisdiction", "विभाग के अधिकार क्षेत्र से बाहर")}
                   </SelectItem>
+                  <SelectItem value="Incomplete Information">
+                    {t("Incomplete / Missing Citizen Information", "अधूरी जानकारी")}
+                  </SelectItem>
+                  <SelectItem value="Invalid / Abusive Content">
+                    {t("Invalid / Abusive Content", "अमान्य / अनुचित सामग्री")}
+                  </SelectItem>
                   <SelectItem value="Duplicate Request">
                     {t("Duplicate Request / Already Registered", "दोहराव अनुरोध / पहले से दर्ज")}
-                  </SelectItem>
-                  <SelectItem value="Spam or Promotional Email">
-                    {t("Spam / Commercial Promotion / Advertisement", "स्पैम / प्रचार ईमेल")}
-                  </SelectItem>
-                  <SelectItem value="Resolved Directly">
-                    {t("Resolved Directly via Phone Call / Inquiry Only", "केवल सामान्य पूछताछ / सीधे समाधान")}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -760,6 +831,64 @@ export default function Inmail() {
               <textarea
                 value={customRemarks}
                 onChange={(e) => setCustomRemarks(e.target.value)}
+                placeholder={t("Provide any specific notes for audit trail...", "ऑडिट ट्रेल के लिए विशिष्ट टिप्पणी लिखें...")}
+                className="w-full h-20 p-2.5 text-xs rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+          </div>
+        </EditDialog>
+      )}
+
+      {/* ── Close Inmail EditDialog ── */}
+      {closeMail && (
+        <EditDialog
+          title={t("Close Inmail Communication", "इनमेल संचार बंद करें")}
+          onClose={() => setCloseMail(null)}
+          onSave={confirmClose}
+        >
+          <div className="space-y-3 text-xs">
+            <p className="text-muted-foreground">
+              {t(
+                "Specify the reason for closing this email without converting to a grievance ticket.",
+                "इस ईमेल को बिना शिकायत दर्ज किए बंद करने का कारण बताएं।"
+              )}
+            </p>
+
+            <div>
+              <label className="font-medium text-foreground block mb-1">
+                {t("Closure Reason", "बंद करने का कारण")} <span className="text-destructive">*</span>
+              </label>
+              <Select value={closeReason} onValueChange={setCloseReason}>
+                <SelectTrigger className="w-full text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Resolved Directly via Call / Counter">
+                    {t("Resolved Directly via Phone Call / Inquiry Only", "केवल सामान्य पूछताछ / सीधे समाधान")}
+                  </SelectItem>
+                  <SelectItem value="Information / Clarification Provided">
+                    {t("Information / Clarification Provided", "जानकारी / स्पष्टीकरण प्रदान किया गया")}
+                  </SelectItem>
+                  <SelectItem value="Duplicate Request / Already Addressed">
+                    {t("Duplicate Request / Already Addressed", "दोहराव अनुरोध / पहले से समाधानित")}
+                  </SelectItem>
+                  <SelectItem value="General Feedback / Acknowledged">
+                    {t("General Feedback / Acknowledged", "सामान्य प्रतिक्रिया / अभिस्वीकृत")}
+                  </SelectItem>
+                  <SelectItem value="No Further Action Required">
+                    {t("No Further Action Required", "आगे किसी कार्रवाई की आवश्यकता नहीं")}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="font-medium text-foreground block mb-1">
+                {t("Additional Remarks (Optional)", "अतिरिक्त टिप्पणी (वैकल्पिक)")}
+              </label>
+              <textarea
+                value={closeRemarks}
+                onChange={(e) => setCloseRemarks(e.target.value)}
                 placeholder={t("Provide any specific notes for audit trail...", "ऑडिट ट्रेल के लिए विशिष्ट टिप्पणी लिखें...")}
                 className="w-full h-20 p-2.5 text-xs rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
               />

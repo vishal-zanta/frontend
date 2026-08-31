@@ -25,6 +25,7 @@ export const grievanceSchema = z.object({
     nature: z.string().min(1, "Grievance type is required"),
     subject: z.string().min(3, "Subject must be at least 3 characters"),
     isSeasonal: z.boolean().optional(),
+    seasonalType: z.string().optional(),
   }),
   evidence: z.object({
     details: z.string().optional(),
@@ -62,7 +63,7 @@ export const defaultValues = {
     email: "",
     preferredLanguage: "",
   },
-  classification: { subService: "", nature: "", subject: "", isSeasonal: false },
+  classification: { subService: "", nature: "", subject: "", isSeasonal: false, seasonalType: "" },
   evidence: { details: "", occurrenceDate: "", frequency: "" },
   impact: {
     affectedBeneficiary: "",

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import RhfBoolean from "@/components/rhfinputs/RhfBoolean";
@@ -17,7 +17,8 @@ export default function ClassificationSection({
   lang,
 }) {
   const [selectedService, setSelectedService] = useState("");
-  const { setValue } = useFormContext();
+  const { setValue, control } = useFormContext();
+  const isSeasonal = useWatch({ control, name: "classification.isSeasonal" });
 
   const API_PARAMS = { page: 1, limit: MAX_LIMIT, select: "title,titleHindi" };
 
@@ -31,6 +32,12 @@ export default function ClassificationSection({
     label: lang === "hi" && s.titleHindi ? s.titleHindi : s.title,
     value: s._id,
   }));
+
+  const seasonalTypeOptions = [
+    { label: t("Floods", "बाढ़"), value: "floods" },
+    { label: t("Summer", "गर्मी"), value: "summer" },
+    { label: t("Rain", "बारिश"), value: "rain" },
+  ];
 
   const handleServiceChange = (val) => {
     setSelectedService(val);
@@ -93,6 +100,17 @@ export default function ClassificationSection({
             label={t("Seasonal Complaint", "मौसमी शिकायत")}
           />
         </div>
+
+        {isSeasonal && (
+          <RhfSelect
+            name="classification.seasonalType"
+            label={t("Seasonal Type", "मौसमी प्रकार")}
+            placeholder={t("Select or type seasonal type", "मौसमी प्रकार चुनें या लिखें")}
+            options={seasonalTypeOptions}
+            isCreatable
+            className="md:col-span-2"
+          />
+        )}
       </div>
     </FormSection>
   );

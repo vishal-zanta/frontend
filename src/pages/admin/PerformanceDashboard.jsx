@@ -188,6 +188,11 @@ export default function PerformanceDashboard() {
                   label: t("Pending", "लंबित"),
                   color: "#f59e0b",
                 },
+                {
+                  key: "rejected",
+                  label: t("Rejected", "अस्वीकृत"),
+                  color: "#ef4444",
+                },
               ]}
             />
           </ChartCard>
