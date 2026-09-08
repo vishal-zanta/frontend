@@ -12,23 +12,64 @@ export const CHANNEL_OPTIONS = [
 ];
 
 const addressSchema = z.object({
-  addressLine: z.string().min(1, "Address details are required"),
-  district: z.string().min(1, "District is required"),
-  subdivision: z.string().min(1, "Block is required"),
-  panchayat: z.string().min(1, "Panchayat is required"),
-  thana: z.string().min(1, "Thana is required"),
+  addressLine: z
+    .string()
+    .min(1, "Address details are required")
+    .max(50, "Address details cannot exceed 50 characters"),
+  district: z
+    .string()
+    .min(1, "District is required")
+    .max(50, "District cannot exceed 50 characters"),
+  subdivision: z
+    .string()
+    .min(1, "Block is required")
+    .max(50, "Block cannot exceed 50 characters"),
+  panchayat: z
+    .string()
+    .min(1, "Panchayat is required")
+    .max(50, "Panchayat cannot exceed 50 characters"),
+  thana: z
+    .string()
+    .min(1, "Thana is required")
+    .max(50, "Thana cannot exceed 50 characters"),
   pincode: z.string().min(1, "Pincode is required"),
 });
 
 const correspondenceAddressSchema = z
   .object({
-    addressLine: z.string().min(1, "Address details are required"),
-    state: z.string().min(1, "State is required"),
-    city: z.string().optional().or(z.literal("")),
-    district: z.string().optional().or(z.literal("")),
-    subdivision: z.string().optional().or(z.literal("")),
-    panchayat: z.string().optional().or(z.literal("")),
-    thana: z.string().optional().or(z.literal("")),
+    addressLine: z
+      .string()
+      .min(1, "Address details are required")
+      .max(50, "Address details cannot exceed 50 characters"),
+    state: z
+      .string()
+      .min(1, "State is required")
+      .max(50, "State cannot exceed 50 characters"),
+    city: z
+      .string()
+      .max(50, "City cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
+    district: z
+      .string()
+      .max(50, "District cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
+    subdivision: z
+      .string()
+      .max(50, "Block cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
+    panchayat: z
+      .string()
+      .max(50, "Panchayat cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
+    thana: z
+      .string()
+      .max(50, "Thana cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
     pincode: z.string().min(1, "Pincode is required"),
   })
   .superRefine((data, ctx) => {
@@ -84,7 +125,7 @@ export const grievanceSchema = z.object({
       .optional()
       .or(z.literal("")),
     email: z.string().email("Enter a valid email").optional().or(z.literal("")),
-    preferredLanguage: z.string().min(1, "Preferred language is required"),
+    // preferredLanguage: z.string().min(1, "Preferred language is required"),
     address: addressSchema,
   }),
   classification: z.object({
@@ -113,11 +154,26 @@ export const grievanceSchema = z.object({
   isCrpEqualPerAdd: z.boolean().optional(),
   address: correspondenceAddressSchema,
   location: z.object({
-    division: z.string().min(1, "Division is required"),
-    district: z.string().min(1, "District is required"),
-    subdivision: z.string().min(1, "Block is required"),
-    block: z.string().min(1, "Block is required"),
-    panchayat: z.string().min(1, "Panchayat is required"),
+    division: z
+      .string()
+      .min(1, "Division is required")
+      .max(50, "Division cannot exceed 50 characters"),
+    district: z
+      .string()
+      .min(1, "District is required")
+      .max(50, "District cannot exceed 50 characters"),
+    subdivision: z
+      .string()
+      .min(1, "Block is required")
+      .max(50, "Block cannot exceed 50 characters"),
+    block: z
+      .string()
+      .min(1, "Block is required")
+      .max(50, "Block cannot exceed 50 characters"),
+    panchayat: z
+      .string()
+      .min(1, "Panchayat is required")
+      .max(50, "Panchayat cannot exceed 50 characters"),
     pincode: z
       .string()
       .min(1, "Pincode is required")
@@ -132,7 +188,7 @@ export const defaultValues = {
     mobile: "",
     alternateMobile: "",
     email: "",
-    preferredLanguage: "",
+    // preferredLanguage: "",
     address: {
       addressLine: "",
       district: "",

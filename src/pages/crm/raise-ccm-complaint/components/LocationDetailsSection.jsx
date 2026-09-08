@@ -55,7 +55,12 @@ export default function LocationDetailsSection({
   const isSubdivisionDisabled = !selectedDistrictId;
 
   return (
-    <FormSection title={t("Location Details", "स्थान का विवरण")}>
+    <FormSection
+      title={t(
+        "Location Details/Place of occurence",
+        "स्थान का विवरण/घटना का स्थान",
+      )}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <RhfSelect
           name="location.division"
@@ -100,7 +105,7 @@ export default function LocationDetailsSection({
         <RhfInput
           name="location.pincode"
           label={t("Pin Code", "पिन कोड")}
-          placeholder="e.g. 800001"
+          placeholder="800001"
           inputClassName="tracking-widest"
           required
           isNumsOnly

@@ -19,11 +19,11 @@ export const getFormData = (data, attachments = []) => {
     );
   if (data.citizenInfo.email)
     formData.append("citizenInfo[email]", data.citizenInfo.email);
-  if (data.citizenInfo.preferredLanguage)
-    formData.append(
-      "citizenInfo[preferredLanguage]",
-      data.citizenInfo.preferredLanguage,
-    );
+  // if (data.citizenInfo.preferredLanguage)
+  //   formData.append(
+  //     "citizenInfo[preferredLanguage]",
+  //     data.citizenInfo.preferredLanguage,
+  //   );
 
   const citizenAddr = data.citizenInfo?.address;
   if (citizenAddr) {

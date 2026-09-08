@@ -46,11 +46,32 @@ function AddressBlock({
       prevStateRef.current !== undefined &&
       prevStateRef.current !== selectedState
     ) {
-      setValue(`${prefix}.city`, "");
-      setValue(`${prefix}.district`, "");
-      setValue(`${prefix}.subdivision`, "");
-      setValue(`${prefix}.panchayat`, "");
-      setValue(`${prefix}.thana`, "");
+      if (selectedState !== "Bihar") {
+        setValue("isCrpEqualPerAdd", false, {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      }
+      setValue(`${prefix}.city`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.district`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.subdivision`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.panchayat`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.thana`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
     }
     prevStateRef.current = selectedState;
   }, [selectedState, setValue, prefix, isPermanent]);
@@ -80,7 +101,10 @@ function AddressBlock({
       prevDistrictRef.current !== undefined &&
       prevDistrictRef.current !== selectedDistrictId
     ) {
-      setValue(`${prefix}.subdivision`, "");
+      setValue(`${prefix}.subdivision`, "", {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
     prevDistrictRef.current = selectedDistrictId;
   }, [selectedDistrictId, setValue, prefix]);
@@ -104,6 +128,7 @@ function AddressBlock({
             "मकान संख्या, सड़क, क्षेत्र",
           )}
           required
+          maxLength={50}
           className="md:col-span-2"
         />
 
@@ -154,6 +179,7 @@ function AddressBlock({
           label={t("Panchayat", "पंचायत")}
           placeholder={t("Panchayat name", "पंचायत का नाम")}
           required={isBihar}
+          maxLength={50}
         />
 
         <RhfInput
@@ -161,12 +187,13 @@ function AddressBlock({
           label={t("Thana", "थाना")}
           placeholder={t("Police Station / Thana", "थाना का नाम")}
           required={isBihar}
+          maxLength={50}
         />
 
         <RhfInput
           name={`${prefix}.pincode`}
           label={t("Pin Code", "पिन कोड")}
-          placeholder="e.g. 800001"
+          placeholder="800001"
           inputClassName="tracking-widest"
           required
           isNumsOnly
@@ -185,6 +212,8 @@ export default function AddressSection({
   const { watch, setValue, getValues } = useFormContext();
   const isCrpEqualPerAdd = watch("isCrpEqualPerAdd");
   const permanentAddress = watch("citizenInfo.address");
+  const correspondenceState = watch("address.state");
+  const isBihar = correspondenceState === "Bihar";
 
   const handleToggleSameAddress = (checked) => {
     setValue("isCrpEqualPerAdd", checked, {
@@ -225,6 +254,19 @@ export default function AddressSection({
   };
 
   React.useEffect(() => {
+    if (
+      correspondenceState &&
+      correspondenceState !== "Bihar" &&
+      isCrpEqualPerAdd
+    ) {
+      setValue("isCrpEqualPerAdd", false, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [correspondenceState, isCrpEqualPerAdd, setValue]);
+
+  React.useEffect(() => {
     if (isCrpEqualPerAdd) {
       setValue("address.addressLine", permanentAddress?.addressLine || "", {
         shouldValidate: true,
@@ -248,7 +290,7 @@ export default function AddressSection({
     }
   }, [isCrpEqualPerAdd, JSON.stringify(permanentAddress), setValue]);
 
-  const sameAddressAction = (
+  const sameAddressAction = isBihar ? (
     <label className="flex items-center gap-2 cursor-pointer select-none text-white text-xs sm:text-sm font-normal normal-case bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-md transition-colors border border-white/20">
       <input
         type="checkbox"
@@ -258,7 +300,7 @@ export default function AddressSection({
       />
       <span>{t("Same as Permanent Address", "स्थायी पते के समान")}</span>
     </label>
-  );
+  ) : null;
 
   return (
     <div className="space-y-6">

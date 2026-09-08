@@ -132,7 +132,7 @@ export default function CRMRaiseComplaint() {
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState([false, null]);
 
   const postComplaintMutation = useMutation({
     mutationFn: postComplaint,
@@ -141,7 +141,7 @@ export default function CRMRaiseComplaint() {
       qc.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_OFFICER] });
       qc.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS_ALL] });
       console.log(data);
-      setSubmitted(true);
+      setSubmitted([true, data]);
     },
     onError: (err) => {
       getErrorToast(err);
@@ -159,7 +159,7 @@ export default function CRMRaiseComplaint() {
 
       console.log(data);
       setExternalComplaintId(data?.data?.data?.externalComplaintId);
-      setSubmitted(true);
+      setSubmitted([true, data]);
     },
     onError: (err) => {
       getErrorToast(err);
@@ -191,14 +191,16 @@ export default function CRMRaiseComplaint() {
     return departmentsList.find((d) => d.key === dept) || null;
   }, [dept]);
 
-  if (submitted) {
+  if (submitted?.[0] || submitted === true) {
     return (
       <SuccessScreen
         role={role}
         t={t}
         externalComplaintId={externalComplaintId}
+        data={Array.isArray(submitted) ? submitted[1] : null}
+        grievanceNatureOptions={grievanceNatureOptions}
         onReset={() => {
-          setSubmitted(false);
+          setSubmitted([false, null]);
           setExternalComplaintId(null);
           setAttachments([]);
           setFileError("");
@@ -211,12 +213,10 @@ export default function CRMRaiseComplaint() {
     <PortalLayout role={role}>
       <div className="max-w-6xl mx-auto p-4 sm:p-6">
         <SectionTitle
-          title={t("Register Grievance", "शिकायत दर्ज करें")}
-          subtitle={t(
-            "Fields marked * are required.",
-            "* चिह्नित फ़ील्ड अनिवार्य हैं।",
-          )}
-          className="!mb-4 !sm:mb-6"
+          title={t("Raise Complaint", "शिकायत दर्ज करें")}
+          subtitle={""}
+          className="!mb-4 !sm:mb-6 !items-center"
+
         >
           <DepartmentSelect
             list={departmentsList}
@@ -350,7 +350,7 @@ function FormWizard({
         "citizenInfo.mobile",
         "citizenInfo.alternateMobile",
         "citizenInfo.email",
-        "citizenInfo.preferredLanguage",
+        // "citizenInfo.preferredLanguage",
         "communication.feedbackConsent",
       ]);
     } else if (step === 2) {
@@ -373,11 +373,13 @@ function FormWizard({
     }
     if (isValid) {
       setStep((prev) => prev + 1);
+      window.scrollTo({top : 0, behavior : "instant"})
     }
   };
 
   const handleBack = () => {
     setStep((prev) => Math.max(1, prev - 1));
+     window.scrollTo({top : 0, behavior : "instant"})
   };
 
   return (
@@ -437,9 +439,9 @@ function FormWizard({
                 >
                   {s.label}
                 </p>
-                <p className="text-[10px] text-muted-foreground hidden sm:block">
+                {/* <p className="text-[10px] text-muted-foreground hidden sm:block">
                   {s.description}
-                </p>
+                </p> */}
               </div>
             </div>
           );
