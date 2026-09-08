@@ -11,26 +11,92 @@ export const CHANNEL_OPTIONS = [
   { value: "Whatsapp", label: "Whatsapp" },
 ];
 
+const addressSchema = z.object({
+  addressLine: z.string().min(1, "Address details are required"),
+  district: z.string().min(1, "District is required"),
+  subdivision: z.string().min(1, "Block is required"),
+  panchayat: z.string().min(1, "Panchayat is required"),
+  thana: z.string().min(1, "Thana is required"),
+  pincode: z.string().min(1, "Pincode is required"),
+});
+
+const correspondenceAddressSchema = z
+  .object({
+    addressLine: z.string().min(1, "Address details are required"),
+    state: z.string().min(1, "State is required"),
+    city: z.string().optional().or(z.literal("")),
+    district: z.string().optional().or(z.literal("")),
+    subdivision: z.string().optional().or(z.literal("")),
+    panchayat: z.string().optional().or(z.literal("")),
+    thana: z.string().optional().or(z.literal("")),
+    pincode: z.string().min(1, "Pincode is required"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.state === "Bihar") {
+      if (!data.district || data.district.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "District is required",
+          path: ["district"],
+        });
+      }
+      if (!data.subdivision || data.subdivision.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Block is required",
+          path: ["subdivision"],
+        });
+      }
+      if (!data.panchayat || data.panchayat.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Panchayat is required",
+          path: ["panchayat"],
+        });
+      }
+      if (!data.thana || data.thana.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Thana is required",
+          path: ["thana"],
+        });
+      }
+    } else {
+      if (!data.city || data.city.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "City is required",
+          path: ["city"],
+        });
+      }
+    }
+  });
+
 export const grievanceSchema = z.object({
   channel: z.string().min(1, "Channel is required"),
   citizenInfo: z.object({
     fullName: z.string().optional(),
-    mobile: z.string().min(10, "Mobile number must be at least 10 digits"),
-    alternateMobile: z.string().optional(),
+    mobile: z
+      .string()
+      .min(10, "Mobile number must be at least 10 digits"),
+    alternateMobile: z
+      .string()
+      .optional()
+      .or(z.literal("")),
     email: z.string().email("Enter a valid email").optional().or(z.literal("")),
     preferredLanguage: z.string().min(1, "Preferred language is required"),
+    address: addressSchema,
   }),
   classification: z.object({
+    department: z.any().optional(),
+    service: z.any().optional(),
     subService: z.string().min(1, "Sub-service is required"),
     nature: z.string().min(1, "Grievance type is required"),
-    subject: z.string().min(3, "Subject must be at least 3 characters"),
     isSeasonal: z.boolean().optional(),
     seasonalType: z.string().optional(),
   }),
   evidence: z.object({
     details: z.string().optional(),
-    occurrenceDate: z.string().optional(),
-    frequency: z.string().min(1, "Frequency is required"),
   }),
   impact: z.object({
     affectedBeneficiary: z.string().min(1, "Affected beneficiary is required"),
@@ -44,13 +110,18 @@ export const grievanceSchema = z.object({
   communication: z.object({
     feedbackConsent: z.boolean().optional(),
   }),
-  address: z.object({
-    state: z.string().min(1, "State is required"),
+  isCrpEqualPerAdd: z.boolean().optional(),
+  address: correspondenceAddressSchema,
+  location: z.object({
+    division: z.string().min(1, "Division is required"),
     district: z.string().min(1, "District is required"),
-    subdivision: z.string().min(1, "Subdivision is required"),
-    villageOrWard: z.string().optional(),
-    pinCode: z.string().regex(/^8\d{5}$/, "Enter a valid pin code of Bihar"),
-    landmark: z.string().optional(),
+    subdivision: z.string().min(1, "Block is required"),
+    block: z.string().min(1, "Block is required"),
+    panchayat: z.string().min(1, "Panchayat is required"),
+    pincode: z
+      .string()
+      .min(1, "Pincode is required")
+      .regex(/^8\d{5}$/, "Enter a valid pin code of Bihar"),
   }),
 });
 
@@ -62,9 +133,24 @@ export const defaultValues = {
     alternateMobile: "",
     email: "",
     preferredLanguage: "",
+    address: {
+      addressLine: "",
+      district: "",
+      panchayat: "",
+      pincode: "",
+      subdivision: "",
+      thana: "",
+    },
   },
-  classification: { subService: "", nature: "", subject: "", isSeasonal: false, seasonalType: "" },
-  evidence: { details: "", occurrenceDate: "", frequency: "" },
+  classification: {
+    department: "",
+    service: "",
+    subService: "",
+    nature: "",
+    isSeasonal: false,
+    seasonalType: "",
+  },
+  evidence: { details: "" },
   impact: {
     affectedBeneficiary: "",
     vulnerability: {
@@ -77,5 +163,23 @@ export const defaultValues = {
   communication: {
     feedbackConsent: false,
   },
-  address: { state: "Bihar", district: "", subdivision: "", villageOrWard: "", pinCode: "", landmark: "" },
+  isCrpEqualPerAdd: false,
+  address: {
+    addressLine: "",
+    district: "",
+    panchayat: "",
+    pincode: "",
+    subdivision: "",
+    thana: "",
+    state: "Bihar",
+    city: "",
+  },
+  location: {
+    division: "",
+    district: "",
+    subdivision: "",
+    block: "",
+    panchayat: "",
+    pincode: "",
+  },
 };

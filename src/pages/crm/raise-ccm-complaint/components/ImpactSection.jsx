@@ -6,7 +6,12 @@ import FormSection from "./FormSection";
 
 export default function ImpactSection({ affectedBeneficiaryOptions, t }) {
   return (
-    <FormSection title={t("Impact Assessment", "प्रभाव मूल्यांकन")}>
+    <FormSection
+      title={t(
+        "Beneficiary and vulnerability details",
+        "लाभार्थी एवं संवेदनशीलता का विवरण",
+      )}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <RhfSelect
           name="impact.affectedBeneficiary"

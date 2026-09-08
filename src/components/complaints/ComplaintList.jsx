@@ -45,7 +45,11 @@ export default function ComplaintList({
   const [selectedChannel, setSelectedChannel] = useState("");
 
   const API_PARAMS = useMemo(
-    () => ({ page: 1, limit: MAX_LIMIT, select: "title,titleHindi,name,nameHindi" }),
+    () => ({
+      page: 1,
+      limit: MAX_LIMIT,
+      select: "title,titleHindi,name,nameHindi",
+    }),
     [],
   );
   const { data: complaintSourcesData, isLoading: complaintSourcesLoading } =
@@ -266,7 +270,10 @@ export default function ComplaintList({
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {complaintSourcesLoading ? (
-                      <DropdownMenuItem disabled className="text-muted-foreground text-xs">
+                      <DropdownMenuItem
+                        disabled
+                        className="text-muted-foreground text-xs"
+                      >
                         {t("Loading...", "लोड हो रहा है...")}
                       </DropdownMenuItem>
                     ) : (
@@ -432,6 +439,7 @@ export default function ComplaintList({
 }
 
 export const ComplaintListCard = ({ c, onClick, isSelected }) => {
+  const excludedStatus = ["RESOLVED", "CLOSED"];
   return (
     <button
       key={c?._id || c.id}
@@ -449,21 +457,22 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
           </h2>
           <StatusBadge status={c.status} />
         </div>
-        <div className="flex items-center gap-1 flex-wrap">
-          <SLATimer
-            createdAt={c.createdAt}
-            slaHours={c.classification?.subService?.sla || null}
-            resolvedAt={c.status == "RESOLVED" ? c?.resolvedAt || null : null}
-          />
-          {
+        {!excludedStatus.includes(c.status) && (
+          <div className="flex items-center gap-1 flex-wrap">
+            <SLATimer
+              createdAt={c.createdAt}
+              slaHours={c.classification?.subService?.sla || null}
+              resolvedAt={c.status == "RESOLVED" ? c?.resolvedAt || null : null}
+            />
+
             <SLATimer
               createdAt={c?.assignedAt || null}
               slaHours={c?.slaHours || null}
               customText="Officer SLA"
               resolvedAt={c.status == "RESOLVED" ? c?.resolvedAt || null : null}
             />
-          }
-        </div>
+          </div>
+        )}
       </div>
       <div className="text-sm text-foreground truncate">
         {c.classification?.subService?.title ||

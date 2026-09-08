@@ -19,7 +19,7 @@ import { getFormData } from "./helpers";
 
 import CitizenInfoSection from "./components/CitizenInfoSection";
 import ClassificationSection from "./components/ClassificationSection";
-import EvidenceSection from "./components/EvidenceSection";
+import LocationDetailsSection from "./components/LocationDetailsSection";
 import ImpactSection from "./components/ImpactSection";
 import AddressSection from "./components/AddressSection";
 import CommunicationSection from "./components/CommunicationSection";
@@ -68,11 +68,10 @@ export default function CRMRaiseComplaint() {
   const [externalComplaintId, setExternalComplaintId] = useState(null);
 
   const {
-    servicesOptions,
+    departmentOptions,
+    departmentsLoading,
     grievanceNatureOptions,
-    frequencyOptions,
     affectedBeneficiaryOptions,
-    servicesLoading,
     naturesLoading,
     allChannels,
     complaintSourcesLoading,
@@ -277,11 +276,10 @@ export default function CRMRaiseComplaint() {
             <FormWizard
               t={t}
               lang={lang}
-              servicesOptions={servicesOptions}
+              departmentOptions={departmentOptions}
+              departmentsLoading={departmentsLoading}
               grievanceNatureOptions={grievanceNatureOptions}
-              servicesLoading={servicesLoading}
               naturesLoading={naturesLoading}
-              frequencyOptions={frequencyOptions}
               affectedBeneficiaryOptions={affectedBeneficiaryOptions}
               fileInputRef={fileInputRef}
               attachments={attachments}
@@ -305,11 +303,10 @@ export default function CRMRaiseComplaint() {
 function FormWizard({
   t,
   lang,
-  servicesOptions,
+  departmentOptions,
+  departmentsLoading,
   grievanceNatureOptions,
-  servicesLoading,
   naturesLoading,
-  frequencyOptions,
   affectedBeneficiaryOptions,
   fileInputRef,
   attachments,
@@ -358,12 +355,20 @@ function FormWizard({
       ]);
     } else if (step === 2) {
       isValid = await methods.trigger([
+        "citizenInfo.address.addressLine",
+        "citizenInfo.address.district",
+        "citizenInfo.address.subdivision",
+        "citizenInfo.address.panchayat",
+        "citizenInfo.address.thana",
+        "citizenInfo.address.pincode",
+        "address.addressLine",
         "address.state",
+        "address.city",
         "address.district",
         "address.subdivision",
-        "address.villageOrWard",
-        "address.pinCode",
-        "address.landmark",
+        "address.panchayat",
+        "address.thana",
+        "address.pincode",
       ]);
     }
     if (isValid) {
@@ -467,14 +472,18 @@ function FormWizard({
         {step === 3 && (
           <div className="space-y-6">
             <ClassificationSection
-              servicesOptions={servicesOptions}
+              departmentOptions={departmentOptions}
+              departmentsLoading={departmentsLoading}
               grievanceNatureOptions={grievanceNatureOptions}
-              servicesLoading={servicesLoading}
               naturesLoading={naturesLoading}
               t={t}
               lang={lang}
             />
-            <EvidenceSection frequencyOptions={frequencyOptions} t={t} />
+            <LocationDetailsSection
+              t={t}
+              allDemography={allDemography}
+              demographyLoading={demographyLoading}
+            />
             <ImpactSection
               affectedBeneficiaryOptions={affectedBeneficiaryOptions}
               t={t}

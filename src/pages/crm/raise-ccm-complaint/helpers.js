@@ -25,9 +25,30 @@ export const getFormData = (data, attachments = []) => {
       data.citizenInfo.preferredLanguage,
     );
 
+  const citizenAddr = data.citizenInfo?.address;
+  if (citizenAddr) {
+    if (citizenAddr.addressLine)
+      formData.append(
+        "citizenInfo[address][addressLine]",
+        citizenAddr.addressLine,
+      );
+    if (citizenAddr.district)
+      formData.append("citizenInfo[address][district]", citizenAddr.district);
+    if (citizenAddr.subdivision)
+      formData.append(
+        "citizenInfo[address][subdivision]",
+        citizenAddr.subdivision,
+      );
+    if (citizenAddr.panchayat)
+      formData.append("citizenInfo[address][panchayat]", citizenAddr.panchayat);
+    if (citizenAddr.thana)
+      formData.append("citizenInfo[address][thana]", citizenAddr.thana);
+    if (citizenAddr.pincode)
+      formData.append("citizenInfo[address][pincode]", citizenAddr.pincode);
+  }
+
   formData.append("classification[subService]", data.classification.subService);
   formData.append("classification[nature]", data.classification.nature);
-  formData.append("classification[subject]", data.classification.subject);
   if (data.classification.isSeasonal !== undefined) {
     formData.append(
       "classification[isSeasonal]",
@@ -41,11 +62,8 @@ export const getFormData = (data, attachments = []) => {
     );
   }
 
-  if (data.evidence.details)
+  if (data.evidence?.details)
     formData.append("evidence[details]", data.evidence.details);
-  if (data.evidence.occurrenceDate)
-    formData.append("evidence[occurrenceDate]", data.evidence.occurrenceDate);
-  formData.append("evidence[frequency]", data.evidence.frequency);
 
   formData.append(
     "impact[affectedBeneficiary]",
@@ -53,32 +71,61 @@ export const getFormData = (data, attachments = []) => {
   );
   formData.append(
     "impact[vulnerability[seniorCitizen]]",
-    String(data.impact.vulnerability.seniorCitizen ?? false),
+    String(data.impact.vulnerability?.seniorCitizen ?? false),
   );
   formData.append(
     "impact[vulnerability[woman]]",
-    String(data.impact.vulnerability.woman ?? false),
+    String(data.impact.vulnerability?.woman ?? false),
   );
   formData.append(
     "impact[vulnerability[personWithDisability]]",
-    String(data.impact.vulnerability.personWithDisability ?? false),
+    String(data.impact.vulnerability?.personWithDisability ?? false),
   );
   formData.append(
     "impact[vulnerability[economicallyWeakerSection]]",
-    String(data.impact.vulnerability.economicallyWeakerSection ?? false),
+    String(data.impact.vulnerability?.economicallyWeakerSection ?? false),
   );
 
-  if (data.address.state) formData.append("address[state]", data.address.state);
-  if (data.address.district)
-    formData.append("address[district]", data.address.district);
-  if (data.address.subdivision)
-    formData.append("address[subdivision]", data.address.subdivision);
-  if (data.address.villageOrWard)
-    formData.append("address[villageOrWard]", data.address.villageOrWard);
-  if (data.address.pinCode)
-    formData.append("address[pinCode]", data.address.pinCode);
-  if (data.address.landmark)
-    formData.append("address[landmark]", data.address.landmark);
+  formData.append(
+    "communication[feedbackConsent]",
+    String(data.communication?.feedbackConsent ?? false),
+  );
+
+  const addr = data.address;
+  if (addr) {
+    if (addr.addressLine)
+      formData.append("address[addressLine]", addr.addressLine);
+    if (addr.state)
+      formData.append("address[state]", addr.state);
+    if (addr.city)
+      formData.append("address[city]", addr.city);
+    if (addr.district)
+      formData.append("address[district]", addr.district);
+    if (addr.subdivision)
+      formData.append("address[subdivision]", addr.subdivision);
+    if (addr.panchayat)
+      formData.append("address[panchayat]", addr.panchayat);
+    if (addr.thana)
+      formData.append("address[thana]", addr.thana);
+    if (addr.pincode)
+      formData.append("address[pincode]", addr.pincode);
+  }
+
+  if (typeof data.isCrpEqualPerAdd !== "undefined") {
+    formData.append("isCrpEqualPerAdd", String(data.isCrpEqualPerAdd));
+  }
+
+  const loc = data.location;
+  if (loc) {
+    if (loc.division) formData.append("location[division]", loc.division);
+    if (loc.district) formData.append("location[district]", loc.district);
+    if (loc.subdivision)
+      formData.append("location[subdivision]", loc.subdivision);
+    if (loc.block) formData.append("location[block]", loc.block);
+    if (loc.panchayat) formData.append("location[panchayat]", loc.panchayat);
+    if (loc.pincode)
+      formData.append("location[pincode]", loc.pincode || loc.pinCode);
+  }
 
   attachments.forEach((file) => formData.append("attachments[]", file));
   return formData;

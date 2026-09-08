@@ -97,9 +97,8 @@ export function SLATimer({
   } else if (isUrgent) {
     badgeClass =
       "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 animate-pulse";
-  }
-  else if(timeLeft === "N/A"){
-    badgeClass = "border-gray-500/10 text-gray-600 dark:text-gray-400"
+  } else if (timeLeft === "N/A") {
+    badgeClass = "border-gray-500/10 text-gray-600 dark:text-gray-400";
   }
 
   const labelText =
@@ -132,6 +131,7 @@ export default function ComplaintDetailHeader({
   assignOfficerMutation,
   selectedId,
 }) {
+  const excludedStatus = ["RESOLVED", "CLOSED"]
   const { t } = useLanguage();
   const { hasPermission } = useAuth();
   const isResolved =
@@ -158,23 +158,25 @@ export default function ComplaintDetailHeader({
                 {t("Filed:", "दर्ज:")} {formattedDate}
               </span>
 
-              <>
-                <SLATimer
-                  createdAt={c.createdAt}
-                  slaHours={c.classification?.subService?.sla || null}
-                  resolvedAt={
-                    c.status == "RESOLVED" ? c?.resolvedAt || null : null
-                  }
-                />
-                <SLATimer
-                  createdAt={c?.assignedAt || null}
-                  slaHours={c?.slaHours || null}
-                  customText="Officer SLA"
-                  resolvedAt={
-                    c.status == "RESOLVED" ? c?.resolvedAt || null : null
-                  }
-                />
-              </>
+              {!excludedStatus.includes(c.status) && (
+                <>
+                  <SLATimer
+                    createdAt={c.createdAt}
+                    slaHours={c.classification?.subService?.sla || null}
+                    resolvedAt={
+                      c.status == "RESOLVED" ? c?.resolvedAt || null : null
+                    }
+                  />
+                  <SLATimer
+                    createdAt={c?.assignedAt || null}
+                    slaHours={c?.slaHours || null}
+                    customText="Officer SLA"
+                    resolvedAt={
+                      c.status == "RESOLVED" ? c?.resolvedAt || null : null
+                    }
+                  />
+                </>
+              )}
             </div>
           )}
           {isResolved && (
@@ -258,25 +260,27 @@ export default function ComplaintDetailHeader({
           <div className="flex flex-wrap gap-1 justify-end">
             {/* {isResolved ? ( */}
 
-            <>
-              <SLATimer
-                createdAt={c.createdAt}
-                slaHours={c.classification?.subService?.sla || null}
-                resolvedAt={
-                  c.status == "RESOLVED" ? c?.resolvedAt || null : null
-                }
-              />
-              {!!c.assignedAt && (
+            {!excludedStatus.includes(c.status) && (
+              <>
                 <SLATimer
-                  createdAt={c.assignedAt}
-                  slaHours={c?.slaHours || null}
-                  customText="Officer SLA"
+                  createdAt={c.createdAt}
+                  slaHours={c.classification?.subService?.sla || null}
                   resolvedAt={
                     c.status == "RESOLVED" ? c?.resolvedAt || null : null
                   }
                 />
-              )}
-            </>
+                {!!c.assignedAt && (
+                  <SLATimer
+                    createdAt={c.assignedAt}
+                    slaHours={c?.slaHours || null}
+                    customText="Officer SLA"
+                    resolvedAt={
+                      c.status == "RESOLVED" ? c?.resolvedAt || null : null
+                    }
+                  />
+                )}
+              </>
+            )}
           </div>
         </div>
       )}

@@ -34,6 +34,8 @@ export default function ComplaintDetailView({
   setStatusUpdate,
   isCCE = false,
 }) {
+
+
   const { t } = useLanguage();
   const selectedId = selected?._id || selected?.id;
   const [selectedFiles, setSelectedFiles] = useState([]); // array of { file, preview }
@@ -284,6 +286,7 @@ export default function ComplaintDetailView({
             userLoading={userLoading}
             assignOfficerMutation={assignOfficerMutation}
             selectedId={selectedId}
+         
           />
 
 

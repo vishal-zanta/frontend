@@ -1,37 +1,73 @@
-import React, { useState } from "react";
+import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import RhfBoolean from "@/components/rhfinputs/RhfBoolean";
+import RhfTextarea from "@/components/rhfinputs/RhfTextarea";
 import MySelect from "@/components/inputs/MySelect";
-import { useGetSubservices } from "../../../admin/master-data/hooks";
+import {
+  useGetServices,
+  useGetSubservices,
+} from "../../../admin/master-data/hooks";
 import FormSection from "./FormSection";
 import { MAX_LIMIT } from "@/utils/constants";
 
 export default function ClassificationSection({
-  servicesOptions,
+  departmentOptions,
   grievanceNatureOptions,
-  servicesLoading,
+  departmentsLoading,
   naturesLoading,
   t,
   lang,
 }) {
-  const [selectedService, setSelectedService] = useState("");
-  const { setValue, control } = useFormContext();
+  const { setValue, watch, control } = useFormContext();
+  const selectedDepartment = watch("classification.department");
+  const selectedService = watch("classification.service");
   const isSeasonal = useWatch({ control, name: "classification.isSeasonal" });
 
-  const API_PARAMS = { page: 1, limit: MAX_LIMIT, select: "title,titleHindi" };
+  const SERVICES_PARAMS = {
+    page: 1,
+    limit: MAX_LIMIT,
+    select: "title,titleHindi,name,nameHindi",
+    departmentId: selectedDepartment,
+  };
 
-  const { data: subServicesData, isLoading: subServicesLoading } = useGetSubservices(
-    [selectedService],
-    { serviceId: selectedService, ...API_PARAMS },
-    !!selectedService
+  const { data: servicesData, isLoading: servicesLoading } = useGetServices(
+    [selectedDepartment],
+    SERVICES_PARAMS,
+    !!selectedDepartment,
   );
 
-  const subServiceOptions = (subServicesData?.data?.data?.docs ?? []).map((s) => ({
-    label: lang === "hi" && s.titleHindi ? s.titleHindi : s.title,
+  const serviceOptions = (servicesData?.data?.data?.docs ?? []).map((s) => ({
+    label:
+      lang === "hi" && (s.titleHindi || s.nameHindi)
+        ? s.titleHindi || s.nameHindi
+        : s.title || s.name,
     value: s._id,
   }));
+
+  const SUBSERVICES_PARAMS = {
+    page: 1,
+    limit: MAX_LIMIT,
+    select: "title,titleHindi,name,nameHindi",
+    serviceId: selectedService,
+  };
+
+  const { data: subServicesData, isLoading: subServicesLoading } =
+    useGetSubservices(
+      [selectedService],
+      SUBSERVICES_PARAMS,
+      !!selectedService,
+    );
+
+  const subServiceOptions = (subServicesData?.data?.data?.docs ?? []).map(
+    (s) => ({
+      label:
+        lang === "hi" && (s.titleHindi || s.nameHindi)
+          ? s.titleHindi || s.nameHindi
+          : s.title || s.name,
+      value: s._id,
+    }),
+  );
 
   const seasonalTypeOptions = [
     { label: t("Floods", "बाढ़"), value: "floods" },
@@ -39,24 +75,48 @@ export default function ClassificationSection({
     { label: t("Rain", "बारिश"), value: "rain" },
   ];
 
-  const handleServiceChange = (val) => {
-    setSelectedService(val);
-    setValue("classification.subService", "");
-  };
-
   return (
-    <FormSection title={t("Complaint Classification", "शिकायत वर्गीकरण")}>
+    <FormSection
+      title={t(
+        "What does the complaint related to?",
+        "शिकायत किससे संबंधित है?",
+      )}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <MySelect
-          value={selectedService}
-          onValueChange={handleServiceChange}
-          label={t("Service", "सेवा")}
+          value={selectedDepartment || ""}
+          onValueChange={(val) => {
+            setValue("classification.department", val);
+            setValue("classification.service", "");
+            setValue("classification.subService", "");
+          }}
+          label={t("Department", "विभाग")}
           placeholder={
-            servicesLoading
+            departmentsLoading
               ? t("Loading...", "लोड हो रहा है...")
-              : t("Select service", "सेवा चुनें")
+              : t("Select department", "विभाग चुनें")
           }
-          options={servicesOptions}
+          options={departmentOptions}
+          disabled={departmentsLoading}
+          required
+        />
+
+        <MySelect
+          value={selectedService || ""}
+          onValueChange={(val) => {
+            setValue("classification.service", val);
+            setValue("classification.subService", "");
+          }}
+          label={t("Service / Category", "सेवा")}
+          placeholder={
+            !selectedDepartment
+              ? t("Select department first", "पहले विभाग चुनें")
+              : servicesLoading
+                ? t("Loading...", "लोड हो रहा है...")
+                : t("Select service", "सेवा चुनें")
+          }
+          options={serviceOptions}
+          disabled={!selectedDepartment || servicesLoading}
           required
         />
 
@@ -64,18 +124,20 @@ export default function ClassificationSection({
           name="classification.subService"
           label={t("Sub-Service", "उप-सेवा")}
           placeholder={
-            subServicesLoading
-              ? t("Loading...", "लोड हो रहा है...")
-              : t("Select sub-service", "उप-सेवा चुनें")
+            !selectedService
+              ? t("Select service first", "पहले सेवा चुनें")
+              : subServicesLoading
+                ? t("Loading...", "लोड हो रहा है...")
+                : t("Select sub-service", "उप-सेवा चुनें")
           }
           options={subServiceOptions}
           required
-          disabled={!selectedService}
+          disabled={!selectedService || subServicesLoading}
         />
 
         <RhfSelect
           name="classification.nature"
-          label={t("Grievance Type / Nature", "शिकायत प्रकार")}
+          label={t("Type / Nature", "शिकायत प्रकार")}
           placeholder={
             naturesLoading
               ? t("Loading...", "लोड हो रहा है...")
@@ -85,13 +147,15 @@ export default function ClassificationSection({
           required
         />
 
-        <RhfInput
-          name="classification.subject"
-          label={t("Subject", "विषय")}
-          placeholder={t("Brief subject of your complaint", "शिकायत का संक्षिप्त विषय")}
-          required
+        <RhfTextarea
+          name="evidence.details"
+          label={t("Brief Description", "संक्षिप्त विवरण")}
+          placeholder={t(
+            "Describe the issue in detail...",
+            "समस्या का विस्तार से वर्णन करें...",
+          )}
+          rows={4}
           className="md:col-span-2"
-          isLettersAllowed
         />
 
         <div className="md:col-span-2">
@@ -105,7 +169,10 @@ export default function ClassificationSection({
           <RhfSelect
             name="classification.seasonalType"
             label={t("Seasonal Type", "मौसमी प्रकार")}
-            placeholder={t("Select or type seasonal type", "मौसमी प्रकार चुनें या लिखें")}
+            placeholder={t(
+              "Select or type seasonal type",
+              "मौसमी प्रकार चुनें या लिखें",
+            )}
             options={seasonalTypeOptions}
             isCreatable
             className="md:col-span-2"
