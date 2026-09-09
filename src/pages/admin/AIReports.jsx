@@ -348,7 +348,7 @@ export default function AIReports() {
           </div>
 
           {/* Scatter */}
-          <ChartCard
+          {/* <ChartCard
             title={t(
               "Population vs Complaint Density",
               "जनसंख्या बनाम शिकायत घनत्व",
@@ -368,7 +368,7 @@ export default function AIReports() {
               xLabel={t("Total Complaints", "कुल शिकायतें")}
               yLabel={t("Escalated", "बढ़ाई गई")}
             />
-          </ChartCard>
+          </ChartCard> */}
 
           {/* Prediction confidence with benchmark */}
           <div className="bg-white dark:bg-card rounded-xl border border-border p-5">

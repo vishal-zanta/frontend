@@ -27,7 +27,8 @@ import StatCard from "@/components/StatCard";
 import { jsPDF } from "jspdf";
 import { useGetMisReports, useGetMisStats } from "./hooks";
 import { useGetDemographics } from "../master-data/hooks";
-import { MAX_LIMIT } from "@/utils/constants";
+import { MAX_LIMIT, PERMISSIONS } from "@/utils/constants";
+import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import DistrictSummaryTable from "./components/DistrictSummaryTable";
 import OfficerRankingTable from "./components/OfficerRankingTable";
@@ -274,16 +275,15 @@ export default function MISReports() {
   const [toDate, setToDate] = useState("2026-07-06");
   const selectedReport = searchParams.get("report") || "summary";
   const { t } = useLanguage();
+  const { hasPermission } = useAuth();
 
   const reportsList = [
     {
       id: "summary",
       name: t("Complaint Summary Report", "शिकायत सारांश रिपोर्ट"),
-      desc: t(
-        "Total complaints, bifurcation by status, district-wise breakdown",
-        "कुल शिकायतें, स्थिति के अनुसार विभाजन, जिला-वार विवरण",
-      ),
+      desc: "",
       icon: FileBarChart,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
     {
       id: "officer",
@@ -293,6 +293,7 @@ export default function MISReports() {
         "दिए गए समय में निराकृत शिकायतों के आधार पर रैंकिंग",
       ),
       icon: FileText,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
     {
       id: "service",
@@ -302,6 +303,7 @@ export default function MISReports() {
         "सेवा द्वारा SLA अनुपालन, उल्लंघन दर, निस्तारण समय",
       ),
       icon: FileBarChart,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
     {
       id: "urban",
@@ -311,6 +313,7 @@ export default function MISReports() {
         "ULB-वार प्रदर्शन, जनसंख्या रैंक, प्रति व्यक्ति विश्लेषण",
       ),
       icon: FileText,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
     {
       id: "rural",
@@ -320,6 +323,7 @@ export default function MISReports() {
         "प्रखंड-स्तरीय शिकायत स्थिति और निस्तारण मीट्रिक",
       ),
       icon: FileText,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
     {
       id: "ulb",
@@ -329,6 +333,7 @@ export default function MISReports() {
         "रुझान संकेतकों के साथ रैंक किया गया ULB प्रदर्शन",
       ),
       icon: FileBarChart,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
     {
       id: "ivr",
@@ -338,6 +343,7 @@ export default function MISReports() {
         "कॉल सफलता दर, एजेंट उपस्थिति, आईवीआर मीट्रिक",
       ),
       icon: FileText,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
     {
       id: "agent",
@@ -347,8 +353,13 @@ export default function MISReports() {
         "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, CSAT, SLA",
       ),
       icon: FileText,
+      permissions: PERMISSIONS.MIS_REPORTS,
     },
   ];
+
+  const visibleReports = reportsList.filter(
+    (r) => !r.permissions || hasPermission(r.permissions),
+  );
 
   const periodLabels = {
     cy: t("Calendar Year 2026", "कैलेंडर वर्ष 2026"),
@@ -357,7 +368,9 @@ export default function MISReports() {
   };
 
   const currentReport =
-    reportsList.find((r) => r.id === selectedReport) || reportsList[0];
+    visibleReports.find((r) => r.id === selectedReport) ||
+    visibleReports[0] ||
+    reportsList[0];
 
   const params = useMemo(() => {
     const next = {
@@ -486,7 +499,7 @@ export default function MISReports() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {reportsList.map((r) => (
+                {visibleReports.map((r) => (
                   <SelectItem key={r.id} value={r.id} className="text-sm">
                     {r.name}
                   </SelectItem>

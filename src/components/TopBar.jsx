@@ -20,6 +20,7 @@ import { getErrorToast } from "@/utils/helpers";
 import BreakOverlay from "./break-timer/BreakOverlay";
 import { postLogout } from "@/api/auth.api";
 import { useAuth } from "@/context/AuthContext";
+import { useAuth as useLibAuth } from "@/lib/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import SearchComplaints from "@/components/SearchComplaints";
@@ -60,6 +61,7 @@ export default function TopBar({
     setProfile: setProfileData,
     profiledata: profileMetaData,
   } = useAuth();
+  const { level } = useLibAuth();
  
   const { t } = useLanguage();
   const { theme, toggle: toggleTheme } = useTheme();
@@ -115,7 +117,7 @@ export default function TopBar({
   }, [breakStatus?.isBreak]);
 
   const portalLabel = profileMetaData?.isAdmin
-    ? t("Super Admin Console", "सुपर एडमिन कंसोल")
+    ? t("Super Admin", "सुपर एडमिन")
     : profileMetaData?.isCRM
       ? t("CRM / Call Centre", "सीआरएम / कॉल सेंटर")
       : t("Officer Portal", "अधिकारी पोर्टल");
@@ -203,7 +205,7 @@ export default function TopBar({
             {portalLabel}
           </div>
           <div className={clsx("text-xs lg:text-sm font-bold text-foreground  hidden sm:block lg:hidden xl:block", t("-mt-0.5", "mt-0"))}>
-            {t(PORTAL_META.name, "बिहार ई-शिकायत पोर्टल")}
+            {t(PORTAL_META.nameEasy, "बिहार ई-शिकायत")}
           </div>
         </div>
       </div>
@@ -255,7 +257,7 @@ export default function TopBar({
         )} */}
 
         {/* Language Selector */}
-     {  <LangSelectorSmall className="shrink-0" />}
+      {  <LangSelectorSmall className="shrink-0" />}
 
         {/* Theme Toggle */}
         <button
@@ -272,16 +274,18 @@ export default function TopBar({
 
       <Notifications/>
 
-        <button
-          onClick={() => toggleBreakMutation.mutate()}
-          disabled={toggleBreakMutation.isPending}
-          className="px-3 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 text-nowrap"
-        >
-          {toggleBreakMutation.isPending && (
-            <Loader2 className="w-3 h-3 animate-spin" />
-          )}
-          {t("Start Break", "ब्रेक शुरू करें")}
-        </button>
+        {level !== "Admin" && (
+          <button
+            onClick={() => toggleBreakMutation.mutate()}
+            disabled={toggleBreakMutation.isPending}
+            className="px-3 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 text-nowrap"
+          >
+            {toggleBreakMutation.isPending && (
+              <Loader2 className="w-3 h-3 animate-spin" />
+            )}
+            {t("Start Break", "ब्रेक शुरू करें")}
+          </button>
+        )}
 
         {/* <Link
           to="/"

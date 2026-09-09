@@ -63,12 +63,12 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
         </Badge>
       </div>
 
-      {/* Body: Sub-services & Subdivisions */}
+      {/* Body: Services & Subdivisions */}
       <div className="p-3 xs:p-3.5 sm:p-4 space-y-3">
         <div className="space-y-2 text-xs bg-muted/40 p-2.5 rounded-lg border border-border/50">
           <div>
             <span className="text-muted-foreground block text-[10px] uppercase font-medium mb-1">
-              {t("Sub-services:", "उप-सेवाएं:")}
+              {t("Services:", "सेवाएं:")}
             </span>
             {servicesList.length > 0 ? (
               <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
@@ -78,7 +78,7 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
                     variant="outline"
                     className="text-[10px] bg-primary/10 text-primary text-nowrap"
                   >
-                    {s.title || "N/A"}
+                    {typeof s === "object" ? s.title || s.name || "N/A" : s}
                   </Badge>
                 ))}
               </div>
@@ -117,14 +117,16 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
           size="sm"
           onClick={() => {
             setEditItem(item);
-            setDialog({
-              officer: item.officer?.name || "",
-              designation: item.officer?.role?.designationEnglish || "",
-              services: (item.services || []).map((s) => s.title),
-              wards: item.wards || [],
-              activeComplaints: 0,
-              slaCompliant: true,
-            });
+            if (setDialog) {
+              setDialog({
+                officer: item.officer?.name || "",
+                designation: item.officer?.role?.designationEnglish || "",
+                services: (item.services || []).map((s) => s.title || s.name || s),
+                wards: item.wards || [],
+                activeComplaints: 0,
+                slaCompliant: true,
+              });
+            }
           }}
           className="h-8 text-xs px-2.5"
         >

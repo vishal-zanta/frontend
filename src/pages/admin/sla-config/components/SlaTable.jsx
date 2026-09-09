@@ -24,8 +24,8 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
 
   const tableHeaders = [
     {
-      id: "subService",
-      label: t("Sub-Service", "उप-सेवा"),
+      id: "service",
+      label: t("Service", "सेवा"),
       className: "min-w-40 sticky left-0 bg-[#F4F7FA] dark:bg-[#172033]",
     },
     ...roles.map((role) => ({
@@ -42,10 +42,13 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
 
   const tableBody = docs.map((s) => {
     const row = {
-      subService: {
+      service: {
         value:
+          s.service?.title ||
+          s.service?.name ||
           s.subService?.title ||
           s.subService?.name ||
+          s.service ||
           s.subService ||
           "N/A",
         className: "font-medium sticky left-0 bg-white dark:bg-[#0f1729]",
@@ -54,7 +57,7 @@ export default function SlaTable({ docs = [], roles = [], onEdit, onDelete }) {
 
     roles.forEach((role) => {
       const esc = (s.escalations || []).find(
-        (e) => (e.role?._id || e.role) === role._id
+        (e) => (e.role?._id || e.role) === role._id,
       );
 
       row[role._id] = {

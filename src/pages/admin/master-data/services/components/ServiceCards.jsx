@@ -1,6 +1,7 @@
 import React from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Clock, MapPin, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function ServiceCards({ services = [], setServiceDialog, setDialog }) {
@@ -41,6 +42,28 @@ function Card({ item, setDialog, t }) {
               {item.department?.title || item.department?.name || item.department || "N/A"}
             </span>
           </div>
+        </div>
+
+        {item.sla !== undefined && item.sla !== null && (
+          <Badge
+            variant="outline"
+            className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/30 shrink-0"
+          >
+            <Clock className="w-3 h-3 mr-1" />
+            {item?.slaType === "days" ? item.sla / 24 : item.sla}
+            {item?.slaType === "days" ? "d" : "h"}
+          </Badge>
+        )}
+      </div>
+
+      <div className="px-3 py-2 bg-muted/20 flex items-center gap-2 flex-wrap text-xs">
+        <div className="flex items-center gap-1">
+          <span className="text-muted-foreground">{t("Geo-Tagged:", "भू-टैग:")}</span>
+          <span className="font-medium">{item.geoTagged ? "✅" : "❌"}</span>
+        </div>
+        <div className="flex items-center gap-1 ml-3">
+          <span className="text-muted-foreground">{t("Field Visit:", "क्षेत्र दौरा:")}</span>
+          <span className="font-medium">{item.fieldVisit ? "✅" : "❌"}</span>
         </div>
       </div>
 

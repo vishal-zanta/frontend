@@ -4,6 +4,7 @@ import MyTable from "@/components/MyTable";
 import { useLanguage } from "@/context/LanguageContext";
 import useIsMobile from "@/hooks/useIsMobile";
 import ServiceCards from "./ServiceCards";
+import { Badge } from "@/components/ui/badge";
 // import SubServicesTable from "./SubServicesTable";
 // import { Button } from "@/components/ui/button";
 // import { Plus } from "lucide-react";
@@ -35,6 +36,17 @@ const ServiceTable = ({
     { id: "title", label: t("Service (English)", "सेवा (अंग्रेज़ी)") },
     { id: "titleHindi", label: t("Service (Hindi)", "सेवा (हिंदी)") },
     { id: "department", label: t("Department", "विभाग") },
+    { id: "sla", label: t("SLA", "SLA"), className: "text-center" },
+    {
+      id: "geoTagged",
+      label: t("Geo-Tagged", "भू-टैग किया गया"),
+      className: "text-center",
+    },
+    {
+      id: "fieldVisit",
+      label: t("Field Visit", "क्षेत्र का दौरा"),
+      className: "text-center",
+    },
     {
       id: "actions",
       label: t("Actions", "कार्रवाई"),
@@ -56,13 +68,36 @@ const ServiceTable = ({
         (typeof s.department === "string" ? s.department : "N/A") ||
         "N/A",
     },
+    sla: {
+      className: "text-center",
+      render: () =>
+        s.sla !== undefined && s.sla !== null ? (
+          <Badge
+            variant="outline"
+            className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold border-amber-500/30"
+          >
+            {s?.slaType === "days" ? s.sla / 24 : s.sla}
+            {s?.slaType === "days" ? "d" : "h"}
+          </Badge>
+        ) : (
+          "N/A"
+        ),
+    },
+    geoTagged: {
+      className: "text-center",
+      value: s.geoTagged ? "✅" : "N/A",
+    },
+    fieldVisit: {
+      className: "text-center",
+      value: s.fieldVisit ? "✅" : "N/A",
+    },
     actions: {
       className: "text-center",
       render: () => (
         <div className="flex gap-2 justify-center">
           <button
             onClick={() => handleDialog && handleDialog({ type: "edit", item: s })}
-            className="p-1 hover:bg-muted rounded text-primary transition-colors"
+            className="p-1 hover:bg-muted rounded text-primary transition-colors cursor-pointer"
             title={t("Edit Service", "सेवा संपादित करें")}
           >
             <Pencil className="w-4 h-4" />
@@ -71,7 +106,7 @@ const ServiceTable = ({
             onClick={() =>
               handleDialog && handleDialog({ type: "delete", item: s })
             }
-            className="p-1 hover:bg-muted rounded text-red-600 hover:text-red-700 transition-colors"
+            className="p-1 hover:bg-muted rounded text-red-600 hover:text-red-700 transition-colors cursor-pointer"
             title={t("Delete Service", "सेवा हटाएं")}
           >
             <Trash2 className="w-4 h-4" />

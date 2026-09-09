@@ -10,7 +10,6 @@ import SlaTable from "./components/SlaTable";
 import Form from "./components/Form";
 import { useGetSlaconfig } from "./hooks";
 import {
-  useGetSubservices,
   useGetDepartments,
   useGetServices,
 } from "../master-data/hooks";
@@ -98,46 +97,29 @@ export default function SLAConfig() {
     { page: 1, limit: MAX_LIMIT, department: selectedDept },
     !!selectedDept,
   );
-  const serviceOptions = (servicesData?.data?.data?.docs || []).map((s) => ({
-    label: s.title || s.name || "",
-    value: s._id,
-  }));
+  const allServices = servicesData?.data?.data?.docs || [];
 
-  // 4. Fetch subservices for selection dropdown
-  const {
-    data: subservicesData,
-    isLoading: isSubservicesLoading,
-    isFetching: isSubservicesFetching,
-    isPending: isSubservicesPendingQuery,
-  } = useGetSubservices(
-    [selectedDept, dialog?.service],
-    {
-      page: 1,
-      limit: MAX_LIMIT,
-      department: selectedDept,
-      serviceId: dialog?.service,
-    },
-    !!(selectedDept && dialog?.service),
-  );
-  const isSubservicesPending =
-    (isSubservicesPendingQuery ||
-      isSubservicesLoading ||
-      isSubservicesFetching) &&
-    !!dialog?.service;
-  const subservices = subservicesData?.data?.data?.docs || [];
-
-  // Filter available subservices for the SLA config select dropdown
-  const availableSubservices = subservices.filter((ss) => {
+  // Filter available services for the SLA config select dropdown
+  const availableServices = allServices.filter((s) => {
     if (
       editItem &&
-      (editItem.subService?._id || editItem.subService) === ss._id
+      ((editItem.service?._id || editItem.service) === s._id ||
+        (editItem.subService?._id || editItem.subService) === s._id)
     ) {
       return true;
     }
     return !docs.some(
-      (doc) => (doc.subService?._id || doc.subService) === ss._id,
+      (doc) =>
+        (doc.service?._id || doc.service) === s._id ||
+        (doc.subService?._id || doc.subService) === s._id,
     );
   });
+
+  const serviceOptions = availableServices.map((s) => ({
+    label: s.title || s.name || "",
+    value: s._id,
+    sla: s.sla,
+  }));
 
   const postMutation = useMutation({
     mutationFn: postSlaConfig,
@@ -178,18 +160,31 @@ export default function SLAConfig() {
 
   const filtered = docs.filter((c) => {
     const title =
-      c.subService?.title || c.subService?.name || c.subService || "";
+      c.service?.title ||
+      c.service?.name ||
+      c.subService?.title ||
+      c.subService?.name ||
+      c.service ||
+      c.subService ||
+      "";
     return !search || title.toLowerCase().includes(search.toLowerCase());
   });
 
   const handleEdit = (item) => {
     setEditItem(item);
     setDialog({
-      service: item.subService?.service?._id || item.subService?.service || "",
-      subService: item.subService?._id || item.subService,
+      service:
+        item.service?._id ||
+        item.service ||
+        item.subService?.service?._id ||
+        item.subService?.service ||
+        item.subService?._id ||
+        item.subService ||
+        "",
       escalations: (item.escalations || []).map((e) => ({
         role: e.role?._id || e.role,
-        slaHours: (e.slaType ?? "hrs") == "days" ? e.slaHours / 24 : e.slaHours,
+        slaHours:
+          (e.slaType ?? "hrs") === "days" ? e.slaHours / 24 : e.slaHours,
         slaType: e.slaType ?? "hrs",
       })),
       officer: !!item.officer,
@@ -207,16 +202,9 @@ export default function SLAConfig() {
     }
   };
 
-  const subServiceOptions = availableSubservices.map((ss) => ({
-    label: ss.title || ss.name || "",
-    value: ss._id,
-    sla: ss.sla,
-  }));
-  // console.log({dialog})
-
   const handleSaveItem = () => {
-    if (!dialog.subService) {
-      getErrorToast({ message: "Please select a sub-service" });
+    if (!dialog.service) {
+      getErrorToast({ message: "Please select a service" });
       return;
     }
     const cleanedEscalations = (dialog.escalations || [])
@@ -228,20 +216,21 @@ export default function SLAConfig() {
         ...s,
         slaHours: s.slaType === "days" ? s.slaHours * 24 : s.slaHours,
       }));
-    // console.log({cleanedEscalations});
+
     let sum = 0;
     cleanedEscalations.forEach((e) => {
       sum += e.slaHours;
     });
-    const ss =
-      subServiceOptions.find((s) => s.value == dialog.subService)?.sla || 24;
-    if (sum > ss) {
-      getErrorToast({ message: `SLA hours sum cannot exceed ${ss} hrs` });
+
+    const selectedServiceObj = allServices.find((s) => s._id === dialog.service);
+    const serviceSla = selectedServiceObj?.sla || 24;
+    if (sum > serviceSla) {
+      getErrorToast({ message: `SLA hours sum cannot exceed ${serviceSla} hrs` });
       return;
     }
 
     const payload = {
-      subService: dialog.subService,
+      service: dialog.service,
       escalations: cleanedEscalations,
       officer: !!dialog.officer,
       active: true,
@@ -264,14 +253,13 @@ export default function SLAConfig() {
         <SectionTitle
           title={t("SLA Configuration", "SLA कॉन्फ़िगरेशन")}
           subtitle={t(
-            "Define SLA timeline per level for each sub-service - breach triggers auto-escalation",
-            "प्रत्येक उप-सेवा के लिए स्तर अनुसार SLA समय सीमा परिभाषित करें - उल्लंघन पर स्वतः वृद्धि होती है",
+            "Define SLA timeline per level for each service - breach triggers auto-escalation",
+            "प्रत्येक सेवा के लिए स्तर अनुसार SLA समय सीमा परिभाषित करें - उल्लंघन पर स्वतः वृद्धि होती है",
           )}
         />
 
-        {/* <LoaderErrWrapper isLoading={isSlaLoading || isRolesLoading} error={slaError || rolesError}> */}
+        {/* Analytics summary */}
         <SlaAnalytics docs={docs} rolesCount={roles.length} />
-        {/* </LoaderErrWrapper> */}
 
         <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-6 sm:items-center justify-between">
           <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center flex-1">
@@ -282,7 +270,7 @@ export default function SLAConfig() {
               }}
               delay={500}
               className="w-full sm:flex-1"
-              placeholder={t("Search sub-service...", "उप-सेवा खोजें...")}
+              placeholder={t("Search service...", "सेवा खोजें...")}
             />
             <LoaderErrWrapper isLoading={deptLoading}>
               <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
@@ -313,7 +301,6 @@ export default function SLAConfig() {
               setEditItem(null);
               setDialog({
                 service: "",
-                subService: "",
                 escalations: [],
                 officer: true,
                 active: true,
@@ -352,8 +339,11 @@ export default function SLAConfig() {
           />
           <div className="px-5 py-3 border-t border-border flex items-center justify-between">
             <div className="text-xs text-amber-600 flex items-center gap-1">
-              <AlertTriangle className="w-3.5 h-3.5" /> Sub-services without an
-              assigned officer will not be visible to citizens
+              <AlertTriangle className="w-3.5 h-3.5" />{" "}
+              {t(
+                "Services without an assigned officer will not be visible to citizens",
+                "बिना अधिकारी आवंटित सेवाएं नागरिकों को दिखाई नहीं देंगी",
+              )}
             </div>
           </div>
         </div>
@@ -373,11 +363,13 @@ export default function SLAConfig() {
             >
               <div className="flex items-center justify-between px-5 py-3 border-b border-border">
                 <h3 className="font-bold text-foreground">
-                  {editItem ? "Edit SLA Config" : "Add SLA Config"}
+                  {editItem
+                    ? t("Edit SLA Config", "SLA कॉन्फ़िगरेशन संपादित करें")
+                    : t("Add SLA Config", "SLA कॉन्फ़िगरेशन जोड़ें")}
                 </h3>
                 <button
                   onClick={() => setDialog(null)}
-                  className="p-1.5 hover:bg-muted rounded-lg"
+                  className="p-1.5 hover:bg-muted rounded-lg cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -389,14 +381,12 @@ export default function SLAConfig() {
                   setDialog={setDialog}
                   roles={roles}
                   serviceOptions={serviceOptions}
-                  subServiceOptions={subServiceOptions}
-                  isServicesPending={isServicesPending}
-                  isSubservicesPending={isSubservicesPending}
+                  isServicesPending={isServicesPending || isServicesLoading}
                 />
               </div>
               <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
                 <Button variant="outline" onClick={() => setDialog(null)}>
-                  Cancel
+                  {t("Cancel", "रद्द करें")}
                 </Button>
                 <Button
                   className="bg-primary hover:bg-primary/90"
@@ -405,8 +395,8 @@ export default function SLAConfig() {
                 >
                   <Check className="w-4 h-4 mr-1" />{" "}
                   {postMutation.isPending || putMutation.isPending
-                    ? "Saving..."
-                    : "Save"}
+                    ? t("Saving...", "सहेज रहा है...")
+                    : t("Save", "सहेजें")}
                 </Button>
               </div>
             </div>
@@ -418,7 +408,11 @@ export default function SLAConfig() {
           <DeleteDialog
             onClose={() => setDeleteRecord(null)}
             onDelete={handleConfirmDelete}
-            title={deleteRecord.subService?.title || "SLA Config"}
+            title={
+              deleteRecord.service?.title ||
+              deleteRecord.subService?.title ||
+              "SLA Config"
+            }
             deleting={deleteMutation.isPending}
           />
         )}

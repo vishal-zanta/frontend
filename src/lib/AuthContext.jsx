@@ -80,7 +80,8 @@ export const AuthProvider = ({ children }) => {
       logout,
       navigateToLogin,
       checkUserAuth,
-      checkAppState
+      checkAppState,
+      level : user?.role?.level
     }}>
       {children}
     </AuthContext.Provider>

@@ -30,7 +30,7 @@ export default function OfficerTagTable({
   const tableHeaders = [
     { id: "officer", label: t("Officer", "अधिकारी") },
     { id: "designation", label: t("Designation", "पदनाम") },
-    { id: "services", label: t("Sub-services", "उप-सेवाएं"), className: "min-w-60" },
+    { id: "services", label: t("Services", "सेवाएं"), className: "min-w-60" },
     { id: "wards", label: t("Subdivisions", "अनुमंडल"), className: "min-w-48" },
     { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-center" },
   ];
@@ -54,7 +54,7 @@ export default function OfficerTagTable({
                 variant="outline"
                 className="text-[10px] bg-primary/10 text-primary"
               >
-                {s.title}
+                {typeof s === "object" ? s.title || s.name || "N/A" : s}
               </Badge>
             ))
           ) : (
@@ -91,14 +91,16 @@ export default function OfficerTagTable({
             size="sm"
             onClick={() => {
               setEditItem(o);
-              setDialog({
-                officer: o.officer?.name || "",
-                designation: o.officer?.role?.designationEnglish || "",
-                services: (o.services || []).map((s) => s.title),
-                wards: o.wards || [],
-                activeComplaints: 0,
-                slaCompliant: true,
-              });
+              if (setDialog) {
+                setDialog({
+                  officer: o.officer?.name || "",
+                  designation: o.officer?.role?.designationEnglish || "",
+                  services: (o.services || []).map((s) => s.title || s.name || s),
+                  wards: o.wards || [],
+                  activeComplaints: 0,
+                  slaCompliant: true,
+                });
+              }
             }}
           >
             <Pencil className="w-3.5 h-3.5 mr-1" /> {t("Edit", "संपादित करें")}

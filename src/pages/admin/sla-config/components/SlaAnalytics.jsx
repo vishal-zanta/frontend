@@ -14,7 +14,7 @@ export default function SlaAnalytics({ docs = [], rolesCount = 0 }) {
       <StatCard
         color="blue"
         value={configured}
-        label={t("Sub-services Configured", "उप-सेवाएं कॉन्फ़िगर की गईं")}
+        label={t("Services Configured", "सेवाएं कॉन्फ़िगर की गईं")}
       />
       <StatCard
         color="emerald"

@@ -124,7 +124,7 @@ export default function CallHistoryLog() {
     { id: "duration", label: t("Duration", "अवधि") },
     { id: "complaint", label: t("Complaint", "शिकायत") },
     { id: "status", label: t("Status", "स्थिति") },
-    { id: "evidence", label: t("Evidence", "साक्ष्य") },
+    { id: "evidence", label: t("Priority", "प्राथमिकता") },
   ];
 
   const tableBody = filtered.map((c) => ({

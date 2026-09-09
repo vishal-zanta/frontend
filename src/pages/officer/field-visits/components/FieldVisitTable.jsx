@@ -12,7 +12,7 @@ export default function FieldVisitTable({
   onView,
   isHideAction = false,
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   return (
     <div className="overflow-x-auto">
@@ -91,24 +91,50 @@ export default function FieldVisitTable({
                   )}
                 </td>
                 <td className="px-4 py-3 text-nowrap text-muted-foreground text-xs">
-                  {fv.serviceDetails?.title || "N/A"}
-                  {fv.subServiceDetails?.title && (
-                    <div className="text-[10px] text-muted-foreground">
-                      {fv.subServiceDetails.title}
-                    </div>
-                  )}
+                  {lang === "hi" &&
+                  (fv.serviceDetails?.titleHindi || fv.serviceDetails?.nameHindi)
+                    ? fv.serviceDetails.titleHindi || fv.serviceDetails.nameHindi
+                    : fv.serviceDetails?.title ||
+                      fv.serviceDetails?.name ||
+                      fv.grievance?.classification?.service?.title ||
+                      "N/A"}
                 </td>
                 <td className="px-4 py-3 text-nowrap text-xs">
-                  {fv?.grievance?.address?.state ||
-                  fv?.grievance?.address?.district ? (
-                    <>
-                      <MapPin className="w-3 h-3 inline mr-1" />
-                      {fv?.grievance?.address?.district?.name || "N/A"},{" "}
-                      {fv?.grievance?.address?.state || "N/A"}
-                    </>
-                  ) : (
-                    "N/A"
-                  )}
+                  {(() => {
+                    const loc = fv?.grievance?.location || {};
+                    const districtName =
+                      typeof loc.district === "object"
+                        ? (lang === "hi" && loc.district?.nameHindi
+                            ? loc.district.nameHindi
+                            : loc.district?.name) ||
+                          loc.district?.name ||
+                          loc.district?.title
+                        : loc.district || "";
+
+                    const parts = [
+                      loc.panchayat,
+                      loc.block,
+                      loc.subdivision && loc.subdivision !== loc.block
+                        ? loc.subdivision
+                        : null,
+                      districtName,
+                      loc.pincode || loc.pinCode,
+                    ].filter(Boolean);
+
+                    const locationText =
+                      parts.length > 0
+                        ? parts.join(", ")
+                        : loc.division || "N/A";
+
+                    return locationText !== "N/A" ? (
+                      <>
+                        <MapPin className="w-3 h-3 inline mr-1 text-muted-foreground shrink-0" />
+                        <span title={locationText}>{locationText}</span>
+                      </>
+                    ) : (
+                      "N/A"
+                    );
+                  })()}
                 </td>
                 <td className="px-4 py-3 text-nowrap">
                   {fv.grievance?.assignedPriority ? (

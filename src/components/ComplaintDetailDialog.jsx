@@ -19,7 +19,7 @@ import {
   ULBS,
 } from "@/lib/biharData";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
-import { getFieldVisitStatusClass } from "@/utils/constants";
+import { getFieldVisitStatusClass, IMG_BASE_URL } from "@/utils/constants";
 import {
   Phone,
   MapPin,
@@ -31,6 +31,7 @@ import {
   Navigation,
   Camera,
   CheckCircle2,
+  User,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -665,7 +666,7 @@ export function FieldVisitDetailDialog({
   open,
   onClose,
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const rawVisit = propVisit;
   if (!rawVisit) return null;
 
@@ -675,66 +676,102 @@ export function FieldVisitDetailDialog({
     rawVisit.serviceDetails
   );
 
+  const loc = rawVisit?.grievance?.location || {};
+  const districtName =
+    typeof loc.district === "object"
+      ? (lang === "hi" && loc.district?.nameHindi
+          ? loc.district.nameHindi
+          : loc.district?.name) ||
+        loc.district?.name ||
+        loc.district?.title
+      : loc.district ||
+        rawVisit.address?.district?.name ||
+        rawVisit.address?.district ||
+        rawVisit.district ||
+        "";
+
+  const locationParts = [
+    loc.panchayat || rawVisit.address?.villageOrWard,
+    loc.block,
+    loc.subdivision && loc.subdivision !== loc.block ? loc.subdivision : null,
+    districtName,
+    loc.pincode || loc.pinCode,
+  ].filter(Boolean);
+
+  const locationText =
+    locationParts.length > 0
+      ? locationParts.join(", ")
+      : loc.division || rawVisit.ward || "N/A";
+
   const visit = {
     id: isApiObject ? rawVisit.visitId || rawVisit._id : rawVisit.id,
-    status: rawVisit.status || "N/A",
+    status: rawVisit.status || "PENDING",
     priority: isApiObject
       ? rawVisit.grievance?.assignedPriority || "NORMAL"
       : rawVisit.priority || "NORMAL",
-    officer: isApiObject
-      ? rawVisit.officer?.name || "N/A"
-      : rawVisit.officer || "N/A",
-    officerId: isApiObject
-      ? rawVisit.officer?._id || "N/A"
-      : rawVisit.officerId || "N/A",
-    ward: isApiObject
-      ? rawVisit.address?.villageOrWard ||
-        rawVisit.grievance?.address?.villageOrWard ||
-        "N/A"
-      : rawVisit.ward || "N/A",
-    district: isApiObject
-      ? rawVisit.address?.district?.name ||
-        rawVisit.address?.district ||
-        rawVisit?.grievance?.address?.district?.name ||
-        rawVisit?.grievance?.address?.district ||
-        "N/A"
-      : rawVisit.district || "N/A",
-    schedule: rawVisit.schedule
-      ? (() => {
-          const dateStr = rawVisit.schedule;
-          return dateStr.includes("N/A") || dateStr.includes("T")
-            ? new Date(dateStr).toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })
-            : dateStr;
-        })()
+    citizenName:
+      rawVisit.grievance?.citizenInfo?.fullName ||
+      rawVisit.citizenName ||
+      "N/A",
+    citizenMobile:
+      rawVisit.grievance?.citizenInfo?.mobile ||
+      rawVisit.citizenMobile ||
+      "N/A",
+    schedule:
+      rawVisit.schedule || rawVisit.scheduledDate
+        ? (() => {
+            const dateStr = rawVisit.schedule || rawVisit.scheduledDate;
+            return String(dateStr).includes("T")
+              ? new Date(dateStr).toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+              : dateStr;
+          })()
+        : "N/A",
+    complaintDate: rawVisit.grievance?.createdAt
+      ? new Date(rawVisit.grievance.createdAt).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
       : "N/A",
-    photoUploaded: isApiObject
-      ? rawVisit.grievance?.geotaggedImages?.length > 0
-      : rawVisit.photoUploaded,
     service: isApiObject
-      ? rawVisit.serviceDetails?.title || "N/A"
+      ? (lang === "hi" &&
+        (rawVisit.serviceDetails?.titleHindi ||
+          rawVisit.serviceDetails?.nameHindi)
+          ? rawVisit.serviceDetails?.titleHindi ||
+            rawVisit.serviceDetails?.nameHindi
+          : rawVisit.serviceDetails?.title ||
+            rawVisit.serviceDetails?.name ||
+            rawVisit.grievance?.classification?.service?.title ||
+            "N/A")
       : rawVisit.service || "N/A",
-    subservice: isApiObject
-      ? rawVisit.subServiceDetails?.title || "N/A"
-      : rawVisit.subservice || "N/A",
     complaintId: isApiObject
-      ? rawVisit.grievance?._id || rawVisit.grievance?.grievanceId || "N/A"
+      ? rawVisit.grievance?.grievanceId || rawVisit.grievance?._id || "N/A"
       : rawVisit.complaintId || "N/A",
     complaint: isApiObject ? rawVisit.grievance : null,
     geoTag: isApiObject
       ? (() => {
-          const coords = rawVisit.grievance?.geotaggedImages?.[0]?.coordinates;
+          const coords = rawVisit.grievance?.geotaggedImages?.find(
+            (g) => g?.coordinates,
+          )?.coordinates;
           return coords?.latitude && coords?.longitude
-            ? `${String(coords.latitude).slice(0, 6)} | ${String(coords.longitude).slice(0, 6)}`
+            ? `${String(coords.latitude).slice(0, 7)} | ${String(coords.longitude).slice(0, 7)}`
             : "N/A";
         })()
       : rawVisit.geoTag || "N/A",
+    geotaggedImages: rawVisit.grievance?.geotaggedImages || [],
     notes: isApiObject ? rawVisit.remarks || "N/A" : rawVisit.notes || "N/A",
+    location: locationText,
+    district: districtName || "N/A",
+    panchayat: loc.panchayat || "N/A",
+    block: loc.block || "N/A",
+    subdivision: loc.subdivision || "N/A",
+    division: loc.division || "N/A",
+    pincode: loc.pincode || loc.pinCode || "N/A",
   };
-  // console.log({visit, rawVisit}, "asdf")
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -758,60 +795,117 @@ export function FieldVisitDetailDialog({
             </Badge>
             <PriorityBadge priority={visit.priority} />
           </div>
+
           <div className="grid grid-cols-2 gap-2 lg:gap-3 text-[10px] lg:text-xs">
-            {/* <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Officer:</span>
-                <span className="font-medium">{visit.officer || "N/A"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <HardHat className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Officer ID:</span>
-                <OfficerId id={visit.officerId || "N/A"} />
-              </div> */}
-            <div className="flex items-center gap-1.5">
-              <MapPin className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">
-                {t("Ward:", "वार्ड:")}
-              </span>
-              <span className="font-medium">{visit.ward || "N/A"}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Building2 className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">
-                {t("District:", "जिला:")}
-              </span>
-              <span className="font-medium">{visit.district || "N/A"}</span>
-            </div>
             <div className="flex items-center gap-1.5">
               <Calendar className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
               <span className="text-muted-foreground">
                 {t("Scheduled:", "निर्धारित:")}
               </span>
-              <span className="font-medium">{visit?.schedule || "N/A"}</span>
+              <span className="font-medium">{visit.schedule}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Camera className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
+              <Calendar className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
               <span className="text-muted-foreground">
-                {t("Photo:", "फोटो:")}
+                {t("Complaint Date:", "शिकायत की तारीख:")}
               </span>
-              {visit.photoUploaded ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-              ) : (
-                <span className="text-[10px] text-amber-600">
-                  {t("Pending", "लंबित")}
-                </span>
-              )}
+              <span className="font-medium">{visit.complaintDate}</span>
             </div>
+
+            {visit.citizenName !== "N/A" && (
+              <div className="flex items-center gap-1.5">
+                <User className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
+                <span className="text-muted-foreground">
+                  {t("Citizen:", "नागरिक:")}
+                </span>
+                <span className="font-medium">{visit.citizenName}</span>
+              </div>
+            )}
+            {visit.citizenMobile !== "N/A" && (
+              <div className="flex items-center gap-1.5">
+                <Phone className="w-3 h-3 lg:w-4 lg:h-4 text-muted-foreground shrink-0" />
+                <span className="text-muted-foreground">
+                  {t("Mobile:", "मोबाइल:")}
+                </span>
+                <span className="font-medium">{visit.citizenMobile}</span>
+              </div>
+            )}
           </div>
+
+          {/* Service Section */}
           <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
               {t("Service", "सेवा")}
             </div>
             <div className="font-medium text-xs lg:text-sm">
-              {visit.service || "N/A"} - {visit.subservice || "N/A"}
+              {visit.service}
             </div>
           </div>
+
+          {/* Location Section */}
+          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3 space-y-1.5">
+            <div className="text-[10px] lg:text-xs text-muted-foreground uppercase tracking-wide font-semibold flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-muted-foreground" />
+              {t("Location Details", "स्थान का विवरण")}
+            </div>
+            <div className="text-xs lg:text-sm font-medium">
+              {visit.location}
+            </div>
+            {(visit.district !== "N/A" || visit.block !== "N/A") && (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground pt-1 border-t border-border/50">
+                {visit.panchayat !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("Panchayat:", "पंचायत:")}{" "}
+                    </span>
+                    {visit.panchayat}
+                  </div>
+                )}
+                {visit.block !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("Block:", "प्रखंड:")}{" "}
+                    </span>
+                    {visit.block}
+                  </div>
+                )}
+                {visit.subdivision !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("Subdivision:", "अनुमंडल:")}{" "}
+                    </span>
+                    {visit.subdivision}
+                  </div>
+                )}
+                {visit.district !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("District:", "जिला:")}{" "}
+                    </span>
+                    {visit.district}
+                  </div>
+                )}
+                {visit.division !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("Division:", "प्रमंडल:")}{" "}
+                    </span>
+                    {visit.division}
+                  </div>
+                )}
+                {visit.pincode !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("Pincode:", "पिनकोड:")}{" "}
+                    </span>
+                    {visit.pincode}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Complaint Link */}
           <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
               {t("Complaint ID", "शिकायत आईडी")}
@@ -822,19 +916,56 @@ export function FieldVisitDetailDialog({
               "N/A"
             )}
           </div>
-          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
-            <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-              {t("Geo-Tag", "जियो-टैग")}
+
+          {/* Geo-Tag & Images */}
+          <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3 space-y-2">
+            <div className="text-[10px] lg:text-xs text-muted-foreground uppercase tracking-wide font-semibold flex items-center justify-between">
+              <span>{t("Geo-Tag Coordinates", "जियो-टैग निर्देशांक")}</span>
+              <span className="font-mono text-xs text-foreground">
+                {visit.geoTag}
+              </span>
             </div>
-            <div className="font-mono text-xs lg:text-sm">
-              {visit.geoTag || "N/A"}
-            </div>
+            {visit.geotaggedImages && visit.geotaggedImages.length > 0 && (
+              <div>
+                <div className="text-[10px] text-muted-foreground mb-1">
+                  {t("Geotagged Photos:", "जियोटैग की गई तस्वीरें:")}
+                </div>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {visit.geotaggedImages.map((img, idx) => {
+                    const url =
+                      typeof img === "string" ? img : img?.url || img?.path || "";
+                    const displayUrl = url.startsWith("http")
+                      ? url
+                      : IMG_BASE_URL + url;
+                    return (
+                      <a
+                        key={idx}
+                        href={displayUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-primary hover:underline bg-background/80 px-2 py-1 rounded border border-border"
+                      >
+                        <Camera className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>
+                          {t("Photo", "फोटो")} #{idx + 1}
+                        </span>
+                        <ExternalLink className="w-3 h-3 ml-0.5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Notes / Remarks */}
           <div>
             <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 uppercase tracking-wide font-semibold">
-              {t("Visit Notes", "विजिट टिप्पणी")}
+              {t("Visit Notes / Remarks", "विजिट टिप्पणी")}
             </div>
-            <p className="text-xs lg:text-sm">{visit.notes || "N/A"}</p>
+            <p className="text-xs lg:text-sm text-foreground bg-muted/20 p-2.5 rounded-lg border border-border/50">
+              {visit.notes || "N/A"}
+            </p>
           </div>
         </div>
       </DialogContent>

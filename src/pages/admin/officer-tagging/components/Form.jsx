@@ -5,7 +5,6 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   useGetServices,
-  useGetSubservices,
   useGetDemographics,
 } from "../../master-data/hooks";
 import subDivisionsData from "@/utils/sub-divisions.json";
@@ -18,93 +17,34 @@ export default function Form({
   onCancel,
 }) {
   const {
-    resetField,
-    getValues,
     setValue,
     formState: { errors },
   } = useFormContext();
   const { t } = useLanguage();
-  const selectedService = useWatch({ name: "service" });
   const selectedDistrict = useWatch({ name: "district" });
   const selectedOfficer = useWatch({ name: "officer" });
   const officerDept = (
     userOptions.find((u) => u.value === selectedOfficer)?.apiData || {}
   )?.role?.department;
 
-  // console.log({userOptions, officerDept})
-
-  // Fetch Services
+  // Fetch Services for officer's department
   const {
     data: servicesData,
     isLoading: serviceLoading,
     isFetching: serviceFetching,
-  } = useGetServices([officerDept?._id], {
-    page: 1,
-    limit: MAX_LIMIT,
-    department: officerDept?._id,
-  });
+  } = useGetServices(
+    [officerDept?._id],
+    {
+      page: 1,
+      limit: MAX_LIMIT,
+      department: officerDept?._id,
+    },
+    !!officerDept?._id,
+  );
   const servicesOptions = (servicesData?.data?.data?.docs || []).map((s) => ({
     label: s.title || s.name || "",
     value: s._id,
   }));
-
-  // Fetch Subservices based on selectedService
-  const {
-    data: subservicesData,
-    isLoading: isSubservicesLoading,
-    isFetching: isSubservicesFetching,
-  } = useGetSubservices(
-    [selectedService],
-    {
-      serviceId: Array.isArray(selectedService)
-        ? selectedService.join(",")
-        : selectedService || "",
-      page: 1,
-      limit: MAX_LIMIT,
-    },
-    !!(selectedService && selectedService.length > 0),
-  );
-  const subservicesOptions = (subservicesData?.data?.data?.docs || []).map(
-    (s) => ({
-      label: s.title || s.name || "",
-      value: s._id,
-    }),
-  );
-
-  // When new sub-services options load after service change,
-  // keep only the selected sub-services that exist in the new options.
-  // Guard: skip if still loading to avoid wiping selection on in-flight empty response.
-  const isFirstRenderService = useRef(true);
-  useEffect(() => {
-    console.log({
-      isFirstRenderService: isFirstRenderService.current,
-      isSubservicesLoading,
-      isSubservicesFetching,
-      subservicesOptions: subservicesOptions.length,
-      selectedService,
-    });
-    if (isFirstRenderService.current) {
-      isFirstRenderService.current = false;
-      return;
-    }
-    // Don't run while subservices are being fetched — the options array is
-    // temporarily empty during the request, which would incorrectly clear
-    // the user's existing selection.
-    if (isSubservicesLoading || isSubservicesFetching) return;
-    const currentSubservices = getValues("services") || [];
-    if (currentSubservices.length === 0) return;
-    const validIds = new Set(subservicesOptions.map((o) => o.value));
-    const filtered = currentSubservices.filter((id) => validIds.has(id));
-    setValue("services", filtered, { shouldValidate: true });
-     
-  }, [
-    JSON.stringify({
-      isSubservicesLoading,
-      isSubservicesFetching,
-      subservicesOptions,
-      selectedService,
-    }),
-  ]);
 
   // Fetch Districts (Demographics)
   const { data: demographyData } = useGetDemographics([], {
@@ -144,61 +84,43 @@ export default function Form({
     <div className="space-y-4">
       <RhfSelect
         name="officer"
-        label="Select Officer"
+        label={t("Select Officer", "अधिकारी चुनें")}
         required
         options={userOptions}
-        placeholder="Select an officer"
+        placeholder={t("Select an officer", "अधिकारी चुनें")}
         disabled={isEdit}
       />
       <RhfSelect
-        name="service"
-        label="Service"
+        name="services"
+        label={t("Services", "सेवाएं")}
         required
         isMultiple={true}
         options={servicesOptions}
-        placeholder={!selectedOfficer ? "Select officer first" : "Select services"}
+        placeholder={
+          !selectedOfficer
+            ? t("Select officer first", "पहले अधिकारी चुनें")
+            : t("Select services", "सेवाएं चुनें")
+        }
         isLoading={serviceLoading || serviceFetching}
         disabled={!selectedOfficer}
       />
-      {
-        <RhfSelect
-          name="services"
-          label="Sub-services"
-          required
-          isMultiple={true}
-          options={subservicesOptions}
-          placeholder={
-            !selectedService || selectedService.length === 0
-              ? "Select service first"
-              : "Select sub-services"
-          }
-          disabled={
-            !selectedService ||
-            selectedService.length === 0 ||
-            serviceLoading ||
-            isSubservicesLoading
-          }
-          isLoading={
-            serviceLoading || isSubservicesFetching || isSubservicesLoading
-          }
-        />
-      }
-
       <RhfSelect
         name="district"
-        label="District"
+        label={t("District", "जिला")}
         required
         options={districtOptions}
-        placeholder="Select district"
+        placeholder={t("Select district", "जिला चुनें")}
       />
       <RhfSelect
         name="wards"
-        label="Subdivision"
+        label={t("Subdivisions", "अनुमंडल")}
         required
         isMultiple={true}
         options={subdivisionOptions}
         placeholder={
-          !selectedDistrict ? "Select district first" : "Select subdivisions"
+          !selectedDistrict
+            ? t("Select district first", "पहले जिला चुनें")
+            : t("Select subdivisions", "अनुमंडल चुनें")
         }
         disabled={!selectedDistrict}
       />
@@ -221,14 +143,16 @@ export default function Form({
             onClick={onCancel}
             disabled={isLoading}
           >
-            Cancel
+            {t("Cancel", "रद्द करें")}
           </Button>
           <Button
             type="submit"
             disabled={isLoading}
             className="bg-primary hover:bg-primary/90"
           >
-            {isLoading ? "Saving..." : "Save"}
+            {isLoading
+              ? t("Saving...", "सहेजा जा रहा है...")
+              : t("Save", "सहेजें")}
           </Button>
         </div>
       </div>

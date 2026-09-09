@@ -33,8 +33,8 @@ export default function RecentComplaintsSection() {
 
   const tableBody = complaints.map((c) => {
     const citizenName = c.citizenInfo?.fullName || "N/A";
-    const serviceName = c.classification?.subService?.service?.title || "N/A";
-    const districtName = c.address?.district?.name || c.address?.district || "N/A";
+    const serviceName = c.classification?.service?.title || "N/A";
+    const districtName = c?.location?.district?.name || c.address?.district || "N/A";
 
     return {
       id: {

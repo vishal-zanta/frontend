@@ -210,59 +210,9 @@ export const sidebarSections = [
       {
         label: "MIS Reports",
         labelHindi: "एमआईएस रिपोर्ट",
-        path: "/admin/mis",
+        path: "/admin/mis?report=summary",
         icon: FileBarChart,
         permissions: PERMISSIONS.MIS_REPORTS,
-        children: [
-          {
-            label: "Complaint Summary",
-            labelHindi: "शिकायत सारांश",
-            path: "/admin/mis?report=summary",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-          {
-            label: "Officer Ranking",
-            labelHindi: "अधिकारी रैंकिंग",
-            path: "/admin/mis?report=officer",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-          {
-            label: "Service Performance",
-            labelHindi: "सेवा प्रदर्शन",
-            path: "/admin/mis?report=service",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-          {
-            label: "Urban Performance",
-            labelHindi: "शहरी प्रदर्शन",
-            path: "/admin/mis?report=urban",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-          {
-            label: "Rural Performance",
-            labelHindi: "ग्रामीण प्रदर्शन",
-            path: "/admin/mis?report=rural",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-          {
-            label: "ULB Leadership Board",
-            labelHindi: "यूएलबी नेतृत्व बोर्ड",
-            path: "/admin/mis?report=ulb",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-          {
-            label: "IVR Report",
-            labelHindi: "आईवीआर रिपोर्ट",
-            path: "/admin/mis?report=ivr",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-          {
-            label: "Agent Performance",
-            labelHindi: "एजेंट प्रदर्शन",
-            path: "/admin/mis?report=agent",
-            permissions: PERMISSIONS.MIS_REPORTS,
-          },
-        ],
       },
       {
         label: "Call History",
@@ -389,7 +339,10 @@ function NavItem({ item, onNavigate, overrideLabel }) {
     }
   }
 
-  const isActive = location.pathname === item.path;
+  const isActive =
+    location.pathname === item.path ||
+    location.pathname + location.search === item.path ||
+    (item.path && location.pathname === item.path.split("?")[0]);
 
   const visibleChildren = (item.children || []).filter((child) =>
     hasPermission(child.permissions),
@@ -528,7 +481,7 @@ export default function Sidebar({
               </div>
               <div className="min-w-0">
                 <div className="text-sm font-bold text-white leading-tight truncate">
-                  {t(PORTAL_META.name, "सहयोग हेल्पलाइन पोर्टल")}
+                  {t(PORTAL_META.nameEasy, "सहयोग हेल्पलाइन")}
                 </div>
                 <div className="text-[10px] text-sidebar-foreground/60 leading-tight">
                   {t("Govt. of Bihar", "बिहार सरकार")}

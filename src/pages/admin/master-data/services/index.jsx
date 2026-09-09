@@ -83,19 +83,33 @@ export default function ServicesTab() {
   });
 
   const handleSubmitService = (formData) => {
+    const finalSla =
+      formData.slaType === "days"
+        ? Number(formData.sla) * 24
+        : Number(formData.sla);
+
+    const payload = {
+      ...formData,
+      sla: finalSla,
+      slaType: formData.slaType || "hrs",
+      geoTagged: Boolean(formData.geoTagged),
+      fieldVisit: Boolean(formData.fieldVisit),
+    };
+
     if (serviceDialog.type === "add") {
-      postServiceMutation.mutate(formData);
+      postServiceMutation.mutate(payload);
     } else {
       putServiceMutation.mutate({
         serviceId: serviceDialog.item._id,
         service: {
           ...serviceDialog.item,
-          ...formData,
+          ...payload,
         },
       });
     }
   };
 
+  const slaType = serviceDialog?.item?.slaType ?? "hrs";
   const initialValues = {
     title: serviceDialog?.item?.title || "",
     titleHindi: serviceDialog?.item?.titleHindi || "",
@@ -103,7 +117,16 @@ export default function ServicesTab() {
       serviceDialog?.item?.department?._id ||
       serviceDialog?.item?.department ||
       "",
-      departmentObj :  serviceDialog?.item?.department || {}
+    departmentObj: serviceDialog?.item?.department || {},
+    sla:
+      serviceDialog?.item?.sla !== undefined && serviceDialog?.item?.sla !== null
+        ? slaType === "days"
+          ? serviceDialog.item.sla / 24
+          : serviceDialog.item.sla
+        : 24,
+    slaType: slaType,
+    geoTagged: Boolean(serviceDialog?.item?.geoTagged ?? false),
+    fieldVisit: Boolean(serviceDialog?.item?.fieldVisit ?? false),
   };
 
   const isSaving =

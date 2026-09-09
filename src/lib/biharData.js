@@ -5,6 +5,7 @@
 
 export const PORTAL_META = {
   name: "Sahayog Helpline Portal",
+  nameEasy: "Sahayog Helpline",
   tagline: "Good Governance is Public Service - Bihar Government",
   dept: "",
   version: "v2.4.1",

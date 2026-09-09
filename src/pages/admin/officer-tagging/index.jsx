@@ -151,10 +151,6 @@ export default function OfficerTagging() {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.OFFICER_TAGGINGS],
       });
-      //  queryClient.invalidateQueries({
-      //   queryKey: [QUERY_KEYS.USERS],
-      //   refetchType: "active",
-      // });
       setDialogOpen(false);
       setEditItem(null);
     },
@@ -188,7 +184,6 @@ export default function OfficerTagging() {
   const handleFormSubmit = (formData) => {
     const payload = {
       officer: formData.officer,
-      service: formData.service,
       services: formData.services,
       district: formData.district,
       wards: formData.wards,
@@ -220,8 +215,8 @@ export default function OfficerTagging() {
         <SectionTitle
           title={t("Officer Tagging", "अधिकारी मैपिंग")}
           subtitle={t(
-            "Tag officers to multiple services and multiple wards - manually assigned due to location restriction",
-            "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और कई वार्डों से मैप करें",
+            "Tag officers to multiple services and multiple subdivisions - manually assigned due to location restriction",
+            "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और कई अनुमंडलों से मैप करें",
           )}
         />
 
@@ -319,7 +314,7 @@ export default function OfficerTagging() {
               setDialogOpen(false);
               setEditItem(null);
             }}
-            title={editItem ? "Edit Tagging" : "Tag New Officer"}
+            title={editItem ? t("Edit Tagging", "मैपिंग संपादित करें") : t("Tag New Officer", "नया अधिकारी मैप करें")}
           >
             <RhfWrapper
               isValidation={true}
@@ -328,23 +323,6 @@ export default function OfficerTagging() {
               initialValues={
                 editItem
                   ? (() => {
-                      const firstSubservice = editItem.services?.[0];
-                      let initialServiceId = [];
-                      if (editItem.service) {
-                        initialServiceId = Array.isArray(editItem.service)
-                          ? editItem.service.map((s) => s._id || s)
-                          : [editItem.service?._id || editItem.service];
-                      } else if (editItem.services?.length > 0) {
-                        const parentIds = editItem.services
-                          .map((s) =>
-                            typeof s?.service === "object"
-                              ? s.service?._id
-                              : s?.service,
-                          )
-                          .filter(Boolean);
-                        initialServiceId = [...new Set(parentIds)];
-                      }
-
                       let initialDistrictId =
                         editItem.district?._id || editItem.district || "";
                       if (!initialDistrictId) {
@@ -371,7 +349,6 @@ export default function OfficerTagging() {
                       return {
                         officer:
                           editItem.officer?._id || editItem.officer || "",
-                        service: initialServiceId,
                         services: (editItem.services || []).map(
                           (s) => s._id || s,
                         ),
@@ -381,7 +358,6 @@ export default function OfficerTagging() {
                     })()
                   : {
                       officer: "",
-                      service: [],
                       services: [],
                       district: "",
                       wards: [],
@@ -407,8 +383,11 @@ export default function OfficerTagging() {
           <DeleteDialog
             onClose={() => setDeleteRecord(null)}
             onDelete={handleConfirmDelete}
-            title="Remove Officer Tagging"
-            message={`Are you sure you want to remove the tagging for "${deleteRecord.officer?.name || "this officer"}"?`}
+            title={t("Remove Officer Tagging", "अधिकारी मैपिंग हटाएं")}
+            message={t(
+              `Are you sure you want to remove the tagging for "${deleteRecord.officer?.name || "this officer"}"?`,
+              `क्या आप "${deleteRecord.officer?.name || "इस अधिकारी"}" के लिए मैपिंग हटाना चाहते हैं?`,
+            )}
             deleting={deleteMutation.isPending}
           />
         )}
@@ -416,22 +395,20 @@ export default function OfficerTagging() {
         {/* Rules */}
         <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-5">
           <h4 className="font-bold text-amber-800 mb-2 text-sm">
-            ⚠ Officer Tagging Rules
+            ⚠ {t("Officer Tagging Rules", "अधिकारी मैपिंग नियम")}
           </h4>
           <ul className="text-sm text-amber-700 space-y-1">
             <li>
-              • A single officer can be tagged to multiple services and multiple
-              wards
+              • {t("A single officer can be tagged to multiple services and multiple subdivisions", "एक अधिकारी को कई सेवाओं और कई अनुमंडलों से मैप किया जा सकता है")}
             </li>
             <li>
-              • Every SLA must have at least 1 officer - or the ticket will not
-              be visible
+              • {t("Every SLA must have at least 1 officer - or the ticket will not be visible", "प्रत्येक SLA में कम से कम 1 अधिकारी होना चाहिए - अन्यथा शिकायत दिखाई नहीं देगी")}
             </li>
             <li>
-              • Officers can only be added manually due to location restriction
+              • {t("Officers can only be added manually due to location restriction", "स्थान प्रतिबंध के कारण अधिकारियों को केवल मैन्युअल रूप से जोड़ा जा सकता है")}
             </li>
             <li>
-              • If a ticket remains unassigned, it can be reassigned later
+              • {t("If a ticket remains unassigned, it can be reassigned later", "यदि कोई शिकायत आवंटित नहीं रहती है, तो उसे बाद में पुनः आवंटित किया जा सकता है")}
             </li>
           </ul>
         </div>

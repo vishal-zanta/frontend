@@ -32,9 +32,12 @@ export default function SlaCards({ docs = [], roles = [], onEdit, onDelete }) {
 }
 
 function Card({ item, roles, onEdit, onDelete, t }) {
-  const subServiceTitle =
+  const serviceTitle =
+    item.service?.title ||
+    item.service?.name ||
     item.subService?.title ||
     item.subService?.name ||
+    item.service ||
     item.subService ||
     "N/A";
 
@@ -48,10 +51,10 @@ function Card({ item, roles, onEdit, onDelete, t }) {
           </div>
           <div className="min-w-0">
             <div className="font-semibold text-sm text-foreground truncate">
-              {subServiceTitle}
+              {serviceTitle}
             </div>
             <div className="text-[11px] text-muted-foreground">
-              {t("Sub-Service SLA Escalations", "उप-सेवा SLA एस्केलेशन")}
+              {t("Service SLA Escalations", "सेवा SLA एस्केलेशन")}
             </div>
           </div>
         </div>
@@ -66,7 +69,7 @@ function Card({ item, roles, onEdit, onDelete, t }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {roles.map((role) => {
               const esc = (item.escalations || []).find(
-                (e) => (e.role?._id || e.role) === role._id
+                (e) => (e.role?._id || e.role) === role._id,
               );
               return (
                 <div
