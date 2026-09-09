@@ -52,7 +52,7 @@ export default function ButtonsFooter({
                 {t("Submitting...", "जमा हो रहा है...")}
               </span>
             ) : (
-              t("Submit Grievance", "शिकायत जमा करें")
+              t("Submit", "जमा करें")
             )}
           </Button>
         )}
