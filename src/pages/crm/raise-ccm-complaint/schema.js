@@ -28,9 +28,9 @@ const addressSchema = z.object({
     .string()
     .min(1, "Panchayat is required")
     .max(50, "Panchayat cannot exceed 50 characters"),
-  thana: z.string().or(z.literal("")),
-    // .min(1, "Thana is required")
-    // .max(50, "Thana cannot exceed 50 characters"),
+  thana: z.string()
+    .min(1, "Thana is required")
+    .max(50, "Thana cannot exceed 50 characters"),
   pincode: z.string().min(1, "Pincode is required"),
 });
 
@@ -94,13 +94,13 @@ const correspondenceAddressSchema = z
           path: ["panchayat"],
         });
       }
-      // if (!data.thana || data.thana.trim() === "") {
-      //   ctx.addIssue({
-      //     code: z.ZodIssueCode.custom,
-      //     message: "Thana is required",
-      //     path: ["thana"],
-      //   });
-      // }
+      if (!data.thana || data.thana.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Thana is required",
+          path: ["thana"],
+        });
+      }
     } else {
       if (!data.city || data.city.trim() === "") {
         ctx.addIssue({
