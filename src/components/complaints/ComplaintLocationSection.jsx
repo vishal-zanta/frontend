@@ -152,11 +152,11 @@ export default function ComplaintLocationSection({
               <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />
               {t("Correspondence Address", "पत्राचार का पता")}
             </h4>
-            {isSameAddress && (
+            {/* {isSameAddress && (
               <span className="text-[10px] font-medium bg-primary/10 text-primary border border-primary/20 rounded-full px-2 py-0.5">
                 {t("Same as Permanent Address", "स्थायी पते के समान")}
               </span>
-            )}
+            )} */}
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-3 text-[10px] lg:text-xs">
             {(effectiveCorrAddr.addressLine || effectiveCorrAddr.landmark) && (
