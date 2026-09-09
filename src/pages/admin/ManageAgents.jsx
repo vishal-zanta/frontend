@@ -157,7 +157,7 @@ export default function ManageAgents() {
                   </th>
                   <th className="px-4 py-3 font-medium">{t("Name", "नाम")}</th>
                   <th className="px-4 py-3 font-medium">
-                    {t("Role", "भूमिका")}
+                    {t("Designation", "पदनाम")}
                   </th>
                   <th className="px-4 py-3 font-medium">
                     {t("Shift", "शिफ्ट")}
@@ -283,7 +283,7 @@ export default function ManageAgents() {
                   />
                 </div>
                 <div>
-                  <Label className="mb-1.5 block">Role</Label>
+                  <Label className="mb-1.5 block">{t("Designation", "पदनाम")}</Label>
                   <select
                     className="w-full border border-input rounded-md p-2 text-sm"
                     value={dialog.role || "CCE"}

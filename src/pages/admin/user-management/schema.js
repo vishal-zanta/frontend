@@ -4,7 +4,7 @@ import { CCE_ROLES } from "@/utils/constants";
 export const getAddSchema = (rolesList) => {
   return z.object({
     name: z.string().min(1, "Name is required").trim(),
-    role: z.string().min(1, "Role is required"),
+    role: z.string().min(1, "Designation is required"),
     district: z.string().optional(),
     status: z.string().optional(),
     skills: z.array(z.string()).optional(),
@@ -84,7 +84,7 @@ export const getAddSchema = (rolesList) => {
 export const getEditSchema = (rolesList) => {
   return z.object({
     name: z.string().min(1, "Name is required").trim(),
-    role: z.string().min(1, "Role is required"),
+    role: z.string().min(1, "Designation is required"),
     district: z.string().optional(),
     status: z.string().optional(),
     skills: z.array(z.string()).optional(),

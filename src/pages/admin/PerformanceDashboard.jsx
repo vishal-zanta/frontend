@@ -57,7 +57,7 @@ export default function PerformanceDashboard() {
   const filterOptions = [
     {
       filterKey: "role",
-      label: t("By Role", "भूमिका के अनुसार"),
+      label: t("By Designation", "पदनाम के अनुसार"),
       options: roleOptions,
     },
     {

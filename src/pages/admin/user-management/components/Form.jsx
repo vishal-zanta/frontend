@@ -7,6 +7,7 @@ import { useGetDemographics } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { MAX_LIMIT, LANGUAGES, CCE_ROLES, ADMIN_ROLES } from "@/utils/constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 
 export default function Form({
@@ -17,6 +18,7 @@ export default function Form({
   disabledKeys = [],
   skillsOptions = [],
 }) {
+  const { t } = useLanguage();
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
   const { data: demographyData } = useGetDemographics([], {
     page: 1,
@@ -50,11 +52,11 @@ export default function Form({
     <div className="space-y-4 max-h-[400px]">
        <RhfSelect
         name="role"
-        label="Role"
+        label={t("Designation", "पदनाम")}
         required
         disabled={disabledKeys.includes("role")}
         options={roleOptions}
-        placeholder="Select a role"
+        placeholder={t("Select a designation", "पदनाम चुनें")}
       />
       <RhfInput
         label="Name"

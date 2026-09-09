@@ -114,7 +114,7 @@ function UserCard({
         <div className="grid grid-cols-2 gap-1.5 xs:gap-2 text-xs bg-muted/40 p-2 xs:p-2.5 rounded-lg border border-border/50">
           <div>
             <span className="text-muted-foreground block text-[9px] xs:text-[10px] uppercase font-medium">
-              {t("Role", "भूमिका")}
+              {t("Designation", "पदनाम")}
             </span>
             {u?.role ? (
               <Badge

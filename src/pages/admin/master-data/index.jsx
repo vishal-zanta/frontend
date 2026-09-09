@@ -57,7 +57,7 @@ const tabs = [
   },
   {
     id: "service",
-    label: "Services & Sub-services",
+    label: "Services",
     icon: Building2,
     permissions: PERMISSIONS.SERVICE_MANAGEMENT,
     group: "external",
@@ -90,7 +90,7 @@ const tabLabels = {
   departments: ["Departments", "विभाग"],
   "skill-set": ["Skill Set", "कौशल सेट"],
   "api-keys": ["API Keys", "API कुंजियाँ"],
-  service: ["Services & Sub-services", "सेवाएं और उप-सेवाएं"],
+  service: ["Services", "सेवाएं"],
   source: ["Complaint Sources", "शिकायत के स्रोत"],
   demography: ["Demography & ULBs", "जनसांख्यिकी और ULBs"],
   "grievances-nature": ["Grievance Nature", "शिकायत की प्रकृति"],

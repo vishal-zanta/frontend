@@ -42,7 +42,7 @@ export default function WorkflowTable({
     { id: "drag", label: "", className: "w-10" },
     { id: "level", label: t("Level", "स्तर") },
     { id: "department", label: t("Department", "विभाग") },
-    { id: "role", label: t("Role", "भूमिका") },
+    { id: "role", label: t("Designation", "पदनाम") },
     { id: "description", label: t("Description", "विवरण") },
     { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-center" },
   ];

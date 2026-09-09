@@ -244,8 +244,8 @@ export default function WorkflowConfig() {
         <SectionTitle
           title={t("Workflow Configuration", "कार्यप्रवाह कॉन्फ़िगरेशन")}
           subtitle={t(
-            "Configure department escalation workflow levels and roles",
-            "विभाग वृद्धि कार्यप्रवाह स्तर और भूमिकाएं कॉन्फ़िगर करें",
+            "Configure department escalation workflow levels and designations",
+            "विभाग वृद्धि कार्यप्रवाह स्तर और पदनाम कॉन्फ़िगर करें",
           )}
         />
 

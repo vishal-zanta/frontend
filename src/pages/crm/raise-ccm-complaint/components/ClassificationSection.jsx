@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import RhfBoolean from "@/components/rhfinputs/RhfBoolean";
@@ -20,8 +20,8 @@ export default function ClassificationSection({
   lang,
 }) {
   const { setValue, watch, control } = useFormContext();
-  const selectedDepartment = watch("classification.department");
-  const selectedService = watch("classification.service");
+  const selectedDepartment = useWatch({ control, name: "classification.department" });
+  const selectedService = useWatch({ control, name: "classification.service" });
   const isSeasonal = useWatch({ control, name: "classification.isSeasonal" });
 
   const SERVICES_PARAMS = {
@@ -45,35 +45,40 @@ export default function ClassificationSection({
     value: s._id,
   }));
 
-  const SUBSERVICES_PARAMS = {
-    page: 1,
-    limit: MAX_LIMIT,
-    select: "title,titleHindi,name,nameHindi",
-    serviceId: selectedService,
-  };
+  // const SUBSERVICES_PARAMS = {
+  //   page: 1,
+  //   limit: MAX_LIMIT,
+  //   select: "title,titleHindi,name,nameHindi",
+  //   serviceId: selectedService,
+  // };
 
-  const { data: subServicesData, isLoading: subServicesLoading } =
-    useGetSubservices(
-      [selectedService],
-      SUBSERVICES_PARAMS,
-      !!selectedService,
-    );
+  // const { data: subServicesData, isLoading: subServicesLoading } =
+  //   useGetSubservices(
+  //     [selectedService],
+  //     SUBSERVICES_PARAMS,
+  //     !!selectedService,
+  //   );
 
-  const subServiceOptions = (subServicesData?.data?.data?.docs ?? []).map(
-    (s) => ({
-      label:
-        lang === "hi" && (s.titleHindi || s.nameHindi)
-          ? s.titleHindi || s.nameHindi
-          : s.title || s.name,
-      value: s._id,
-    }),
-  );
+  // const subServiceOptions = (subServicesData?.data?.data?.docs ?? []).map(
+  //   (s) => ({
+  //     label:
+  //       lang === "hi" && (s.titleHindi || s.nameHindi)
+  //         ? s.titleHindi || s.nameHindi
+  //         : s.title || s.name,
+  //     value: s._id,
+  //   }),
+  // );
 
   const seasonalTypeOptions = [
     { label: t("Floods", "बाढ़"), value: "floods" },
     { label: t("Summer", "गर्मी"), value: "summer" },
     { label: t("Rain", "बारिश"), value: "rain" },
   ];
+
+  useEffect(()=> {
+    if(selectedDepartment) setValue("classification.service", "")
+    
+  },[ selectedDepartment])
 
   return (
     <FormSection
@@ -83,13 +88,14 @@ export default function ClassificationSection({
       )}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MySelect
-          value={selectedDepartment || ""}
-          onValueChange={(val) => {
-            setValue("classification.department", val);
-            setValue("classification.service", "");
-            // setValue("classification.subService", "");
-          }}
+        <RhfSelect
+        name={"classification.department"}
+          // value={selectedDepartment || ""}
+          // onValueChange={(val) => {
+          //   setValue("classification.department", val);
+          //   setValue("classification.service", "");
+          //   // setValue("classification.subService", "");
+          // }}
           label={t("Department", "विभाग")}
           placeholder={
             departmentsLoading
@@ -101,12 +107,13 @@ export default function ClassificationSection({
           required
         />
 
-        <MySelect
-          value={selectedService || ""}
-          onValueChange={(val) => {
-            setValue("classification.service", val);
-            // setValue("classification.subService", "");
-          }}
+        <RhfSelect
+        name={"classification.service"}
+          // value={selectedService || ""}
+          // onValueChange={(val) => {
+          //   setValue("classification.service", val);
+          //   // setValue("classification.subService", "");
+          // }}
           label={t("Service / Category", "सेवा")}
           placeholder={
             !selectedDepartment

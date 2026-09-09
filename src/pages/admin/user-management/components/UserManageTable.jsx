@@ -27,7 +27,7 @@ export default function UserManageTable({
     },
     {
       id: "role",
-      label: t("Role", "भूमिका"),
+      label: t("Designation", "पदनाम"),
     },
     {
       id: "district",

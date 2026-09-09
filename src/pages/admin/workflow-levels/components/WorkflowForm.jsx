@@ -5,6 +5,7 @@ import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import { workflowSchema } from "../schema";
+import { useLanguage } from "@/context/LanguageContext";
 
 const WorkflowForm = ({
   editLevel,
@@ -14,6 +15,7 @@ const WorkflowForm = ({
   onClose,
   isPending,
 }) => {
+  const { t } = useLanguage();
   return (
     <div
       className="bg-card rounded-2xl shadow-2xl w-full max-w-md"
@@ -21,7 +23,7 @@ const WorkflowForm = ({
     >
       <div className="flex items-center justify-between px-5 py-3 border-b border-border">
         <h3 className="font-bold text-foreground">
-          {editLevel ? "Edit Level" : "Add Workflow Level"}
+          {editLevel ? t("Edit Level", "स्तर संपादित करें") : t("Add Workflow Level", "कार्यप्रवाह स्तर जोड़ें")}
         </h3>
         <button
           onClick={onClose}
@@ -40,8 +42,8 @@ const WorkflowForm = ({
       >
         <RhfSelect
           name="role"
-          label="Role"
-          placeholder="Select role..."
+          label={t("Designation", "पदनाम")}
+          placeholder={t("Select designation...", "पदनाम चुनें...")}
           options={roleOptions}
           required
           isMultiple={false}

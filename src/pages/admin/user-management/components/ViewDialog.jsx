@@ -2,9 +2,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Key, Mail, MapPin, Phone, Shield } from 'lucide-react'
 import { apiPermissionOptions } from "@/utils/constants"
+import { useLanguage } from '@/context/LanguageContext'
 import React from 'react'
 
 const ViewDialog = ({viewUser, setViewUser}) => {
+  const { t } = useLanguage()
   return (
        <div className="space-y-6 pb-4 text-sm">
               {/* Header profile section */}
@@ -33,7 +35,7 @@ const ViewDialog = ({viewUser, setViewUser}) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Shield className="w-3.5 h-3.5 text-primary" /> Designation / Role
+                    <Shield className="w-3.5 h-3.5 text-primary" /> {t("Designation", "पदनाम")}
                   </span>
                   <span className="font-medium text-foreground block">{viewUser?.role || "N/A"}</span>
                 </div>

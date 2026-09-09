@@ -1,17 +1,96 @@
 import React from "react";
-import SubServicesTable from "./SubServicesTable";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
-import EditButton from "@/components/EditButton";
+import { Pencil, Trash2 } from "lucide-react";
+import MyTable from "@/components/MyTable";
 import { useLanguage } from "@/context/LanguageContext";
+import useIsMobile from "@/hooks/useIsMobile";
+import ServiceCards from "./ServiceCards";
+// import SubServicesTable from "./SubServicesTable";
+// import { Button } from "@/components/ui/button";
+// import { Plus } from "lucide-react";
+// import EditButton from "@/components/EditButton";
 
 const ServiceTable = ({
   services = [],
   setServiceDialog,
-  subServiceDialog,
-  setSubServiceDialog,
+  setDialog,
+  pagination,
+  // subServiceDialog,
+  // setSubServiceDialog,
 }) => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
+  const handleDialog = setServiceDialog || setDialog;
+
+  if (isMobile) {
+    return (
+      <ServiceCards
+        services={services}
+        setServiceDialog={handleDialog}
+        setDialog={handleDialog}
+      />
+    );
+  }
+
+  const tableHeaders = [
+    { id: "title", label: t("Service (English)", "सेवा (अंग्रेज़ी)") },
+    { id: "titleHindi", label: t("Service (Hindi)", "सेवा (हिंदी)") },
+    { id: "department", label: t("Department", "विभाग") },
+    {
+      id: "actions",
+      label: t("Actions", "कार्रवाई"),
+      className: "text-center w-28",
+    },
+  ];
+
+  const tableBody = services.map((s) => ({
+    title: { className: "font-medium", value: s.title || "N/A" },
+    titleHindi: {
+      className: "text-muted-foreground",
+      value: s.titleHindi || "N/A",
+    },
+    department: {
+      className: "text-muted-foreground",
+      value:
+        s.department?.title ||
+        s.department?.name ||
+        (typeof s.department === "string" ? s.department : "N/A") ||
+        "N/A",
+    },
+    actions: {
+      className: "text-center",
+      render: () => (
+        <div className="flex gap-2 justify-center">
+          <button
+            onClick={() => handleDialog && handleDialog({ type: "edit", item: s })}
+            className="p-1 hover:bg-muted rounded text-primary transition-colors"
+            title={t("Edit Service", "सेवा संपादित करें")}
+          >
+            <Pencil className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() =>
+              handleDialog && handleDialog({ type: "delete", item: s })
+            }
+            className="p-1 hover:bg-muted rounded text-red-600 hover:text-red-700 transition-colors"
+            title={t("Delete Service", "सेवा हटाएं")}
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      ),
+    },
+  }));
+
+  return (
+    <MyTable
+      tableHeaders={tableHeaders}
+      tableBody={tableBody}
+      pagination={pagination}
+    />
+  );
+
+  /*
+  // PREVIOUS IMPLEMENTATION WITH SUB-SERVICES (COMMENTED OUT):
   return (
     <div className="space-y-6">
       {services.map((s) => (
@@ -64,6 +143,7 @@ const ServiceTable = ({
       ))}
     </div>
   );
+  */
 };
 
 export default ServiceTable;

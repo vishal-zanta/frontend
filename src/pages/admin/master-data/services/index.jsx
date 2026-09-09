@@ -111,44 +111,51 @@ export default function ServicesTab() {
 
   return (
     <>
-      <LoaderErrWrapper isLoading={isLoading} error={error}>
-        <div className="flex justify-end items-center gap-2 mb-4">
-          <Filter
-            filters={filters}
-            setFilters={(val) => {
-              setFilters(val);
-              paginationProps.setPage(1);
-            }}
-            filterOptions={[
-              {
-                label: "Department",
-                filterKey: "department",
-                options: departmentOptions,
-              },
-            ]}
-          />
-          <Button
-            size="sm"
-            onClick={() => setServiceDialog({ type: "add" })}
-            className="bg-primary hover:bg-primary/90 animate-fade-in"
-          >
-            <Plus className="w-4 h-4 mr-1" /> Add Service
-          </Button>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="px-5 py-3 border-b border-border flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 xs:gap-0">
+          <h3 className="font-bold text-foreground ">{t("Services", "सेवाएं")}</h3>
+          <div className="flex items-center gap-2">
+            <Filter
+              filters={filters}
+              setFilters={(val) => {
+                setFilters(val);
+                paginationProps.setPage(1);
+              }}
+              filterOptions={[
+                {
+                  label: t("Department", "विभाग"),
+                  filterKey: "department",
+                  options: departmentOptions,
+                },
+              ]}
+            />
+            <Button
+              size="sm"
+              onClick={() => setServiceDialog({ type: "add" })}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Plus className="w-4 h-4 mr-1" /> {t("Add Service", "सेवा जोड़ें")}
+            </Button>
+          </div>
         </div>
-        <ServiceTable
-          services={services}
-          setServiceDialog={setServiceDialog}
-          subServiceDialog={subServiceDialog}
-          setSubServiceDialog={setSubServiceDialog}
-        />
-        <Pagination
-          page={page}
-          limit={limit}
-          totalPage={totalPages}
-          isLoading={isLoading}
-          {...paginationProps}
-        />
-      </LoaderErrWrapper>
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
+          <div className="overflow-x-auto">
+            <ServiceTable
+              services={services}
+              setServiceDialog={setServiceDialog}
+              subServiceDialog={subServiceDialog}
+              setSubServiceDialog={setSubServiceDialog}
+            />
+          </div>
+          <Pagination
+            page={page}
+            limit={limit}
+            totalPage={totalPages}
+            isLoading={isLoading}
+            {...paginationProps}
+          />
+        </LoaderErrWrapper>
+      </div>
 
       {serviceDialog && serviceDialog.type === "delete" && (
         <DeleteDialog

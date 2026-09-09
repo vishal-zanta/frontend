@@ -298,9 +298,9 @@ export default function UserManagement() {
               label: r.designationEnglish,
               value: r._id,
             }))}
-            placeholder={t("Select a role", "भूमिका चुनें")}
+            placeholder={t("Select a designation", "पदनाम चुनें")}
             isAll={true}
-            allLabel={t("All Roles", "सभी भूमिकाएं")}
+            allLabel={t("All Designations", "सभी पदनाम")}
           />
         </div>
 
@@ -455,10 +455,7 @@ export default function UserManagement() {
             <Shield className="w-4 h-4" /> Role-Based Access Control (RBAC)
           </h4>
           <p className="text-sm text-primary">
-            Secure role-based access control is enforced for State CC agents,
-            field officers, Nodal Officers, State Monitoring Teams, and System
-            Admins. Each role has predefined permission scopes - customizable
-            per user via the Manage Links section.
+           Secure role-based access is enforced for State CC agents, field officers, Nodal Officers, State Monitoring Teams, and System Admins. Each Designation has predefined permissions, which can be customized for individual users through the Manage Links section.
           </p>
         </div>
       </div>
