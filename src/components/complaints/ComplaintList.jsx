@@ -439,7 +439,48 @@ export default function ComplaintList({
 }
 
 export const ComplaintListCard = ({ c, onClick, isSelected }) => {
+  const { t } = useLanguage();
   const excludedStatus = ["RESOLVED", "CLOSED"];
+
+  const loc = c.location || {};
+  const districtName =
+    typeof loc.district === "object"
+      ? t(loc.district?.name, loc.district?.nameHindi) ||
+        loc.district?.name ||
+        loc.district?.title
+      : loc.district ||
+        c.address?.district?.name ||
+        c.address?.district ||
+        "";
+
+  const locationParts = [
+    loc.panchayat || c.address?.panchayat,
+    loc.block,
+    loc.subdivision && loc.subdivision !== loc.block ? loc.subdivision : null,
+    districtName,
+    loc.pincode || loc.pinCode || c.address?.pincode || c.address?.pinCode,
+  ].filter(Boolean);
+
+  const locationText =
+    locationParts.length > 0
+      ? locationParts.join(", ")
+      : [c.address?.villageOrWard || c.ward, c.address?.state]
+          .filter(Boolean)
+          .join(", ") || "N/A";
+
+  const serviceTitle =
+    t(
+      c.classification?.service?.title ||
+        c.classification?.subService?.service?.title ||
+        c.classification?.subService?.title,
+      c.classification?.service?.titleHindi ||
+        c.classification?.subService?.service?.titleHindi ||
+        c.classification?.subService?.titleHindi,
+    ) ||
+    c.classification?.service?.title ||
+    c.classification?.department?.title ||
+    "N/A";
+
   return (
     <button
       key={c?._id || c.id}
@@ -461,7 +502,11 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
           <div className="flex items-center gap-1 flex-wrap">
             <SLATimer
               createdAt={c.createdAt}
-              slaHours={c.classification?.subService?.sla || null}
+              slaHours={
+                c.classification?.service?.sla ||
+                c.classification?.subService?.sla ||
+                null
+              }
               resolvedAt={c.status == "RESOLVED" ? c?.resolvedAt || null : null}
             />
 
@@ -475,17 +520,11 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
         )}
       </div>
       <div className="text-sm text-foreground truncate">
-        {c.classification?.subService?.title ||
-          // c.subserviceName ||
-          // c.serviceName || 
-          c.classification?.service?.title ||
-          c.classification?.department?.title || "N/A"}
+        {serviceTitle}
       </div>
       <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
-        <MapPin className="w-3 h-3" />{" "}
-        {`  ${c.address?.villageOrWard || c.ward || "N/A"}, 
-                      ${c.address?.district?.name || "N/A"},
-                      ${c.address?.state || "N/A"}`.replaceAll("N/A,", "")}
+        <MapPin className="w-3 h-3 shrink-0" />{" "}
+        <span className="truncate">{locationText}</span>
       </div>
     </button>
   );

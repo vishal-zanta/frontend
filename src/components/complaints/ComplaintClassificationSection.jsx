@@ -6,7 +6,13 @@ import { Button } from "../ui/button";
 import EditDialog from "@/components/EditDialog";
 import { getSuccessToast } from "@/utils/helpers";
 
-export default function ComplaintClassificationSection({ departmentText, occurrenceDate }) {
+export default function ComplaintClassificationSection({
+  departmentText,
+  natureText,
+  channelText,
+  isSeasonal,
+  seasonalType,
+}) {
   const { t } = useLanguage();
   const { profiledata } = useAuth();
   const [showMailDialog, setShowMailDialog] = useState(false);
@@ -19,35 +25,65 @@ export default function ComplaintClassificationSection({ departmentText, occurre
   };
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-3 text-[10px] lg:text-xs bg-muted/20 p-2.5 lg:p-3 rounded-lg border border-border">
-      <div>
-        <span className="text-muted-foreground block font-medium">{t("Department", "विभाग")}</span>
-        <span className="font-semibold text-foreground">{departmentText}</span>
-      </div>
-     
-      <div>
-        <span className="text-muted-foreground block font-medium">{t("Occurrence Date", "घटना की तिथि")}</span>
-        <span className="font-semibold text-foreground">{occurrenceDate}</span>
+    <div className="bg-muted/20 p-2.5 lg:p-3 rounded-lg border border-border">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 lg:gap-3 text-[10px] lg:text-xs">
+        <div>
+          <span className="text-muted-foreground block font-medium">
+            {t("Department", "विभाग")}
+          </span>
+          <span className="font-semibold text-foreground">
+            {departmentText || "N/A"}
+          </span>
+        </div>
+        <div>
+          <span className="text-muted-foreground block font-medium">
+            {t("Grievance Nature", "शिकायत की प्रकृति")}
+          </span>
+          <span className="font-semibold text-foreground">
+            {natureText || "N/A"}
+          </span>
+        </div>
+        <div>
+          <span className="text-muted-foreground block font-medium">
+            {t("Channel / Mode", "माध्यम")}
+          </span>
+          <span className="font-semibold text-foreground capitalize">
+            {channelText || "N/A"}
+          </span>
+        </div>
+        <div>
+          <span className="text-muted-foreground block font-medium">
+            {t("Seasonal", "मौसमी")}
+          </span>
+          <span className="font-semibold text-foreground">
+            {isSeasonal
+              ? `${t("Yes", "हाँ")}${seasonalType ? ` (${seasonalType})` : ""}`
+              : t("No", "नहीं")}
+          </span>
+        </div>
       </div>
 
-        {profiledata?.isOfficer && (
-          <div className="flex items-center justify-end">
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-card hover:bg-muted text-foreground border-border flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
-              onClick={() => setShowMailDialog(true)}
-            >
-              <Mail className="w-3.5 h-3.5 text-primary" />
-              <span className="text-primary">{t("Send Mail", "मेल भेजें")}</span>
-            </Button>
-          </div>
-        )}
+      {profiledata?.isOfficer && (
+        <div className="flex items-center justify-end mt-2 pt-2 border-t border-border">
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-card hover:bg-muted text-foreground border-border flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
+            onClick={() => setShowMailDialog(true)}
+          >
+            <Mail className="w-3.5 h-3.5 text-primary" />
+            <span className="text-primary">{t("Send Mail", "मेल भेजें")}</span>
+          </Button>
+        </div>
+      )}
 
       {showMailDialog && (
         <EditDialog
           title={t("Send Mail", "मेल भेजें")}
-          onClose={() => { setShowMailDialog(false); setRecipientEmail(""); }}
+          onClose={() => {
+            setShowMailDialog(false);
+            setRecipientEmail("");
+          }}
           onSave={handleSendMail}
           saving={false}
         >

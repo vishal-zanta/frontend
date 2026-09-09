@@ -32,7 +32,7 @@ import {
   Camera,
   CheckCircle2,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -131,21 +131,35 @@ function getServiceName(serviceId) {
 
 export function ComplaintId({ id, className = "", complaint }) {
   const [open, setOpen] = useState(false);
+  const { pathname } = window.location;
+  const isOfficer = pathname.startsWith("/officer");
   // console.log({complaint, id})
+  /*
+(
+    
+  */
+  const nav = useNavigate();
+  function navigateTo() {
+    nav(
+      (isOfficer ? "/officer/complaints" : "/crm/track-complaint") +
+        "?complaint=" +
+        complaint?.grievanceId,
+    );
+  }
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => navigateTo()}
         className={`font-mono text-primary hover:underline cursor-pointer ${className}`}
       >
         {complaint?.grievanceId || id}
       </button>
-      <ComplaintDetailDialog
+      {/* <ComplaintDetailDialog
         complaintId={complaint?._id || id}
         open={open}
         onClose={() => setOpen(false)}
         // complaintData={complaint}
-      />
+      /> */}
     </>
   );
 }

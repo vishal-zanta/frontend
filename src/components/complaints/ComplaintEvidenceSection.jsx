@@ -2,35 +2,104 @@ import React from "react";
 import { IMG_BASE_URL } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
+import { Badge } from "@/components/ui/badge";
 
 export default function ComplaintEvidenceSection({
   description,
-  attachments,
-  geotaggedImages,
-  subjectText,
+  attachments = [],
+  geotaggedImages = [],
+  impact = null,
   resolvedReason = null,
 }) {
   const { t } = useLanguage();
   const { profiledata } = useAuth();
+
+  const vulnerabilities = [];
+  if (impact?.vulnerability?.seniorCitizen) {
+    vulnerabilities.push({
+      key: "seniorCitizen",
+      label: t("Senior Citizen", "वरिष्ठ नागरिक"),
+    });
+  }
+  if (impact?.vulnerability?.woman) {
+    vulnerabilities.push({ key: "woman", label: t("Woman", "महिला") });
+  }
+  if (impact?.vulnerability?.personWithDisability) {
+    vulnerabilities.push({
+      key: "personWithDisability",
+      label: t("Person with Disability", "दिव्यांग"),
+    });
+  }
+  if (impact?.vulnerability?.economicallyWeakerSection) {
+    vulnerabilities.push({
+      key: "economicallyWeakerSection",
+      label: t("Economically Weaker Section", "आर्थिक रूप से कमजोर वर्ग"),
+    });
+  }
+
+  const affectedBeneficiaryText =
+    typeof impact?.affectedBeneficiary === "object"
+      ? t(
+          impact.affectedBeneficiary?.title || impact.affectedBeneficiary?.name,
+          impact.affectedBeneficiary?.titleHindi ||
+            impact.affectedBeneficiary?.nameHindi,
+        ) ||
+        impact.affectedBeneficiary?.title ||
+        impact.affectedBeneficiary?.name ||
+        ""
+      : impact?.affectedBeneficiary;
+
   return (
     <>
       {/* Description */}
       <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
         <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">
-          {t("Description / Details", "विवरण / विवरण")}
+          {t("Brief Description / Details", "संक्षिप्त विवरण / विवरण")}
         </div>
         <p className="text-xs lg:text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-          {description}
+          {description || "N/A"}
         </p>
       </div>
-      <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
-        <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">
-          {t("Subject", "विषय")}
+
+      {/* Impact Details & Vulnerability */}
+      {impact && (affectedBeneficiaryText || vulnerabilities.length > 0) && (
+        <div className="bg-muted/30 rounded-lg p-2.5 lg:p-3 border border-border">
+          <div className="text-[10px] lg:text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wide">
+            {t("Impact & Vulnerability", "प्रभाव एवं संवेदनशीलता")}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-3 text-[10px] lg:text-xs">
+            {affectedBeneficiaryText && (
+              <div>
+                <span className="text-muted-foreground block font-medium">
+                  {t("Affected Beneficiary", "प्रभावित लाभार्थी")}
+                </span>
+                <span className="font-semibold text-foreground">
+                  {affectedBeneficiaryText}
+                </span>
+              </div>
+            )}
+            {vulnerabilities.length > 0 && (
+              <div>
+                <span className="text-muted-foreground block font-medium mb-1">
+                  {t("Vulnerability", "संवेदनशीलता")}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {vulnerabilities.map((v) => (
+                    <Badge
+                      key={v.key}
+                      variant="outline"
+                      className="text-[10px] bg-primary/10 text-primary border-primary/20"
+                    >
+                      {v.label}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        <p className="text-xs lg:text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-          {subjectText}
-        </p>
-      </div>
+      )}
+
       {resolvedReason && !profiledata?.isOfficer && (
         <div className="bg-muted/50 rounded-lg p-2.5 lg:p-3">
           <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">
@@ -46,7 +115,7 @@ export default function ComplaintEvidenceSection({
       {attachments.length > 0 && (
         <div className="mb-4">
           <div className="text-[10px] lg:text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wide">
-            {t("Evidence Attachments", "साक्ष्य संलग्नक")} ({attachments.length}
+            {t("uploaded Attachments", "अपलोड किए गए संलग्नक")} ({attachments.length}
             )
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
