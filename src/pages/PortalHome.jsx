@@ -5,6 +5,7 @@ import biharGovtLogo from "@/assets/bihar_govt.png";
 import cmPhoto from "@/assets/cm_photo.jpg";
 import LangSelector from "@/components/LangSelector";
 import { useLanguage } from "@/context/LanguageContext";
+import { Zap } from "lucide-react";
 
 export default function PortalHome() {
   const { t } = useLanguage();
@@ -69,7 +70,14 @@ export default function PortalHome() {
           <span className="text-blue-800 dark:text-blue-300 font-medium">
             {t(PORTAL_META.tagline, "सुशासन ही जनसेवा - बिहार सरकार")}
           </span>
+          <div className="flex items-center gap-3 text-xs text-blue-600 dark:text-blue-400">
+            <span className="flex items-center gap-1">
+              <Zap className="w-3 h-3 text-green-600 dark:text-green-400" /> {t("All systems operational", "सभी प्रणालियाँ चालू हैं")}
+            </span>
+            {/* <span>-</span>
+            <span>Last synced: {(new Date()).toISOString().split("T")?.[0]}</span> */}
           <LangSelector />
+          </div>
         </div>
       </div>
 
