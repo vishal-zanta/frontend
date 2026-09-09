@@ -186,7 +186,7 @@ function AddressBlock({
           name={`${prefix}.thana`}
           label={t("Thana", "थाना")}
           placeholder={t("Police Station / Thana", "थाना का नाम")}
-          required={isBihar}
+          required={false}
           maxLength={50}
         />
 

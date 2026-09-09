@@ -11,11 +11,11 @@ export const getFormData = (data, attachments = []) => {
   // Flatten nested fields to match Postman format
   if (data.citizenInfo.fullName)
     formData.append("citizenInfo[fullName]", data.citizenInfo.fullName);
-  formData.append("citizenInfo[mobile]", "+91"+data.citizenInfo.mobile);
+  formData.append("citizenInfo[mobile]", "+91" + data.citizenInfo.mobile);
   if (data.citizenInfo.alternateMobile)
     formData.append(
       "citizenInfo[alternateMobile]",
-     "+91"+data.citizenInfo.alternateMobile,
+      "+91" + data.citizenInfo.alternateMobile,
     );
   if (data.citizenInfo.email)
     formData.append("citizenInfo[email]", data.citizenInfo.email);
@@ -69,26 +69,36 @@ export const getFormData = (data, attachments = []) => {
   if (data.evidence?.details)
     formData.append("evidence[details]", data.evidence.details);
 
-  formData.append(
-    "impact[affectedBeneficiary]",
-    data.impact.affectedBeneficiary,
-  );
-  formData.append(
-    "impact[vulnerability[seniorCitizen]]",
-    String(data.impact.vulnerability?.seniorCitizen ?? false),
-  );
-  formData.append(
-    "impact[vulnerability[woman]]",
-    String(data.impact.vulnerability?.woman ?? false),
-  );
-  formData.append(
-    "impact[vulnerability[personWithDisability]]",
-    String(data.impact.vulnerability?.personWithDisability ?? false),
-  );
-  formData.append(
-    "impact[vulnerability[economicallyWeakerSection]]",
-    String(data.impact.vulnerability?.economicallyWeakerSection ?? false),
-  );
+  // formData.append(
+  //   "impact[affectedBeneficiary]",
+  //   data.impact.affectedBeneficiary,
+  // );
+  // formData.append(
+  //   "impact[vulnerability[seniorCitizen]]",
+  //   String(data.impact.vulnerability?.seniorCitizen ?? false),
+  // );
+  // formData.append(
+  //   "impact[vulnerability[woman]]",
+  //   String(data.impact.vulnerability?.woman ?? false),
+  // );
+  // formData.append(
+  //   "impact[vulnerability[personWithDisability]]",
+  //   String(data.impact.vulnerability?.personWithDisability ?? false),
+  // );
+  // formData.append(
+  //   "impact[vulnerability[economicallyWeakerSection]]",
+  //   String(data.impact.vulnerability?.economicallyWeakerSection ?? false),
+  // );
+  formData.append("impact", JSON.stringify({
+    affectedBeneficiary: data.impact.affectedBeneficiary,
+    vulnerability: {
+      seniorCitizen: Boolean(data.impact.vulnerability?.seniorCitizen ?? false),
+      woman: Boolean(data.impact.vulnerability?.woman ?? false),
+      personWithDisability: Boolean(data.impact.vulnerability?.personWithDisability ?? false),
+      economicallyWeakerSection: Boolean(data.impact.vulnerability?.economicallyWeakerSection ?? false)
+    }
+
+  }))
 
   formData.append(
     "communication[feedbackConsent]",
