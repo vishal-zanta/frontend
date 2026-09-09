@@ -148,7 +148,7 @@ export default function ComplaintDetailHeader({
           <PriorityBadge priority={displayPriority} />
         </div>
         <p className="text-xs lg:text-sm font-semibold text-foreground">
-          {serviceText} &rarr; {subServiceText}
+          {serviceText} {subServiceText && subServiceText !== "N/A" && subServiceText !== serviceText ? `→ ${subServiceText}` : ""}
         </p>
 
         <>
@@ -162,7 +162,7 @@ export default function ComplaintDetailHeader({
                 <>
                   <SLATimer
                     createdAt={c.createdAt}
-                    slaHours={c.classification?.subService?.sla || null}
+                    slaHours={c.classification?.service?.sla || c.classification?.subService?.sla || null}
                     resolvedAt={
                       c.status == "RESOLVED" ? c?.resolvedAt || null : null
                     }
@@ -264,7 +264,7 @@ export default function ComplaintDetailHeader({
               <>
                 <SLATimer
                   createdAt={c.createdAt}
-                  slaHours={c.classification?.subService?.sla || null}
+                  slaHours={c.classification?.service?.sla || c.classification?.subService?.sla || null}
                   resolvedAt={
                     c.status == "RESOLVED" ? c?.resolvedAt || null : null
                   }

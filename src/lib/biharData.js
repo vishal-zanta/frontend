@@ -4,9 +4,9 @@
 // ============================================================
 
 export const PORTAL_META = {
-  name: "Bihar Sahayog Helpline Portal",
-  tagline: "सुशासन ही जनसेवा - Good Governance is Public Service",
-  dept: "Urban Development & Housing Department, Government of Bihar",
+  name: "Sahayog Helpline Portal",
+  tagline: "Good Governance is Public Service - Bihar Government",
+  dept: "",
   version: "v2.4.1",
   lastSync: "06 Jul 2026, 09:42 AM IST",
 };

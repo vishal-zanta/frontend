@@ -93,6 +93,7 @@ export default function LocationDetailsSection({
           label={t("Block", "प्रखंड")}
           placeholder={t("Block name", "प्रखंड का नाम")}
           required
+          maxLength={50}
         />
 
         <RhfInput
@@ -100,6 +101,7 @@ export default function LocationDetailsSection({
           label={t("Panchayat", "पंचायत")}
           placeholder={t("Panchayat name", "पंचायत का नाम")}
           required
+          maxLength={50}
         />
 
         <RhfInput

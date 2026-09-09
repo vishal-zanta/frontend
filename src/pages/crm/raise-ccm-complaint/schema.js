@@ -116,7 +116,11 @@ const correspondenceAddressSchema = z
 export const grievanceSchema = z.object({
   channel: z.string().min(1, "Channel is required"),
   citizenInfo: z.object({
-    fullName: z.string().optional(),
+    fullName: z
+      .string()
+      .max(50, "Full name cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
     mobile: z
       .string()
       .min(10, "Mobile number must be at least 10 digits"),
@@ -124,20 +128,32 @@ export const grievanceSchema = z.object({
       .string()
       .optional()
       .or(z.literal("")),
-    email: z.string().email("Enter a valid email").optional().or(z.literal("")),
+    email: z
+      .string()
+      .email("Enter a valid email")
+      .max(50, "Email cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
     // preferredLanguage: z.string().min(1, "Preferred language is required"),
     address: addressSchema,
   }),
   classification: z.object({
-    department: z.any().optional(),
-    service: z.any().optional(),
-    subService: z.string().min(1, "Sub-service is required"),
+    department:  z.string().min(1, "Department is required"),
+    service:  z.string().min(1, "Service/Category is required"),
+    // subService: z.string().min(1, "Sub-service is required"),
     nature: z.string().min(1, "Grievance type is required"),
     isSeasonal: z.boolean().optional(),
-    seasonalType: z.string().optional(),
+    seasonalType: z
+      .string()
+      .max(50, "Seasonal type cannot exceed 50 characters")
+      .optional()
+      .or(z.literal("")),
   }),
   evidence: z.object({
-    details: z.string().optional(),
+    details: z
+      .string()
+      .min(1, "Brief description is required")
+      .max(1000, "Brief description cannot exceed 1000 characters"),
   }),
   impact: z.object({
     affectedBeneficiary: z.string().min(1, "Affected beneficiary is required"),
@@ -201,7 +217,7 @@ export const defaultValues = {
   classification: {
     department: "",
     service: "",
-    subService: "",
+    // subService: "",
     nature: "",
     isSeasonal: false,
     seasonalType: "",

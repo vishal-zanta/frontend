@@ -476,9 +476,10 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
       </div>
       <div className="text-sm text-foreground truncate">
         {c.classification?.subService?.title ||
-          c.subserviceName ||
-          c.serviceName ||
-          "N/A"}
+          // c.subserviceName ||
+          // c.serviceName || 
+          c.classification?.service?.title ||
+          c.classification?.department?.title || "N/A"}
       </div>
       <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
         <MapPin className="w-3 h-3" />{" "}

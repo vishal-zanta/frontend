@@ -8,10 +8,12 @@ import AuthLayout from "@/components/AuthLayout";
 import { postLogin, getProfile } from "@/api/auth.api";
 import { sidebarSections } from "@/components/Sidebar";
 import { checkPermissionManual } from "@/utils/helpers";
+import { useLanguage } from "@/context/LanguageContext";
 // import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function Login() {
   const { state } = useLocation();
+  const { t } = useLanguage();
 
   // const {executeRecaptcha} = useGoogleReCaptcha();
   const navigate = useNavigate();
@@ -67,29 +69,35 @@ export default function Login() {
           permission: res?.data?.data?.role?.permissions || [],
         });
         if (!path) {
-          throw new Error("Ask admin to give some permissions for this role");
+          throw new Error(
+            t(
+              "Ask admin to give some permissions for this role",
+              "कृपया व्यवस्थापक से इस भूमिका के लिए अनुमति प्राप्त करें",
+            ),
+          );
         }
         setTimeout(() => {
           navigate(path);
         }, 0);
       } else {
-        throw new Error("token not found");
+        throw new Error(t("token not found", "टोकन नहीं मिला"));
       }
     } catch (err) {
       setError(
         err.response?.data?.message ||
           err.message ||
-          "Invalid email or password",
+          t("Invalid email or password", "अमान्य ईमेल या पासवर्ड"),
       );
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     let timer = null;
     const token = localStorage.getItem("usertoken");
     if (!!token) {
-      console.log("Login profile")
+      console.log("Login profile");
       setFullScreenLoader(true);
       getProfile()
         .then((res) => {
@@ -99,7 +107,12 @@ export default function Login() {
           setFullScreenLoader(false);
           console.log("After login path : ", path);
           if (!path) {
-            throw new Error("Ask admin to give some permissions for this role");
+            throw new Error(
+              t(
+                "Ask admin to give some permissions for this role",
+                "कृपया व्यवस्थापक से इस भूमिका के लिए अनुमति प्राप्त करें",
+              ),
+            );
           }
           timer = setTimeout(() => {
             navigate(path);
@@ -116,38 +129,12 @@ export default function Login() {
   return (
     <AuthLayout
       icon={LogIn}
-      title="Welcome back"
-      subtitle="Log in to your account"
-      footer={
-        null
-        /* <>
-          Don't have an account?{" "}
-          <Link to="/register" className="text-primary font-medium hover:underline">
-            Create one
-          </Link>
-        </> */
-      }
+      title={t("Sahayog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
+      subtitle={t("Log in to your account", "अपने खाते में लॉग इन करें")}
+      footer={null}
     >
-      {/* <Button
-        variant="outline"
-        className="w-full h-12 text-sm font-medium mb-6"
-        onClick={handleGoogle}
-      >
-        <GoogleIcon className="w-5 h-5 mr-2" />
-        Continue with Google
-      </Button>
-
-      <div className="relative mb-6">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
-        </div>
-      </div> */}
-
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
           {error}
         </div>
       )}
@@ -174,10 +161,7 @@ export default function Login() {
           </div>
           <div className="min-w-0">
             <div className="text-xs font-bold leading-tight truncate">
-              Admin / Officer
-            </div>
-            <div className="text-[10px] text-muted-foreground/80 font-normal truncate">
-              Login with Email
+              {t("Admin / Officer", "प्रशासक / अधिकारी")}
             </div>
           </div>
         </button>
@@ -202,10 +186,7 @@ export default function Login() {
           </div>
           <div className="min-w-0">
             <div className="text-xs font-bold leading-tight truncate">
-              CCE Agent
-            </div>
-            <div className="text-[10px] text-muted-foreground/80 font-normal truncate">
-              Login with User ID
+              {t("CCE Agent", "सीसीई एजेंट")}
             </div>
           </div>
         </button>
@@ -214,7 +195,7 @@ export default function Login() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {loginMode === "email" ? (
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email">{t("Email Address", "ईमेल पता")}</Label>
             <div className="relative">
               <Mail
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
@@ -225,7 +206,7 @@ export default function Login() {
                 type="email"
                 autoComplete="email"
                 autoFocus
-                placeholder="you@bihar.gov.in"
+                placeholder={t("you@bihar.gov.in", "you@bihar.gov.in")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10 h-12"
@@ -235,7 +216,7 @@ export default function Login() {
           </div>
         ) : (
           <div className="space-y-2">
-            <Label htmlFor="loginId">User ID</Label>
+            <Label htmlFor="loginId">{t("User ID", "यूज़र आईडी")}</Label>
             <div className="relative">
               <User
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
@@ -246,7 +227,7 @@ export default function Login() {
                 type="text"
                 autoComplete="username"
                 autoFocus
-                placeholder="Enter your User ID"
+                placeholder={t("Enter your User ID", "अपनी यूज़र आईडी दर्ज करें")}
                 value={loginId}
                 onChange={(e) => setLoginId((e.target.value || "").toUpperCase())}
                 className="pl-10 h-12"
@@ -257,7 +238,7 @@ export default function Login() {
         )}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("Password", "पासवर्ड")}</Label>
           </div>
           <div className="relative">
             <Lock
@@ -289,16 +270,16 @@ export default function Login() {
         </div>
         <Button
           type="submit"
-          className="w-full h-12 font-medium"
+          className="w-full h-12 font-medium cursor-pointer"
           disabled={loading}
         >
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Logging in...
+              {t("Logging in...", "लॉगिन हो रहा है...")}
             </>
           ) : (
-            "Log in"
+            t("Log in", "लॉग इन करें")
           )}
         </Button>
       </form>

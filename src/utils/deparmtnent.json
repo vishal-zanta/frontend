@@ -1,0 +1,858 @@
+{
+  "Dairy fisheries and animal resources": [
+    {
+      "hindi": "विभागीय योजना के संबंध में |",
+      "english": "Regarding Departmental Schemes"
+    },
+    {
+      "hindi": "डेयरी केन्द्रों की स्थापना के संबंध में |",
+      "english": "Regarding Establishment of Dairy Centers"
+    },
+    {
+      "hindi": "कृत्रिम गर्भाधान के संबंध में |",
+      "english": "Regarding Artificial Insemination"
+    },
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में |",
+      "english": "Regarding Allegations/ Complaints against Officers"
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में |",
+      "english": "Regarding Employment on Compassionate Grounds"
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Others"
+    },
+    {
+      "hindi": "समेकित मुर्गी विकास योजना",
+      "english": "Integrated Poultry Development Scheme"
+    },
+    {
+      "hindi": "समेकित बकरी एवं भेड़ विकास योजना",
+      "english": "Integrated Goat and Sheep Development Scheme"
+    },
+    {
+      "hindi": "पशु स्वास्थ्य एवं चिकित्सा सेवाएँ योजना",
+      "english": "Animal Health and Veterinary Services Scheme"
+    },
+    {
+      "hindi": "राष्ट्रीय पशुधन स्वास्थ्य एवं रोग नियंत्रण कार्यक्रम (टीकाकरण...",
+      "english": "National Animal Disease Control Programme (including vaccination...)"
+    },
+    {
+      "hindi": "राष्ट्रीय पशुधन स्वास्थ्य एवं रोग नियंत्रण कार्यक्रम (टीकाकरण कार्यक्रम सहित)",
+      "english": "National Animal Disease Control Programme (including vaccination programme)"
+    },
+    {
+      "hindi": "पशु चिकित्सालयों के भवन निर्माण की योजना",
+      "english": "Scheme for Construction of Veterinary Hospital Buildings"
+    },
+    {
+      "hindi": "पशुधन विकास की योजना",
+      "english": "Livestock Development Scheme"
+    },
+    {
+      "hindi": "राष्ट्रीय एवं राज्य योजना से परिचालित अन्य सभी पशुपालन प्रक्षेत्र से संबंधित योजनाएँ",
+      "english": "All other schemes related to the Animal Husbandry sector run by National and State schemes"
+    },
+    {
+      "hindi": "कृत्रिम गर्भाधान के मामले",
+      "english": "Matters related to Artificial Insemination"
+    },
+    {
+      "hindi": "उन्नत नस्ल के मत्स्य बीज वितरण की योजना",
+      "english": "Scheme for Distribution of High-Yield/Improved Variety Fish Seeds"
+    },
+    {
+      "hindi": "पुराने सरकारी तालाबों के जीर्णोद्धार की योजना",
+      "english": "Scheme for Renovation of Old Government Ponds"
+    },
+    {
+      "hindi": "मुख्यमंत्री मत्स्य विकास की योजना",
+      "english": "Chief Minister Fisheries Development Scheme"
+    },
+    {
+      "hindi": "प्रशिक्षण की योजना",
+      "english": "Training Scheme"
+    },
+    {
+      "hindi": "मच्छुआ आवास की योजना",
+      "english": "Fisherman Housing Scheme"
+    },
+    {
+      "hindi": "दुर्घटना बीमा योजना",
+      "english": "Accident Insurance Scheme"
+    },
+    {
+      "hindi": "आर्द्र जल क्षेत्र की योजना",
+      "english": "Wetland / Water Body Development Scheme"
+    },
+    {
+      "hindi": "राष्ट्रीय कृषि विकास योजना",
+      "english": "Rashtriya Krishi Vikas Yojana (National Agriculture Development Scheme)"
+    },
+    {
+      "hindi": "अनुसूचित जातियों के लिए विशेष घटक योजना",
+      "english": "Special Component Plan for Scheduled Castes"
+    },
+    {
+      "hindi": "जनजाति क्षेत्र उपयोजना",
+      "english": "Tribal Area Sub-Plan"
+    },
+    {
+      "hindi": "समग्र गव्य विकास योजना",
+      "english": "Integrated Dairy/Cattle Development Scheme"
+    },
+    {
+      "hindi": "प्रशिक्षण एवं प्रसार की योजना",
+      "english": "Training and Extension Scheme"
+    },
+    {
+      "hindi": "विशेष अंगीभूत के तहत अनुसूचित जाति/ अनु. जनजाति के सदस्यों को गव्य विज्ञान में प्रशिक्षण",
+      "english": "Training in Dairy Science for SC/ST members under Special Component Plan"
+    },
+    {
+      "hindi": "दुग्ध समितियों के गठन की योजना",
+      "english": "Scheme for Formation of Milk/Dairy Cooperative Societies"
+    },
+    {
+      "hindi": "दुग्ध संग्रहण केन्द्र की स्थापना",
+      "english": "Establishment of Milk Collection Center"
+    },
+    {
+      "hindi": "स्वचालित दुग्ध संग्रहण केन्द्र की...",
+      "english": "Automatic Milk Collection Center..."
+    },
+    {
+      "hindi": "स्वचालित दुग्ध संग्रहण केन्द्र की स्थापना",
+      "english": "Establishment of Automatic Milk Collection Center"
+    },
+    {
+      "hindi": "स्वचालित मिल्कींग मशीन की स्थापना",
+      "english": "Installation of Automatic Milking Machine"
+    },
+    {
+      "hindi": "डेयरी केन्द्रों की स्थापना से संबंधित मामले",
+      "english": "Matters related to Establishment of Dairy Centers"
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Matters related to Service Matters and Retirement/Terminal Benefits of Regular Employees and Officers"
+    }
+  ],
+  "social welfare": [
+    {
+      "hindi": "वृद्धा पेंशन की समस्या के संबंध में |",
+      "english": "Regarding old age pension issues/problems."
+    },
+    {
+      "hindi": "विकलांग की समस्या के संबंध में",
+      "english": "Regarding disability related issues / problems."
+    },
+    {
+      "hindi": "आंगनवाड़ी सेविका / सहायिका के चयन संबंध में |",
+      "english": "Regarding the selection of Anganwadi Workers / Helpers."
+    },
+    {
+      "hindi": "पोषाहार से संबंधित",
+      "english": "Related to nutrition / supplementary food."
+    },
+    {
+      "hindi": "बाल सुरक्षा से संबंधित |",
+      "english": "Related to child protection/child safety."
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Other."
+    },
+    {
+      "hindi": "कबीर अन्त्येष्टि अनुदान योजना",
+      "english": "Kabir Antyesti Anudan Yojana (Kabir Funeral/ Cremation Assistance Scheme)."
+    },
+    {
+      "hindi": "समाज कल्याण विभाग के माध्यम से संचालित विभिन्न पेंशन/कल्याणकारी योजनाओं में स्वीकृति के पश्चात भुगतान नहीं किये जाने से संबंधित परिवाद",
+      "english": "Grievance/complaint regarding non-payment after sanction der various pensio Ire schemes run by the Social Welfare"
+    },
+    {
+      "hindi": "समाज कल्याण विभाग के माध्यम से संचालित विभिन्न पेंशन/कल्याणकारी योजनाओं में स्वीकृति के पश्चात भुगतान नहीं किये जाने से संबंधित परिवाद",
+      "english": "Grievance/complaint regarding non-payment after sanction under various pension/welfare schemes run by the Social Welfare Department."
+    },
+    {
+      "hindi": "मुख्यमंत्री कन्या सुरक्षा योजना",
+      "english": "Chief Minister Kanya Suraksha Yojana (Girl Child Protection Scheme)."
+    },
+    {
+      "hindi": "अन्तर्जातीय विवाह प्रोत्साहन अनुदान योजना",
+      "english": "Inter-caste Marriage Incentive Grant Scheme."
+    },
+    {
+      "hindi": "समेकित बाल विकास योजना के अन्तर्गत सेवाएँ",
+      "english": "Services under Integrated Child Development Services (ICDS)."
+    },
+    {
+      "hindi": "पूरक पोषाहार कार्यक्रम",
+      "english": "Supplementary Nutrition Program."
+    },
+    {
+      "hindi": "आंगनबाड़ी केन्द्रों में स्कूल पूर्व शिक्षा के बच्चों के लिए पोशाक योजना",
+      "english": "Uniform scheme for pre-school children in Anganwadi centers."
+    },
+    {
+      "hindi": "इंदिरा गाँधी मातृत्व सहयोग योजना",
+      "english": "Indira Gandhi Matritva Sahyog Yojana (Maternity Benefit Scheme)."
+    },
+    {
+      "hindi": "आँगनबाड़ी केन्द्र स्थापित करने के संबंध में",
+      "english": "Regarding the establishment of Anganwadi centers."
+    },
+    {
+      "hindi": "समेकित बाल संरक्षण योजना",
+      "english": "Integrated Child Protection Scheme (ICPS)."
+    },
+    {
+      "hindi": "बाल गृह, खुला आश्रय, विशिष्ट दत्तक ग्रहण संस्थान, विशेष गृह एवं पर्यवेक्षण गृहों का संचालन",
+      "english": "Operation of Children's Homes, Open Sheltersecialized Adoption Agenciecial Homes, and Observation Homes."
+    },
+    {
+      "hindi": "बाल गृह, खुला आश्रय, विशिष्ट दत्तक ग्रहण संस्थान, विशेष गृह एवं पर्यवेक्षण गृहों का संचालन",
+      "english": "Operation of Children's Homes, Open Shelters, Specialized Adoption Agencies, Special Homes, and Observation Homes."
+    },
+    {
+      "hindi": "परवरिश (अनाथ बच्चों के लिए)",
+      "english": "Parvarish Scheme (for orphan children)."
+    },
+    {
+      "hindi": "विकलांग सर्वेक्षण",
+      "english": "Disability Survey."
+    },
+    {
+      "hindi": "महिला हेल्प लाइन से संबंधित शिकायतें",
+      "english": "Complaints related to Women Helpline."
+    },
+    {
+      "hindi": "मुख्यमंत्री परिवार लाभ योजना",
+      "english": "Chief Minister Family Benefit Scheme."
+    },
+    {
+      "hindi": "कृत्रिम अंग एवं उपकरण का वितरण",
+      "english": "Distribution of artificial limbs and assistive equipment."
+    },
+    {
+      "hindi": "बिहार समेकित सामाजिक सुरक्षा सुदृढ़ीकरण योजना (BISPS)",
+      "english": "Bihar Integrated Social Security Strengthening Project (BISPS)."
+    },
+    {
+      "hindi": "बिहार शताब्दी कुष्ठ कल्याण योजना",
+      "english": "Bihar Shatabdi Leprosy Welfare Scheme."
+    },
+    {
+      "hindi": "मुख्यमंत्री भिक्षावृत्ति निवारण योजना",
+      "english": "Chief Minister Beggary Prevention Scheme."
+    },
+    {
+      "hindi": "वृद्धाश्रमों का निर्माण",
+      "english": "Construction of Old Age Homes."
+    },
+    {
+      "hindi": "मानसिक रूप से विकलांगों के लिए नये विशेष विद्यालयों की स्थापना",
+      "english": "Establishment of new special schools for the mentally challenged."
+    },
+    {
+      "hindi": "मुख्यमंत्री विकलांग विवाह प्रोत्साहन योजना",
+      "english": "Chief Minister Disability Marriage Incentive Scheme."
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Related to service matters and retirement/ terminal benefits of regular employees and officers."
+    }
+  ],
+  "planning and development": [
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में।",
+      "english": "Regarding allegations/chargets against officials."
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में।",
+      "english": "Regarding compassionate appointment (job on compassionate grounds)."
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Other"
+    },
+    {
+      "hindi": "मुख्यमंत्री क्षेत्र विकास योजना",
+      "english": "Chief Minister Area Development Scheme"
+    },
+    {
+      "hindi": "सांसद स्थानीय क्षेत्र विकास योजना",
+      "english": "Member of Parliament Local Area Development Scheme (MPLADS)"
+    },
+    {
+      "hindi": "कोशी पुनर्वास एवं पुनर्निर्माण योजना",
+      "english": "Kosi Rehabilitation and Reconstruction Scheme"
+    },
+    {
+      "hindi": "एकीकृत कार्य योजना",
+      "english": "Integrated Action Plan (IAP)"
+    },
+    {
+      "hindi": "पंचायत सरकार भवन एवं ई-किसान भवन (क्रियान्वयन संबंधी)",
+      "english": "Panchayat Sarkar Bhavan and E-Kisan Bhavan (Implementation related)"
+    },
+    {
+      "hindi": "जन्म-मृत्यु पंजीकरण/कृषि गणना/पशु गणना/फसल कटनी/वर्षा मापक यंत्र-अर्थ एवं सांख्यिकी निदेशालय, पटना",
+      "english": "Birth-Death Registration / Agricultural Census / Livestock Census/Crop Harvesting / Rain Gauge Instrument - Directorate of Economics and Statistics, Patna"
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Related to service matters and retirement benefits of regular employees and officers"
+    }
+  ],
+  "urban development & housing": [
+    {
+      "hindi": "नगर निगम / नगर परिषद / नगर पंचायत के संबंध में।",
+      "english": "Regarding Municipal Corporation / Municipal Council / Town Panchayat."
+    },
+    {
+      "hindi": "अतिक्रमण के संबंध में ।",
+      "english": "Regarding Encroachment."
+    },
+    {
+      "hindi": "सफाई / प्रदूषण के संबंध में ।",
+      "english": "Regarding Sanitation / Pollution."
+    },
+    {
+      "hindi": "शहरी क्षेत्रो में जलापूर्ति व्यवस्था / स्ट्रीट लाईट के संबंध में।",
+      "english": "Regarding Water Supply System / Street Light in Urban Areas."
+    },
+    {
+      "hindi": "आवास बोर्ड नगर निकाय चुनाव के संबंध में।",
+      "english": "Regarding Housing Board Municipal Body Elections."
+    },
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में",
+      "english": "Regarding Allegations/ Objections against Officials."
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में।",
+      "english": "Regarding Jobs on Compassionate Grounds."
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Others."
+    },
+    {
+      "hindi": "मुख्यमंत्री नगर विकास योजना",
+      "english": "Chief Minister Urban Development Scheme."
+    },
+    {
+      "hindi": "राज्य योजना के अंतर्गत",
+      "english": "Under State Scheme."
+    },
+    {
+      "hindi": "बिहार नगरपालिका अधिनियम, 2007",
+      "english": "Bihar Municipal Act, 2007."
+    },
+    {
+      "hindi": "बिहार शहरी आयोजना एवं विकास अधिनियम",
+      "english": "Bihar Urban Planning and Development Act."
+    },
+    {
+      "hindi": "स्वच्छ भारत मिशन (शहरी) योजना",
+      "english": "Swachh Bharat Mission (Urban) Scheme."
+    },
+    {
+      "hindi": "राष्ट्रीय शहरी आजीविका मिशन (NULM)",
+      "english": "National Urban Livelihoods Mission (NULM)."
+    },
+    {
+      "hindi": "भवन निर्माण उपविधि",
+      "english": "Building Construction By-laws."
+    },
+    {
+      "hindi": "बिहार अपार्टमेन्ट स्वामित्व अधिनियम",
+      "english": "Bihar Apartment Ownership Act."
+    },
+    {
+      "hindi": "रैन बसेरा प्रबंधन",
+      "english": "Night Shelter Management."
+    },
+    {
+      "hindi": "स्ट्रीट भेण्डरों विषयक मामले",
+      "english": "Issues Related to Street Vendors."
+    },
+    {
+      "hindi": "बिहार राज्य आवास बोर्ड",
+      "english": "Bihar State Housing Board."
+    },
+    {
+      "hindi": "नगर निगम क्षेत्र में पेयजल, शौचालय एवं गली नाली योजनाओं से संबंधित मामले",
+      "english": "Matters Related to Drinking Water, Toilet, and Alley/ Drainage Schemes in Municipal Corporation Area."
+    },
+    {
+      "hindi": "नगर परिषद/नगर पंचायत क्षेत्र में पेयजल, शौचालय एवं गली-नाली योजनाओं से संबंधित मामले",
+      "english": "Matters Related to Drinking Water, Toilet, and Alley/ Drainage Schemes in Municipal Council / Town Panchayat Area."
+    },
+    {
+      "hindi": "नगर परिषद/नगर पंचायत में जन सुविधाओं:-अतिक्रमण, चारा-प्रबंधन, पेयजल की सुविधा, स्ट्रीट लाईट, साफ-सफाई",
+      "english": "Public Amenities in Municipal Council / Town Panchayat: Encroachment, Cattle/Fodder Management, Drinking Water Facility, Street Light, Sanitation."
+    },
+    {
+      "hindi": "पटना नगर निगम के अंतर्गत जन सुविधाओं:-अतिक्रमण, चारा-प्रबंधन, पेयजल की सुविधा, स्ट्रीट लाईट, साफ-सफाई",
+      "english": "Public Amenities under Patna Municipal Corporation: Encroachment, Cattle/Fodder Management, Drinking Water Facility, Street Light, Sanitation."
+    },
+    {
+      "hindi": "पटना नगर निगम को छोड़कर अन्य नगर निगमों के जन सुविधाओं:-अतिक्रमण, चारा-प्रबंधन, पेयजल की सुविधा, स्ट्रीट लाईट, साफ-सफाई",
+      "english": "Public Amenities in Municipal Corporations other than Patna Municipal Corporation: Encroachment, Cattle/Fodder Management, Drinking Water Facility, Street Light, Sanitation."
+    },
+    {
+      "hindi": "BUIDCO द्वारा कार्यान्वित योजनाओं से संबंधित परिवाद",
+      "english": "Complaints Related to Schemes Implemented by BUIDCO."
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Related to Service Matters and Retirement/Terminal Benefits of Regular Employees and Officials."
+    }
+  ],
+  "SC-ST welfare": [
+    {
+      "hindi": "छात्रवृत्ति के संबंध में |",
+      "english": "Regarding Scholarship"
+    },
+    {
+      "hindi": "छात्रावास के संबंध में |",
+      "english": "Regarding Hostel"
+    },
+    {
+      "hindi": "नामांकन में कठिनाई के संबंध में |",
+      "english": "Regarding Admission Difficulties"
+    },
+    {
+      "hindi": "बिहार राज्य अनुसूचित जाति सहकारिता विकास निगम के संबंध में |",
+      "english": "Regarding Bihar State Scheduled Caste Co-operative Development Corporation"
+    },
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में |",
+      "english": "Regarding Allegations/ Complaints against Officials"
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में |",
+      "english": "Regarding Compassionate Appointment (Job)"
+    },
+    {
+      "hindi": "सेवा संबंधी समस्या के संबंध में |",
+      "english": "Regarding Service-related Issues"
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Other"
+    },
+    {
+      "hindi": "अनु० जाति एवं अनु० जनजाति छात्रवृत्ति योजना से संबंधित परिवाद",
+      "english": "Grievance regarding SC & ST Scholarship Scheme"
+    },
+    {
+      "hindi": "मुख्यमंत्री अनु० जाति एवं अनु० जनजाति मेधावृत्ति योजना से संबंधित",
+      "english": "Regarding Chief Minister SC & ST Merit Scholarship Scheme"
+    },
+    {
+      "hindi": "मुख्यमंत्री अनु० जाति एवं अनु० जनजाति मेधावृत्ति योजना से संबंधित परिवाद",
+      "english": "Grievance regarding Chief Minister SC & ST Merit Scholarship Scheme"
+    },
+    {
+      "hindi": "अनु० जाति एवं अनु० जनजाति (अत्याचार निवारण) अधिनियम, 1989 एवं नागरिक अधिकार संरक्षण अधिनियम, 1995 से संबंधित परिवाद",
+      "english": "Grievance regarding SC & ST (Prevention of Atrocities) Act, 1989 and Protection of Civil Rights Act, 1955"
+    },
+    {
+      "hindi": "अनु० जाति एवं अनु० जनजाति आवासीय विद्यालय योजना से संबंधित परिवाद",
+      "english": "Grievance regarding SC & ST Residential School Scheme"
+    },
+    {
+      "hindi": "अनु० जाति एवं अनु० जनजाति छात्रावास से संबंधित परिवाद",
+      "english": "Grievance regarding SC & ST Hostel"
+    },
+    {
+      "hindi": "अनु० जाति उपयोजना/अनु० जनजाति उपयोजना से संबंधित परिवाद",
+      "english": "Grievance regarding Scheduled Caste Sub-Plan / Scheduled Tribe Sub-Plan"
+    },
+    {
+      "hindi": "बिहार महादलित विकास मिशन द्वारा संचालित योजनाओं से संबंधित परिवाद",
+      "english": "Grievance regarding Schemes run by Bihar Mahadalit Vikas Mission"
+    },
+    {
+      "hindi": "बिहार राज्य अनु० जाति सहकारिता विकास निगम से संबंधित परिवाद",
+      "english": "Grievance regarding Bihar State SC Co-operative Development Corporation"
+    },
+    {
+      "hindi": "प्राक् परीक्षा प्रशिक्षण केंद्र एवं चंद्रगुप्त प्रबंध संस्थान द्वारा संचालित स्टूडेंट्स",
+      "english": "Students Guidance Center operated by Pre-Examination Training Center & Chandragupt Institute of Management..."
+    },
+    {
+      "hindi": "प्राक् परीक्षा प्रशिक्षण केंद्र एवं चंद्रगुप्त प्रबंध संस्थान द्वारा संचालित स्टूडेंट्स गाइडेंस सेंटर से संबंधित परिवाद",
+      "english": "Grievance regarding Students Guidance Center operated by Pre-Examination Training Center & Chandragupt Institute of Management"
+    },
+    {
+      "hindi": "थरूहट क्षेत्र विकास योजना से संबंधित परिवाद",
+      "english": "Grievance regarding Tharuhat Area Development Scheme"
+    },
+    {
+      "hindi": "पुस्तक अधिकोष से संबंधित परिवाद",
+      "english": "Grievance regarding Book Bank"
+    },
+    {
+      "hindi": "परीक्षा शुल्क की प्रतिपूर्ति योजना से संबंधित परिवाद",
+      "english": "Grievance regarding Examination Fee Reimbursement Scheme"
+    },
+    {
+      "hindi": "विशेष केंद्रीय सहायता से संबंधित",
+      "english": "Regarding Special Central Assistance"
+    },
+    {
+      "hindi": "अनुसूचित जाति उप योजना के तहत विशेष केंद्रीय सहायता योजना के लिये अतिरिक्त 5 प्रतिशत अनुदान योजना से संबंधित परिवाद",
+      "english": "Grievance regarding Additional 5% Grant Scheme under Special Central Assistance for Scheduled Castes Sub-Plan"
+    },
+    {
+      "hindi": "संविधान की धारा-275 (1) के तहत आधारभूत संरचना विकास योजना से संबंधित परिवाद",
+      "english": "Grievance regarding Infrastructure Development Scheme under Article 275(1) of the Constitution"
+    },
+    {
+      "hindi": "प्रधानमंत्री आदर्श ग्राम योजना से संबंधित परिवाद",
+      "english": "Grievance regarding Pradhan Mantri Adarsh Gram Yojana"
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Regarding Service Matters and Post-Retirement Benefits of Regular Employees and Officials"
+    }
+  ],
+  "Agriculture": [
+    {
+      "hindi": "खाद / बीज की आपूर्ति के संबंध में।",
+      "english": "Regarding the supply of fertilizer/seeds."
+    },
+    {
+      "hindi": "फसल बर्बाद के संबंध में।",
+      "english": "Regarding crop damage/loss."
+    },
+    {
+      "hindi": "अनुदान / ऋण / कृषि योजना लागू नहीं होने के संबंध में।",
+      "english": "Regarding non-implementation of subsidy / loan/agricultural schemes."
+    },
+    {
+      "hindi": "कृषि विद्यालयों के संबंध में ।",
+      "english": "Regarding agricultural schools/ colleges."
+    },
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में",
+      "english": "Regarding allegations/ complaints against officials."
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में।",
+      "english": "Regarding compassionate appointment (job on compassionate grounds)."
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Other"
+    },
+    {
+      "hindi": "राष्ट्रीय कृषि विकास योजना एवं राज्यस्तरीय सभी कृषि विकास से संबंधित योजनाओं का परिवाद",
+      "english": "Grievance related to Rashtriya Krishi Vikas Yojana and all state-level agricultural development schemes."
+    },
+    {
+      "hindi": "बीज एवं उर्वरक उपादान कीट वितरण से संबंधित परिवाद",
+      "english": "Grievance related to the distribution of seeds, fertilizers, inputs, and pest control items."
+    },
+    {
+      "hindi": "कृषि यांत्रीकरण से संबंधित परिवाद",
+      "english": "Grievance related to agricultural mechanization."
+    },
+    {
+      "hindi": "जैविक उर्वरक खेती से संबंधित परिवाद",
+      "english": "Grievance related to organic fertilizer farming."
+    },
+    {
+      "hindi": "कम्पोस्ट/बायोगैस से संबंधित परिवाद",
+      "english": "Grievance related to compost/ biogas."
+    },
+    {
+      "hindi": "बीज/उर्वरक/कीटनाशी से संबंधित परिवाद",
+      "english": "Grievance related to seeds/ fertilizers/pesticides."
+    },
+    {
+      "hindi": "राष्ट्रीय एवं राज्य योजना से परिचालित अन्य सभी कृषि योजना से संबंधित परिवाद",
+      "english": "Grievance related to all other agricultural schemes operated under national and state schemes."
+    },
+    {
+      "hindi": "राष्ट्रीय एवं राज्य बागवानी मिशन से संबंधित परिवाद",
+      "english": "Grievance related to National and State Horticulture Missions."
+    },
+    {
+      "hindi": "डीजल अनुदान से संबंधित परिवाद",
+      "english": "Grievance related to diesel subsidy."
+    },
+    {
+      "hindi": "राष्ट्रीय खाद्य सुरक्षा मिशन के अंतर्गत संचालित कृषि योजनाओं से संबंधित परिवाद",
+      "english": "Grievance related to agricultural schemes operated under the National Food Security Mission."
+    },
+    {
+      "hindi": "बिहार राज्य विपणन पर्षद (विघटित) के अंतर्गत गोदाम/दुकान/विक्रय स्थल-भूखण्ड का आवंटन से संबंधित परिवाद",
+      "english": "Grievance related to allocation of warehouse/shop/sales site-plots under the Bihar State Marketing Board (dissolved)."
+    },
+    {
+      "hindi": "गोदाम/दुकान का रख-रखाव एवं योजनाओं के निर्माण से संबंधित परिवाद",
+      "english": "Grievance related to the maintenance of warehouses/ shops and construction under schemes."
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Regarding service matters and retirement benefits of regular employees and officials."
+    }
+  ],
+  "Home": [
+    {
+      "hindi": "अपराध-धन के लिए भयादोहन के संबंध में।",
+      "english": "Regarding extortion of money related to crime."
+    },
+    {
+      "hindi": "अपराध - पुलिस की अक्षमता के संबंध में।",
+      "english": "Crime - Regarding police incompetence."
+    },
+    {
+      "hindi": "जान - माल का खतरा / धमकी से संबंधित ।",
+      "english": "Related to threat/danger to life and property."
+    },
+    {
+      "hindi": "पारिवारिक विवाद से संबंधित ।",
+      "english": "Related to family dispute."
+    },
+    {
+      "hindi": "अपराध - अपहरण से संबंधित ।",
+      "english": "Crime - Related to kidnapping/abduction."
+    },
+    {
+      "hindi": "दोषी को बचाने / नहीं पकड़ने के संबंध में।",
+      "english": "Regarding protecting or failing to arrest the culprit."
+    },
+    {
+      "hindi": "कारागार की व्यवस्था के संबंध में।",
+      "english": "Regarding prison/jail administration and arrangements."
+    },
+    {
+      "hindi": "थाना से चरित्र प्रमाण पत्र निर्गत देने के संबंध में।",
+      "english": "Regarding issuance of character certificate from the police station."
+    },
+    {
+      "hindi": "उग्रवाद / सामूहिक मृत्यु पर मुआवजा देने के संबंध में।",
+      "english": "Regarding compensation for extremism/militancy or mass casualties."
+    },
+    {
+      "hindi": "विस्फोटक एवं आग्नेयास्त्र के अनुज्ञापित के संबंध में।",
+      "english": "Regarding licensing of explosives and firearms."
+    },
+    {
+      "hindi": "सैनिकों के कल्याण के संबंध में।",
+      "english": "Regarding the welfare of soldiers/ defense personnel."
+    },
+    {
+      "hindi": "बोध गया मंदिर के रख रखाव के संबंध में।",
+      "english": "Regarding maintenance of the Bodh Gaya Temple."
+    },
+    {
+      "hindi": "कब्रिस्तानों की घेरा बंदी के संबंध में।",
+      "english": "Regarding the boundary walling/ fencing of graveyards."
+    },
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में।",
+      "english": "Regarding allegations/charges against officials."
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में।",
+      "english": "Regarding job appointment on compassionate grounds."
+    },
+    {
+      "hindi": "सेवा संबंधी समस्या के संबंध में।",
+      "english": "Regarding service-related issues/ matters."
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Other"
+    },
+    {
+      "hindi": "परिवाद-भयादोहन के संबंध में",
+      "english": "Complaint - Regarding extortion."
+    },
+    {
+      "hindi": "परिवाद- काण्ड में कार्रवाई करने/ना करने के संबंध में",
+      "english": "Complaint - Regarding taking action or inaction in a case/ incident."
+    },
+    {
+      "hindi": "परिवाद- वारंट/कुर्की जब्ती का निष्पादन न करने के संबंध में",
+      "english": "Complaint - Regarding non-execution of arrest warrant/property attachment orders."
+    },
+    {
+      "hindi": "परिवाद- जान माल को खतरा/सुरक्षा/धमकी के संबंध में",
+      "english": "Complaint - Regarding threat to life and property/security/ threats received."
+    },
+    {
+      "hindi": "परिवाद- जान माल को खतरा/सुरक्षा/धमकी के संबंध में",
+      "english": "Complaint - Regarding threat to life and property /security/ threats received."
+    },
+    {
+      "hindi": "परिवाद- पारिवारिक विवाद",
+      "english": "Complaint- Family dispute."
+    },
+    {
+      "hindi": "परिवाद- अपहरण की शिकायत",
+      "english": "Complaint - Abduction/Kidnapping complaint."
+    },
+    {
+      "hindi": "परिवाद- काण्ड दर्ज न करना",
+      "english": "Complaint - Non-registration of FIR / case."
+    },
+    {
+      "hindi": "परिवाद- भूमि विवाद/शांति भंग",
+      "english": "Complaint - Land dispute / breach of peace."
+    },
+    {
+      "hindi": "परिवाद- साम्प्रदायिक तनाव",
+      "english": "Complaint Communal tension."
+    },
+    {
+      "hindi": "उग्रवादियों का प्रत्यर्पण एवं पुनर्वास",
+      "english": "Surrender and rehabilitation of extremists/militants."
+    },
+    {
+      "hindi": "आतंकवादी / उग्रवादी/ साम्प्रदायिक/ जातीय विरोधाभाव / निर्वाचन संबंधी हिंसा / सामूहिक हिंसा की घटनाओं में मृत व्यक्तियों के आश्रितों को अनुग्रह अनुदान",
+      "english": "Ex-gratia grant to dependents of victims killed in terrorist/militant/communal/caste conflict/election-related violence/ mass violence incidents."
+    },
+    {
+      "hindi": "अग्निशमन सेवा से अनापत्ति प्रमाण-पत्र",
+      "english": "No Objection Certificate (NOC) from Fire Services."
+    },
+    {
+      "hindi": "कारागार व्यवस्था एवं बंदियों की...",
+      "english": "Jail administration and prisoner..."
+    },
+    {
+      "hindi": "कारागार व्यवस्था एवं बंदियों की शिकायत से संबंधित मामले",
+      "english": "Matters related to jail administration and prisoners' complaints."
+    },
+    {
+      "hindi": "आग्नेयास्त्र अनुज्ञप्ति निर्गम",
+      "english": "Issuance of firearm license."
+    },
+    {
+      "hindi": "कब्रिस्तान घेराबंदी के संबंध में",
+      "english": "Regarding boundary fencing of graveyards."
+    },
+    {
+      "hindi": "मंदिर घेराबंदी की योजना से संबंधित मामले",
+      "english": "Matters related to boundary fencing schemes for temples."
+    },
+    {
+      "hindi": "अनुसंधान एवं पर्यवेक्षण में विलम्ब के संबंध में",
+      "english": "Regarding delay in investigation and supervision."
+    },
+    {
+      "hindi": "सैनिकों के कल्याण से संबंधित मामले",
+      "english": "Matters related to the welfare of soldiers."
+    },
+    {
+      "hindi": "पुलिस सत्यापन से संबंधित शिकायतें",
+      "english": "Complaints related to police verification."
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Related to service matters and post-retirements/terminal benefits of regular employees and officers."
+    }
+  ],
+  "energy": [
+    {
+      "hindi": "गैर कानूनी बिजली कनेक्शन / बिजली चोरी के संबंध में |",
+      "english": "Regarding illegal electricity connection / power theft"
+    },
+    {
+      "hindi": "ट्रांसफॉर्मर / मीटर में खराबी एवं नहीं बदले जाने के सम्बन्ध में |",
+      "english": "Regarding defect in transformer / meter and delay/failure in replacement"
+    },
+    {
+      "hindi": "विद्युतीकरण के संबंध में |",
+      "english": "Regarding electrification"
+    },
+    {
+      "hindi": "बिजली बिल के सम्बन्ध में |",
+      "english": "Regarding electricity bill"
+    },
+    {
+      "hindi": "कम वोल्टेज / बिजली नहीं रहने के संबंध में |",
+      "english": "Regarding low voltage / power outage"
+    },
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में",
+      "english": "Regarding allegations/complaints against officials"
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में |",
+      "english": "Regarding employment on compassionate grounds"
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Others"
+    },
+    {
+      "hindi": "जल विद्युत से संबंधित मामले",
+      "english": "Issues related to hydroelectric power"
+    },
+    {
+      "hindi": "सौर ऊर्जा से संबंधित मामले",
+      "english": "Issues related to solar energy"
+    },
+    {
+      "hindi": "मुख्यमंत्री विद्युत निश्चय योजना",
+      "english": "Mukhyamantri Vidyut Nishchay Yojana"
+    },
+    {
+      "hindi": "ग्रामीण विद्युतीकरण योजना",
+      "english": "Rural Electrification Scheme"
+    },
+    {
+      "hindi": "दीनदयाल उपाध्याय ग्राम ज्योति योजना",
+      "english": "Deendayal Upadhyaya Gram Jyoti Yojana"
+    },
+    {
+      "hindi": "विद्युत तार टूटने, झुलने से संबंधित मामले",
+      "english": "Issues related to broken or sagging power lines"
+    },
+    {
+      "hindi": "विद्युत कनेक्शन से संबंधित मामले",
+      "english": "Issues related to electricity connection"
+    },
+    {
+      "hindi": "विद्युत विपत्र से संबंधित मामले",
+      "english": "Issues related to electricity bills / billing"
+    },
+    {
+      "hindi": "ट्रांसफारमर एवं उसके बदलाव से संबंधित मामले",
+      "english": "Issues related to transformer and its replacement"
+    },
+    {
+      "hindi": "विद्युत वितरण से संबंधित मामले",
+      "english": "Issues related to power distribution"
+    },
+    {
+      "hindi": "ट्रांसफारमर एवं उसके बदलाव से संबंधित मामले",
+      "english": "Issues related to transformer and its replacement"
+    },
+    {
+      "hindi": "विद्युत वितरण से संबंधित मामले",
+      "english": "Issues related to power distribution"
+    },
+    {
+      "hindi": "विद्युत स्पर्शाघात से मानव क्षति से संबंधित शिकायत",
+      "english": "Complaint regarding human loss/ injury due to electric shock"
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Related to service matters and retirement/terminal benefits of regular employees and officials"
+    }
+  ]
+}

@@ -11,11 +11,11 @@ export const getFormData = (data, attachments = []) => {
   // Flatten nested fields to match Postman format
   if (data.citizenInfo.fullName)
     formData.append("citizenInfo[fullName]", data.citizenInfo.fullName);
-  formData.append("citizenInfo[mobile]", data.citizenInfo.mobile);
+  formData.append("citizenInfo[mobile]", "+91"+data.citizenInfo.mobile);
   if (data.citizenInfo.alternateMobile)
     formData.append(
       "citizenInfo[alternateMobile]",
-      data.citizenInfo.alternateMobile,
+     "+91"+data.citizenInfo.alternateMobile,
     );
   if (data.citizenInfo.email)
     formData.append("citizenInfo[email]", data.citizenInfo.email);
@@ -47,7 +47,11 @@ export const getFormData = (data, attachments = []) => {
       formData.append("citizenInfo[address][pincode]", citizenAddr.pincode);
   }
 
-  formData.append("classification[subService]", data.classification.subService);
+  // formData.append("classification[subService]", data.classification.subService);
+  formData.append("classification[service]", data.classification.service);
+  formData.append("classification[department]", data.classification.department);
+
+
   formData.append("classification[nature]", data.classification.nature);
   if (data.classification.isSeasonal !== undefined) {
     formData.append(
@@ -124,7 +128,7 @@ export const getFormData = (data, attachments = []) => {
     if (loc.block) formData.append("location[block]", loc.block);
     if (loc.panchayat) formData.append("location[panchayat]", loc.panchayat);
     if (loc.pincode)
-      formData.append("location[pincode]", loc.pincode || loc.pinCode);
+      formData.append("location[pincode]", loc.pincode || loc.pincode);
   }
 
   attachments.forEach((file) => formData.append("attachments[]", file));

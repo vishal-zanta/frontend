@@ -26,6 +26,7 @@ import { PORTAL_META } from "@/lib/biharData";
 import { PERMISSIONS } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import biharGovtLogo from "@/assets/bihar_govt.png";
 
 export const sidebarSections = [
   {
@@ -516,20 +517,24 @@ export default function Sidebar({
         `}
       >
         <div className="w-64 flex flex-col h-full">
-          <div className="px-5 py-4 border-b border-sidebar-border flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-blue-700 flex items-center justify-center shadow-lg shrink-0">
-                <ShieldCheck className="w-6 h-6 text-white" />
+          <div className="px-4 py-3.5 border-b border-sidebar-border flex items-center justify-between shrink-0">
+            <Link to="/" className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-white p-1 flex items-center justify-center border border-sidebar-border/30 shrink-0 shadow-sm">
+                <img
+                  src={biharGovtLogo}
+                  alt="Government of Bihar"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="min-w-0">
-                <div className="text-sm font-bold text-white leading-tight">
-                  {t("Sahayog Helpline", "ई-शिकायत")}
+                <div className="text-sm font-bold text-white leading-tight truncate">
+                  {t(PORTAL_META.name, "सहयोग हेल्पलाइन पोर्टल")}
                 </div>
                 <div className="text-[10px] text-sidebar-foreground/60 leading-tight">
                   {t("Govt. of Bihar", "बिहार सरकार")}
                 </div>
               </div>
-            </div>
+            </Link>
             <button
               onClick={onClose}
               className="lg:hidden p-1 hover:bg-sidebar-accent rounded"

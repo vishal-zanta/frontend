@@ -244,9 +244,23 @@ export function ComplaintDetailDialog({
         ward: activeComplaint.address?.villageOrWard || "N/A",
         createdDate: activeComplaint.createdAt,
         serviceName:
-          activeComplaint.classification?.subService?.service?.title || "N/A",
+          t(
+            activeComplaint.classification?.service?.title ||
+              activeComplaint.classification?.subService?.service?.title,
+            activeComplaint.classification?.service?.titleHindi ||
+              activeComplaint.classification?.subService?.service?.titleHindi,
+          ) ||
+          activeComplaint.classification?.service?.title ||
+          activeComplaint.classification?.subService?.service?.title ||
+          activeComplaint.serviceName ||
+          "N/A",
         subserviceName:
-          activeComplaint.classification?.subService?.title || "N/A",
+          t(
+            activeComplaint.classification?.subService?.title,
+            activeComplaint.classification?.subService?.titleHindi,
+          ) ||
+          activeComplaint.classification?.subService?.title ||
+          "N/A",
         subject: activeComplaint.classification?.subject || "N/A",
         description: activeComplaint.evidence?.details || "N/A",
         l1OfficerName: activeComplaint.l1Officer?.name || "Unassigned",
@@ -335,8 +349,7 @@ export function ComplaintDetailDialog({
                   {t("Service", "सेवा")}
                 </div>
                 <div className="font-medium text-xs lg:text-sm">
-                  {unifiedComplaint.serviceName} -{" "}
-                  {unifiedComplaint.subserviceName}
+                  {unifiedComplaint.serviceName}
                 </div>
               </div>
               <div>

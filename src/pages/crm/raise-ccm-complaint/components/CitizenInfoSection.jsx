@@ -14,6 +14,7 @@ export default function CitizenInfoSection({ t, allChannels , complaintSourcesLo
           label={t("Full Name", "पूरा नाम")}
           placeholder={t("Enter your full name", "अपना पूरा नाम दर्ज करें")}
           isLettersAllowed
+          maxLength={50}
         />
         <RhfInput
           name="citizenInfo.mobile"
@@ -36,6 +37,7 @@ export default function CitizenInfoSection({ t, allChannels , complaintSourcesLo
           label={t("Email", "ईमेल")}
           placeholder="example@email.com"
           type="email"
+          maxLength={50}
         />
         {/* <RhfSelect
           name="citizenInfo.preferredLanguage"

@@ -88,7 +88,7 @@ export default function ClassificationSection({
           onValueChange={(val) => {
             setValue("classification.department", val);
             setValue("classification.service", "");
-            setValue("classification.subService", "");
+            // setValue("classification.subService", "");
           }}
           label={t("Department", "विभाग")}
           placeholder={
@@ -105,7 +105,7 @@ export default function ClassificationSection({
           value={selectedService || ""}
           onValueChange={(val) => {
             setValue("classification.service", val);
-            setValue("classification.subService", "");
+            // setValue("classification.subService", "");
           }}
           label={t("Service / Category", "सेवा")}
           placeholder={
@@ -120,7 +120,7 @@ export default function ClassificationSection({
           required
         />
 
-        <RhfSelect
+        {/* <RhfSelect
           name="classification.subService"
           label={t("Sub-Service", "उप-सेवा")}
           placeholder={
@@ -133,7 +133,7 @@ export default function ClassificationSection({
           options={subServiceOptions}
           required
           disabled={!selectedService || subServicesLoading}
-        />
+        /> */}
 
         <RhfSelect
           name="classification.nature"
@@ -155,6 +155,8 @@ export default function ClassificationSection({
             "समस्या का विस्तार से वर्णन करें...",
           )}
           rows={4}
+          maxLength={1000}
+          required
           className="md:col-span-2"
         />
 

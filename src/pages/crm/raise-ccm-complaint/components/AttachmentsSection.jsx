@@ -95,7 +95,7 @@ export default function AttachmentsSection({
   return (
     <FormSection
       title={t(
-        "Upload Supporting Documents",
+        "Uploading Documents",
         "सहायक दस्तावेज़ अपलोड करें",
       )}
     >

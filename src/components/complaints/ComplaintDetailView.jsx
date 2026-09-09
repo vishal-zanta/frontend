@@ -149,19 +149,25 @@ export default function ComplaintDetailView({
     },
   });
 
-  const { data: usersData, isLoading :  userLoading} = useGetUsers(
+  const serviceId =
+    data?.data?.classification?.service?._id ||
+    data?.data?.classification?.service ||
+    data?.data?.classification?.subService?._id;
+
+  const { data: usersData, isLoading: userLoading } = useGetUsers(
     [
       "cce-officer-list",
-      `subServices_${data?.data?.classification?.subService?._id}`,
-      `subdivisions_${data?.data?.address?.subdivision}`
+      `services_${serviceId}`,
+      `subdivisions_${data?.data?.address?.subdivision}`,
     ],
     {
       page: 1,
       limit: MAX_LIMIT,
-      subServices: data?.data?.classification?.subService?._id,
-      wards : data?.data?.address?.subdivision
+      services: serviceId,
+      subServices: serviceId,
+      wards: data?.data?.address?.subdivision,
     },
-    isCCE && !!data?.data?.classification?.subService?._id,
+    isCCE && !!serviceId,
   );
   const userOptions = (
     usersData?.data?.data?.docs ||
@@ -230,12 +236,30 @@ export default function ComplaintDetailView({
   const displayPriority = c.assignedPriority || c.priority || "NORMAL";
 
   const serviceText =
-    c.classification?.subService?.service?.title || c.serviceName || "N/A";
+    t(
+      c.classification?.service?.title ||
+        c.classification?.subService?.service?.title,
+      c.classification?.service?.titleHindi ||
+        c.classification?.subService?.service?.titleHindi,
+    ) ||
+    c.classification?.service?.title ||
+    c.classification?.subService?.service?.title ||
+    c.serviceName ||
+    "N/A";
   const subServiceText =
-    c.classification?.subService?.title || c.subserviceName || "N/A";
+    t(
+      c.classification?.subService?.title,
+      c.classification?.subService?.titleHindi,
+    ) ||
+    c.subserviceName ||
+    "";
     
   const departmentText =
-    c.classification?.subService?.service?.department?.title ||  c.classification?.subService?.service?.department || "N/A";
+    c.classification?.department?.title ||
+    c.classification?.service?.department?.title ||
+    c.classification?.subService?.service?.department?.title ||
+    c.classification?.subService?.service?.department ||
+    "N/A";
   const subjectText = (c.classification?.subject || "").trim() || "N/A";
 
   const formattedDate =
@@ -255,7 +279,7 @@ export default function ComplaintDetailView({
   const addressDistrict = c.address?.district?.name || c.address?.district || c.districtName || "N/A";
   const addressSubdivision = c.address?.subdivision || "N/A";
   const addressVillageOrWard = c.address?.villageOrWard || c.ward || "N/A";
-  const addressPinCode = c.address?.pinCode || "N/A";
+  const addressPinCode = c.address?.pincode || "N/A";
   const addressLandmark = c.address?.landmark || "N/A";
 
   const description = c.evidence?.details || c.description || "N/A";
