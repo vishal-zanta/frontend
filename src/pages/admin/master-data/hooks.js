@@ -1,20 +1,23 @@
 import { getServices, getSubservices, getComplaintSources, getDemographics, getUlbs, getOptions, getOptionTypes, getDepartments, getSkills, getApiKeys } from "./api";
+import { getDistricts } from "@/api/address.api";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../../utils/constants";
 
-export const useGetServices = (keys = [], params = {}, enabled = true) => {
+export const useGetServices = (keys = [], params = {}, enabled = true, otherOption = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SERVICES, ...keys],
     queryFn: () => getServices(params),
-    enabled: enabled
+    enabled: enabled,
+    ...otherOption
   });
 };
 
-export const useGetSubservices = (keys = [], params = {}, enabled = false) => {
+export const useGetSubservices = (keys = [], params = {}, enabled = false, otherOption = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SUBSERVICES, ...keys],
     queryFn: () => getSubservices(params),
-    enabled: enabled
+    enabled: enabled,
+    ...otherOption
   });
 };
 
@@ -25,6 +28,15 @@ export const useGetComplaintSources = (keys = [], params = {}) => {
   });
 };
 
+export const useGetDistricts = (keys = [], params = {}, enabled = true, otherOptions = {}) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.DISTRICTS || "districts", ...keys],
+    queryFn: () => getDistricts(params),
+    enabled: enabled,
+    ...otherOptions,
+  });
+};
+
 export const useGetDemographics = (keys = [], params = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.DEMOGRAPHY, ...keys],
@@ -32,11 +44,11 @@ export const useGetDemographics = (keys = [], params = {}) => {
   });
 };
 
-export const useGetUlbs = (keys = [], params = {} , enabled = true) => {
+export const useGetUlbs = (keys = [], params = {}, enabled = true) => {
   return useQuery({
     queryKey: [QUERY_KEYS.ULBS, ...keys],
     queryFn: () => getUlbs(params),
-    enabled : enabled
+    enabled: enabled
   });
 };
 

@@ -18,10 +18,9 @@ import RhfWrapper from "@/components/RhfWrapper";
 import { officerTaggingSchema } from "./schema";
 
 import { useGetOfficerTag } from "./hooks";
-import { useGetDemographics, useGetDepartments } from "../master-data/hooks";
+import { useGetDepartments } from "../master-data/hooks";
 import { useGetUsers } from "../user-management/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import subDivisionsData from "@/utils/sub-divisions.json";
 import {
   postOfficerTagging,
   putOfficerTagging,
@@ -78,11 +77,7 @@ export default function OfficerTagging() {
   const docs = taggingsApiData?.data?.data?.docs || [];
   const totalPages = taggingsApiData?.data?.data?.pagination?.totalPages || 1;
 
-  const { data: demographyData } = useGetDemographics([], {
-    page: 1,
-    limit: MAX_LIMIT,
-  });
-  const demographyDocs = demographyData?.data?.data?.docs || [];
+
 
   const { data: usersApiDataUntagged } = useGetUsers(
     [1, MAX_LIMIT, "untagged", selectedDept],
@@ -185,8 +180,8 @@ export default function OfficerTagging() {
     const payload = {
       officer: formData.officer,
       services: formData.services,
-      district: formData.district,
-      wards: formData.wards,
+      divisions: formData.divisions,
+      subdivisions: formData.subdivisions,
     };
 
     if (editItem) {
@@ -322,45 +317,28 @@ export default function OfficerTagging() {
               className={"max-h-[450px] "}
               initialValues={
                 editItem
-                  ? (() => {
-                      let initialDistrictId =
-                        editItem.district?._id || editItem.district || "";
-                      if (!initialDistrictId) {
-                        const firstWard = editItem.wards?.[0];
-                        if (firstWard) {
-                          const districtName = Object.keys(
-                            subDivisionsData,
-                          ).find((districtKey) =>
-                            subDivisionsData[districtKey].includes(firstWard),
-                          );
-                          if (districtName) {
-                            const matchingDoc = demographyDocs.find(
-                              (d) =>
-                                d.name?.toLowerCase() ===
-                                districtName.toLowerCase(),
-                            );
-                            if (matchingDoc) {
-                              initialDistrictId = matchingDoc._id;
-                            }
-                          }
-                        }
-                      }
-
-                      return {
-                        officer:
-                          editItem.officer?._id || editItem.officer || "",
-                        services: (editItem.services || []).map(
-                          (s) => s._id || s,
-                        ),
-                        district: initialDistrictId,
-                        wards: editItem.wards || [],
-                      };
-                    })()
+                  ? {
+                      officer:
+                        editItem.officer?._id || editItem.officer || "",
+                      services: (editItem.services || []).map(
+                        (s) => s._id || s,
+                      ),
+                      divisions: (
+                        editItem.divisions ||
+                        (editItem.division ? [editItem.division] : [])
+                      ).map((d) => d._id || d),
+                      subdivisions: (
+                        editItem.subdivisions ||
+                        editItem.subDivisions ||
+                        editItem.wards ||
+                        []
+                      ).map((s) => s._id || s),
+                    }
                   : {
                       officer: "",
                       services: [],
-                      district: "",
-                      wards: [],
+                      divisions: [],
+                      subdivisions: [],
                     }
               }
               onSubmit={handleFormSubmit}

@@ -5,6 +5,7 @@ import { PriorityBadge } from "@/components/Badges";
 import { Badge } from "@/components/ui/badge";
 import { getFieldVisitStatusClass, IMG_BASE_URL } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function FieldVisitTable({
   filtered = [],
@@ -91,40 +92,37 @@ export default function FieldVisitTable({
                   )}
                 </td>
                 <td className="px-4 py-3 text-nowrap text-muted-foreground text-xs">
-                  {lang === "hi" &&
-                  (fv.serviceDetails?.titleHindi || fv.serviceDetails?.nameHindi)
-                    ? fv.serviceDetails.titleHindi || fv.serviceDetails.nameHindi
-                    : fv.serviceDetails?.title ||
-                      fv.serviceDetails?.name ||
-                      fv.grievance?.classification?.service?.title ||
-                      "N/A"}
+                  {getEntityLabel(
+                    fv.serviceDetails || fv.grievance?.classification?.service,
+                    t,
+                  ) || "N/A"}
                 </td>
                 <td className="px-4 py-3 text-nowrap text-xs">
                   {(() => {
                     const loc = fv?.grievance?.location || {};
                     const districtName =
-                      typeof loc.district === "object"
-                        ? (lang === "hi" && loc.district?.nameHindi
-                            ? loc.district.nameHindi
-                            : loc.district?.name) ||
-                          loc.district?.name ||
-                          loc.district?.title
-                        : loc.district || "";
+                      getEntityLabel(loc.district || fv.grievance?.address?.district, t) || "";
+                    const panchayatName =
+                      getEntityLabel(loc.panchayat || fv.grievance?.address?.panchayat || fv.grievance?.address?.villageOrWard, t) || "";
+                    const blockName = getEntityLabel(loc.block, t) || "";
+                    const subdivisionName =
+                      getEntityLabel(loc.subdivision || fv.grievance?.address?.subdivision, t) || "";
+                    const divisionName = getEntityLabel(loc.division, t) || "";
 
                     const parts = [
-                      loc.panchayat,
-                      loc.block,
-                      loc.subdivision && loc.subdivision !== loc.block
-                        ? loc.subdivision
+                      panchayatName,
+                      blockName,
+                      subdivisionName && subdivisionName !== blockName
+                        ? subdivisionName
                         : null,
                       districtName,
-                      loc.pincode || loc.pinCode,
+                      loc.pincode || loc.pinCode || fv.grievance?.address?.pincode,
                     ].filter(Boolean);
 
                     const locationText =
                       parts.length > 0
                         ? parts.join(", ")
-                        : loc.division || "N/A";
+                        : divisionName || "N/A";
 
                     return locationText !== "N/A" ? (
                       <>

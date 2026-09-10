@@ -69,13 +69,13 @@ const tabs = [
     permissions: PERMISSIONS.SOURCE_MANAGEMENT,
     group: "external",
   },
-  {
-    id: "demography",
-    label: "Demography & ULBs",
-    icon: MapPin,
-    permissions: PERMISSIONS.DEMOGRAPHY_MANAGEMENT,
-    group: "external",
-  },
+  // {
+  //   id: "demography",
+  //   label: "Demography & ULBs",
+  //   icon: MapPin,
+  //   permissions: PERMISSIONS.DEMOGRAPHY_MANAGEMENT,
+  //   group: "external",
+  // },
   {
     id: "grievances-nature",
     label: "Grievance Nature",
@@ -92,7 +92,7 @@ const tabLabels = {
   "api-keys": ["API Keys", "API कुंजियाँ"],
   service: ["Services", "सेवाएं"],
   source: ["Complaint Sources", "शिकायत के स्रोत"],
-  demography: ["Demography & ULBs", "जनसांख्यिकी और ULBs"],
+  // demography: ["Demography & ULBs", "जनसांख्यिकी और ULBs"],
   "grievances-nature": ["Grievance Nature", "शिकायत की प्रकृति"],
 };
 
@@ -237,7 +237,7 @@ export default function MasterData() {
         {tab === "source" && <ComplaintSourcesTab />}
 
         {/* Demography */}
-        {tab === "demography" && <DemographyTab />}
+        {/* {tab === "demography" && <DemographyTab />} */}
 
         {/* Grievance Nature */}
         {tab === "grievances-nature" && <GrievenceNatureTab />}

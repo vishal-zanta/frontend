@@ -5,8 +5,10 @@ export const officerTaggingSchema = z.object({
   services: z
     .array(z.string())
     .min(1, "At least one service is required"),
-  district: z.string().min(1, "District is required"),
-  wards: z
+  divisions: z
+    .array(z.string())
+    .min(1, "At least one division is required"),
+  subdivisions: z
     .array(z.string())
     .min(1, "At least one subdivision is required"),
 });

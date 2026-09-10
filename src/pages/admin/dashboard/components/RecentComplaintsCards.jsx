@@ -2,6 +2,7 @@ import React from "react";
 import { ComplaintId } from "@/components/ComplaintDetailDialog";
 import { StatusBadge, PriorityBadge } from "@/components/Badges";
 import { useLanguage } from "@/context/LanguageContext";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function RecentComplaintsCards({ complaints = [] }) {
   const { t } = useLanguage();
@@ -18,8 +19,10 @@ export default function RecentComplaintsCards({ complaints = [] }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 xs:p-4">
       {complaints.map((c) => {
         const citizenName = c.citizenInfo?.fullName || "N/A";
-        const serviceName = c.classification?.subService?.service?.title || "N/A";
-        const districtName = c.address?.district?.name || c.address?.district || "N/A";
+        const serviceName =
+          getEntityLabel(c.classification?.service || c.classification?.subService?.service, t) || "N/A";
+        const districtName =
+          getEntityLabel(c?.location?.district || c.address?.district, t) || "N/A";
 
         return (
           <div

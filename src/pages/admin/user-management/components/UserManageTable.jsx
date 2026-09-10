@@ -69,6 +69,7 @@ export default function UserManageTable({
       : typeof u.preferredLanguages === "string" && u.preferredLanguages.trim()
         ? u.preferredLanguages.split(", ").filter(Boolean)
         : [];
+      
 
     return {
       user: {

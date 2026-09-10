@@ -38,7 +38,12 @@ export default function OfficerTagCards({
 
 function Card({ item, setEditItem, setDialog, handleDelete, t }) {
   const servicesList = item.services || [];
-  const wardsList = item.wards || [];
+  const divisionsList = Array.isArray(item.divisions)
+    ? item.divisions
+    : item.division
+      ? [item.division]
+      : [];
+  const subdivisionsList = item.subdivisions || item.subDivisions || item.wards || [];
 
   return (
     <div className="rounded-xl border border-border bg-background dark:bg-[#0c1427] shadow-sm hover:shadow-md transition-all overflow-hidden">
@@ -89,19 +94,52 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
 
           <div className="pt-1.5 border-t border-border/40">
             <span className="text-muted-foreground block text-[10px] uppercase font-medium mb-1">
-              {t("Subdivisions / Wards:", "अनुमंडल / वार्ड:")}
+              {t("Divisions:", "प्रमंडल:")}
             </span>
-            {wardsList.length > 0 ? (
+            {divisionsList.length > 0 ? (
               <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
-                {wardsList.map((w, wi) => (
-                  <Badge
-                    key={wi}
-                    variant="outline"
-                    className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-nowrap"
-                  >
-                    {w}
-                  </Badge>
-                ))}
+                {divisionsList.map((d, di) => {
+                  const divLabel =
+                    typeof d === "object" && d
+                      ? t(d.name_en || d.name, d.name_local || d.nameHindi)
+                      : d;
+                  return (
+                    <Badge
+                      key={di}
+                      variant="outline"
+                      className="text-[10px] bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium text-nowrap"
+                    >
+                      {divLabel}
+                    </Badge>
+                  );
+                })}
+              </div>
+            ) : (
+              <span className="text-muted-foreground text-xs">N/A</span>
+            )}
+          </div>
+
+          <div className="pt-1.5 border-t border-border/40">
+            <span className="text-muted-foreground block text-[10px] uppercase font-medium mb-1">
+              {t("Subdivisions:", "अनुमंडल:")}
+            </span>
+            {subdivisionsList.length > 0 ? (
+              <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
+                {subdivisionsList.map((w, wi) => {
+                  const subLabel =
+                    typeof w === "object" && w
+                      ? t(w.name_en || w.name, w.name_local || w.nameHindi)
+                      : w;
+                  return (
+                    <Badge
+                      key={wi}
+                      variant="outline"
+                      className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-nowrap"
+                    >
+                      {subLabel}
+                    </Badge>
+                  );
+                })}
               </div>
             ) : (
               <span className="text-muted-foreground text-xs">N/A</span>
@@ -122,7 +160,8 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
                 officer: item.officer?.name || "",
                 designation: item.officer?.role?.designationEnglish || "",
                 services: (item.services || []).map((s) => s.title || s.name || s),
-                wards: item.wards || [],
+                divisions: divisionsList.map((d) => d._id || d),
+                subdivisions: (item.subdivisions || item.subDivisions || item.wards || []),
                 activeComplaints: 0,
                 slaCompliant: true,
               });

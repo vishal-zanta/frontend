@@ -9,6 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import MyTable from "@/components/MyTable";
 import useIsMobile from "@/hooks/useIsMobile";
 import RecentComplaintsCards from "./RecentComplaintsCards";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function RecentComplaintsSection() {
   const { t } = useLanguage();
@@ -33,8 +34,10 @@ export default function RecentComplaintsSection() {
 
   const tableBody = complaints.map((c) => {
     const citizenName = c.citizenInfo?.fullName || "N/A";
-    const serviceName = c.classification?.service?.title || "N/A";
-    const districtName = c?.location?.district?.name || c.address?.district || "N/A";
+    const serviceName =
+      getEntityLabel(c.classification?.service || c.classification?.subService?.service, t) || "N/A";
+    const districtName =
+      getEntityLabel(c?.location?.district || c.address?.district, t) || "N/A";
 
     return {
       id: {

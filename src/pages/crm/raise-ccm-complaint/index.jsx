@@ -33,7 +33,7 @@ import { postComplaint, postExternalComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
 import { SectionTitle } from "@/components/ChartCard";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import Department104Form from "./department-forms/health-department";
 import { departmentsList } from "@/utils/departments";
 
@@ -65,9 +65,8 @@ export default function CRMRaiseComplaint() {
       ? departmentsList.find((item) => item?.key === searchDept)?.key || ""
       : departmentsList?.[0]?.key;
   });
-  const [externalComplaintId, setExternalComplaintId] = useState(null);
-
-  const {
+    const [externalComplaintId, setExternalComplaintId] = useState(null);
+    const {
     departmentOptions,
     departmentsLoading,
     grievanceNatureOptions,
@@ -75,9 +74,48 @@ export default function CRMRaiseComplaint() {
     naturesLoading,
     allChannels,
     complaintSourcesLoading,
-    allDemography,
-    demographyLoading,
   } = useRaiseComplaintData(lang);
+  const location = useLocation();
+  const initialInmail = location.state?.INITIAL_INMAILS;
+
+  const formInitialValues = useMemo(() => {
+    if (!initialInmail) return defaultValues;
+
+    const email =
+      initialInmail.fromEmail ||
+      (typeof initialInmail.from === "string" && initialInmail.from.includes("<")
+        ? initialInmail.from.match(/<([^>]+)>/)?.[1]
+        : initialInmail.from) ||
+      initialInmail.email ||
+      "";
+    const fullName =
+      initialInmail.fromName ||
+      (typeof initialInmail.from === "string"
+        ? initialInmail.from.split("<")[0].trim()
+        : "");
+    const emailBody =
+      initialInmail.body ||
+      initialInmail.content ||
+      initialInmail.text ||
+      initialInmail.html ||
+      "";
+
+    return {
+      ...defaultValues,
+      channel: allChannels.find(v=>v?.label == "Email")?.value,
+      citizenInfo: {
+        ...defaultValues.citizenInfo,
+        fullName: fullName || defaultValues.citizenInfo.fullName,
+        email: email,
+      },
+      evidence: {
+        ...defaultValues.evidence,
+        details: emailBody,
+      },
+    };
+  }, [initialInmail]);
+
+
 
   const fileInputRef = useRef(null);
   const [attachments, setAttachments] = useState([]);
@@ -266,7 +304,7 @@ export default function CRMRaiseComplaint() {
           />
         ) : (
           <RhfWrapper
-            initialValues={defaultValues}
+            initialValues={formInitialValues}
             isValidation
             validationSchema={grievanceSchema}
             validationOn="onChange"
@@ -289,8 +327,6 @@ export default function CRMRaiseComplaint() {
               postComplaintMutation={postComplaintMutation}
               allChannels={allChannels}
               complaintSourcesLoading={complaintSourcesLoading}
-              allDemography={allDemography}
-              demographyLoading={demographyLoading}
               grievanceMaxUploadSizeMB={grievanceMaxUploadSizeMB}
             />
           </RhfWrapper>
@@ -316,8 +352,6 @@ function FormWizard({
   postComplaintMutation,
   allChannels,
   complaintSourcesLoading,
-  allDemography,
-  demographyLoading,
   grievanceMaxUploadSizeMB,
 }) {
   const methods = useFormContext();
@@ -463,11 +497,7 @@ function FormWizard({
 
         {step === 2 && (
           <div className="space-y-6">
-            <AddressSection
-              t={t}
-              allDemography={allDemography}
-              demographyLoading={demographyLoading}
-            />
+            <AddressSection t={t} />
           </div>
         )}
 
@@ -481,11 +511,7 @@ function FormWizard({
               t={t}
               lang={lang}
             />
-            <LocationDetailsSection
-              t={t}
-              allDemography={allDemography}
-              demographyLoading={demographyLoading}
-            />
+            <LocationDetailsSection t={t} />
             <ImpactSection
               affectedBeneficiaryOptions={affectedBeneficiaryOptions}
               t={t}

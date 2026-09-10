@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import FormSection from "./FormSection";
-import subDivisionsData from "@/utils/sub-divisions.json";
 import statesCitiesData from "@/utils/states_cities.json";
 import { cn } from "@/lib/utils";
+import { useClearAddressFields, useGetAddressFields } from "../hooks";
+import { useLanguage } from "@/context/LanguageContext";
 
 const stateOptions = Object.keys(statesCitiesData)
   .sort()
@@ -14,19 +15,154 @@ const stateOptions = Object.keys(statesCitiesData)
     value: state,
   }));
 
-function AddressBlock({
-  title,
-  prefix,
+export const PermanentAddress = ({ t }) => {
+  const { lang } = useLanguage();
+  const { watch, setValue, control } = useFormContext();
+  const prefix = "citizenInfo.address";
+
+  const selectedDistrictId = watch(`${prefix}.district`);
+  const selectedSubdivisionId = watch(`${prefix}.subdivision`);
+
+  const {
+    districtOptions,
+    isDistrictsLoading,
+    blockOptions,
+    isBlocksLoading,
+    panchayatOptions,
+    thanaOptions,
+    isPanchayatsLoading,
+    isThanasLoading,
+  } = useGetAddressFields(
+    {
+      lang,
+      districtId: selectedDistrictId,
+      blockId: selectedSubdivisionId,
+    },
+    {
+      isValueId: true,
+    },
+  );
+
+  useClearAddressFields({
+    control,
+    prefix,
+    setValue,
+  });
+
+  return (
+    <FormSection title={t("Applicant Permanent Address", "स्थायी पता")}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-200">
+        <RhfInput
+          name={`${prefix}.addressLine`}
+          label={t("Address Line", "पता विवरण")}
+          placeholder={t(
+            "House no., Street, Area",
+            "मकान संख्या, सड़क, क्षेत्र",
+          )}
+          required
+          maxLength={50}
+          className="md:col-span-2"
+        />
+
+        <RhfSelect
+          name={`${prefix}.district`}
+          label={t("District", "ज़िला")}
+          placeholder={t("Select District", "जिला चुनें")}
+          options={districtOptions}
+          isLoading={isDistrictsLoading}
+          disabled={isDistrictsLoading}
+          required
+        />
+
+        <RhfSelect
+          name={`${prefix}.subdivision`}
+          label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+          placeholder={t(
+            "Select Block / Subdivision",
+            "प्रखंड / अनुमंडल चुनें",
+          )}
+          options={blockOptions}
+          disabled={!selectedDistrictId || isBlocksLoading}
+          isLoading={isBlocksLoading}
+          required
+        />
+
+        <RhfSelect
+          name={`${prefix}.panchayat`}
+          label={t("Select Panchayat", "पंचायत")}
+          placeholder={t("Select Panchayat name", "पंचायत का नाम")}
+          options={panchayatOptions}
+          disabled={!selectedSubdivisionId || isPanchayatsLoading}
+          isLoading={isPanchayatsLoading}
+          required
+        />
+
+        <RhfSelect
+          name={`${prefix}.thana`}
+          label={t("Select Thana", "थाना")}
+          placeholder={t("Select Thana", "थाना चुनें")}
+          options={thanaOptions}
+          disabled={!selectedSubdivisionId || isThanasLoading}
+          isLoading={isThanasLoading}
+          required
+        />
+
+        <RhfInput
+          name={`${prefix}.pincode`}
+          label={t("Pin Code", "पिन कोड")}
+          placeholder="800001"
+          inputClassName="tracking-widest"
+          required
+          isNumsOnly
+          maxLength={6}
+        />
+      </div>
+    </FormSection>
+  );
+};
+
+export const CorrespondenceAddress = ({
+  t,
   action,
   disabled,
-  t,
-  allDemography,
-  demographyLoading,
-  isPermanent = false,
-}) {
-  const { watch, setValue } = useFormContext();
+}) => {
+  const { lang } = useLanguage();
+  const { watch, setValue, control } = useFormContext();
+  const prefix = "address";
+
   const selectedState = watch(`${prefix}.state`);
   const selectedDistrictId = watch(`${prefix}.district`);
+  const selectedSubdivisionId = watch(`${prefix}.subdivision`);
+    const districtOptionsRef = useRef([]);
+    const blocksOptionsRef = useRef([]);
+
+  const {
+    districtOptions,
+    isDistrictsLoading,
+    blockOptions,
+    isBlocksLoading,
+    panchayatOptions,
+    thanaOptions,
+    isPanchayatsLoading,
+    isThanasLoading,
+  } = useGetAddressFields(
+    {
+      lang,
+     districtId: (districtOptionsRef.current || []).find(v=> v.value === selectedDistrictId)?.raw?._id,
+      blockId: (blocksOptionsRef.current || []).find(v=> v.value === selectedSubdivisionId)?.raw?._id,
+    },
+    {
+      isValueId: false,
+    },
+  );
+  districtOptionsRef.current = districtOptions;
+blocksOptionsRef.current = blockOptions;
+
+  useClearAddressFields({
+    control,
+    prefix,
+    setValue,
+  });
 
   // City options for correspondence address
   const cityOptions = React.useMemo(() => {
@@ -38,11 +174,10 @@ function AddressBlock({
     }));
   }, [selectedState]);
 
-  // Clear city, district, subdivision, thana, panchayat when state changes (for correspondence address)
+  // Clear city, district, subdivision, thana, panchayat when state changes
   const prevStateRef = React.useRef(selectedState);
   React.useEffect(() => {
     if (
-      !isPermanent &&
       prevStateRef.current !== undefined &&
       prevStateRef.current !== selectedState
     ) {
@@ -74,46 +209,15 @@ function AddressBlock({
       });
     }
     prevStateRef.current = selectedState;
-  }, [selectedState, setValue, prefix, isPermanent]);
+  }, [selectedState, setValue, prefix]);
 
-  // Find the selected district object from allDemography to get the English name
-  const selectedDistrict = React.useMemo(() => {
-    return allDemography?.find((d) => d.value === selectedDistrictId);
-  }, [allDemography, selectedDistrictId]);
-
-  const districtName = selectedDistrict?.name;
-
-  // Find the subdivision options for the selected district name from json
-  const subdivisionOptions = React.useMemo(() => {
-    if (!districtName) return [];
-    const subdivisions = subDivisionsData[districtName];
-    if (!subdivisions) return [];
-    return subdivisions.map((sub) => ({
-      label: sub,
-      value: sub,
-    }));
-  }, [districtName]);
-
-  // Keep track of the last selected district to clear subdivision on change
-  const prevDistrictRef = React.useRef(selectedDistrictId);
-  React.useEffect(() => {
-    if (
-      prevDistrictRef.current !== undefined &&
-      prevDistrictRef.current !== selectedDistrictId
-    ) {
-      setValue(`${prefix}.subdivision`, "", {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-    }
-    prevDistrictRef.current = selectedDistrictId;
-  }, [selectedDistrictId, setValue, prefix]);
-
-  const isSubdivisionDisabled = !selectedDistrictId;
-  const isBihar = isPermanent || selectedState === "Bihar";
+  const isBihar = selectedState === "Bihar";
 
   return (
-    <FormSection title={title} action={action}>
+    <FormSection
+      title={t("Correspondence Address", "पत्राचार का पता")}
+      action={action}
+    >
       <div
         className={cn(
           "grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-200",
@@ -132,63 +236,102 @@ function AddressBlock({
           className="md:col-span-2"
         />
 
-        {!isPermanent && (
+        <RhfSelect
+          name={`${prefix}.state`}
+          label={t("State", "राज्य")}
+          placeholder={t("Select State", "राज्य चुनें")}
+          options={stateOptions}
+          required
+        />
+
+        <RhfSelect
+          name={`${prefix}.city`}
+          label={t("City", "शहर")}
+          placeholder={t("Select City", "शहर चुनें")}
+          options={cityOptions}
+          disabled={!selectedState}
+          required={!isBihar}
+        />
+
+        {isBihar ? (
           <>
             <RhfSelect
-              name={`${prefix}.state`}
-              label={t("State", "राज्य")}
-              placeholder={t("Select State", "राज्य चुनें")}
-              options={stateOptions}
+              name={`${prefix}.district`}
+              label={t("District", "ज़िला")}
+              placeholder={t("Select District", "जिला चुनें")}
+              options={districtOptions}
+              isLoading={isDistrictsLoading}
+              disabled={isDistrictsLoading}
               required
             />
 
             <RhfSelect
-              name={`${prefix}.city`}
-              label={t("City", "शहर")}
-              placeholder={t("Select City", "शहर चुनें")}
-              options={cityOptions}
-              disabled={!selectedState}
-              required={!isBihar}
+              name={`${prefix}.subdivision`}
+              label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+              placeholder={t(
+                "Select Block / Subdivision",
+                "प्रखंड / अनुमंडल चुनें",
+              )}
+              options={blockOptions}
+              disabled={!selectedDistrictId || isBlocksLoading}
+              isLoading={isBlocksLoading}
+              required
+            />
+
+            <RhfSelect
+              name={`${prefix}.panchayat`}
+              label={t("Select Panchayat", "पंचायत")}
+              placeholder={t("Select Panchayat name", "पंचायत का नाम")}
+              options={panchayatOptions}
+              disabled={!selectedSubdivisionId || isPanchayatsLoading}
+              isLoading={isPanchayatsLoading}
+              required
+            />
+
+            <RhfSelect
+              name={`${prefix}.thana`}
+              label={t("Select Thana", "थाना")}
+              placeholder={t("Select Thana", "थाना चुनें")}
+              options={thanaOptions}
+              disabled={!selectedSubdivisionId || isThanasLoading}
+              isLoading={isThanasLoading}
+              required
+            />
+          </>
+        ) : (
+          <>
+            <RhfInput
+              name={`${prefix}.district`}
+              label={t("District", "ज़िला")}
+              placeholder={t("Enter District", "ज़िला दर्ज करें")}
+              maxLength={50}
+            />
+
+            <RhfInput
+              name={`${prefix}.subdivision`}
+              label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+              placeholder={t(
+                "Enter Block / Subdivision",
+                "प्रखंड / अनुमंडल दर्ज करें",
+              )}
+              maxLength={50}
+            />
+
+            <RhfInput
+              name={`${prefix}.panchayat`}
+              label={t("Select Panchayat", "पंचायत")}
+              placeholder={t("Enter Panchayat", "पंचायत दर्ज करें")}
+              maxLength={50}
+            />
+
+            <RhfInput
+              name={`${prefix}.thana`}
+              label={t("Select Thana", "थाना")}
+              placeholder={t("Enter Thana", "थाना दर्ज करें")}
+              maxLength={50}
             />
           </>
         )}
-
-        <RhfSelect
-          name={`${prefix}.district`}
-          label={t("District", "ज़िला")}
-          placeholder={t("Select District", "जिला चुनें")}
-          options={allDemography}
-          isLoading={demographyLoading}
-          required={isBihar}
-        />
-
-        <RhfSelect
-          name={`${prefix}.subdivision`}
-          label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-          placeholder={t(
-            "Select Block / Subdivision",
-            "प्रखंड / अनुमंडल चुनें",
-          )}
-          options={subdivisionOptions}
-          disabled={isSubdivisionDisabled}
-          required={isBihar}
-        />
-
-        <RhfInput
-          name={`${prefix}.panchayat`}
-          label={t("Panchayat", "पंचायत")}
-          placeholder={t("Panchayat name", "पंचायत का नाम")}
-          required={isBihar}
-          maxLength={50}
-        />
-
-        <RhfInput
-          name={`${prefix}.thana`}
-          label={t("Thana", "थाना")}
-          placeholder={t("Police Station / Thana", "थाना का नाम")}
-          required={isBihar}
-          maxLength={50}
-        />
 
         <RhfInput
           name={`${prefix}.pincode`}
@@ -202,18 +345,61 @@ function AddressBlock({
       </div>
     </FormSection>
   );
-}
+};
 
-export default function AddressSection({
-  t,
-  allDemography,
-  demographyLoading,
-}) {
+export default function AddressSection({ t }) {
+  const { lang } = useLanguage();
   const { watch, setValue, getValues } = useFormContext();
   const isCrpEqualPerAdd = watch("isCrpEqualPerAdd");
   const permanentAddress = watch("citizenInfo.address");
   const correspondenceState = watch("address.state");
   const isBihar = correspondenceState === "Bihar";
+
+  const { districtOptions, blockOptions, panchayatOptions, thanaOptions } =
+    useGetAddressFields(
+      {
+        lang,
+        districtId: permanentAddress?.district,
+        blockId: permanentAddress?.subdivision,
+      },
+      { isValueId: true },
+    );
+
+  const getAddressLabels = (perm) => {
+    const districtLabel =
+      districtOptions.find(
+        (d) => d.value === perm?.district || d.raw?._id === perm?.district,
+      )?.label ||
+      perm?.district ||
+      "";
+    const subdivisionLabel =
+      blockOptions.find(
+        (b) =>
+          b.value === perm?.subdivision || b.raw?._id === perm?.subdivision,
+      )?.label ||
+      perm?.subdivision ||
+      "";
+    const panchayatLabel =
+      panchayatOptions.find(
+        (p) =>
+          p.value === perm?.panchayat || p.raw?._id === perm?.panchayat,
+      )?.label ||
+      perm?.panchayat ||
+      "";
+    const thanaLabel =
+      thanaOptions.find(
+        (tItem) => tItem.value === perm?.thana || tItem.raw?._id === perm?.thana,
+      )?.label ||
+      perm?.thana ||
+      "";
+
+    return {
+      districtLabel,
+      subdivisionLabel,
+      panchayatLabel,
+      thanaLabel,
+    };
+  };
 
   const handleToggleSameAddress = (checked) => {
     setValue("isCrpEqualPerAdd", checked, {
@@ -222,6 +408,9 @@ export default function AddressSection({
     });
     if (checked) {
       const perm = getValues("citizenInfo.address");
+      const { districtLabel, subdivisionLabel, panchayatLabel, thanaLabel } =
+        getAddressLabels(perm);
+
       setValue("address.addressLine", perm?.addressLine || "", {
         shouldDirty: true,
         shouldValidate: true,
@@ -230,19 +419,19 @@ export default function AddressSection({
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("address.district", perm?.district || "", {
+      setValue("address.district", districtLabel, {
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("address.subdivision", perm?.subdivision || "", {
+      setValue("address.subdivision", subdivisionLabel, {
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("address.panchayat", perm?.panchayat || "", {
+      setValue("address.panchayat", panchayatLabel, {
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("address.thana", perm?.thana || "", {
+      setValue("address.thana", thanaLabel, {
         shouldDirty: true,
         shouldValidate: true,
       });
@@ -268,27 +457,38 @@ export default function AddressSection({
 
   React.useEffect(() => {
     if (isCrpEqualPerAdd) {
+      const { districtLabel, subdivisionLabel, panchayatLabel, thanaLabel } =
+        getAddressLabels(permanentAddress);
+
       setValue("address.addressLine", permanentAddress?.addressLine || "", {
         shouldValidate: true,
       });
       setValue("address.state", "Bihar", { shouldValidate: true });
-      setValue("address.district", permanentAddress?.district || "", {
+      setValue("address.district", districtLabel, {
         shouldValidate: true,
       });
-      setValue("address.subdivision", permanentAddress?.subdivision || "", {
+      setValue("address.subdivision", subdivisionLabel, {
         shouldValidate: true,
       });
-      setValue("address.panchayat", permanentAddress?.panchayat || "", {
+      setValue("address.panchayat", panchayatLabel, {
         shouldValidate: true,
       });
-      setValue("address.thana", permanentAddress?.thana || "", {
+      setValue("address.thana", thanaLabel, {
         shouldValidate: true,
       });
       setValue("address.pincode", permanentAddress?.pincode || "", {
         shouldValidate: true,
       });
     }
-  }, [isCrpEqualPerAdd, JSON.stringify(permanentAddress), setValue]);
+  }, [
+    isCrpEqualPerAdd,
+    JSON.stringify(permanentAddress),
+    districtOptions,
+    blockOptions,
+    panchayatOptions,
+    thanaOptions,
+    setValue,
+  ]);
 
   const sameAddressAction = isBihar ? (
     <label className="flex items-center gap-2 cursor-pointer select-none text-white text-xs sm:text-sm font-normal normal-case bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-md transition-colors border border-white/20">
@@ -304,26 +504,13 @@ export default function AddressSection({
 
   return (
     <div className="space-y-6">
-      <AddressBlock
-        title={t("Permanent Address", "स्थायी पता")}
-        prefix="citizenInfo.address"
-        t={t}
-        allDemography={allDemography}
-        demographyLoading={demographyLoading}
-        isPermanent={true}
-      />
+      <PermanentAddress t={t} />
 
-      <AddressBlock
-        title={t("Correspondence Address", "पत्राचार का पता")}
-        prefix="address"
+      <CorrespondenceAddress
+        t={t}
         action={sameAddressAction}
         disabled={!!isCrpEqualPerAdd}
-        t={t}
-        allDemography={allDemography}
-        demographyLoading={demographyLoading}
-        isPermanent={false}
       />
     </div>
   );
 }
-

@@ -3,7 +3,7 @@ import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import { Button } from "@/components/ui/button";
 import useGetRoles from "@/hooks/query/useGetRoles";
-import { useGetDemographics } from "../../master-data/hooks";
+import { useGetDistricts } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { MAX_LIMIT, LANGUAGES, CCE_ROLES, ADMIN_ROLES } from "@/utils/constants";
@@ -20,10 +20,7 @@ export default function Form({
 }) {
   const { t } = useLanguage();
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
-  const { data: demographyData } = useGetDemographics([], {
-    page: 1,
-    limit: MAX_LIMIT,
-  });
+  const { data: districtData } = useGetDistricts();
 
   const { watch } = useFormContext();
   const selectedRoleId = watch("role");
@@ -37,8 +34,12 @@ export default function Form({
     value: r._id,
   }));
 
-  const districtOptions = (demographyData?.data?.data?.docs || []).map((d) => ({
-    label: d.name,
+  const districtOptions = (
+    (Array.isArray(districtData?.data?.data)
+      ? districtData?.data?.data
+      : districtData?.data?.data?.docs) || []
+  ).map((d) => ({
+    label: t(d.name_en || d.name, d.name_local || d.nameHindi),
     value: d._id,
   }));
 

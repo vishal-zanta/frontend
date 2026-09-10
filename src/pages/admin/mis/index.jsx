@@ -26,7 +26,7 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import StatCard from "@/components/StatCard";
 import { jsPDF } from "jspdf";
 import { useGetMisReports, useGetMisStats } from "./hooks";
-import { useGetDemographics } from "../master-data/hooks";
+import { useGetDistricts } from "../master-data/hooks";
 import { MAX_LIMIT, PERMISSIONS } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -390,9 +390,13 @@ export default function MISReports() {
     data: demographics,
     isLoading: demographicsLoading,
     error: demographicsError,
-  } = useGetDemographics([], { page: 1, limit: MAX_LIMIT });
-  const districtOptions = (demographics?.data?.data?.docs || []).map((d) => ({
-    label: t(d.name, d.nameHindi),
+  } = useGetDistricts();
+  const districtOptions = (
+    (Array.isArray(demographics?.data?.data)
+      ? demographics?.data?.data
+      : demographics?.data?.data?.docs) || []
+  ).map((d) => ({
+    label: t(d.name_en || d.name, d.name_local || d.nameHindi),
     value: d._id,
   }));
 

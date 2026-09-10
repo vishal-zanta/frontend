@@ -7,7 +7,7 @@ import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 
-import { useGetDemographics } from "../hooks";
+import { useGetDistricts } from "../hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postDemographic, putDemographic, deleteDemographic } from "../api";
 import { QUERY_KEYS } from "@/utils/constants";
@@ -23,12 +23,15 @@ export default function DemographyTab() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { page, limit, ...paginationProps } = usePagination();
-  const { data, isLoading, error } = useGetDemographics([page, limit], {
+  const { data, isLoading, error } = useGetDistricts([page, limit], {
     page,
     limit,
   });
-  const districts = data?.data?.data?.docs || [];
-  const totalPages = data?.data?.data?.pagination?.totalPages || 1;
+  const districts =
+    (Array.isArray(data?.data?.data)
+      ? data?.data?.data
+      : data?.data?.data?.docs) || [];
+  const totalPages = data?.data?.pagination?.totalPages || data?.data?.data?.pagination?.totalPages || 1;
 
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
   const [formData, setFormData] = useState({

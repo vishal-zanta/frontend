@@ -1,6 +1,7 @@
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { MapPin, Building2, Navigation } from "lucide-react";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function ComplaintLocationSection({
   permAddr = {},
@@ -8,21 +9,7 @@ export default function ComplaintLocationSection({
   loc = {},
   isCrpEqualPerAdd = false,
 }) {
-  const { t, lang } = useLanguage();
-
-  const getEntityLabel = (item) => {
-    if (!item) return "";
-    if (typeof item === "object") {
-      return (
-        t(item.name || item.title, item.nameHindi || item.titleHindi) ||
-        (lang === "hi" && (item.nameHindi || item.titleHindi)) ||
-        item.name ||
-        item.title ||
-        ""
-      );
-    }
-    return String(item);
-  };
+  const { t } = useLanguage();
 
   const hasPermAddr = Boolean(
     permAddr?.addressLine ||
@@ -67,7 +54,8 @@ export default function ComplaintLocationSection({
       loc?.subdivision ||
       loc?.block ||
       loc?.panchayat ||
-      loc?.pincode,
+      loc?.pincode ||
+      loc?.pinCode,
   );
 
   return (
@@ -96,7 +84,7 @@ export default function ComplaintLocationSection({
                   {t("District", "ज़िला")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {getEntityLabel(permAddr.district)}
+                  {getEntityLabel(permAddr.district, t)}
                 </span>
               </div>
             )}
@@ -106,7 +94,7 @@ export default function ComplaintLocationSection({
                   {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {getEntityLabel(permAddr.subdivision)}
+                  {getEntityLabel(permAddr.subdivision, t)}
                 </span>
               </div>
             )}
@@ -116,7 +104,7 @@ export default function ComplaintLocationSection({
                   {t("Panchayat", "पंचायत")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {permAddr.panchayat}
+                  {getEntityLabel(permAddr.panchayat, t)}
                 </span>
               </div>
             )}
@@ -126,7 +114,7 @@ export default function ComplaintLocationSection({
                   {t("Thana", "थाना")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {permAddr.thana}
+                  {getEntityLabel(permAddr.thana, t)}
                 </span>
               </div>
             )}
@@ -152,11 +140,6 @@ export default function ComplaintLocationSection({
               <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />
               {t("Correspondence Address", "पत्राचार का पता")}
             </h4>
-            {/* {isSameAddress && (
-              <span className="text-[10px] font-medium bg-primary/10 text-primary border border-primary/20 rounded-full px-2 py-0.5">
-                {t("Same as Permanent Address", "स्थायी पते के समान")}
-              </span>
-            )} */}
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-3 text-[10px] lg:text-xs">
             {(effectiveCorrAddr.addressLine || effectiveCorrAddr.landmark) && (
@@ -195,7 +178,7 @@ export default function ComplaintLocationSection({
                   {t("District", "ज़िला")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {getEntityLabel(effectiveCorrAddr.district)}
+                  {getEntityLabel(effectiveCorrAddr.district, t)}
                 </span>
               </div>
             )}
@@ -205,7 +188,7 @@ export default function ComplaintLocationSection({
                   {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {getEntityLabel(effectiveCorrAddr.subdivision)}
+                  {getEntityLabel(effectiveCorrAddr.subdivision, t)}
                 </span>
               </div>
             )}
@@ -215,7 +198,7 @@ export default function ComplaintLocationSection({
                   {t("Panchayat", "पंचायत")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {effectiveCorrAddr.panchayat}
+                  {getEntityLabel(effectiveCorrAddr.panchayat, t)}
                 </span>
               </div>
             )}
@@ -225,7 +208,7 @@ export default function ComplaintLocationSection({
                   {t("Thana", "थाना")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {effectiveCorrAddr.thana}
+                  {getEntityLabel(effectiveCorrAddr.thana, t)}
                 </span>
               </div>
             )}
@@ -235,7 +218,7 @@ export default function ComplaintLocationSection({
                   {t("Village / Ward", "गाँव / वार्ड")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {effectiveCorrAddr.villageOrWard}
+                  {getEntityLabel(effectiveCorrAddr.villageOrWard, t)}
                 </span>
               </div>
             )}
@@ -270,7 +253,7 @@ export default function ComplaintLocationSection({
                   {t("Division", "प्रमंडल")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {getEntityLabel(loc.division)}
+                  {getEntityLabel(loc.division, t)}
                 </span>
               </div>
             )}
@@ -280,7 +263,7 @@ export default function ComplaintLocationSection({
                   {t("District", "ज़िला")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {getEntityLabel(loc.district)}
+                  {getEntityLabel(loc.district, t)}
                 </span>
               </div>
             )}
@@ -290,7 +273,7 @@ export default function ComplaintLocationSection({
                   {t("Subdivision", "अनुमंडल")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {getEntityLabel(loc.subdivision)}
+                  {getEntityLabel(loc.subdivision, t)}
                 </span>
               </div>
             )}
@@ -300,7 +283,7 @@ export default function ComplaintLocationSection({
                   {t("Block", "प्रखंड")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {loc.block}
+                  {getEntityLabel(loc.block, t)}
                 </span>
               </div>
             )}
@@ -310,7 +293,7 @@ export default function ComplaintLocationSection({
                   {t("Panchayat", "पंचायत")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {loc.panchayat}
+                  {getEntityLabel(loc.panchayat, t)}
                 </span>
               </div>
             )}

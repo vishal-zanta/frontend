@@ -196,10 +196,8 @@ export default function UserManagement() {
       email: user?.email || "",
       phone: user?.phone || "",
       role: user?.role?.designationEnglish || "",
-      district:
-        typeof user?.district === "object"
-          ? user?.district?.name || "-"
-          : user?.district || "-",
+      district: t(user?.district?.name_en , user?.district?.name_local ),
+       
       status: user?.status || "",
       permissions: user?.permissions || [],
       lastLogin: user?.lastLogin

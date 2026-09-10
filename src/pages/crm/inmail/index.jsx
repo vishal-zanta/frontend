@@ -231,7 +231,9 @@ export default function Inmail() {
   // Handlers
   const handleRaiseComplaint = (mail) => {
     if (!mail?.id) return;
-    navigate(`/crm/raise?inmail=${mail.id}`);
+    navigate(`/crm/raise?inmail=${mail.id}`, {
+      state: { INITIAL_INMAILS: mail },
+    });
   };
 
   const handleOpenReject = (mail) => {

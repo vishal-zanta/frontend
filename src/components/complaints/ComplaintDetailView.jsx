@@ -13,7 +13,7 @@ import {
   updateComplaintStatus,
   updateComplaintPriority,
 } from "@/api/complaint.api";
-import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { getErrorToast, getSuccessToast, getEntityLabel } from "@/utils/helpers";
 import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
 import { useLanguage } from "@/context/LanguageContext";
@@ -175,8 +175,7 @@ export default function ComplaintDetailView({
       page: 1,
       limit: MAX_LIMIT,
       services: serviceId,
-      subServices: serviceId,
-      wards: subdivisionId,
+      subdivisions : subdivisionId?._id,
     },
     isCCE && !!serviceId,
   );
@@ -251,48 +250,32 @@ export default function ComplaintDetailView({
   const displayPriority = c.assignedPriority || c.priority || "NORMAL";
 
   const serviceText =
-    t(
-      c.classification?.service?.title ||
-        c.classification?.subService?.service?.title,
-      c.classification?.service?.titleHindi ||
-        c.classification?.subService?.service?.titleHindi,
-    ) ||
-    c.classification?.service?.title ||
-    c.classification?.subService?.service?.title ||
-    c.serviceName ||
-    "N/A";
+    getEntityLabel(
+      c.classification?.service ||
+        c.classification?.subService?.service ||
+        c.serviceName,
+      t,
+    ) || "N/A";
 
   const subServiceText =
-    t(
-      c.classification?.subService?.title,
-      c.classification?.subService?.titleHindi,
-    ) ||
-    c.subserviceName ||
-    "";
+    getEntityLabel(
+      c.classification?.subService || c.subserviceName,
+      t,
+    ) || "";
 
   const departmentText =
-    t(
-      c.classification?.department?.title,
-      c.classification?.department?.titleHindi,
-    ) ||
-    c.classification?.department?.title ||
-    c.classification?.service?.department?.title ||
-    c.classification?.subService?.service?.department?.title ||
-    c.classification?.subService?.service?.department ||
-    "N/A";
+    getEntityLabel(
+      c.classification?.department ||
+        c.classification?.service?.department ||
+        c.classification?.subService?.service?.department,
+      t,
+    ) || "N/A";
 
   const natureText =
-    t(c.classification?.nature?.title, c.classification?.nature?.titleHindi) ||
-    c.classification?.nature?.title ||
-    c.classification?.nature ||
-    "N/A";
+    getEntityLabel(c.classification?.nature, t) || "N/A";
 
   const channelText =
-    t(c.channel?.title, c.channel?.titleHindi) ||
-    c.channel?.title ||
-    c.channel ||
-    c.source ||
-    "N/A";
+    getEntityLabel(c.channel || c.source, t) || "N/A";
 
   const isSeasonal = Boolean(c.classification?.isSeasonal);
   const seasonalType = c.classification?.seasonalType || "";

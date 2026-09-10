@@ -21,6 +21,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import MySelect from "@/components/inputs/MySelect";
 import ExternalDepartmentList from "./department-list";
 import { useGetComplaintSources } from "@/pages/admin/master-data/hooks";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function ComplaintList({
   selected,
@@ -444,19 +445,18 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
 
   const loc = c.location || {};
   const districtName =
-    typeof loc.district === "object"
-      ? t(loc.district?.name, loc.district?.nameHindi) ||
-        loc.district?.name ||
-        loc.district?.title
-      : loc.district ||
-        c.address?.district?.name ||
-        c.address?.district ||
-        "";
+    getEntityLabel(loc.district || c.address?.district, t) || "";
+
+  const panchayatName =
+    getEntityLabel(loc.panchayat || c.address?.panchayat, t) || "";
+  const blockName = getEntityLabel(loc.block, t) || "";
+  const subdivisionName =
+    getEntityLabel(loc.subdivision || c.address?.subdivision, t) || "";
 
   const locationParts = [
-    loc.panchayat || c.address?.panchayat,
-    loc.block,
-    loc.subdivision && loc.subdivision !== loc.block ? loc.subdivision : null,
+    panchayatName,
+    blockName,
+    subdivisionName && subdivisionName !== blockName ? subdivisionName : null,
     districtName,
     loc.pincode || loc.pinCode || c.address?.pincode || c.address?.pinCode,
   ].filter(Boolean);
@@ -464,22 +464,18 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
   const locationText =
     locationParts.length > 0
       ? locationParts.join(", ")
-      : [c.address?.villageOrWard || c.ward, c.address?.state]
+      : [getEntityLabel(c.address?.villageOrWard || c.ward, t), c.address?.state]
           .filter(Boolean)
           .join(", ") || "N/A";
 
   const serviceTitle =
-    t(
-      c.classification?.service?.title ||
-        c.classification?.subService?.service?.title ||
-        c.classification?.subService?.title,
-      c.classification?.service?.titleHindi ||
-        c.classification?.subService?.service?.titleHindi ||
-        c.classification?.subService?.titleHindi,
-    ) ||
-    c.classification?.service?.title ||
-    c.classification?.department?.title ||
-    "N/A";
+    getEntityLabel(
+      c.classification?.service ||
+        c.classification?.subService?.service ||
+        c.classification?.subService ||
+        c.classification?.department,
+      t,
+    ) || "N/A";
 
   return (
     <button

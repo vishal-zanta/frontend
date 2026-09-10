@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import RhfBoolean from "@/components/rhfinputs/RhfBoolean";
@@ -20,9 +20,13 @@ export default function ClassificationSection({
   lang,
 }) {
   const { setValue, watch, control } = useFormContext();
-  const selectedDepartment = useWatch({ control, name: "classification.department" });
+  const selectedDepartment = useWatch({
+    control,
+    name: "classification.department",
+  });
   const selectedService = useWatch({ control, name: "classification.service" });
   const isSeasonal = useWatch({ control, name: "classification.isSeasonal" });
+  const departmentRef = useRef(selectedDepartment);
 
   const SERVICES_PARAMS = {
     page: 1,
@@ -35,6 +39,10 @@ export default function ClassificationSection({
     [selectedDepartment],
     SERVICES_PARAMS,
     !!selectedDepartment,
+    {
+      gcTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000,
+    },
   );
 
   const serviceOptions = (servicesData?.data?.data?.docs ?? []).map((s) => ({
@@ -75,10 +83,12 @@ export default function ClassificationSection({
     { label: t("Rain", "बारिश"), value: "rain" },
   ];
 
-  useEffect(()=> {
-    if(selectedDepartment) setValue("classification.service", "")
-    
-  },[ selectedDepartment])
+  useEffect(() => {
+    if (departmentRef.current && selectedDepartment !== departmentRef.current)
+      setValue("classification.service", "");
+
+    departmentRef.current = selectedDepartment;
+  }, [selectedDepartment]);
 
   return (
     <FormSection
@@ -89,7 +99,7 @@ export default function ClassificationSection({
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <RhfSelect
-        name={"classification.department"}
+          name={"classification.department"}
           // value={selectedDepartment || ""}
           // onValueChange={(val) => {
           //   setValue("classification.department", val);
@@ -108,7 +118,7 @@ export default function ClassificationSection({
         />
 
         <RhfSelect
-        name={"classification.service"}
+          name={"classification.service"}
           // value={selectedService || ""}
           // onValueChange={(val) => {
           //   setValue("classification.service", val);
