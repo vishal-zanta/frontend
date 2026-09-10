@@ -4,7 +4,7 @@ import { DISTRICTS, SERVICES } from "@/lib/biharData";
 import { addStoredComplaint, findComplaintById } from "@/lib/complaintStore";
 
 const WELCOME =
-  "Namaste! 🙏 Welcome to Bihar Sahayog Helpline AI Assistant.\n\nI can help you:\n📝 File a complaint (right here in chat!)\n🔍 Track your complaint status\n💡 Get answers about services & SLA\n🛠️ Technical support\n\nHow can I help you today?";
+  "Namaste! 🙏 Welcome to Bihar Sahyog Helpline AI Assistant.\n\nI can help you:\n📝 File a complaint (right here in chat!)\n🔍 Track your complaint status\n💡 Get answers about services & SLA\n🛠️ Technical support\n\nHow can I help you today?";
 
 const QUICK_ACTIONS = [
   { label: "📝 File Complaint", action: "raise" },

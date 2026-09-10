@@ -66,7 +66,7 @@ export default function CallHistoryLog() {
         r.evidenceTagged
           ? t("Yes", "हाँ") + " - " + (r.evidenceReason || "")
           : t("No", "नहीं"),
-      label: t("Evidence Tagged", "साक्ष्य चिह्नित"),
+      label: t("Priority Tagged", "प्राथमिकता चिह्नित"),
     },
   ];
 
@@ -249,7 +249,7 @@ export default function CallHistoryLog() {
           />
           <StatCard
             icon={ShieldCheck}
-            label={t("Evidence Tagged", "साक्ष्य चिह्नित")}
+            label={t("Priority Tagged", "प्राथमिकता चिह्नित")}
             value={evidenceCount}
             color="purple"
           />
@@ -319,8 +319,8 @@ export default function CallHistoryLog() {
           >
             <ShieldCheck className="w-4 h-4 mr-1" />
             {evidenceOnly
-              ? t("Showing Evidence Only", "केवल साक्ष्य दिखा रहा है")
-              : t("Show Evidence Only", "केवल साक्ष्य दिखाएं")}
+              ? t("Showing Priority Only", "केवल प्राथमिकता दिखा रहा है")
+              : t("Show Priority Only", "केवल प्राथमिकता दिखाएं")}
           </Button>
           {selected.length > 0 && (
             <Button
@@ -329,7 +329,7 @@ export default function CallHistoryLog() {
               className="w-full xs:w-auto bg-purple-600 hover:bg-purple-700 text-xs"
             >
               <Tag className="w-4 h-4 mr-1" /> {t("Tag", "चिह्नित करें")}{" "}
-              {selected.length} {t("as Evidence", "साक्ष्य के रूप में")}
+              {selected.length} {t("as Priority", "प्राथमिकता के रूप में")}
             </Button>
           )}
         </div>
@@ -398,14 +398,14 @@ export default function CallHistoryLog() {
               <ShieldCheck className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               <h3 className="font-bold text-foreground">
                 {t("Tag", "चिह्नित करें")} {tagDialog.ids.length}{" "}
-                {t("Call(s) as Evidence", "कॉल साक्ष्य के रूप में")}
+                {t("Call(s) as Priority", "कॉल प्राथमिकता के रूप में")}
               </h3>
             </div>
             <div className="p-5 space-y-4">
               <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 text-sm text-purple-600 dark:text-purple-400">
                 {t(
-                  "Evidence-tagged calls are preserved with enhanced retention (7 years) and flagged for legal/audit review. Recordings cannot be deleted while tagged.",
-                  "साक्ष्य-चिह्नित कॉल को बढ़ी हुई अवधारण (7 वर्ष) के साथ संरक्षित किया जाता है और कानूनी/लेखापरीक्षा समीक्षा के लिए चिह्नित किया जाता है। चिह्नित होने के दौरान रिकॉर्डिंग हटाई नहीं जा सकती।"
+                  "Priority-tagged calls are preserved with enhanced retention (7 years) and flagged for legal/audit review. Recordings cannot be deleted while tagged.",
+                  "प्राथमिकता-चिह्नित कॉल को बढ़ी हुई अवधारण (7 वर्ष) के साथ संरक्षित किया जाता है और कानूनी/लेखापरीक्षा समीक्षा के लिए चिह्नित किया जाता है। चिह्नित होने के दौरान रिकॉर्डिंग हटाई नहीं जा सकती।"
                 )}
               </div>
               <div>
@@ -437,7 +437,7 @@ export default function CallHistoryLog() {
                 className="bg-purple-600 hover:bg-purple-700"
               >
                 <ShieldCheck className="w-4 h-4 mr-1" />{" "}
-                {t("Confirm Evidence Tag", "साक्ष्य टैग की पुष्टि करें")}
+                {t("Confirm Priority Tag", "प्राथमिकता टैग की पुष्टि करें")}
               </Button>
             </div>
           </div>

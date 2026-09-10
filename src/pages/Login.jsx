@@ -3,7 +3,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, Mail, Lock, Loader2, Eye, EyeOff, User, Shield, Headphones } from "lucide-react";
+import {
+  LogIn,
+  Mail,
+  Lock,
+  Loader2,
+  Eye,
+  EyeOff,
+  User,
+  Shield,
+  Headphones,
+} from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { postLogin, getProfile } from "@/api/auth.api";
 import { sidebarSections } from "@/components/Sidebar";
@@ -55,7 +65,8 @@ export default function Login() {
     //   console.log("reCAPTCHA has not loaded yet");
     // }
     try {
-      const payload = loginMode === "email" ? { email, password } : { loginId, password };
+      const payload =
+        loginMode === "email" ? { email, password } : { loginId, password };
       const res = await postLogin(payload);
 
       const token = res?.data?.data?.token;
@@ -129,7 +140,7 @@ export default function Login() {
   return (
     <AuthLayout
       icon={LogIn}
-      title={t("Sahayog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
+      title={t("Sahyog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
       subtitle={t("Log in to your account", "अपने खाते में लॉग इन करें")}
       footer={null}
     >
@@ -227,9 +238,14 @@ export default function Login() {
                 type="text"
                 autoComplete="username"
                 autoFocus
-                placeholder={t("Enter your User ID", "अपनी यूज़र आईडी दर्ज करें")}
+                placeholder={t(
+                  "Enter your User ID",
+                  "अपनी यूज़र आईडी दर्ज करें",
+                )}
                 value={loginId}
-                onChange={(e) => setLoginId((e.target.value || "").toUpperCase())}
+                onChange={(e) =>
+                  setLoginId((e.target.value || "").toUpperCase())
+                }
                 className="pl-10 h-12"
                 required
               />

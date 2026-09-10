@@ -53,7 +53,7 @@ const ErrorPage = ({ error, resetErrorBoundary }) => {
           </h1>
 
           <p className="text-base text-slate-600 max-w-md mx-auto mb-8">
-            The Bihar Sahayog Helpline portal encountered an unexpected
+            The Bihar Sahyog Helpline portal encountered an unexpected
             application issue. We apologize for the inconvenience.
           </p>
 
@@ -137,7 +137,7 @@ const ErrorPage = ({ error, resetErrorBoundary }) => {
 
         {/* Footer */}
         <div className="bg-slate-50 px-8 py-4 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-400">
-          <span>Sahayog Helpline Resolution System</span>
+          <span>Sahyog Helpline Resolution System</span>
           <span>Government of Bihar</span>
         </div>
       </div>

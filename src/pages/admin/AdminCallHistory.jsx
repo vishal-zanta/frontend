@@ -76,7 +76,7 @@ export default function AdminCallHistory() {
     { id: "duration", label: t("Duration", "अवधि") },
     { id: "complaint", label: t("Complaint", "शिकायत") },
     { id: "status", label: t("Status", "स्थिति") },
-    { id: "evidence", label: t("Evidence", "साक्ष्य") },
+    { id: "evidence", label: t("Priority", "प्राथमिकता") },
   ];
 
   const tableBody = filtered.map((c) => ({
@@ -173,7 +173,7 @@ export default function AdminCallHistory() {
           />
           <StatCard
             icon={ShieldCheck}
-            label={t("Evidence Tagged", "साक्ष्य टैग किए गए")}
+            label={t("Priority Tagged", "प्राथमिकता टैग किए गए")}
             value={callHistoryLog.filter((c) => c.evidenceTagged).length}
             color="purple"
           />
@@ -351,7 +351,7 @@ function CallCards({ calls = [], t }) {
             {c.evidenceTagged ? (
               <div className="flex items-center gap-1 text-purple-600 dark:text-purple-400 font-medium text-[11px]">
                 <ShieldCheck className="w-4 h-4" />
-                <span>{t("Evidence Tagged", "साक्ष्य टैग किया गया")}</span>
+                <span>{t("Priority Tagged", "प्राथमिकता टैग किया गया")}</span>
               </div>
             ) : (
               <span className="text-muted-foreground text-[11px]">N/A</span>

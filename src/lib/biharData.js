@@ -4,8 +4,8 @@
 // ============================================================
 
 export const PORTAL_META = {
-  name: "Sahayog Helpline Portal",
-  nameEasy: "Sahayog Helpline",
+  name: "Sahyog Helpline Portal",
+  nameEasy: "Sahyog Helpline",
   tagline: "Good Governance is Public Service - Bihar Government",
   dept: "",
   version: "v2.4.1",
@@ -1156,9 +1156,9 @@ for (let i = 0; i < 100; i++) {
   const created = new Date(createdDate);
   const resolvedDate = isResolved
     ? new Date(
-        created.getTime() +
-          (subservice.slaHours * 0.5 + Math.random() * 24) * 3600000,
-      ).toISOString()
+      created.getTime() +
+      (subservice.slaHours * 0.5 + Math.random() * 24) * 3600000,
+    ).toISOString()
     : null;
   const wardNum = Math.floor(Math.random() * (ulb.wards || 50)) + 1;
   const lat =

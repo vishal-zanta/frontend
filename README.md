@@ -1,6 +1,6 @@
 # Bihar Government Frontend Project
 
-This repository contains the frontend application for the Bihar Sahayog Helpline / Grievance Portal.
+This repository contains the frontend application for the Bihar Sahyog Helpline / Grievance Portal.
 
 ## Prerequisites
 
@@ -21,4 +21,3 @@ Open the local URL printed by Vite (typically http://localhost:5173).
 ```bash
 npm run build
 ```
-

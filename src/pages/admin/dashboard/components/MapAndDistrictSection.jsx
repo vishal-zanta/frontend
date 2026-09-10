@@ -18,11 +18,11 @@ export default function MapAndDistrictSection({ districtData }) {
   let dataList =( districtData || []).map(v=> ({...v, _id : v.name}));
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="space-y-6">
       <ChartCard
         title={t("Complaint Hotspot Map", "शिकायत हॉटस्पॉट मानचित्र")}
         subtitle={t("Geo-tagged complaint density by ward", "वार्ड द्वारा भू-टैग की गई शिकायत घनत्व")}
-        className="lg:col-span-1"
+        className=""
       >
         <ComplaintMap
           height={320}

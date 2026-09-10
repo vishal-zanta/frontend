@@ -1,10 +1,12 @@
 import React from "react";
 import ModeWiseComplaintsChart from "./charts/ModeWiseComplaintsChart";
+import SeasonalComplaintsChart from "./charts/SeasonalComplaintsChart";
 
-export default function ModesAndSocialSection({ modeData }) {
+export default function ModesAndSocialSection({ modeData, seasonalData }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <ModeWiseComplaintsChart mainData={modeData} />
+      <SeasonalComplaintsChart data={seasonalData} />
       {/* <ChartCard
         title="Social Media Complaints"
         subtitle="Latest from Twitter, WhatsApp, Instagram & Newspaper"

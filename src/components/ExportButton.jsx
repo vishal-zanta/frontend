@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  FileSpreadsheet,
-  FileDown,
-  Loader2,
-  Check,
-} from "lucide-react";
+import { FileSpreadsheet, FileDown, Loader2, Check } from "lucide-react";
 import { jsPDF } from "jspdf";
 import { Button } from "@/components/ui/button";
 
@@ -50,7 +45,7 @@ export default function ExportButton({ data, columns, filename = "export" }) {
           format: "a4",
         });
         doc.setFontSize(14);
-        doc.text("Bihar Sahayog Helpline Portal", 14, 15);
+        doc.text("Bihar Sahyog Helpline Portal", 14, 15);
         doc.setFontSize(9);
         doc.setTextColor(100);
         doc.text(

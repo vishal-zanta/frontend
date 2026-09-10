@@ -139,8 +139,11 @@ export default function AdminDashboard() {
             districtData={dashboardData?.charts?.byDistrict}
           />
 
-          {/* Channel Modes & Social Complaints */}
-          <ModesAndSocialSection modeData={dashboardData?.charts?.bySource} />
+          {/* Channel Modes & Seasonal Complaints */}
+          <ModesAndSocialSection
+            modeData={dashboardData?.charts?.bySource}
+            seasonalData={dashboardData?.charts?.bySeasonalType}
+          />
 
           {/* Grievance Nature & Location Distribution Section */}
           <NatureAndLocationSection />
