@@ -143,7 +143,7 @@ export const getFormData = (data, attachments = [], extraObj= {}) => {
 
   if(Object.keys(extraObj).length > 0){
     Object.entries(extraObj).forEach(([key, value]) => {
-      formData.append(key, value);
+      value && formData.append(key, value);
     });
   }
   attachments.forEach((file) => formData.append("attachments[]", file));

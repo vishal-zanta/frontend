@@ -22,7 +22,8 @@ const ComplaintEmailDetails = ({ channelText, id }) => {
 
   const emailData = emailApiData?.data?.data || emailApiData?.data;
 
-  if (!id) return null;
+  if (!id || error) return null;
+  
 
   return (
     <div className="bg-muted/30 rounded-lg p-3 lg:p-4 border border-border">

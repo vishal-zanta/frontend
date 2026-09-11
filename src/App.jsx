@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "./api/auth.api";
 import FullScreenLoader from "./components/FullScreenLoader";
 import PageNotFound from "./lib/PageNotFound";
-import { AuthProvider } from "@/lib/AuthContext";
+
 import ScrollToTop from "./components/ScrollToTop";
 // Page imports
 import PortalHome from "./pages/PortalHome";
@@ -52,7 +52,7 @@ import Login from "./pages/Login";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import ErrorPage from "./components/ErrorPage";
 import { useEffect } from "react";
-import { useAuth } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import PermissionChecker from "./components/PermissionChecker";
 import NotAuthorized from "./pages/NotAuthorized";
 import { PERMISSIONS } from "./utils/constants";
@@ -65,7 +65,11 @@ const RootLayout = () => {
   return (
     <>
       <ScrollToTop />
-      <Outlet />
+      <AuthProvider>
+        <LanguageContextProvider>
+          <Outlet />
+        </LanguageContextProvider>
+      </AuthProvider>
     </>
   );
 };
@@ -363,17 +367,17 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeContextProvider>
-      <AuthProvider>
-        <LanguageContextProvider>
-          <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
-            <QueryClientProvider client={queryClientInstance}>
-              <RouterProvider router={router} />
-              {/* <Toaster /> */}
-              <SonnerToaster richColors position="top-center" />
-            </QueryClientProvider>
-          </GoogleReCaptchaProvider>
-        </LanguageContextProvider>
-      </AuthProvider>
+      {/* <AuthProvider> */}
+      {/* <LanguageContextProvider> */}
+        <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
+          <QueryClientProvider client={queryClientInstance}>
+            <RouterProvider router={router} />
+            {/* <Toaster /> */}
+            <SonnerToaster richColors position="top-center" />
+          </QueryClientProvider>
+        </GoogleReCaptchaProvider>
+      {/* </LanguageContextProvider> */}
+      {/* </AuthProvider> */}
     </ThemeContextProvider>
   );
 }

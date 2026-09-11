@@ -20,7 +20,6 @@ import { getErrorToast } from "@/utils/helpers";
 import BreakOverlay from "./break-timer/BreakOverlay";
 import { postLogout } from "@/api/auth.api";
 import { useAuth } from "@/context/AuthContext";
-import { useAuth as useLibAuth } from "@/lib/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import SearchComplaints from "@/components/SearchComplaints";

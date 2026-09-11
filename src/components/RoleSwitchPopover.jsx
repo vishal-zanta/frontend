@@ -6,13 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { getRouteAfterLogin, getErrorToast } from "@/utils/helpers";
 import { RolesList } from "@/pages/RoleSelect";
 import { Badge } from "@/components/ui/badge";
+import FullScreenLoader from "./FullScreenLoader";
+import { createPortal } from "react-dom";
 
 export default function RoleSwitchPopover() {
-  const { profile, setProfile, profiledata } = useAuth();
+  const { profile, setProfile, profiledata, setNewPath } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const popoverRef = useRef(null);
+  const [loader, setLoader] = useState(false);
 
   const roles = profile?.roles || [];
   const currentRole = profile?.role;
@@ -38,10 +41,15 @@ export default function RoleSwitchPopover() {
     setProfile((prev) => ({ ...prev, role: selectedRole }));
     const path = getRouteAfterLogin(selectedRole?.permissions || []);
     setIsOpen(false);
+    // setProfile((prev) => ({ ...prev, role: selectedRole }));
     if (path) {
-      setTimeout(() => {
-        navigate(path, { replace: true });
-      }, 0);
+      // navigate(path, { replace: true });
+      // setLoader(true);
+      setNewPath({ path, replace: true, isLoading: true });
+
+      // setTimeout(() => {
+      //   setLoader(false);
+      // }, 1000);
     } else {
       getErrorToast(
         t(

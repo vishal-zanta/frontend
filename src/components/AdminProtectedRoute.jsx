@@ -5,18 +5,21 @@ import { getProfile } from "../api/auth.api";
 import FullScreenLoader from "./FullScreenLoader";
 import { useEffect, useState } from "react";
 import RoleSelect from "../pages/RoleSelect";
+const getLatestRole = () => {
+  const roleValue = localStorage.getItem("role");
+  if (!roleValue) return null;
+  try {
+    return JSON.parse(roleValue);
+  } catch (error) {
+    return null;
+  }
+};
 
 const AdminProtectedRoute = ({ children }) => {
-  const { setProfile } = useAuth();
-  const [role, setRole] = useState(() => {
-    const roleValue = localStorage.getItem("role");
-    if (!roleValue) return null;
-    try {
-      return JSON.parse(roleValue);
-    } catch (error) {
-      return null;
-    }
-  });
+  const { setProfile, profile } = useAuth();
+
+const role = getLatestRole();
+
   //   const path = window.location;
   //   console.log({path});
   const token =
@@ -34,6 +37,7 @@ const AdminProtectedRoute = ({ children }) => {
     staleTime: 0,
   });
 
+
   useEffect(() => {
     if (isLoading || error || !data) return;
     setProfile(data?.data?.data);
@@ -48,7 +52,7 @@ const AdminProtectedRoute = ({ children }) => {
   }, [isLoading, error, data, setProfile]);
 
   function handleSetRole(r) {
-    setRole(r);
+    // setRole(r);
     localStorage.setItem("role", JSON.stringify(r));
   }
 
@@ -62,8 +66,8 @@ const AdminProtectedRoute = ({ children }) => {
 
     return <Navigate to="/" replace state={{ redirect: false }} />;
   }
-  if (!role) {
-    return <RoleSelect handleSetRole={handleSetRole}/>;
+  if (!profile?.role) {
+    return <RoleSelect handleSetRole={handleSetRole} />;
   }
 
   return children;
