@@ -51,7 +51,15 @@ export default function OfficerTagTable({
         className: "font-medium",
       },
       designation: {
-        value: o.officer?.role?.designationEnglish || "N/A",
+        value:
+          Array.isArray(o.officer?.roles) && o.officer?.roles.length > 0
+            ? o.officer.roles
+                .map((r) =>
+                  typeof r === "object" ? r.designationEnglish || r.name : r,
+                )
+                .filter(Boolean)
+                .join(", ")
+            : o.officer?.role?.designationEnglish || "N/A",
         className: "text-muted-foreground",
       },
       services: {

@@ -15,6 +15,7 @@ export default function Form({
   isEdit,
   isLoading,
   userOptions = [],
+  department,
   onCancel,
 }) {
   const {
@@ -25,9 +26,17 @@ export default function Form({
   const selectedDivisions = useWatch({ name: "divisions" });
   const selectedSubdivisions = useWatch({ name: "subdivisions" });
   const selectedOfficer = useWatch({ name: "officer" });
-  const officerDept = (
-    userOptions.find((u) => u.value === selectedOfficer)?.apiData || {}
-  )?.role?.department;
+  const selectedOfficerObj = userOptions.find((u) => u.value === selectedOfficer);
+  const officerUser = selectedOfficerObj?.apiData || {};
+
+  const officerDept =
+    department ||
+    officerUser?.department ||
+    officerUser?.roles?.find((r) => r?.department)?.department ||
+    officerUser?.role?.department;
+
+  const officerDeptId =
+    typeof officerDept === "object" ? officerDept?._id : officerDept;
 
   // Fetch Services for officer's department
   const {
@@ -35,21 +44,24 @@ export default function Form({
     isLoading: serviceLoading,
     isFetching: serviceFetching,
   } = useGetServices(
-    [officerDept?._id],
+    [officerDeptId],
     {
       page: 1,
       limit: MAX_LIMIT,
-      department: officerDept?._id,
+      department: officerDeptId,
     },
-    !!officerDept?._id,
+    !!officerDeptId,
   );
   const servicesOptions = useMemo(() => {
-    return (servicesData?.data?.data?.docs || []).map((s) => ({
+    const raw =
+      (Array.isArray(servicesData?.data?.data)
+        ? servicesData?.data?.data
+        : servicesData?.data?.data?.docs) || [];
+    return raw.map((s) => ({
       label: s.title || s.name || "",
       value: s._id,
     }));
-  }, [servicesData?.data?.data?.docs]);
-  console.log({servicesOptions, api : servicesData?.data?.data?.docs, officerDept})
+  }, [servicesData]);
 
   // Fetch Divisions
   const { data: divisionsData, isLoading: divisionsLoading } =

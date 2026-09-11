@@ -79,6 +79,46 @@ export default function OfficerTagging() {
 
 
 
+  const formatUserOptions = (docsList = []) => {
+    return (docsList || [])
+      .filter((u) => {
+        const rolesList = Array.isArray(u.roles)
+          ? u.roles
+          : u.role
+            ? [u.role]
+            : [];
+        const roleNames = rolesList.map(
+          (r) =>
+            (typeof r === "object"
+              ? r.designationEnglish || r.name
+              : r) || "",
+        );
+        return !roleNames.some((r) => USER_ROLES_EXECULDED.includes(r));
+      })
+      .map((u) => {
+        const rolesList = Array.isArray(u.roles)
+          ? u.roles
+          : u.role
+            ? [u.role]
+            : [];
+        const roleNames = rolesList
+          .map(
+            (r) =>
+              (typeof r === "object"
+                ? r.designationEnglish || r.name
+                : r) || "",
+          )
+          .filter(Boolean);
+        const roleLabel =
+          roleNames.length > 0 ? ` (${roleNames.join(", ")})` : "";
+        return {
+          label: `${u.name || "User"}${roleLabel}`,
+          value: u._id,
+          apiData: u,
+        };
+      });
+  };
+
   const { data: usersApiDataUntagged } = useGetUsers(
     [1, MAX_LIMIT, "untagged", selectedDept],
     {
@@ -89,14 +129,10 @@ export default function OfficerTagging() {
     },
     !!selectedDept,
   );
-  const userOptionsUnTagged = (usersApiDataUntagged?.data?.data?.docs || [])
-    .filter(
-      (u) => !USER_ROLES_EXECULDED.includes(u.role?.designationEnglish || ""),
-    )
-    .map((u) => ({
-      label: `${u.name} (${u.role?.designationEnglish || ""})`,
-      value: u._id,
-    }));
+  const userOptionsUnTagged = formatUserOptions(
+    usersApiDataUntagged?.data?.data?.docs,
+  );
+
   const { data: usersApiData } = useGetUsers(
     [1, MAX_LIMIT, selectedDept],
     {
@@ -106,15 +142,7 @@ export default function OfficerTagging() {
     },
     !!selectedDept,
   );
-  const userOptions = (usersApiData?.data?.data?.docs || [])
-    .filter(
-      (u) => !USER_ROLES_EXECULDED.includes(u.role?.designationEnglish || ""),
-    )
-    .map((u) => ({
-      label: `${u.name} (${u.role?.designationEnglish || ""})`,
-      value: u._id,
-      apiData: u,
-    }));
+  const userOptions = formatUserOptions(usersApiData?.data?.data?.docs);
 
   const filtered = docs.filter(
     (t) =>
@@ -347,6 +375,11 @@ export default function OfficerTagging() {
                 isEdit={!!editItem}
                 isLoading={postMutation.isPending || putMutation.isPending}
                 userOptions={userOptions}
+                department={
+                  editItem?.department?._id ||
+                  editItem?.department ||
+                  selectedDept
+                }
                 onCancel={() => {
                   setDialogOpen(false);
                   setEditItem(null);

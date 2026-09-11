@@ -34,7 +34,11 @@ export default function QuickTagOfficer({
     !!department,
   );
   const servicesOptions = useMemo(() => {
-    return (servicesData?.data?.data?.docs || []).map((s) => ({
+    const raw =
+      (Array.isArray(servicesData?.data?.data)
+        ? servicesData?.data?.data
+        : servicesData?.data?.data?.docs) || [];
+    return raw.map((s) => ({
       label: s.title || s.name || "",
       value: s._id,
     }));

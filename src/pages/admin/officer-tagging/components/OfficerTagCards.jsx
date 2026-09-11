@@ -58,13 +58,27 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
               {item.officer?.name || "N/A"}
             </div>
             <div className="text-[11px] text-muted-foreground truncate">
-              {item.officer?.role?.designationEnglish || "N/A"}
+              {Array.isArray(item.officer?.roles) && item.officer?.roles.length > 0
+                ? item.officer.roles
+                    .map((r) =>
+                      typeof r === "object" ? r.designationEnglish || r.name : r,
+                    )
+                    .filter(Boolean)
+                    .join(", ")
+                : item.officer?.role?.designationEnglish || "N/A"}
             </div>
           </div>
         </div>
 
         <Badge variant="outline" className="text-[10px] shrink-0">
-          {item.officer?.role?.designationEnglish || "N/A"}
+          {Array.isArray(item.officer?.roles) && item.officer?.roles.length > 0
+            ? item.officer.roles
+                .map((r) =>
+                  typeof r === "object" ? r.designationEnglish || r.name : r,
+                )
+                .filter(Boolean)
+                .join(", ")
+            : item.officer?.role?.designationEnglish || "N/A"}
         </Badge>
       </div>
 
