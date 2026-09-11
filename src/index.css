@@ -164,3 +164,6 @@ th{
 input[type="date"]{
   display: block !important;
 }
+.leaflet-bottom.leaflet-right {
+  display: none !important;
+}

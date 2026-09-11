@@ -6,9 +6,13 @@ import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDistricts } from "../../master-data/hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { MAX_LIMIT, LANGUAGES, CCE_ROLES, ADMIN_ROLES } from "@/utils/constants";
+import {
+  MAX_LIMIT,
+  LANGUAGES,
+  CCE_ROLES,
+  ADMIN_ROLES,
+} from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
-
 
 export default function Form({
   onCancel,
@@ -23,11 +27,17 @@ export default function Form({
   const { data: districtData } = useGetDistricts();
 
   const { watch } = useFormContext();
-  const selectedRoleId = watch("role");
-  const selectedRoleName = (rolesApiData?.data?.docs || []).find((r) => r._id === selectedRoleId)?.designationEnglish || "";
-  const isCCE = CCE_ROLES.includes(selectedRoleName);
-  const isAdmin = ADMIN_ROLES.includes(selectedRoleName);
-  const isOther = !!selectedRoleId && !isAdmin && !isCCE;
+  const selectedRoleIds = watch("roles") || [];
+  const selectedRoleDocs = (rolesApiData?.data?.docs || []).filter((r) =>
+    selectedRoleIds.includes(r._id),
+  );
+  const isCCE = selectedRoleDocs.some((r) =>
+    CCE_ROLES.includes(r.designationEnglish || ""),
+  );
+  const isAdmin = selectedRoleDocs.some((r) =>
+    ADMIN_ROLES.includes(r.designationEnglish || ""),
+  );
+  const isOther = selectedRoleIds.length > 0 && !isAdmin && !isCCE;
 
   const roleOptions = (rolesApiData?.data?.docs || []).map((r) => ({
     label: r.designationEnglish,
@@ -51,13 +61,14 @@ export default function Form({
 
   return (
     <div className="space-y-4 max-h-[400px]">
-       <RhfSelect
-        name="role"
+      <RhfSelect
+        name="roles"
         label={t("Designation", "पदनाम")}
         required
-        disabled={disabledKeys.includes("role")}
+        disabled={disabledKeys.includes("roles") || disabledKeys.includes("role")}
         options={roleOptions}
-        placeholder={t("Select a designation", "पदनाम चुनें")}
+        placeholder={t("Select designations", "पदनाम चुनें")}
+        isMultiple={true}
       />
       <RhfInput
         label="Name"
@@ -103,8 +114,6 @@ export default function Form({
         required={!isEdit}
         placeholder="Confirm password"
       />
-
-     
 
       <RhfSelect
         name="district"
@@ -165,7 +174,8 @@ export default function Form({
             </>
           ) : (
             <>
-              <UserPlus className="w-4 h-4 mr-1" /> {isOther ? "Send Verification Mail" : submitLabel}
+              <UserPlus className="w-4 h-4 mr-1" />{" "}
+              {isOther ? "Send Verification Mail" : submitLabel}
             </>
           )}
         </Button>

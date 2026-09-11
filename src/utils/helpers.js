@@ -248,3 +248,17 @@ export const getEntityLabel = (item, t) => {
   return name || nameHindi || "";
 };
 
+export const getRouteAfterLogin = (permissions = []) => {
+  const allPaths = sidebarSections.map((s) => s.items).flat();
+  let path = null;
+  for (let i = 0; i < allPaths.length; i++) {
+    if (checkPermissionManual(permissions, allPaths[i]?.permissions)) {
+      path = allPaths[i];
+      break;
+    }
+  }
+
+  return path?.path || null;
+};
+
+

@@ -10,8 +10,11 @@ export const AuthProvider = ({ children }) => {
 
   const hasPermission = (permission) => {
     // console.log("CHECKING PERMISSION", {permission, profile})
-    const validPermissions = profile?.role?.permissions || [];
-
+    // const validPermissions = Array.isArray(profile?.roles)
+    //   ? (profile?.roles?.map((v) => v?.permissions) || []).flat()
+    //   :  [];
+        const validPermissions = profile?.role?.permissions || [];
+    // console.log({ validPermissions, permission,  role : profile.role, roles : profile.roles});
     return checkPermissionManual(validPermissions, permission);
   };
   const profiledata = {
@@ -22,7 +25,9 @@ export const AuthProvider = ({ children }) => {
       profile?.role?.designationEnglish === USER_ROLES_EXECULDED?.[2],
     isOfficer: !USER_ROLES_EXECULDED.includes(
       profile?.role?.designationEnglish,
+
     ),
+    isMultiRoles: Array.isArray( profile?.roles) ? profile?.roles?.length > 1 : false
   };
   return (
     <authContext.Provider

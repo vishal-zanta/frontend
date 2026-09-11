@@ -19,6 +19,7 @@ import { postLogin, getProfile } from "@/api/auth.api";
 import { sidebarSections } from "@/components/Sidebar";
 import { checkPermissionManual } from "@/utils/helpers";
 import { useLanguage } from "@/context/LanguageContext";
+import { RolesList } from "./RoleSelect";
 // import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function Login() {
@@ -35,6 +36,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [fullScreenLoader, setFullScreenLoader] = useState(false);
+  const [roles, setRoles] = useState(null);
 
   const handleModeChange = (mode) => {
     setLoginMode(mode);
@@ -72,13 +74,17 @@ export default function Login() {
       const token = res?.data?.data?.token;
       if (token) {
         localStorage.setItem("usertoken", token);
-        const path = getRouteAfterLogin(
-          res?.data?.data?.role?.permissions || [],
+        if (res.data?.data?.roles && res.data?.data?.roles.length > 1) {
+          setRoles(res.data?.data?.roles);
+          return;
+        }
+        const path = getRouteAfterLogin(res?.data?.data?.roles?.[0]?.permissions || []
         );
         // sessionStorage.setItem("usertoken", token);
         console.log("After login path : ", path, {
-          permission: res?.data?.data?.role?.permissions || [],
+          permission: res?.data?.data?.roles?.[0]?.permissions || [],
         });
+        localStorage.setItem("role",JSON.stringify(res?.data?.data?.roles?.[0] || null))
         if (!path) {
           throw new Error(
             t(
@@ -107,13 +113,23 @@ export default function Login() {
   useEffect(() => {
     let timer = null;
     const token = localStorage.getItem("usertoken");
+    let preSelectedRole = localStorage.getItem("role");
+    try {
+      if (preSelectedRole) {
+        preSelectedRole = JSON.parse(preSelectedRole);
+      }
+    } catch (_) {
+      preSelectedRole = null;
+    }
     if (!!token) {
       console.log("Login profile");
       setFullScreenLoader(true);
       getProfile()
         .then((res) => {
           const path = getRouteAfterLogin(
-            res?.data?.data?.role?.permissions || [],
+            preSelectedRole?.permissions ||
+              res?.data?.data?.role?.permissions ||
+              [],
           );
           setFullScreenLoader(false);
           console.log("After login path : ", path);
@@ -136,6 +152,56 @@ export default function Login() {
     }
     return () => clearTimeout(timer);
   }, [navigate]);
+
+  function handleSelectRole(r) {
+    localStorage.setItem("role", JSON.stringify(r));
+    const path = getRouteAfterLogin(r?.permissions || []);
+    console.log({ path, r });
+    if (path) {
+      setTimeout(() => {
+        navigate(path);
+      }, 0);
+    } else {
+      setError(
+        t(
+          "Ask admin to give some permissions for this role",
+          "कृपया व्यवस्थापक से इस भूमिका के लिए अनुमति प्राप्त करें",
+        ),
+      );
+    }
+  }
+
+  if (!!roles) {
+    return (
+      <AuthLayout
+        icon={LogIn}
+        title={t("Sahyog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
+        subtitle={t("Log in to your account", "अपने खाते में लॉग इन करें")}
+        footer={null}
+
+      >
+        <div className="w-full">
+
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
+            {error}
+          </div>
+        )}
+
+        <RolesList roles={roles} onSelectRole={handleSelectRole} />
+        <Button
+          onClick={() => {
+            setRoles(null);
+            setError("");
+          }}
+          className={"w-full mt-4"}
+          >
+          Back to login
+        </Button>
+          </div>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout

@@ -26,6 +26,7 @@ import { useTheme } from "@/context/ThemeContext";
 import SearchComplaints from "@/components/SearchComplaints";
 import { LangSelectorSmall } from "@/components/LangSelector";
 import Notifications from "@/components/Notifications";
+import RoleSwitchPopover from "@/components/RoleSwitchPopover";
 import clsx from "clsx";
 
 const STAFF_NOTIFICATIONS = [
@@ -61,7 +62,7 @@ export default function TopBar({
     setProfile: setProfileData,
     profiledata: profileMetaData,
   } = useAuth();
-  const { level } = useLibAuth();
+
  
   const { t } = useLanguage();
   const { theme, toggle: toggleTheme } = useTheme();
@@ -150,6 +151,8 @@ export default function TopBar({
     onSuccess: () => {
       localStorage.removeItem("usertoken");
       sessionStorage.removeItem("usertoken");
+      localStorage.removeItem("role");
+
       // localStorage.removeItem("off-lang");
       // localStorage.removeItem("cce-lang");
 
@@ -163,6 +166,8 @@ export default function TopBar({
       // Revert/proceed on failure to avoid blocking users
       localStorage.removeItem("usertoken");
       sessionStorage.removeItem("usertoken");
+      localStorage.removeItem("role");
+
       //     localStorage.removeItem("off-lang");
       // localStorage.removeItem("cce-lang");
       setProfileData(null);
@@ -273,8 +278,9 @@ export default function TopBar({
         </button>
 
       <Notifications/>
+      <RoleSwitchPopover />
 
-        {level !== "Admin" && (
+        {!isSuperAdmin && (
           <button
             onClick={() => toggleBreakMutation.mutate()}
             disabled={toggleBreakMutation.isPending}
@@ -286,6 +292,7 @@ export default function TopBar({
             {t("Start Break", "ब्रेक शुरू करें")}
           </button>
         )}
+
 
         {/* <Link
           to="/"

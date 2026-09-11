@@ -1,7 +1,7 @@
 import { getFormsFields } from "@/lib/idb";
 import moment from "moment";
 
-export const getFormData = (data, attachments = []) => {
+export const getFormData = (data, attachments = [], extraObj= {}) => {
   const formData = new FormData();
 
   if (data.channel) {
@@ -141,6 +141,11 @@ export const getFormData = (data, attachments = []) => {
       formData.append("location[pincode]", loc.pincode || loc.pincode);
   }
 
+  if(Object.keys(extraObj).length > 0){
+    Object.entries(extraObj).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+  }
   attachments.forEach((file) => formData.append("attachments[]", file));
   return formData;
 };

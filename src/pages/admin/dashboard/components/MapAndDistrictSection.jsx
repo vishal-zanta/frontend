@@ -21,12 +21,13 @@ export default function MapAndDistrictSection({ districtData }) {
     <div className="space-y-6">
       <ChartCard
         title={t("Complaint Hotspot Map", "शिकायत हॉटस्पॉट मानचित्र")}
-        subtitle={t("Geo-tagged complaint density by ward", "वार्ड द्वारा भू-टैग की गई शिकायत घनत्व")}
+        subtitle={t("District-wise complaint density across Bihar", "बिहार भर में जिला-वार शिकायत घनत्व")}
         className=""
       >
         <ComplaintMap
-          height={320}
-          showHotspots={true}
+          height={340}
+          districtData={districtData}
+          showHotspots={false}
           center={[25.61, 85.13]}
           zoom={7}
         />

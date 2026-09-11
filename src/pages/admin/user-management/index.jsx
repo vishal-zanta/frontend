@@ -18,7 +18,7 @@ import Form from "./components/Form";
 import { getAddSchema, getEditSchema } from "./schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postUser, putUser, deleteUser } from "./users.api";
-import { CCE_ROLES, MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
+import { ADMIN_ROLES, CCE_ROLES, MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import ViewDialog from "./components/ViewDialog";
 import { postAdminLogout } from "@/api/auth.api";
@@ -32,7 +32,7 @@ export default function UserManagement() {
   const { t } = useLanguage();
   const [filterRole, setFilterRole] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-    const isMobile = useIsMobile();
+  const isMobile = useIsMobile();
 
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
   const { data: skillsApiData } = useGetSkills([1, MAX_LIMIT], {
@@ -69,7 +69,7 @@ export default function UserManagement() {
     phone: "",
     password: "",
     confirmPassword: "",
-    role: "",
+    roles: [],
     district: "",
     skills: [],
     preferredLanguages: [],
@@ -142,7 +142,7 @@ export default function UserManagement() {
 
   const handleToggleStatus = (user) => {
     const newStatus = user.status === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
-    putMutation.mutate({ id: user.id, data: { status: newStatus } });
+    putMutation.mutate({ userId: user.id, user: { status: newStatus } });
   };
 
   const handleDelete = (user) => {
@@ -166,7 +166,7 @@ export default function UserManagement() {
       email: formData.email,
       phone: formData.phone,
       password: formData.password,
-      role: formData.role,
+      roles: formData.roles,
       district: formData.district,
       loginId: formData.loginId,
       skills: formData.skills,
@@ -180,24 +180,40 @@ export default function UserManagement() {
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
-      role: formData.role?._id || formData.role,
+      roles: formData.roles,
       district: formData.district,
       loginId: formData.loginId,
       skills: formData.skills,
       preferredLanguages: formData.preferredLanguages,
     };
-    putMutation.mutate({ id: editUser.id, data: payload });
+    putMutation.mutate({ userId: editUser.id, user: payload });
   };
 
   const tableData = (usersData || []).map((user) => {
+    const userRoles = Array.isArray(user?.roles)
+      ? user.roles
+      : user?.role
+        ? [user.role]
+        : [];
+    const roleNames = userRoles
+      .map((r) =>
+        typeof r === "object" ? r.designationEnglish || r.name || "" : r,
+      )
+      .filter(Boolean);
+    const isUserCCE = roleNames.some((r) => CCE_ROLES.includes(r));
+    const isUserAdmin = roleNames.some((r) => ADMIN_ROLES.includes(r));
+
     return {
       id: user?._id,
       name: user?.name || "",
       email: user?.email || "",
       phone: user?.phone || "",
-      role: user?.role?.designationEnglish || "",
-      district: t(user?.district?.name_en , user?.district?.name_local ),
-       
+      roles: roleNames,
+      role: roleNames.join(", "),
+      isCCE: isUserCCE,
+      isAdmin: isUserAdmin,
+      district: t(user?.district?.name_en, user?.district?.name_local),
+
       status: user?.status || "",
       permissions: user?.permissions || [],
       lastLogin: user?.lastLogin
@@ -205,9 +221,7 @@ export default function UserManagement() {
         : "Never",
       skills: user?.skills || [],
       preferredLanguages: user?.preferredLanguages || [],
-      loginId: CCE_ROLES.includes(user?.role?.designationEnglish)
-        ? user?.loginId
-        : "-",
+      loginId: isUserCCE ? user?.loginId : "-",
       apiData: user,
     };
   });
@@ -217,13 +231,13 @@ export default function UserManagement() {
     <PortalLayout role="superadmin">
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* <div className="flex items-center justify-between"> */}
-          <SectionTitle
-            title={t("User Management & RBAC", "उपयोगकर्ता प्रबंधन और RBAC")}
-            subtitle={t(
-              "Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control",
-              "भूमिका-आधारित पहुँच नियंत्रण के साथ कॉल-सेंटर एजेंटों, पर्यवेक्षकों, निगरानी टीम और सिस्टम व्यवस्थापकों को प्रबंधित करें",
-            )}
-          >
+        <SectionTitle
+          title={t("User Management & RBAC", "उपयोगकर्ता प्रबंधन और RBAC")}
+          subtitle={t(
+            "Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control",
+            "भूमिका-आधारित पहुँच नियंत्रण के साथ कॉल-सेंटर एजेंटों, पर्यवेक्षकों, निगरानी टीम और सिस्टम व्यवस्थापकों को प्रबंधित करें",
+          )}
+        >
           <div className="flex gap-2">
             <Button
               onClick={() => {
@@ -234,7 +248,7 @@ export default function UserManagement() {
                   phone: "",
                   password: "",
                   confirmPassword: "",
-                  role: "",
+                  roles: [],
                   district: "",
                 });
                 setAddUserOpen(true);
@@ -258,20 +272,19 @@ export default function UserManagement() {
                   phone: "",
                   password: "",
                   confirmPassword: "",
-                  role: superAdminId,
+                  roles: superAdminId ? [superAdminId] : [],
                   district: "",
                 });
                 setAddUserOpen(true);
               }}
               size={"sm"}
-
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
               <Shield className="w-4 h-4 mr-1" />{" "}
               {t("Create Admin", "एडमिन बनाएं")}
             </Button>
           </div>
-          </SectionTitle>
+        </SectionTitle>
         {/* </div> */}
 
         {/* Filters */}
@@ -303,20 +316,16 @@ export default function UserManagement() {
         </div>
 
         {/* Users table */}
-        <div className={clsx(isMobile ? "" : "bg-card rounded-xl border border-border overflow-hidden" )}>
+        <div
+          className={clsx(
+            isMobile
+              ? ""
+              : "bg-card rounded-xl border border-border overflow-hidden",
+          )}
+        >
           <LoaderErrWrapper isLoading={isLoading} error={error}>
-          {isMobile ?(
-            <UserManageCards 
-            users={tableData}
-                handleToggleStatus={handleToggleStatus}
-                setEditUser={setEditUser}
-                handleDelete={handleDelete}
-                handleView={handleView}
-                handleLogoutClick={handleLogoutClick}
-            
-            />
-          ) :  <div className="overflow-x-auto">
-              <UserManageTable
+            {isMobile ? (
+              <UserManageCards
                 users={tableData}
                 handleToggleStatus={handleToggleStatus}
                 setEditUser={setEditUser}
@@ -324,7 +333,18 @@ export default function UserManagement() {
                 handleView={handleView}
                 handleLogoutClick={handleLogoutClick}
               />
-            </div>}
+            ) : (
+              <div className="overflow-x-auto">
+                <UserManageTable
+                  users={tableData}
+                  handleToggleStatus={handleToggleStatus}
+                  setEditUser={setEditUser}
+                  handleDelete={handleDelete}
+                  handleView={handleView}
+                  handleLogoutClick={handleLogoutClick}
+                />
+              </div>
+            )}
           </LoaderErrWrapper>
           <Pagination
             page={page}
@@ -348,7 +368,13 @@ export default function UserManagement() {
                 phone: editUser?.apiData?.phone || "",
                 password: editUser?.apiData?.password || "",
                 confirmPassword: editUser?.apiData?.password || "",
-                role: editUser?.apiData?.role?._id || "",
+                roles: Array.isArray(editUser?.apiData?.roles)
+                  ? editUser.apiData.roles.map((r) => r._id || r)
+                  : editUser?.apiData?.role?._id
+                    ? [editUser.apiData.role._id]
+                    : editUser?.apiData?.role
+                      ? [editUser.apiData.role]
+                      : [],
                 district:
                   editUser?.apiData?.district?._id ||
                   editUser?.apiData?.district ||
@@ -399,7 +425,7 @@ export default function UserManagement() {
                 isLoading={postMutation.isPending}
                 submitLabel="Add User"
                 disabledKeys={[
-                  ...(!!addInitialValues.role ? ["role"] : []),
+                  ...(addInitialValues.roles?.length > 0 ? ["roles", "role"] : []),
                 ].flat()}
                 onCancel={() => setAddUserOpen(false)}
                 skillsOptions={skillsOptions}
@@ -453,7 +479,10 @@ export default function UserManagement() {
             <Shield className="w-4 h-4" /> Role-Based Access Control (RBAC)
           </h4>
           <p className="text-sm text-primary">
-           Secure role-based access is enforced for State CC agents, field officers, Nodal Officers, State Monitoring Teams, and System Admins. Each Designation has predefined permissions, which can be customized for individual users through the Manage Links section.
+            Secure role-based access is enforced for State CC agents, field
+            officers, Nodal Officers, State Monitoring Teams, and System Admins.
+            Each Designation has predefined permissions, which can be customized
+            for individual users through the Manage Links section.
           </p>
         </div>
       </div>

@@ -65,8 +65,8 @@ export default function CRMRaiseComplaint() {
       ? departmentsList.find((item) => item?.key === searchDept)?.key || ""
       : departmentsList?.[0]?.key;
   });
-    const [externalComplaintId, setExternalComplaintId] = useState(null);
-    const {
+  const [externalComplaintId, setExternalComplaintId] = useState(null);
+  const {
     departmentOptions,
     departmentsLoading,
     grievanceNatureOptions,
@@ -83,7 +83,8 @@ export default function CRMRaiseComplaint() {
 
     const email =
       initialInmail.fromEmail ||
-      (typeof initialInmail.from === "string" && initialInmail.from.includes("<")
+      (typeof initialInmail.from === "string" &&
+      initialInmail.from.includes("<")
         ? initialInmail.from.match(/<([^>]+)>/)?.[1]
         : initialInmail.from) ||
       initialInmail.email ||
@@ -102,7 +103,7 @@ export default function CRMRaiseComplaint() {
 
     return {
       ...defaultValues,
-      channel: allChannels.find(v=>v?.label == "Email")?.value,
+      channel: allChannels.find((v) => v?.label == "Email")?.value,
       citizenInfo: {
         ...defaultValues.citizenInfo,
         fullName: fullName || defaultValues.citizenInfo.fullName,
@@ -112,10 +113,9 @@ export default function CRMRaiseComplaint() {
         ...defaultValues.evidence,
         details: emailBody,
       },
+      emailId: initialInmail?.id,
     };
-  }, [initialInmail]);
-
-
+  }, [initialInmail, allChannels]);
 
   const fileInputRef = useRef(null);
   const [attachments, setAttachments] = useState([]);
@@ -205,7 +205,9 @@ export default function CRMRaiseComplaint() {
   });
 
   const handleSubmit = (data) => {
-    const formData = getFormData(data, attachments);
+    const formData = getFormData(data, attachments, {
+      emailId: searchParams.get("inmail"),
+    });
     console.log("JSON DATA", data);
     console.log("Final FormData:", Object.fromEntries(formData));
 
@@ -254,7 +256,6 @@ export default function CRMRaiseComplaint() {
           title={t("Raise Complaint", "शिकायत दर्ज करें")}
           subtitle={""}
           className="!mb-4 !sm:mb-6 !items-center"
-
         >
           <DepartmentSelect
             list={departmentsList}
@@ -407,13 +408,13 @@ function FormWizard({
     }
     if (isValid) {
       setStep((prev) => prev + 1);
-      window.scrollTo({top : 0, behavior : "instant"})
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
   };
 
   const handleBack = () => {
     setStep((prev) => Math.max(1, prev - 1));
-     window.scrollTo({top : 0, behavior : "instant"})
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   return (

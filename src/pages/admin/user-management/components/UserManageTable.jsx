@@ -71,6 +71,17 @@ export default function UserManageTable({
         : [];
       
 
+    const isCCE =
+      u.isCCE ??
+      (Array.isArray(u.roles)
+        ? u.roles.some((r) => CCE_ROLES.includes(r))
+        : CCE_ROLES.includes(u.role));
+    const isAdmin =
+      u.isAdmin ??
+      (Array.isArray(u.roles)
+        ? u.roles.some((r) => ADMIN_ROLES.includes(r))
+        : ADMIN_ROLES.includes(u.role));
+
     return {
       user: {
         className: "bg-white dark:bg-[#0f1729] sticky left-0",
@@ -86,12 +97,12 @@ export default function UserManageTable({
             </div>
             <div>
               <div className="font-medium">{u.name || "N/A"}</div>
-              {!CCE_ROLES.includes(u.role) && (
+              {!isCCE && (
                 <div className="text-xs text-muted-foreground">
                   {u.email || "N/A"}
                 </div>
               )}
-              {CCE_ROLES.includes(u.role) && (
+              {isCCE && (
                 <div className="text-xs text-muted-foreground">
                   {u?.loginId || u?.email || "N/A"}
                 </div>
@@ -101,13 +112,22 @@ export default function UserManageTable({
         ),
       },
       role: {
-        value: u?.role ? (
-          <Badge variant="outline" className="text-xs">
-            {u.role}
-          </Badge>
-        ) : (
-          "N/A"
-        ),
+        value:
+          Array.isArray(u.roles) && u.roles.length > 0 ? (
+            <div className="flex flex-wrap gap-1 max-w-[200px]">
+              {u.roles.map((r, idx) => (
+                <Badge key={idx} variant="outline" className="text-xs">
+                  {r}
+                </Badge>
+              ))}
+            </div>
+          ) : u?.role ? (
+            <Badge variant="outline" className="text-xs">
+              {u.role}
+            </Badge>
+          ) : (
+            "N/A"
+          ),
       },
       district: {
         className: "text-muted-foreground",
@@ -196,7 +216,7 @@ export default function UserManageTable({
               size="sm"
               onClick={() => handleDelete && handleDelete(u)}
               title={t("Delete User", "उपयोगकर्ता हटाएँ")}
-              disabled={ADMIN_ROLES.includes(u.role)}
+              disabled={isAdmin}
             >
               <Trash2 className="w-4 h-4 text-red-500" />
             </Button>

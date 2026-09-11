@@ -67,6 +67,17 @@ function UserCard({
       ? u.preferredLanguages.split(", ").filter(Boolean)
       : [];
 
+  const isCCE =
+    u.isCCE ??
+    (Array.isArray(u.roles)
+      ? u.roles.some((r) => CCE_ROLES.includes(r))
+      : CCE_ROLES.includes(u.role));
+  const isAdmin =
+    u.isAdmin ??
+    (Array.isArray(u.roles)
+      ? u.roles.some((r) => ADMIN_ROLES.includes(r))
+      : ADMIN_ROLES.includes(u.role));
+
   return (
     <div className="rounded-xl border border-border bg-background dark:bg-[#0c1427] shadow-sm hover:shadow-md transition-all overflow-hidden">
       {/* Top Header: Avatar, Name, Email, Status */}
@@ -85,7 +96,7 @@ function UserCard({
               {u.name || "N/A"}
             </div>
             <div className="text-[11px] xs:text-xs text-muted-foreground truncate">
-              {!CCE_ROLES.includes(u.role)
+              {!isCCE
                 ? u.email || "N/A"
                 : u?.loginId || u?.email || "N/A"}
             </div>
@@ -116,7 +127,19 @@ function UserCard({
             <span className="text-muted-foreground block text-[9px] xs:text-[10px] uppercase font-medium">
               {t("Designation", "पदनाम")}
             </span>
-            {u?.role ? (
+            {Array.isArray(u?.roles) && u.roles.length > 0 ? (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {u.roles.map((r, idx) => (
+                  <Badge
+                    key={idx}
+                    variant="outline"
+                    className="text-[9px] xs:text-[10px]"
+                  >
+                    {r}
+                  </Badge>
+                ))}
+              </div>
+            ) : u?.role ? (
               <Badge
                 variant="outline"
                 className="text-[9px] xs:text-[10px] mt-0.5"
@@ -228,7 +251,7 @@ function UserCard({
           variant="outline"
           size="sm"
           onClick={() => handleDelete && handleDelete(u)}
-          disabled={ADMIN_ROLES.includes(u.role)}
+          disabled={isAdmin}
           className="w-full xs:w-auto h-7 xs:h-8 text-[11px] xs:text-xs px-2 xs:px-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center justify-center"
           title={t("Delete User", "उपयोगकर्ता हटाएँ")}
         >

@@ -37,7 +37,21 @@ const ViewDialog = ({viewUser, setViewUser}) => {
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <Shield className="w-3.5 h-3.5 text-primary" /> {t("Designation", "पदनाम")}
                   </span>
-                  <span className="font-medium text-foreground block">{viewUser?.role || "N/A"}</span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {Array.isArray(viewUser?.roles) && viewUser.roles.length > 0 ? (
+                      viewUser.roles.map((r, idx) => (
+                        <Badge key={idx} variant="outline" className="text-xs">
+                          {r}
+                        </Badge>
+                      ))
+                    ) : viewUser?.role ? (
+                      <Badge variant="outline" className="text-xs">
+                        {viewUser.role}
+                      </Badge>
+                    ) : (
+                      <span className="font-medium text-foreground block">N/A</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">

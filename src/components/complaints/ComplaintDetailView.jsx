@@ -25,6 +25,7 @@ import ComplaintComplainantSection from "./ComplaintComplainantSection";
 import ComplaintLocationSection from "./ComplaintLocationSection";
 import ComplaintEvidenceSection from "./ComplaintEvidenceSection";
 import ComplaintActionSection from "./ComplaintActionSection";
+import ComplaintEmailDetails from "./ComplaintEmailDetails";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
 
 export default function ComplaintDetailView({
@@ -362,6 +363,12 @@ export default function ComplaintDetailView({
             impact={impact}
             resolvedReason={c.status === "RESOLVED" ? c?.resolvedReason : null}
           />
+          {channelText === "Email" && (
+            <ComplaintEmailDetails
+              channelText={channelText}
+              id={c?.emailId || c?.inmailId || c?.inmail || c?._id}
+            />
+          )}
 
           {/* Actions (Status change, Priority change, Geotag upload) */}
           <ComplaintActionSection

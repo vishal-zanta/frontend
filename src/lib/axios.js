@@ -24,6 +24,8 @@ instance.interceptors.response.use(
     if (err.response?.status === 401) {
       localStorage.removeItem("usertoken");
       sessionStorage.removeItem("usertoken");
+      localStorage.removeItem("role");
+
       window.location.href = "/";
     }
     return Promise.reject(err);

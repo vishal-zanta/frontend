@@ -59,7 +59,9 @@ export const QUERY_KEYS = {
   VISIT_STATS: "visit-stats",
   API_KEYS: "api-keys",
   EXTERNAL_COMPLAINTS : "external-complaints",
-  
+  INMAILS: "inmails",
+  INMAIL_STATS: "inmail-stats",
+  EMAILS: "emails",
 };
 
 export const PREFERRED_LANGUAGE_OPTIONS = [

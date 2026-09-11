@@ -48,7 +48,8 @@ export default function Form({
       label: s.title || s.name || "",
       value: s._id,
     }));
-  }, [servicesData]);
+  }, [servicesData?.data?.data?.docs]);
+  console.log({servicesOptions, api : servicesData?.data?.data?.docs, officerDept})
 
   // Fetch Divisions
   const { data: divisionsData, isLoading: divisionsLoading } =
