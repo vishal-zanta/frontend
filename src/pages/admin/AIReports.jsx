@@ -116,10 +116,7 @@ export default function AIReports() {
         <div className="flex items-center justify-between">
           <SectionTitle
             title={t("AI Analytical Reports", "AI विश्लेषणात्मक रिपोर्ट")}
-            subtitle={t(
-              "Time-series analysis, category distribution, hotspot prediction & AI-powered insights",
-              "समय-श्रृंखला विश्लेषण, श्रेणी वितरण, हॉटस्पॉट भविष्यवाणी और AI अंतर्दृष्टि",
-            )}
+            subtitle={""}
           >
           <div className="flex flex-col items-start sm:items-end w-full lg:items-start xl:items-end  gap-3">
             <TimeRangeFilter

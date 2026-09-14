@@ -82,10 +82,7 @@ export default function PerformanceDashboard() {
         <div className="flex items-center justify-between">
           <SectionTitle
             title={t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
-            subtitle={t(
-              "Service-wise, district-wise & ULB-wise performance analytics",
-              "सेवा-वार, जिला-वार, प्रमंडल-वार और ULB-वार प्रदर्शन विश्लेषण",
-            )}
+            subtitle={""}
           >
           <TimeRangeFilter
             period={period}

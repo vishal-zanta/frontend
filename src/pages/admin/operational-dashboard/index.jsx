@@ -160,10 +160,7 @@ export default function OperationalDashboard() {
         <SectionTitle
           title={`${t("Operational Dashboard", "परिचालन डैशबोर्ड")} -
               ${t(activeTab?.labelEn || "", activeTab?.labelHi || "")}`}
-          subtitle={t(
-            "Real-time operational metrics across call centre, SLA, grievances, and infrastructure",
-            "कॉल सेंटर, SLA, शिकायतों और अवसंरचना में वास्तविक समय के परिचालन मेट्रिक्स",
-          )}
+          subtitle={""}
         />
 
         {tab === "call-volume" && <CallVolumeTab pd={pd} />}

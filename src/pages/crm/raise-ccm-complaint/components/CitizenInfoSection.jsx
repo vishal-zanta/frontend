@@ -15,6 +15,7 @@ export default function CitizenInfoSection({ t, allChannels , complaintSourcesLo
           placeholder={t("Enter your full name", "अपना पूरा नाम दर्ज करें")}
           isLettersAllowed
           maxLength={50}
+          required
         />
         <RhfInput
           name="citizenInfo.mobile"
