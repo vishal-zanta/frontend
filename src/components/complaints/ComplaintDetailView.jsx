@@ -164,7 +164,10 @@ export default function ComplaintDetailView({
     data?.data?.classification?.subService?._id;
 
   const subdivisionId =
-    data?.data?.location?.subdivision || data?.data?.address?.subdivision;
+    data?.data?.location?.block ||
+    data?.data?.location?.subdivision ||
+    data?.data?.address?.block ||
+    data?.data?.address?.subdivision;
 
   const { data: usersData, isLoading: userLoading } = useGetUsers(
     [

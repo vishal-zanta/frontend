@@ -100,24 +100,29 @@ export default function FieldVisitTable({
                 <td className="px-4 py-3 text-nowrap text-xs">
                   {(() => {
                     const loc = fv?.grievance?.location || {};
-                    const districtName =
-                      getEntityLabel(loc.district || fv.grievance?.address?.district, t) || "";
+                    const isUrban = Boolean(loc.isUrban);
+                    const districtName = getEntityLabel(loc.district, t) || "";
+                    const urbanPanchayatName =
+                      getEntityLabel(loc.urbanPanchayat, t) || "";
+                    const wardName = getEntityLabel(loc.ward, t) || "";
+                    const villageName = getEntityLabel(loc.village, t) || "";
                     const panchayatName =
-                      getEntityLabel(loc.panchayat || fv.grievance?.address?.panchayat || fv.grievance?.address?.villageOrWard, t) || "";
-                    const blockName = getEntityLabel(loc.block, t) || "";
-                    const subdivisionName =
-                      getEntityLabel(loc.subdivision || fv.grievance?.address?.subdivision, t) || "";
+                      getEntityLabel(loc.panchayat, t) || "";
+                    const blockName =
+                      getEntityLabel(loc.block || loc.subdivision, t) || "";
                     const divisionName = getEntityLabel(loc.division, t) || "";
+                    const pincode = loc.pincode || loc.pinCode;
 
-                    const parts = [
-                      panchayatName,
-                      blockName,
-                      subdivisionName && subdivisionName !== blockName
-                        ? subdivisionName
-                        : null,
-                      districtName,
-                      loc.pincode || loc.pinCode || fv.grievance?.address?.pincode,
-                    ].filter(Boolean);
+                    const parts = (isUrban
+                      ? [wardName, urbanPanchayatName, districtName, pincode]
+                      : [
+                          villageName,
+                          panchayatName,
+                          blockName,
+                          districtName,
+                          pincode,
+                        ]
+                    ).filter(Boolean);
 
                     const locationText =
                       parts.length > 0

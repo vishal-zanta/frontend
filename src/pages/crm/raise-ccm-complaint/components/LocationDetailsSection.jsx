@@ -2,113 +2,178 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
+import RhfBadgeSelect from "@/components/rhfinputs/RhfBadgeSelect";
 import FormSection from "./FormSection";
 import { useLanguage } from "@/context/LanguageContext";
-import { useClearLocationFields, useGetLocationAddressFields } from "../hooks";
+import { useClearAddressFields, useGetAddressFields } from "../hooks";
 
 export default function LocationDetailsSection({ t }) {
   const { lang } = useLanguage();
   const { watch, control, setValue } = useFormContext();
+  const prefix = "location";
 
-  const selectedDivisionId = watch("location.division");
-  const selectedDistrictId = watch("location.district");
-  const selectedSubdivisionId = watch("location.subdivision");
-  const selectedBlockId = watch("location.block");
+  const isUrban = watch(`${prefix}.isUrban`);
+  const selectedDistrictId = watch(`${prefix}.district`);
+  const selectedBlockId = watch(`${prefix}.block`);
+  const selectedPanchayatId = watch(`${prefix}.panchayat`);
+  const selectedUrbanPanchayatId = watch(`${prefix}.urbanPanchayat`);
 
   const {
-    divisionOptions,
-    isDivisionsLoading,
     districtOptions,
     isDistrictsLoading,
-    subdivisionOptions,
-    isSubdivisionsLoading,
     blockOptions,
     isBlocksLoading,
     panchayatOptions,
     isPanchayatsLoading,
-  } = useGetLocationAddressFields(
+    villageOptions,
+    isVillagesLoading,
+    urbanPanchayatOptions,
+    isUrbanPanchayatsLoading,
+    wardOptions,
+    isWardsLoading,
+  } = useGetAddressFields(
     {
       lang,
-      divisionId: selectedDivisionId,
       districtId: selectedDistrictId,
-      subdivisionId: selectedSubdivisionId,
       blockId: selectedBlockId,
+      panchayatId: selectedPanchayatId,
+      urbanPanchayatId: selectedUrbanPanchayatId,
+      isUrban,
     },
     { isValueId: true },
   );
 
-  useClearLocationFields({
+  useClearAddressFields({
     control,
+    prefix,
     setValue,
   });
 
   return (
     <FormSection
       title={t(
-        "Location Details/Place of occurence",
-        "स्थान का विवरण/घटना का स्थान",
+        "Location Details / Place of Occurrence",
+        "स्थान का विवरण / घटना का स्थान",
       )}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <RhfSelect
-          name="location.division"
-          label={t("Division", "प्रमंडल")}
-          placeholder={t("Select Division", "प्रमंडल चुनें")}
-          options={divisionOptions}
-          isLoading={isDivisionsLoading}
-          disabled={isDivisionsLoading}
-          required
+      <div className="space-y-4">
+        <RhfBadgeSelect
+          name={`${prefix}.isUrban`}
+          label={t("Area Type", "क्षेत्र का प्रकार")}
+          options={[
+            { label: t("Rural", "ग्रामीण"), value: false },
+            { label: t("Urban", "शहरी"), value: true },
+          ]}
         />
 
-        <RhfSelect
-          name="location.district"
-          label={t("District", "ज़िला")}
-          placeholder={t("Select District", "जिला चुनें")}
-          options={districtOptions}
-          isLoading={isDistrictsLoading}
-          disabled={!selectedDivisionId || isDistrictsLoading}
-          required
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-200">
+          <RhfInput
+            name={`${prefix}.addressLine`}
+            label={t("Address Line", "सटीक स्थान या पता विवरण")}
+            placeholder={t(
+              "House no., Street, Area",
+              "मकान संख्या, सड़क, क्षेत्र",
+            )}
+            required
+            maxLength={50}
+            className="md:col-span-2"
+          />
 
-        <RhfSelect
-          name="location.subdivision"
-          label={t("Subdivision", "अनुमंडल")}
-          placeholder={t("Select Subdivision", "अनुमंडल चुनें")}
-          options={subdivisionOptions}
-          isLoading={isSubdivisionsLoading}
-          disabled={!selectedDistrictId || isSubdivisionsLoading}
-          required
-        />
+          <RhfSelect
+            name={`${prefix}.district`}
+            label={t("District", "ज़िला")}
+            placeholder={t("Select District", "जिला चुनें")}
+            options={districtOptions}
+            isLoading={isDistrictsLoading}
+            disabled={isDistrictsLoading}
+            required
+          />
 
-        <RhfSelect
-          name="location.block"
-          label={t("Block", "प्रखंड")}
-          placeholder={t("Select Block", "प्रखंड चुनें")}
-          options={blockOptions}
-          disabled={!selectedSubdivisionId || isBlocksLoading}
-          isLoading={isBlocksLoading}
-          required
-        />
+          {isUrban ? (
+            <>
+              <RhfSelect
+                name={`${prefix}.urbanPanchayat`}
+                label={t(
+                  "Municipal Corporation / Council / Nagar Panchayat",
+                  "नगर निगम / नगर परिषद / नगर पंचायत",
+                )}
+                placeholder={t(
+                  "Select Municipal Body",
+                  "नगर निकाय चुनें",
+                )}
+                options={urbanPanchayatOptions}
+                isLoading={isUrbanPanchayatsLoading}
+                disabled={!selectedDistrictId || isUrbanPanchayatsLoading}
+              />
 
-        <RhfSelect
-          name="location.panchayat"
-          label={t("Select Panchayat", "पंचायत")}
-          placeholder={t("Select Panchayat name", "पंचायत का नाम")}
-          options={panchayatOptions}
-          disabled={!selectedBlockId || isPanchayatsLoading}
-          isLoading={isPanchayatsLoading}
-          required
-        />
+              <RhfSelect
+                name={`${prefix}.ward`}
+                label={t("Ward", "वार्ड")}
+                placeholder={t("Select Ward", "वार्ड चुनें")}
+                options={wardOptions}
+                isLoading={isWardsLoading}
+                disabled={!selectedUrbanPanchayatId || isWardsLoading}
+              />
+            </>
+          ) : (
+            <>
+              <RhfSelect
+                name={`${prefix}.block`}
+                label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+                placeholder={t(
+                  "Select Block / Subdivision",
+                  "प्रखंड / अनुमंडल चुनें",
+                )}
+                options={blockOptions}
+                disabled={!selectedDistrictId || isBlocksLoading}
+                isLoading={isBlocksLoading}
+                required
+              />
 
-        <RhfInput
-          name="location.pincode"
-          label={t("Pin Code", "पिन कोड")}
-          placeholder="800001"
-          inputClassName="tracking-widest"
-          required
-          isNumsOnly
-          maxLength={6}
-        />
+              <RhfSelect
+                name={`${prefix}.panchayat`}
+                label={t("Panchayat", "पंचायत")}
+                placeholder={t("Select Panchayat name", "पंचायत का नाम")}
+                options={panchayatOptions}
+                disabled={!selectedBlockId || isPanchayatsLoading}
+                isLoading={isPanchayatsLoading}
+                required
+              />
+
+              <RhfSelect
+                name={`${prefix}.village`}
+                label={t("Village", "गाँव")}
+                placeholder={t("Select Village name", "गाँव का नाम चुनें")}
+                options={villageOptions}
+                isLoading={isVillagesLoading}
+                disabled={!selectedPanchayatId || isVillagesLoading}
+              />
+
+              <RhfInput
+                name={`${prefix}.thana`}
+                label={t("Thana", "थाना")}
+                placeholder={t("Enter Thana", "थाना दर्ज करें")}
+                maxLength={50}
+              />
+            </>
+          )}
+
+          <RhfInput
+            name={`${prefix}.landmark`}
+            label={t("Landmark", "लैंडमार्क")}
+            placeholder={t("Enter Landmark", "लैंडमार्क दर्ज करें")}
+            maxLength={50}
+          />
+
+          <RhfInput
+            name={`${prefix}.pincode`}
+            label={t("Pin Code", "पिन कोड")}
+            placeholder="800001"
+            inputClassName="tracking-widest"
+            isNumsOnly
+            maxLength={6}
+          />
+        </div>
       </div>
     </FormSection>
   );

@@ -1,7 +1,7 @@
 import { getFormsFields } from "@/lib/idb";
 import moment from "moment";
 
-export const getFormData = (data, attachments = [], extraObj= {}) => {
+export const getFormData = (data, attachments = [], extraObj = {}) => {
   const formData = new FormData();
 
   if (data.channel) {
@@ -27,6 +27,10 @@ export const getFormData = (data, attachments = [], extraObj= {}) => {
 
   const citizenAddr = data.citizenInfo?.address;
   if (citizenAddr) {
+    formData.append(
+      "citizenInfo[address][isUrban]",
+      String(Boolean(citizenAddr.isUrban)),
+    );
     if (citizenAddr.addressLine)
       formData.append(
         "citizenInfo[address][addressLine]",
@@ -34,15 +38,23 @@ export const getFormData = (data, attachments = [], extraObj= {}) => {
       );
     if (citizenAddr.district)
       formData.append("citizenInfo[address][district]", citizenAddr.district);
-    if (citizenAddr.subdivision)
+    if (citizenAddr.urbanPanchayat)
       formData.append(
-        "citizenInfo[address][subdivision]",
-        citizenAddr.subdivision,
+        "citizenInfo[address][urbanPanchayat]",
+        citizenAddr.urbanPanchayat,
       );
+    if (citizenAddr.ward)
+      formData.append("citizenInfo[address][ward]", citizenAddr.ward);
+    if (citizenAddr.block)
+      formData.append("citizenInfo[address][block]", citizenAddr.block);
     if (citizenAddr.panchayat)
       formData.append("citizenInfo[address][panchayat]", citizenAddr.panchayat);
     if (citizenAddr.thana)
       formData.append("citizenInfo[address][thana]", citizenAddr.thana);
+    if (citizenAddr.village)
+      formData.append("citizenInfo[address][village]", citizenAddr.village);
+    if (citizenAddr.landmark)
+      formData.append("citizenInfo[address][landmark]", citizenAddr.landmark);
     if (citizenAddr.pincode)
       formData.append("citizenInfo[address][pincode]", citizenAddr.pincode);
   }
@@ -50,7 +62,6 @@ export const getFormData = (data, attachments = [], extraObj= {}) => {
   // formData.append("classification[subService]", data.classification.subService);
   formData.append("classification[service]", data.classification.service);
   formData.append("classification[department]", data.classification.department);
-
 
   formData.append("classification[nature]", data.classification.nature);
   if (data.classification.isSeasonal !== undefined) {
@@ -69,36 +80,22 @@ export const getFormData = (data, attachments = [], extraObj= {}) => {
   if (data.evidence?.details)
     formData.append("evidence[details]", data.evidence.details);
 
-  // formData.append(
-  //   "impact[affectedBeneficiary]",
-  //   data.impact.affectedBeneficiary,
-  // );
-  // formData.append(
-  //   "impact[vulnerability[seniorCitizen]]",
-  //   String(data.impact.vulnerability?.seniorCitizen ?? false),
-  // );
-  // formData.append(
-  //   "impact[vulnerability[woman]]",
-  //   String(data.impact.vulnerability?.woman ?? false),
-  // );
-  // formData.append(
-  //   "impact[vulnerability[personWithDisability]]",
-  //   String(data.impact.vulnerability?.personWithDisability ?? false),
-  // );
-  // formData.append(
-  //   "impact[vulnerability[economicallyWeakerSection]]",
-  //   String(data.impact.vulnerability?.economicallyWeakerSection ?? false),
-  // );
-  formData.append("impact", JSON.stringify({
-    affectedBeneficiary: data.impact.affectedBeneficiary,
-    vulnerability: {
-      seniorCitizen: Boolean(data.impact.vulnerability?.seniorCitizen ?? false),
-      woman: Boolean(data.impact.vulnerability?.woman ?? false),
-      personWithDisability: Boolean(data.impact.vulnerability?.personWithDisability ?? false),
-      economicallyWeakerSection: Boolean(data.impact.vulnerability?.economicallyWeakerSection ?? false)
-    }
-
-  }))
+  formData.append(
+    "impact",
+    JSON.stringify({
+      affectedBeneficiary: data.impact.affectedBeneficiary,
+      vulnerability: {
+        seniorCitizen: Boolean(data.impact.vulnerability?.seniorCitizen ?? false),
+        woman: Boolean(data.impact.vulnerability?.woman ?? false),
+        personWithDisability: Boolean(
+          data.impact.vulnerability?.personWithDisability ?? false,
+        ),
+        economicallyWeakerSection: Boolean(
+          data.impact.vulnerability?.economicallyWeakerSection ?? false,
+        ),
+      },
+    }),
+  );
 
   formData.append(
     "communication[feedbackConsent]",
@@ -107,22 +104,24 @@ export const getFormData = (data, attachments = [], extraObj= {}) => {
 
   const addr = data.address;
   if (addr) {
+    formData.append("address[isUrban]", String(Boolean(addr.isUrban)));
     if (addr.addressLine)
       formData.append("address[addressLine]", addr.addressLine);
-    if (addr.state)
-      formData.append("address[state]", addr.state);
-    if (addr.city)
-      formData.append("address[city]", addr.city);
-    if (addr.district)
-      formData.append("address[district]", addr.district);
-    if (addr.subdivision)
-      formData.append("address[subdivision]", addr.subdivision);
+    if (addr.addressLine2)
+      formData.append("address[addressLine2]", addr.addressLine2);
+    if (addr.state) formData.append("address[state]", addr.state);
+    if (addr.city) formData.append("address[city]", addr.city);
+    if (addr.district) formData.append("address[district]", addr.district);
+    if (addr.urbanPanchayat)
+      formData.append("address[urbanPanchayat]", addr.urbanPanchayat);
+    if (addr.ward) formData.append("address[ward]", addr.ward);
+    if (addr.block) formData.append("address[block]", addr.block);
     if (addr.panchayat)
       formData.append("address[panchayat]", addr.panchayat);
-    if (addr.thana)
-      formData.append("address[thana]", addr.thana);
-    if (addr.pincode)
-      formData.append("address[pincode]", addr.pincode);
+    if (addr.thana) formData.append("address[thana]", addr.thana);
+    if (addr.village) formData.append("address[village]", addr.village);
+    if (addr.landmark) formData.append("address[landmark]", addr.landmark);
+    if (addr.pincode) formData.append("address[pincode]", addr.pincode);
   }
 
   if (typeof data.isCrpEqualPerAdd !== "undefined") {
@@ -131,17 +130,23 @@ export const getFormData = (data, attachments = [], extraObj= {}) => {
 
   const loc = data.location;
   if (loc) {
-    if (loc.division) formData.append("location[division]", loc.division);
+    formData.append("location[isUrban]", String(Boolean(loc.isUrban)));
+    if (loc.addressLine)
+      formData.append("location[addressLine]", loc.addressLine);
     if (loc.district) formData.append("location[district]", loc.district);
-    if (loc.subdivision)
-      formData.append("location[subdivision]", loc.subdivision);
+    if (loc.urbanPanchayat)
+      formData.append("location[urbanPanchayat]", loc.urbanPanchayat);
+    if (loc.ward) formData.append("location[ward]", loc.ward);
     if (loc.block) formData.append("location[block]", loc.block);
-    if (loc.panchayat) formData.append("location[panchayat]", loc.panchayat);
-    if (loc.pincode)
-      formData.append("location[pincode]", loc.pincode || loc.pincode);
+    if (loc.panchayat)
+      formData.append("location[panchayat]", loc.panchayat);
+    if (loc.thana) formData.append("location[thana]", loc.thana);
+    if (loc.village) formData.append("location[village]", loc.village);
+    if (loc.landmark) formData.append("location[landmark]", loc.landmark);
+    if (loc.pincode) formData.append("location[pincode]", loc.pincode);
   }
 
-  if(Object.keys(extraObj).length > 0){
+  if (Object.keys(extraObj).length > 0) {
     Object.entries(extraObj).forEach(([key, value]) => {
       value && formData.append(key, value);
     });

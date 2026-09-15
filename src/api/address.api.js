@@ -17,7 +17,26 @@ export const getPanchayats = async (blockId, params = {}) => {
 };
 export const getPanchayatsByBlock = getPanchayats;
 
-// 4) GET thanas: /address/blocks/:blockId/thanas
+// 4) GET villages: /address/panchayats/:panchayatId/villages
+export const getVillages = async (panchayatId, params = {}) => {
+  return instance.get(`/address/panchayats/${panchayatId}/villages`, { params });
+};
+export const getVillagesByPanchayat = getVillages;
+
+// 5) GET ULBs (urban panchayats): /address/districts/:districtId/ulbs
+export const getUlbs = async (districtId, params = {}) => {
+  return instance.get(`/address/districts/${districtId}/ulbs`, { params });
+};
+export const getUlbsByDistrict = getUlbs;
+export const getUrbanPanchayats = getUlbs;
+
+// 6) GET wards: /address/ulbs/:ulbId/wards
+export const getWards = async (ulbId, params = {}) => {
+  return instance.get(`/address/ulbs/${ulbId}/wards`, { params });
+};
+export const getWardsByUlb = getWards;
+
+// Keeping getThanas for backward compatibility
 export const getThanas = async (blockId, params = {}) => {
   return instance.get(`/address/blocks/${blockId}/thanas`, { params });
 };

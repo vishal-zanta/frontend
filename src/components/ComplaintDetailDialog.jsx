@@ -675,22 +675,32 @@ export function FieldVisitDetailDialog({
   );
 
   const loc = rawVisit?.grievance?.location || {};
+  const isUrban = Boolean(loc.isUrban);
   const districtName =
     getEntityLabel(loc.district || rawVisit.address?.district || rawVisit.district, t) || "";
+  const urbanPanchayatName =
+    getEntityLabel(loc.urbanPanchayat || rawVisit.address?.urbanPanchayat, t) || "";
+  const wardName =
+    getEntityLabel(loc.ward || rawVisit.address?.ward || rawVisit.ward, t) || "";
+  const villageName =
+    getEntityLabel(loc.village || rawVisit.address?.village, t) || "";
   const panchayatName =
-    getEntityLabel(loc.panchayat || rawVisit.address?.panchayat || rawVisit.address?.villageOrWard, t) || "";
-  const blockName = getEntityLabel(loc.block, t) || "";
-  const subdivisionName =
-    getEntityLabel(loc.subdivision || rawVisit.address?.subdivision, t) || "";
+    getEntityLabel(loc.panchayat || rawVisit.address?.panchayat, t) || "";
+  const blockName =
+    getEntityLabel(loc.block || loc.subdivision || rawVisit.address?.block || rawVisit.address?.subdivision, t) || "";
   const divisionName = getEntityLabel(loc.division, t) || "";
+  const pincode = loc.pincode || loc.pinCode || rawVisit.address?.pincode;
 
-  const locationParts = [
-    panchayatName,
-    blockName,
-    subdivisionName && subdivisionName !== blockName ? subdivisionName : null,
-    districtName,
-    loc.pincode || loc.pinCode || rawVisit.address?.pincode,
-  ].filter(Boolean);
+  const locationParts = (isUrban
+    ? [wardName, urbanPanchayatName, districtName, pincode]
+    : [
+        villageName,
+        panchayatName,
+        blockName,
+        districtName,
+        pincode,
+      ]
+  ).filter(Boolean);
 
   const locationText =
     locationParts.length > 0

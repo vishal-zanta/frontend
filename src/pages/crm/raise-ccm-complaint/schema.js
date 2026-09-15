@@ -11,106 +11,191 @@ export const CHANNEL_OPTIONS = [
   { value: "Whatsapp", label: "Whatsapp" },
 ];
 
-const addressSchema = z.object({
+const locationOrPermanentAddress = z.object({
+  isUrban: z.boolean().default(false),
   addressLine: z
     .string()
-    .min(1, "Address details are required")
+    .min(1, "Field is required")
     .max(50, "Address details cannot exceed 50 characters"),
   district: z
     .string()
-    .min(1, "District is required")
+    .min(1, "Field is required")
     .max(50, "District cannot exceed 50 characters"),
-  subdivision: z
+
+  // Rural
+  block: z
     .string()
-    .min(1, "Block is required")
-    .max(50, "Block cannot exceed 50 characters"),
+    .max(50, "Block cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
   panchayat: z
     .string()
-    .min(1, "Panchayat is required")
-    .max(50, "Panchayat cannot exceed 50 characters"),
-  thana: z.string()
-    .min(1, "Thana is required")
-    .max(50, "Thana cannot exceed 50 characters"),
-  pincode: z.string().min(1, "Pincode is required"),
+    .max(50, "Panchayat cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  thana: z
+    .string()
+    .max(50, "Thana cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  village: z
+    .string()
+    .max(50, "Village cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  pincode: z.string().regex(/^$|^8\d{5}$/, "Enter a valid pin code of Bihar"),
+
+  // Urban
+  urbanPanchayat: z
+    .string()
+    .max(
+      50,
+      "Municipal corporation/municipal council/nagar panchayat cannot exceed 50 characters",
+    )
+    .optional()
+    .or(z.literal("")),
+  ward: z
+    .string()
+    .max(50, "Ward cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+
+  // Common
+  landmark: z
+    .string()
+    .max(50, "Landmark cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
 });
 
-const correspondenceAddressSchema = z
-  .object({
-    addressLine: z
-      .string()
-      .min(1, "Address details are required")
-      .max(50, "Address details cannot exceed 50 characters"),
-    state: z
-      .string()
-      .min(1, "State is required")
-      .max(50, "State cannot exceed 50 characters"),
-    city: z
-      .string()
-      .max(50, "City cannot exceed 50 characters")
-      .optional()
-      .or(z.literal("")),
-    district: z
-      .string()
-      .max(50, "District cannot exceed 50 characters")
-      .optional()
-      .or(z.literal("")),
-    subdivision: z
-      .string()
-      .max(50, "Block cannot exceed 50 characters")
-      .optional()
-      .or(z.literal("")),
-    panchayat: z
-      .string()
-      .max(50, "Panchayat cannot exceed 50 characters")
-      .optional()
-      .or(z.literal("")),
-    thana: z
-      .string()
-      .max(50, "Thana cannot exceed 50 characters")
-      .optional()
-      .or(z.literal("")),
-    pincode: z.string().min(1, "Pincode is required"),
-  })
-  .superRefine((data, ctx) => {
-    if (data.state === "Bihar") {
-      if (!data.district || data.district.trim() === "") {
+const finalAddressSchema = z.object({
+  isUrban: z.boolean().default(false),
+  addressLine: z
+    .string()
+    .max(50, "Address details cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  district: z
+    .string()
+    .max(50, "District cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  block: z
+    .string()
+    .max(50, "Block cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  panchayat: z
+    .string()
+    .max(50, "Panchayat cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  thana: z
+    .string()
+    .max(50, "Thana cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  village: z
+    .string()
+    .max(50, "Village cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  pincode: z
+    .string()
+    .max(6, "Pincode cannot exceed 6 characters")
+    .optional()
+    .or(z.literal("")),
+
+  // Urban
+  urbanPanchayat: z
+    .string()
+    .max(
+      50,
+      "Municipal corporation/municipal council/nagar panchayat cannot exceed 50 characters",
+    )
+    .optional()
+    .or(z.literal("")),
+  ward: z
+    .string()
+    .max(50, "Ward cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+
+  // Correspondence
+  state: z
+    .string()
+    .max(50, "State cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  city: z
+    .string()
+    .max(50, "City cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  addressLine2: z
+    .string()
+    .max(50, "Address details cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+  landmark: z
+    .string()
+    .max(50, "Landmark cannot exceed 50 characters")
+    .optional()
+    .or(z.literal("")),
+});
+
+const addressSchema = locationOrPermanentAddress.superRefine((data, ctx) => {
+  if (!!data.isUrban) {
+    const requiredKeys = ["urbanPanchayat", "ward"];
+    requiredKeys.forEach((key) => {
+      if (!data[key] || data[key].trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "District is required",
-          path: ["district"],
+          message: "Field is required",
+          path: [key],
         });
       }
-      if (!data.subdivision || data.subdivision.trim() === "") {
+    });
+  } else {
+    const requiredKeys = ["block", "panchayat"];
+    requiredKeys.forEach((key) => {
+      if (!data[key] || data[key].trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Block is required",
-          path: ["subdivision"],
+          message: "Field is required",
+          path: [key],
         });
       }
-      if (!data.panchayat || data.panchayat.trim() === "") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Panchayat is required",
-          path: ["panchayat"],
-        });
-      }
-      if (!data.thana || data.thana.trim() === "") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Thana is required",
-          path: ["thana"],
-        });
-      }
-    } else {
-      if (!data.city || data.city.trim() === "") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "City is required",
-          path: ["city"],
-        });
-      }
+    });
+  }
+});
+
+const correspondenceAddressSchema = finalAddressSchema.superRefine(
+  (data, ctx) => {
+    if (!data.state || data.state.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Field is required",
+        path: ["state"],
+      });
     }
-  });
+
+    if (data.state === "Bihar") {
+      // standard Bihar address handling
+    } else {
+      const requiredKeys = ["addressLine", "city"];
+      requiredKeys.forEach((key) => {
+        if (!data[key] || data[key].trim() === "") {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Field is required",
+            path: [key],
+          });
+        }
+      });
+    }
+  },
+);
 
 export const grievanceSchema = z.object({
   channel: z.string().min(1, "Channel is required"),
@@ -119,8 +204,6 @@ export const grievanceSchema = z.object({
       .string()
       .min(1, "Name is required")
       .max(50, "Name cannot exceed 50 characters"),
-      // .optional()
-      // .or(z.literal("")),
     mobile: z
       .string()
       .min(10, "Mobile number must be at least 10 digits"),
@@ -134,13 +217,11 @@ export const grievanceSchema = z.object({
       .max(50, "Email cannot exceed 50 characters")
       .optional()
       .or(z.literal("")),
-    // preferredLanguage: z.string().min(1, "Preferred language is required"),
     address: addressSchema,
   }),
   classification: z.object({
-    department:  z.string().min(1, "Department is required"),
-    service:  z.string().min(1, "Service/Category is required"),
-    // subService: z.string().min(1, "Sub-service is required"),
+    department: z.string().min(1, "Department is required"),
+    service: z.string().min(1, "Service/Category is required"),
     nature: z.string().min(1, "Grievance type is required"),
     isSeasonal: z.boolean().optional(),
     seasonalType: z
@@ -169,32 +250,7 @@ export const grievanceSchema = z.object({
   }),
   isCrpEqualPerAdd: z.boolean().optional(),
   address: correspondenceAddressSchema,
-  location: z.object({
-    division: z
-      .string()
-      .min(1, "Division is required")
-      .max(50, "Division cannot exceed 50 characters"),
-    district: z
-      .string()
-      .min(1, "District is required")
-      .max(50, "District cannot exceed 50 characters"),
-    subdivision: z
-      .string()
-      .min(1, "Block is required")
-      .max(50, "Block cannot exceed 50 characters"),
-    block: z
-      .string()
-      .min(1, "Block is required")
-      .max(50, "Block cannot exceed 50 characters"),
-    panchayat: z
-      .string()
-      .min(1, "Panchayat is required")
-      .max(50, "Panchayat cannot exceed 50 characters"),
-    pincode: z
-      .string()
-      .min(1, "Pincode is required")
-      .regex(/^8\d{5}$/, "Enter a valid pin code of Bihar"),
-  }),
+  location: addressSchema,
 });
 
 export const defaultValues = {
@@ -204,20 +260,23 @@ export const defaultValues = {
     mobile: "",
     alternateMobile: "",
     email: "",
-    // preferredLanguage: "",
     address: {
+      isUrban: false,
       addressLine: "",
       district: "",
       panchayat: "",
       pincode: "",
-      subdivision: "",
+      block: "",
       thana: "",
+      village: "",
+      urbanPanchayat: "",
+      ward: "",
+      landmark: "",
     },
   },
   classification: {
     department: "",
     service: "",
-    // subService: "",
     nature: "",
     isSeasonal: false,
     seasonalType: "",
@@ -237,21 +296,32 @@ export const defaultValues = {
   },
   isCrpEqualPerAdd: false,
   address: {
+    isUrban: false,
+    state: "Bihar",
+    city: "",
     addressLine: "",
     district: "",
     panchayat: "",
     pincode: "",
-    subdivision: "",
+    block: "",
     thana: "",
-    state: "Bihar",
-    city: "",
+    village: "",
+    urbanPanchayat: "",
+    ward: "",
+    addressLine2: "",
+    landmark: "",
   },
   location: {
-    division: "",
+    isUrban: false,
+    addressLine: "",
     district: "",
-    subdivision: "",
-    block: "",
     panchayat: "",
     pincode: "",
+    block: "",
+    thana: "",
+    village: "",
+    urbanPanchayat: "",
+    ward: "",
+    landmark: "",
   },
 };

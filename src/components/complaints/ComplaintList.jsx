@@ -444,36 +444,79 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
   const excludedStatus = ["RESOLVED", "CLOSED"];
 
   const loc = c.location || {};
+  const isUrban = Boolean(
+    loc.isUrban ?? false,
+  );
+
   const districtName =
-    getEntityLabel(loc.district || c.address?.district, t) || "";
+    getEntityLabel(
+      loc.district ,
+      t,
+    ) || "";
+
+  const urbanPanchayatName =
+    getEntityLabel(
+      loc.urbanPanchayat ,
+      t,
+    ) || "";
+
+  const wardName =
+    getEntityLabel(
+      loc.ward ,
+      t,
+    ) || "";
+
+  const villageName =
+    getEntityLabel(
+      loc.village ,
+      t,
+    ) || "";
 
   const panchayatName =
-    getEntityLabel(loc.panchayat || c.address?.panchayat, t) || "";
-  const blockName = getEntityLabel(loc.block, t) || "";
-  const subdivisionName =
-    getEntityLabel(loc.subdivision || c.address?.subdivision, t) || "";
+    getEntityLabel(
+      loc.panchayat ,
+      t,
+    ) || "";
 
-  const locationParts = [
-    panchayatName,
-    blockName,
-    subdivisionName && subdivisionName !== blockName ? subdivisionName : null,
-    districtName,
-    loc.pincode || loc.pinCode || c.address?.pincode || c.address?.pinCode,
-  ].filter(Boolean);
+  const blockName =
+    getEntityLabel(
+      loc.block ,
+      t,
+    ) || "";
+
+  const subdivisionName =
+    getEntityLabel(loc.subdivision , t) || "";
+
+  const pincode =
+    loc.pincode ||
+    loc.pinCode ;
+
+  const locationParts = (
+    isUrban
+      ? [wardName, urbanPanchayatName, districtName, pincode]
+      : [
+          villageName,
+          panchayatName,
+          blockName ,
+          districtName,
+          pincode,
+        ]
+  ).filter(Boolean);
 
   const locationText =
     locationParts.length > 0
       ? locationParts.join(", ")
-      : [getEntityLabel(c.address?.villageOrWard || c.ward, t), c.address?.state]
+      : [
+          // getEntityLabel(c.address?.villageOrWard || c.ward, t),
+          // c.address?.city,
+          // c.address?.state,
+        ]
           .filter(Boolean)
           .join(", ") || "N/A";
 
   const serviceTitle =
     getEntityLabel(
-      c.classification?.service ||
-        c.classification?.subService?.service ||
-        c.classification?.subService ||
-        c.classification?.department,
+      c.classification?.service ,
       t,
     ) || "N/A";
 

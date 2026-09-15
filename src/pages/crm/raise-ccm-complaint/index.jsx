@@ -390,19 +390,30 @@ function FormWizard({
       ]);
     } else if (step === 2) {
       isValid = await methods.trigger([
+        "citizenInfo.address.isUrban",
         "citizenInfo.address.addressLine",
         "citizenInfo.address.district",
-        "citizenInfo.address.subdivision",
+        "citizenInfo.address.block",
         "citizenInfo.address.panchayat",
+        "citizenInfo.address.village",
         "citizenInfo.address.thana",
+        "citizenInfo.address.urbanPanchayat",
+        "citizenInfo.address.ward",
+        "citizenInfo.address.landmark",
         "citizenInfo.address.pincode",
-        "address.addressLine",
+        "address.isUrban",
         "address.state",
         "address.city",
+        "address.addressLine",
+        "address.addressLine2",
         "address.district",
-        "address.subdivision",
+        "address.block",
         "address.panchayat",
+        "address.village",
         "address.thana",
+        "address.urbanPanchayat",
+        "address.ward",
+        "address.landmark",
         "address.pincode",
       ]);
     }

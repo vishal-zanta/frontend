@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
+import RhfBadgeSelect from "@/components/rhfinputs/RhfBadgeSelect";
 import FormSection from "./FormSection";
 import statesCitiesData from "@/utils/states_cities.json";
 import { cn } from "@/lib/utils";
@@ -20,8 +21,11 @@ export const PermanentAddress = ({ t }) => {
   const { watch, setValue, control } = useFormContext();
   const prefix = "citizenInfo.address";
 
+  const isUrban = watch(`${prefix}.isUrban`);
   const selectedDistrictId = watch(`${prefix}.district`);
-  const selectedSubdivisionId = watch(`${prefix}.subdivision`);
+  const selectedBlockId = watch(`${prefix}.block`);
+  const selectedPanchayatId = watch(`${prefix}.panchayat`);
+  const selectedUrbanPanchayatId = watch(`${prefix}.urbanPanchayat`);
 
   const {
     districtOptions,
@@ -29,14 +33,21 @@ export const PermanentAddress = ({ t }) => {
     blockOptions,
     isBlocksLoading,
     panchayatOptions,
-    thanaOptions,
     isPanchayatsLoading,
-    isThanasLoading,
+    villageOptions,
+    isVillagesLoading,
+    urbanPanchayatOptions,
+    isUrbanPanchayatsLoading,
+    wardOptions,
+    isWardsLoading,
   } = useGetAddressFields(
     {
       lang,
       districtId: selectedDistrictId,
-      blockId: selectedSubdivisionId,
+      blockId: selectedBlockId,
+      panchayatId: selectedPanchayatId,
+      urbanPanchayatId: selectedUrbanPanchayatId,
+      isUrban,
     },
     {
       isValueId: true,
@@ -51,71 +62,124 @@ export const PermanentAddress = ({ t }) => {
 
   return (
     <FormSection title={t("Applicant Permanent Address", "स्थायी पता")}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-200">
-        <RhfInput
-          name={`${prefix}.addressLine`}
-          label={t("Address Line", "पता विवरण")}
-          placeholder={t(
-            "House no., Street, Area",
-            "मकान संख्या, सड़क, क्षेत्र",
+      <div className="space-y-4">
+        <RhfBadgeSelect
+          name={`${prefix}.isUrban`}
+          label={t("Area Type", "क्षेत्र का प्रकार")}
+          options={[
+            { label: t("Rural", "ग्रामीण"), value: false },
+            { label: t("Urban", "शहरी"), value: true },
+          ]}
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-200">
+          <RhfInput
+            name={`${prefix}.addressLine`}
+            label={t("Address Line", "पता विवरण")}
+            placeholder={t(
+              "House no., Street, Area",
+              "मकान संख्या, सड़क, क्षेत्र",
+            )}
+            required
+            maxLength={50}
+            className="md:col-span-2"
+          />
+
+          <RhfSelect
+            name={`${prefix}.district`}
+            label={t("District", "ज़िला")}
+            placeholder={t("Select District", "जिला चुनें")}
+            options={districtOptions}
+            isLoading={isDistrictsLoading}
+            disabled={isDistrictsLoading}
+            required
+          />
+
+          {isUrban ? (
+            <>
+              <RhfSelect
+                name={`${prefix}.urbanPanchayat`}
+                label={t(
+                  "Municipal Corporation / Council / Nagar Panchayat",
+                  "नगर निगम / नगर परिषद / नगर पंचायत",
+                )}
+                placeholder={t(
+                  "Select Municipal Body",
+                  "नगर निकाय चुनें",
+                )}
+                options={urbanPanchayatOptions}
+                isLoading={isUrbanPanchayatsLoading}
+                disabled={!selectedDistrictId || isUrbanPanchayatsLoading}
+              />
+
+              <RhfSelect
+                name={`${prefix}.ward`}
+                label={t("Ward", "वार्ड")}
+                placeholder={t("Select Ward", "वार्ड चुनें")}
+                options={wardOptions}
+                isLoading={isWardsLoading}
+                disabled={!selectedUrbanPanchayatId || isWardsLoading}
+              />
+            </>
+          ) : (
+            <>
+              <RhfSelect
+                name={`${prefix}.block`}
+                label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+                placeholder={t(
+                  "Select Block / Subdivision",
+                  "प्रखंड / अनुमंडल चुनें",
+                )}
+                options={blockOptions}
+                disabled={!selectedDistrictId || isBlocksLoading}
+                isLoading={isBlocksLoading}
+                required
+              />
+
+              <RhfSelect
+                name={`${prefix}.panchayat`}
+                label={t("Panchayat", "पंचायत")}
+                placeholder={t("Select Panchayat name", "पंचायत का नाम")}
+                options={panchayatOptions}
+                disabled={!selectedBlockId || isPanchayatsLoading}
+                isLoading={isPanchayatsLoading}
+                required
+              />
+
+              <RhfSelect
+                name={`${prefix}.village`}
+                label={t("Village", "गाँव")}
+                placeholder={t("Select Village name", "गाँव का नाम चुनें")}
+                options={villageOptions}
+                isLoading={isVillagesLoading}
+                disabled={!selectedPanchayatId || isVillagesLoading}
+              />
+
+              <RhfInput
+                name={`${prefix}.thana`}
+                label={t("Thana", "थाना")}
+                placeholder={t("Enter Thana", "थाना दर्ज करें")}
+                maxLength={50}
+              />
+            </>
           )}
-          required
-          maxLength={50}
-          className="md:col-span-2"
-        />
 
-        <RhfSelect
-          name={`${prefix}.district`}
-          label={t("District", "ज़िला")}
-          placeholder={t("Select District", "जिला चुनें")}
-          options={districtOptions}
-          isLoading={isDistrictsLoading}
-          disabled={isDistrictsLoading}
-          required
-        />
+          <RhfInput
+            name={`${prefix}.landmark`}
+            label={t("Landmark", "लैंडमार्क")}
+            placeholder={t("Enter Landmark", "लैंडमार्क दर्ज करें")}
+            maxLength={50}
+          />
 
-        <RhfSelect
-          name={`${prefix}.subdivision`}
-          label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-          placeholder={t(
-            "Select Block / Subdivision",
-            "प्रखंड / अनुमंडल चुनें",
-          )}
-          options={blockOptions}
-          disabled={!selectedDistrictId || isBlocksLoading}
-          isLoading={isBlocksLoading}
-          required
-        />
-
-        <RhfSelect
-          name={`${prefix}.panchayat`}
-          label={t("Select Panchayat", "पंचायत")}
-          placeholder={t("Select Panchayat name", "पंचायत का नाम")}
-          options={panchayatOptions}
-          disabled={!selectedSubdivisionId || isPanchayatsLoading}
-          isLoading={isPanchayatsLoading}
-          required
-        />
-
-        <RhfSelect
-          name={`${prefix}.thana`}
-          label={t("Select Thana", "थाना")}
-          placeholder={t("Select Thana", "थाना चुनें")}
-          options={thanaOptions}
-          disabled={!selectedSubdivisionId || isThanasLoading}
-          isLoading={isThanasLoading}
-          required
-        />
-
-        <RhfInput
-          name={`${prefix}.pincode`}
-          label={t("Pin Code", "पिन कोड")}
-          placeholder="800001"
-          inputClassName="tracking-widest"
-          required
-          isNumsOnly
-          maxLength={6}
-        />
+          <RhfInput
+            name={`${prefix}.pincode`}
+            label={t("Pin Code", "पिन कोड")}
+            placeholder="800001"
+            inputClassName="tracking-widest"
+            isNumsOnly
+            maxLength={6}
+          />
+        </div>
       </div>
     </FormSection>
   );
@@ -130,11 +194,34 @@ export const CorrespondenceAddress = ({
   const { watch, setValue, control } = useFormContext();
   const prefix = "address";
 
+  const isUrban = watch(`${prefix}.isUrban`);
   const selectedState = watch(`${prefix}.state`);
-  const selectedDistrictId = watch(`${prefix}.district`);
-  const selectedSubdivisionId = watch(`${prefix}.subdivision`);
-    const districtOptionsRef = useRef([]);
-    const blocksOptionsRef = useRef([]);
+  const selectedDistrict = watch(`${prefix}.district`);
+  const selectedBlock = watch(`${prefix}.block`);
+  const selectedPanchayat = watch(`${prefix}.panchayat`);
+  const selectedUrbanPanchayat = watch(`${prefix}.urbanPanchayat`);
+
+  const districtOptionsRef = useRef([]);
+  const blocksOptionsRef = useRef([]);
+  const panchayatOptionsRef = useRef([]);
+  const urbanPanchayatOptionsRef = useRef([]);
+
+  const selectedDistrictId = (districtOptionsRef.current || []).find(
+    (v) => v.value === selectedDistrict || v.label === selectedDistrict,
+  )?.raw?._id;
+
+  const selectedBlockId = (blocksOptionsRef.current || []).find(
+    (v) => v.value === selectedBlock || v.label === selectedBlock,
+  )?.raw?._id;
+
+  const selectedPanchayatId = (panchayatOptionsRef.current || []).find(
+    (v) => v.value === selectedPanchayat || v.label === selectedPanchayat,
+  )?.raw?._id;
+
+  const selectedUrbanPanchayatId = (urbanPanchayatOptionsRef.current || []).find(
+    (v) =>
+      v.value === selectedUrbanPanchayat || v.label === selectedUrbanPanchayat,
+  )?.raw?._id;
 
   const {
     districtOptions,
@@ -142,21 +229,31 @@ export const CorrespondenceAddress = ({
     blockOptions,
     isBlocksLoading,
     panchayatOptions,
-    thanaOptions,
     isPanchayatsLoading,
-    isThanasLoading,
+    villageOptions,
+    isVillagesLoading,
+    urbanPanchayatOptions,
+    isUrbanPanchayatsLoading,
+    wardOptions,
+    isWardsLoading,
   } = useGetAddressFields(
     {
       lang,
-     districtId: (districtOptionsRef.current || []).find(v=> v.value === selectedDistrictId)?.raw?._id,
-      blockId: (blocksOptionsRef.current || []).find(v=> v.value === selectedSubdivisionId)?.raw?._id,
+      districtId: selectedDistrictId,
+      blockId: selectedBlockId,
+      panchayatId: selectedPanchayatId,
+      urbanPanchayatId: selectedUrbanPanchayatId,
+      isUrban,
     },
     {
       isValueId: false,
     },
   );
+
   districtOptionsRef.current = districtOptions;
-blocksOptionsRef.current = blockOptions;
+  blocksOptionsRef.current = blockOptions;
+  panchayatOptionsRef.current = panchayatOptions;
+  urbanPanchayatOptionsRef.current = urbanPanchayatOptions;
 
   useClearAddressFields({
     control,
@@ -174,7 +271,7 @@ blocksOptionsRef.current = blockOptions;
     }));
   }, [selectedState]);
 
-  // Clear city, district, subdivision, thana, panchayat when state changes
+  // Clear fields when state changes
   const prevStateRef = React.useRef(selectedState);
   React.useEffect(() => {
     if (
@@ -195,7 +292,7 @@ blocksOptionsRef.current = blockOptions;
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue(`${prefix}.subdivision`, "", {
+      setValue(`${prefix}.block`, "", {
         shouldDirty: true,
         shouldValidate: true,
       });
@@ -204,6 +301,22 @@ blocksOptionsRef.current = blockOptions;
         shouldValidate: true,
       });
       setValue(`${prefix}.thana`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.village`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.urbanPanchayat`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.ward`, "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`${prefix}.landmark`, "", {
         shouldDirty: true,
         shouldValidate: true,
       });
@@ -218,131 +331,180 @@ blocksOptionsRef.current = blockOptions;
       title={t("Correspondence Address", "पत्राचार का पता")}
       action={action}
     >
-      <div
+     {!disabled ?  <div
         className={cn(
-          "grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-200",
+          "space-y-4 transition-all duration-200",
           disabled && "pointer-events-none opacity-60 select-none",
         )}
       >
-        <RhfInput
-          name={`${prefix}.addressLine`}
-          label={t("Address Line", "पता विवरण")}
-          placeholder={t(
-            "House no., Street, Area",
-            "मकान संख्या, सड़क, क्षेत्र",
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <RhfSelect
+            name={`${prefix}.state`}
+            label={t("State", "राज्य")}
+            placeholder={t("Select State", "राज्य चुनें")}
+            options={stateOptions}
+            required
+          />
+
+          {!isBihar && (
+            <RhfSelect
+              name={`${prefix}.city`}
+              label={t("City", "शहर")}
+              placeholder={t("Select City", "शहर चुनें")}
+              options={cityOptions}
+              disabled={!selectedState}
+              required={!isBihar}
+            />
           )}
-          required
-          maxLength={50}
-          className="md:col-span-2"
-        />
+        </div>
 
-        <RhfSelect
-          name={`${prefix}.state`}
-          label={t("State", "राज्य")}
-          placeholder={t("Select State", "राज्य चुनें")}
-          options={stateOptions}
-          required
-        />
-
-        <RhfSelect
-          name={`${prefix}.city`}
-          label={t("City", "शहर")}
-          placeholder={t("Select City", "शहर चुनें")}
-          options={cityOptions}
-          disabled={!selectedState}
-          required={!isBihar}
-        />
-
-        {isBihar ? (
-          <>
-            <RhfSelect
-              name={`${prefix}.district`}
-              label={t("District", "ज़िला")}
-              placeholder={t("Select District", "जिला चुनें")}
-              options={districtOptions}
-              isLoading={isDistrictsLoading}
-              disabled={isDistrictsLoading}
-              required
-            />
-
-            <RhfSelect
-              name={`${prefix}.subdivision`}
-              label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-              placeholder={t(
-                "Select Block / Subdivision",
-                "प्रखंड / अनुमंडल चुनें",
-              )}
-              options={blockOptions}
-              disabled={!selectedDistrictId || isBlocksLoading}
-              isLoading={isBlocksLoading}
-              required
-            />
-
-            <RhfSelect
-              name={`${prefix}.panchayat`}
-              label={t("Select Panchayat", "पंचायत")}
-              placeholder={t("Select Panchayat name", "पंचायत का नाम")}
-              options={panchayatOptions}
-              disabled={!selectedSubdivisionId || isPanchayatsLoading}
-              isLoading={isPanchayatsLoading}
-              required
-            />
-
-            <RhfSelect
-              name={`${prefix}.thana`}
-              label={t("Select Thana", "थाना")}
-              placeholder={t("Select Thana", "थाना चुनें")}
-              options={thanaOptions}
-              disabled={!selectedSubdivisionId || isThanasLoading}
-              isLoading={isThanasLoading}
-              required
-            />
-          </>
-        ) : (
-          <>
-            <RhfInput
-              name={`${prefix}.district`}
-              label={t("District", "ज़िला")}
-              placeholder={t("Enter District", "ज़िला दर्ज करें")}
-              maxLength={50}
-            />
-
-            <RhfInput
-              name={`${prefix}.subdivision`}
-              label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-              placeholder={t(
-                "Enter Block / Subdivision",
-                "प्रखंड / अनुमंडल दर्ज करें",
-              )}
-              maxLength={50}
-            />
-
-            <RhfInput
-              name={`${prefix}.panchayat`}
-              label={t("Select Panchayat", "पंचायत")}
-              placeholder={t("Enter Panchayat", "पंचायत दर्ज करें")}
-              maxLength={50}
-            />
-
-            <RhfInput
-              name={`${prefix}.thana`}
-              label={t("Select Thana", "थाना")}
-              placeholder={t("Enter Thana", "थाना दर्ज करें")}
-              maxLength={50}
-            />
-          </>
+        {isBihar && (
+          <RhfBadgeSelect
+            name={`${prefix}.isUrban`}
+            label={t("Area Type", "क्षेत्र का प्रकार")}
+            options={[
+              { label: t("Rural", "ग्रामीण"), value: false },
+              { label: t("Urban", "शहरी"), value: true },
+            ]}
+          />
         )}
 
-        <RhfInput
-          name={`${prefix}.pincode`}
-          label={t("Pin Code", "पिन कोड")}
-          placeholder="800001"
-          inputClassName="tracking-widest"
-          required
-          isNumsOnly
-          maxLength={6}
-        />
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <RhfInput
+            name={`${prefix}.addressLine`}
+            label={t("Address Line", "पता विवरण")}
+            placeholder={t(
+              "House no., Street, Area",
+              "मकान संख्या, सड़क, क्षेत्र",
+            )}
+            required
+            maxLength={50}
+            className="md:col-span-2"
+          />
+
+          {isBihar ? (
+            <>
+              <RhfSelect
+                name={`${prefix}.district`}
+                label={t("District", "ज़िला")}
+                placeholder={t("Select District", "जिला चुनें")}
+                options={districtOptions}
+                isLoading={isDistrictsLoading}
+                disabled={isDistrictsLoading}
+                required
+              />
+
+              {isUrban ? (
+                <>
+                  <RhfSelect
+                    name={`${prefix}.urbanPanchayat`}
+                    label={t(
+                      "Municipal Corporation / Council / Nagar Panchayat",
+                      "नगर निगम / नगर परिषद / नगर पंचायत",
+                    )}
+                    placeholder={t(
+                      "Select Municipal Body",
+                      "नगर निकाय चुनें",
+                    )}
+                    options={urbanPanchayatOptions}
+                    isLoading={isUrbanPanchayatsLoading}
+                    disabled={
+                      !selectedDistrict || isUrbanPanchayatsLoading
+                    }
+                  />
+
+                  <RhfSelect
+                    name={`${prefix}.ward`}
+                    label={t("Ward", "वार्ड")}
+                    placeholder={t("Select Ward", "वार्ड चुनें")}
+                    options={wardOptions}
+                    isLoading={isWardsLoading}
+                    disabled={
+                      !selectedUrbanPanchayat || isWardsLoading
+                    }
+                  />
+                </>
+              ) : (
+                <>
+                  <RhfSelect
+                    name={`${prefix}.block`}
+                    label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+                    placeholder={t(
+                      "Select Block / Subdivision",
+                      "प्रखंड / अनुमंडल चुनें",
+                    )}
+                    options={blockOptions}
+                    disabled={!selectedDistrict || isBlocksLoading}
+                    isLoading={isBlocksLoading}
+                    required
+                  />
+
+                  <RhfSelect
+                    name={`${prefix}.panchayat`}
+                    label={t("Panchayat", "पंचायत")}
+                    placeholder={t(
+                      "Select Panchayat name",
+                      "पंचायत का नाम",
+                    )}
+                    options={panchayatOptions}
+                    disabled={!selectedBlock || isPanchayatsLoading}
+                    isLoading={isPanchayatsLoading}
+                    required
+                  />
+
+                  <RhfSelect
+                    name={`${prefix}.village`}
+                    label={t("Village", "गाँव")}
+                    placeholder={t(
+                      "Select Village name",
+                      "गाँव का नाम चुनें",
+                    )}
+                    options={villageOptions}
+                    isLoading={isVillagesLoading}
+                    disabled={!selectedPanchayat || isVillagesLoading}
+                  />
+
+                  <RhfInput
+                    name={`${prefix}.thana`}
+                    label={t("Thana", "थाना")}
+                    placeholder={t("Enter Thana", "थाना दर्ज करें")}
+                    maxLength={50}
+                  />
+                </>
+              )}
+
+              <RhfInput
+                name={`${prefix}.landmark`}
+                label={t("Landmark", "लैंडमार्क")}
+                placeholder={t("Enter Landmark", "लैंडमार्क दर्ज करें")}
+                maxLength={50}
+              />
+            </>
+          ) : (
+            <>
+              <RhfInput
+                name={`${prefix}.addressLine2`}
+                label={t("Address Line 2", "पता विवरण 2")}
+                placeholder={t(
+                  "Apartment, suite, landmark",
+                  "अपार्टमेंट, सुइट, लैंडमार्क",
+                )}
+                maxLength={50}
+                className="md:col-span-2"
+              />
+            </>
+          )}
+
+          <RhfInput
+            name={`${prefix}.pincode`}
+            label={t("Pin Code", "पिन कोड")}
+            placeholder="800001"
+            inputClassName="tracking-widest"
+            isNumsOnly
+            maxLength={6}
+          />
+        </div>
+      </div> : null}
     </FormSection>
   );
 };
@@ -355,15 +517,24 @@ export default function AddressSection({ t }) {
   const correspondenceState = watch("address.state");
   const isBihar = correspondenceState === "Bihar";
 
-  const { districtOptions, blockOptions, panchayatOptions, thanaOptions } =
-    useGetAddressFields(
-      {
-        lang,
-        districtId: permanentAddress?.district,
-        blockId: permanentAddress?.subdivision,
-      },
-      { isValueId: true },
-    );
+  const {
+    districtOptions,
+    blockOptions,
+    panchayatOptions,
+    villageOptions,
+    urbanPanchayatOptions,
+    wardOptions,
+  } = useGetAddressFields(
+    {
+      lang,
+      districtId: permanentAddress?.district,
+      blockId: permanentAddress?.block,
+      panchayatId: permanentAddress?.panchayat,
+      urbanPanchayatId: permanentAddress?.urbanPanchayat,
+      isUrban: permanentAddress?.isUrban,
+    },
+    { isValueId: true },
+  );
 
   const getAddressLabels = (perm) => {
     const districtLabel =
@@ -372,12 +543,11 @@ export default function AddressSection({ t }) {
       )?.label ||
       perm?.district ||
       "";
-    const subdivisionLabel =
+    const blockLabel =
       blockOptions.find(
-        (b) =>
-          b.value === perm?.subdivision || b.raw?._id === perm?.subdivision,
+        (b) => b.value === perm?.block || b.raw?._id === perm?.block,
       )?.label ||
-      perm?.subdivision ||
+      perm?.block ||
       "";
     const panchayatLabel =
       panchayatOptions.find(
@@ -386,18 +556,35 @@ export default function AddressSection({ t }) {
       )?.label ||
       perm?.panchayat ||
       "";
-    const thanaLabel =
-      thanaOptions.find(
-        (tItem) => tItem.value === perm?.thana || tItem.raw?._id === perm?.thana,
+    const villageLabel =
+      villageOptions.find(
+        (v) =>
+          v.value === perm?.village || v.raw?._id === perm?.village,
       )?.label ||
-      perm?.thana ||
+      perm?.village ||
+      "";
+    const urbanPanchayatLabel =
+      urbanPanchayatOptions.find(
+        (u) =>
+          u.value === perm?.urbanPanchayat ||
+          u.raw?._id === perm?.urbanPanchayat,
+      )?.label ||
+      perm?.urbanPanchayat ||
+      "";
+    const wardLabel =
+      wardOptions.find(
+        (w) => w.value === perm?.ward || w.raw?._id === perm?.ward,
+      )?.label ||
+      perm?.ward ||
       "";
 
     return {
       districtLabel,
-      subdivisionLabel,
+      blockLabel,
       panchayatLabel,
-      thanaLabel,
+      villageLabel,
+      urbanPanchayatLabel,
+      wardLabel,
     };
   };
 
@@ -408,9 +595,19 @@ export default function AddressSection({ t }) {
     });
     if (checked) {
       const perm = getValues("citizenInfo.address");
-      const { districtLabel, subdivisionLabel, panchayatLabel, thanaLabel } =
-        getAddressLabels(perm);
+      const {
+        districtLabel,
+        blockLabel,
+        panchayatLabel,
+        villageLabel,
+        urbanPanchayatLabel,
+        wardLabel,
+      } = getAddressLabels(perm);
 
+      setValue("address.isUrban", Boolean(perm?.isUrban), {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
       setValue("address.addressLine", perm?.addressLine || "", {
         shouldDirty: true,
         shouldValidate: true,
@@ -419,11 +616,15 @@ export default function AddressSection({ t }) {
         shouldDirty: true,
         shouldValidate: true,
       });
+      setValue("address.city", "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
       setValue("address.district", districtLabel, {
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("address.subdivision", subdivisionLabel, {
+      setValue("address.block", blockLabel, {
         shouldDirty: true,
         shouldValidate: true,
       });
@@ -431,7 +632,23 @@ export default function AddressSection({ t }) {
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("address.thana", thanaLabel, {
+      setValue("address.thana", perm?.thana || "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue("address.village", villageLabel, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue("address.urbanPanchayat", urbanPanchayatLabel, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue("address.ward", wardLabel, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue("address.landmark", perm?.landmark || "", {
         shouldDirty: true,
         shouldValidate: true,
       });
@@ -457,23 +674,51 @@ export default function AddressSection({ t }) {
 
   React.useEffect(() => {
     if (isCrpEqualPerAdd) {
-      const { districtLabel, subdivisionLabel, panchayatLabel, thanaLabel } =
-        getAddressLabels(permanentAddress);
+      const {
+        districtLabel,
+        blockLabel,
+        panchayatLabel,
+        villageLabel,
+        urbanPanchayatLabel,
+        wardLabel,
+      } = getAddressLabels(permanentAddress);
 
-      setValue("address.addressLine", permanentAddress?.addressLine || "", {
-        shouldValidate: true,
-      });
+      setValue(
+        "address.isUrban",
+        Boolean(permanentAddress?.isUrban),
+        { shouldValidate: true },
+      );
+      setValue(
+        "address.addressLine",
+        permanentAddress?.addressLine || "",
+        { shouldValidate: true },
+      );
       setValue("address.state", "Bihar", { shouldValidate: true });
+      setValue("address.city", "", { shouldValidate: true });
       setValue("address.district", districtLabel, {
         shouldValidate: true,
       });
-      setValue("address.subdivision", subdivisionLabel, {
+      setValue("address.block", blockLabel, {
         shouldValidate: true,
       });
       setValue("address.panchayat", panchayatLabel, {
         shouldValidate: true,
       });
-      setValue("address.thana", thanaLabel, {
+      setValue("address.thana", permanentAddress?.thana || "", {
+        shouldValidate: true,
+      });
+      setValue("address.village", villageLabel, {
+        shouldValidate: true,
+      });
+      setValue(
+        "address.urbanPanchayat",
+        urbanPanchayatLabel,
+        { shouldValidate: true },
+      );
+      setValue("address.ward", wardLabel, {
+        shouldValidate: true,
+      });
+      setValue("address.landmark", permanentAddress?.landmark || "", {
         shouldValidate: true,
       });
       setValue("address.pincode", permanentAddress?.pincode || "", {
@@ -486,7 +731,9 @@ export default function AddressSection({ t }) {
     districtOptions,
     blockOptions,
     panchayatOptions,
-    thanaOptions,
+    villageOptions,
+    urbanPanchayatOptions,
+    wardOptions,
     setValue,
   ]);
 
