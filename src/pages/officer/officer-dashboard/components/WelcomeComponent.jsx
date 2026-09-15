@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function WelcomeComponent({ officer, profileId, profileLabel }) {
   const { t } = useLanguage();
@@ -10,15 +11,16 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
     profileId === "suda" || profileId === "division" || profileId === "zone";
 
   const displayName = profile?.name || "-";
-  const displayRole = profile?.role?.designationEnglish || "-";
+  const displayRole = profile?.role?.designationEnglish || profile?.role?.name || "-";
+  const districtName = getEntityLabel(profile?.district, t);
 
   const subtitle = isStateLevel ? (
     `${displayRole} • ${t("State-level overview", "राज्य-स्तरीय अवलोकन")} • ${t("All districts", "सभी जिले")}`
   ) : (
     <>
       {displayRole} • {t("Officer ID:", "अधिकारी आईडी:")}{" "}
-      <span className="font-mono text-white">{profile?.userCode}</span> •{" "}
-      {profile?.district?.name || profile?.district}
+      <span className="font-mono text-white">{profile?.userCode || "-"}</span>
+      {districtName ? ` • ${districtName}` : ""}
     </>
   );
 
@@ -41,3 +43,4 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
     </div>
   );
 }
+

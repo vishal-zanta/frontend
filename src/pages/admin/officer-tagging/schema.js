@@ -5,10 +5,25 @@ export const officerTaggingSchema = z.object({
   services: z
     .array(z.string())
     .min(1, "At least one service is required"),
-  divisions: z
+  districts: z
     .array(z.string())
-    .min(1, "At least one division is required"),
-  subdivisions: z
+    .min(1, "At least one district is required"),
+  areaType: z
     .array(z.string())
-    .min(1, "At least one subdivision is required"),
+    .min(1, "At least one area type is required"),
+  blocks: z.array(z.string()).default([]),
+  panchayats: z.array(z.string()).default([]),
+  urbanPanchayats: z.array(z.string()).default([]),
+  wards: z.array(z.string()).default([]),
 });
+
+export const defaultOfficerTaggingValues = {
+  officer: "",
+  services: [],
+  districts: [],
+  areaType: [],
+  blocks: [],
+  panchayats: [],
+  urbanPanchayats: [],
+  wards: [],
+};

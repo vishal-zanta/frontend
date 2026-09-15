@@ -38,12 +38,45 @@ export default function OfficerTagCards({
 
 function Card({ item, setEditItem, setDialog, handleDelete, t }) {
   const servicesList = item.services || [];
-  const divisionsList = Array.isArray(item.divisions)
-    ? item.divisions
-    : item.division
-      ? [item.division]
+  const districtsList = Array.isArray(item.districts)
+    ? item.districts
+    : item.district
+      ? [item.district]
       : [];
-  const subdivisionsList = item.subdivisions || item.subDivisions || item.wards || [];
+
+  const areaTypeList = Array.isArray(item.areaType)
+    ? item.areaType
+    : item.areaType
+      ? [item.areaType]
+      : [];
+
+  const blocksList = Array.isArray(item.blocks)
+    ? item.blocks
+    : item.block
+      ? [item.block]
+      : [];
+
+  const panchayatsList = Array.isArray(item.panchayats)
+    ? item.panchayats
+    : item.panchayat
+      ? [item.panchayat]
+      : [];
+
+  const urbanPanchayatsList = Array.isArray(item.urbanPanchayats)
+    ? item.urbanPanchayats
+    : Array.isArray(item.ulbs)
+      ? item.ulbs
+      : item.urbanPanchayat
+        ? [item.urbanPanchayat]
+        : item.ulb
+          ? [item.ulb]
+          : [];
+
+  const wardsList = Array.isArray(item.wards)
+    ? item.wards
+    : item.ward
+      ? [item.ward]
+      : [];
 
   return (
     <div className="rounded-xl border border-border bg-background dark:bg-[#0c1427] shadow-sm hover:shadow-md transition-all overflow-hidden">
@@ -82,7 +115,7 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
         </Badge>
       </div>
 
-      {/* Body: Services & Subdivisions */}
+      {/* Body: Services, Districts, Area Type & Locations */}
       <div className="p-3 xs:p-3.5 sm:p-4 space-y-3">
         <div className="space-y-2 text-xs bg-muted/40 p-2.5 rounded-lg border border-border/50">
           <div>
@@ -108,12 +141,12 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
 
           <div className="pt-1.5 border-t border-border/40">
             <span className="text-muted-foreground block text-[10px] uppercase font-medium mb-1">
-              {t("Divisions:", "प्रमंडल:")}
+              {t("Districts:", "ज़िला:")}
             </span>
-            {divisionsList.length > 0 ? (
+            {districtsList.length > 0 ? (
               <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
-                {divisionsList.map((d, di) => {
-                  const divLabel =
+                {districtsList.map((d, di) => {
+                  const distLabel =
                     typeof d === "object" && d
                       ? t(d.name_en || d.name, d.name_local || d.nameHindi)
                       : d;
@@ -123,7 +156,7 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
                       variant="outline"
                       className="text-[10px] bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium text-nowrap"
                     >
-                      {divLabel}
+                      {distLabel}
                     </Badge>
                   );
                 })}
@@ -133,32 +166,85 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
             )}
           </div>
 
-          <div className="pt-1.5 border-t border-border/40">
-            <span className="text-muted-foreground block text-[10px] uppercase font-medium mb-1">
-              {t("Subdivisions:", "अनुमंडल:")}
-            </span>
-            {subdivisionsList.length > 0 ? (
+          {areaTypeList.length > 0 && (
+            <div className="pt-1.5 border-t border-border/40">
+              <span className="text-muted-foreground block text-[10px] uppercase font-medium mb-1">
+                {t("Area Type:", "क्षेत्र का प्रकार:")}
+              </span>
               <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
-                {subdivisionsList.map((w, wi) => {
-                  const subLabel =
-                    typeof w === "object" && w
-                      ? t(w.name_en || w.name, w.name_local || w.nameHindi)
-                      : w;
-                  return (
-                    <Badge
-                      key={wi}
-                      variant="outline"
-                      className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-nowrap"
-                    >
-                      {subLabel}
-                    </Badge>
-                  );
-                })}
+                {areaTypeList.map((at, ati) => (
+                  <Badge
+                    key={ati}
+                    variant="outline"
+                    className="text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400 capitalize text-nowrap"
+                  >
+                    {at === "rural"
+                      ? t("Rural", "ग्रामीण")
+                      : at === "urban"
+                        ? t("Urban", "शहरी")
+                        : at}
+                  </Badge>
+                ))}
               </div>
-            ) : (
-              <span className="text-muted-foreground text-xs">N/A</span>
-            )}
-          </div>
+            </div>
+          )}
+
+          {(blocksList.length > 0 ||
+            panchayatsList.length > 0 ||
+            urbanPanchayatsList.length > 0 ||
+            wardsList.length > 0) && (
+            <div className="pt-1.5 border-t border-border/40">
+              <span className="text-muted-foreground block text-[10px] uppercase font-medium mb-1">
+                {t("Locations:", "स्थान:")}
+              </span>
+              <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
+                {blocksList.map((b, bi) => (
+                  <Badge
+                    key={`b-${bi}`}
+                    variant="outline"
+                    className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-nowrap"
+                  >
+                    {typeof b === "object" && b
+                      ? t(b.name_en || b.name, b.name_local || b.nameHindi)
+                      : b}
+                  </Badge>
+                ))}
+                {panchayatsList.map((p, pi) => (
+                  <Badge
+                    key={`p-${pi}`}
+                    variant="outline"
+                    className="text-[10px] bg-teal-500/10 text-teal-600 dark:text-teal-400 text-nowrap"
+                  >
+                    {typeof p === "object" && p
+                      ? t(p.name_en || p.name, p.name_local || p.nameHindi)
+                      : p}
+                  </Badge>
+                ))}
+                {urbanPanchayatsList.map((u, ui) => (
+                  <Badge
+                    key={`u-${ui}`}
+                    variant="outline"
+                    className="text-[10px] bg-purple-500/10 text-purple-600 dark:text-purple-400 text-nowrap"
+                  >
+                    {typeof u === "object" && u
+                      ? t(u.name_en || u.name, u.name_local || u.nameHindi)
+                      : u}
+                  </Badge>
+                ))}
+                {wardsList.map((w, wi) => (
+                  <Badge
+                    key={`w-${wi}`}
+                    variant="outline"
+                    className="text-[10px] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-nowrap"
+                  >
+                    {typeof w === "object" && w
+                      ? t(w.name_en || w.name, w.name_local || w.nameHindi)
+                      : w}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -170,15 +256,7 @@ function Card({ item, setEditItem, setDialog, handleDelete, t }) {
           onClick={() => {
             setEditItem(item);
             if (setDialog) {
-              setDialog({
-                officer: item.officer?.name || "",
-                designation: item.officer?.role?.designationEnglish || "",
-                services: (item.services || []).map((s) => s.title || s.name || s),
-                divisions: divisionsList.map((d) => d._id || d),
-                subdivisions: (item.subdivisions || item.subDivisions || item.wards || []),
-                activeComplaints: 0,
-                slaCompliant: true,
-              });
+              setDialog(item);
             }
           }}
           className="h-8 text-xs px-2.5"

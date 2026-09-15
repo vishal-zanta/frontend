@@ -10,6 +10,7 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import Pagination from "@/components/Pagination";
 import SearchDebounced from "@/components/debounced/SearchDebounced";
 import { useLanguage } from "@/context/LanguageContext";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function AssignedComplaintsTable() {
   const { t } = useLanguage();
@@ -59,6 +60,36 @@ export default function AssignedComplaintsTable() {
   );
 }
 
+const formatLocation = (c, t) => {
+  const loc = c.location || c.address || c.citizenInfo?.address || {};
+  const isUrban = Boolean(loc.isUrban);
+  const districtName = getEntityLabel(loc.district, t);
+  const urbanPanchayatName = getEntityLabel(loc.urbanPanchayat, t);
+  const wardName = getEntityLabel(loc.ward, t);
+  const villageName = getEntityLabel(loc.village, t);
+  const panchayatName = getEntityLabel(loc.panchayat, t);
+  const blockName = getEntityLabel(loc.block || loc.subdivision, t);
+  const villageOrWard = getEntityLabel(loc.villageOrWard, t);
+  const pincode = loc.pincode || loc.pinCode;
+
+  const parts = isUrban
+    ? [wardName, urbanPanchayatName, districtName, pincode]
+    : [
+        villageName,
+        panchayatName,
+        blockName,
+        villageOrWard,
+        districtName,
+        pincode,
+      ];
+
+  const filtered = parts.filter(Boolean);
+  if (filtered.length > 0) return filtered.join(", ");
+  if (loc.addressLine) return loc.addressLine;
+  if (c.ward) return c.ward;
+  return "N/A";
+};
+
 const Table = ({ filtered = [], t }) => {
   return (
     <table className="w-full text-sm">
@@ -68,10 +99,7 @@ const Table = ({ filtered = [], t }) => {
             {t("Complaint ID", "शिकायत आईडी")}
           </th>
           <th className="px-4 py-2 font-medium">{t("Service", "सेवा")}</th>
-          <th className="px-4 py-2 font-medium">
-            {t("Sub-Service", "उप-सेवा")}
-          </th>
-          <th className="px-4 py-2 font-medium">{t("Ward", "वार्ड")}</th>
+          <th className="px-4 py-2 font-medium">{t("Location", "स्थान")}</th>
           <th className="px-4 py-2 font-medium">
             {t("Priority", "प्राथमिकता")}
           </th>
@@ -83,15 +111,22 @@ const Table = ({ filtered = [], t }) => {
         {filtered.map((c, i) => {
           const complaintId = c.grievanceId || c.id || c._id || "N/A";
           const serviceName =
-            c.classification?.subService?.service?.title ||
-            c.serviceName ||
-            "N/A";
-          const subserviceName =
-            c.classification?.subService?.title || c.subserviceName || "N/A";
-          const ward = c.address?.villageOrWard || c.ward || "N/A";
+            getEntityLabel(
+              c.classification?.service ||
+                c.serviceDetails ||
+                c.service ||
+                c.classification?.subService?.service ||
+                c.serviceName,
+              t,
+            ) || "N/A";
+
+          const locationText = formatLocation(c, t);
           const priority = c.assignedPriority || c.priority || "NORMAL";
           const slaHours =
-            c.classification?.subService?.sla ?? c.slaHours ?? "N/A";
+            c.classification?.service?.sla ??
+            c.classification?.subService?.sla ??
+            c.slaHours ??
+            "N/A";
           const status = c.status || "PENDING";
 
           return (
@@ -99,15 +134,14 @@ const Table = ({ filtered = [], t }) => {
               <td className="px-4 py-2.5 text-nowrap">
                 <ComplaintId id={complaintId} complaint={c} />
               </td>
-              <td className="px-4 py-2.5 text-muted-foreground text-nowrap">
+              <td className="px-4 py-2.5 text-foreground font-medium text-nowrap">
                 {serviceName}
               </td>
-              <td className="px-4 py-2.5 text-muted-foreground text-xs text-nowrap">
-                {subserviceName}
-              </td>
-              <td className="px-4 py-2.5 text-muted-foreground text-nowrap">
-             {ward && ward !="N/A" &&   <MapPin className="w-3 h-3 inline mr-1" />}
-                {ward}
+              <td className="px-4 py-2.5 text-muted-foreground text-xs max-w-xs truncate">
+                {locationText && locationText !== "N/A" && (
+                  <MapPin className="w-3 h-3 inline mr-1 text-primary shrink-0" />
+                )}
+                {locationText}
               </td>
               <td className="px-4 py-2.5 text-nowrap">
                 <PriorityBadge priority={priority} />
@@ -115,7 +149,7 @@ const Table = ({ filtered = [], t }) => {
               <td className="px-4 py-2.5">
                 <span className="text-xs text-muted-foreground text-nowrap">
                   <Clock className="w-3 h-3 inline mr-1" />
-                  {slaHours}h
+                  {slaHours !== "N/A" ? `${slaHours}h` : "N/A"}
                 </span>
               </td>
               <td className="px-4 py-2.5 text-nowrap">
@@ -128,3 +162,4 @@ const Table = ({ filtered = [], t }) => {
     </table>
   );
 };
+

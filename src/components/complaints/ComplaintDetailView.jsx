@@ -13,7 +13,11 @@ import {
   updateComplaintStatus,
   updateComplaintPriority,
 } from "@/api/complaint.api";
-import { getErrorToast, getSuccessToast, getEntityLabel } from "@/utils/helpers";
+import {
+  getErrorToast,
+  getSuccessToast,
+  getEntityLabel,
+} from "@/utils/helpers";
 import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
 import { useLanguage } from "@/context/LanguageContext";
@@ -163,23 +167,35 @@ export default function ComplaintDetailView({
     data?.data?.classification?.service ||
     data?.data?.classification?.subService?._id;
 
-  const subdivisionId =
-    data?.data?.location?.block ||
-    data?.data?.location?.subdivision ||
-    data?.data?.address?.block ||
-    data?.data?.address?.subdivision;
+  const location = data?.data?.location;
+  // console.log({ location });
 
   const { data: usersData, isLoading: userLoading } = useGetUsers(
     [
       "cce-officer-list",
       `services_${serviceId}`,
-      `subdivisions_${subdivisionId}`,
+      // `subdivisions_${subdivisionId}`,
+      ...(location?.block?._id ? [`blocks_${location?.block?._id}`] : []),
+      ...(location?.panchayat?._id
+        ? [`panchayats_${location?.panchayat?._id}`]
+        : []),
+      ...(location?.urbanPanchayat?._id
+        ? [`urbanPanchayats_${location?.urbanPanchayat?._id}`]
+        : []),
+      ...(location?.ward?._id ? [`wards_${location?.ward?._id}`] : []),
+      `area_type_${String(location?.isUrban ? "urban" : "rural")}`,
     ],
     {
       page: 1,
       limit: MAX_LIMIT,
       services: serviceId,
-      subdivisions : subdivisionId?._id,
+      ...(location?.block?._id && { blocks: location?.block?._id }),
+      ...(location?.panchayat?._id && { panchayats: location?.panchayat?._id }),
+      ...(location?.urbanPanchayat?._id && {
+        urbanPanchayats: location?.urbanPanchayat?._id,
+      }),
+      ...(location?.ward?._id && { wards: location?.ward?._id }),
+      areaType: !!location?.isUrban ? "urban" : "rural",
     },
     isCCE && !!serviceId,
   );
@@ -262,10 +278,7 @@ export default function ComplaintDetailView({
     ) || "N/A";
 
   const subServiceText =
-    getEntityLabel(
-      c.classification?.subService || c.subserviceName,
-      t,
-    ) || "";
+    getEntityLabel(c.classification?.subService || c.subserviceName, t) || "";
 
   const departmentText =
     getEntityLabel(
@@ -275,11 +288,9 @@ export default function ComplaintDetailView({
       t,
     ) || "N/A";
 
-  const natureText =
-    getEntityLabel(c.classification?.nature, t) || "N/A";
+  const natureText = getEntityLabel(c.classification?.nature, t) || "N/A";
 
-  const channelText =
-    getEntityLabel(c.channel || c.source, t) || "N/A";
+  const channelText = getEntityLabel(c.channel || c.source, t) || "N/A";
 
   const isSeasonal = Boolean(c.classification?.isSeasonal);
   const seasonalType = c.classification?.seasonalType || "";

@@ -15,7 +15,7 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import RhfWrapper from "@/components/RhfWrapper";
-import { officerTaggingSchema } from "./schema";
+import { officerTaggingSchema, defaultOfficerTaggingValues } from "./schema";
 
 import { useGetOfficerTag } from "./hooks";
 import { useGetDepartments } from "../master-data/hooks";
@@ -201,15 +201,31 @@ export default function OfficerTagging() {
   });
 
   const handleQuickSave = (data) => {
-    postMutation.mutate(data);
+    const payload = {
+      officer: data.officer,
+      services: data.services,
+      department: selectedDept,
+      districts: data.districts,
+      areaType: data.areaType,
+      blocks: data.blocks || [],
+      panchayats: data.panchayats || [],
+      urbanPanchayats: data.urbanPanchayats || [],
+      wards: data.wards || [],
+    };
+    postMutation.mutate(payload);
   };
 
   const handleFormSubmit = (formData) => {
     const payload = {
       officer: formData.officer,
       services: formData.services,
-      divisions: formData.divisions,
-      subdivisions: formData.subdivisions,
+      department: selectedDept,
+      districts: formData.districts,
+      areaType: formData.areaType,
+      blocks: formData.blocks || [],
+      panchayats: formData.panchayats || [],
+      urbanPanchayats: formData.urbanPanchayats || [],
+      wards: formData.wards || [],
     };
 
     if (editItem) {
@@ -238,8 +254,8 @@ export default function OfficerTagging() {
         <SectionTitle
           title={t("Officer Tagging", "अधिकारी मैपिंग")}
           subtitle={t(
-            "Tag officers to multiple services and multiple subdivisions - manually assigned due to location restriction",
-            "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और कई अनुमंडलों से मैप करें",
+            "Tag officers to multiple services and locations - manually assigned due to location restriction",
+            "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और स्थानों से मैप करें",
           )}
         />
 
@@ -351,23 +367,35 @@ export default function OfficerTagging() {
                       services: (editItem.services || []).map(
                         (s) => s._id || s,
                       ),
-                      divisions: (
-                        editItem.divisions ||
-                        (editItem.division ? [editItem.division] : [])
+                      districts: (
+                        editItem.districts ||
+                        (editItem.district ? [editItem.district] : [])
                       ).map((d) => d._id || d),
-                      subdivisions: (
-                        editItem.subdivisions ||
-                        editItem.subDivisions ||
+                      areaType: Array.isArray(editItem.areaType)
+                        ? editItem.areaType
+                        : editItem.areaType
+                          ? [editItem.areaType]
+                          : [],
+                      blocks: (
+                        editItem.blocks ||
+                        (editItem.block ? [editItem.block] : [])
+                      ).map((b) => b._id || b),
+                      panchayats: (
+                        editItem.panchayats ||
+                        (editItem.panchayat ? [editItem.panchayat] : [])
+                      ).map((p) => p._id || p),
+                      urbanPanchayats: (
+                        editItem.urbanPanchayats ||
+                        editItem.ulbs ||
+                        (editItem.urbanPanchayat ? [editItem.urbanPanchayat] : []) ||
+                        (editItem.ulb ? [editItem.ulb] : [])
+                      ).map((u) => u._id || u),
+                      wards: (
                         editItem.wards ||
-                        []
-                      ).map((s) => s._id || s),
+                        (editItem.ward ? [editItem.ward] : [])
+                      ).map((w) => w._id || w),
                     }
-                  : {
-                      officer: "",
-                      services: [],
-                      divisions: [],
-                      subdivisions: [],
-                    }
+                  : defaultOfficerTaggingValues
               }
               onSubmit={handleFormSubmit}
             >
@@ -410,7 +438,7 @@ export default function OfficerTagging() {
           </h4>
           <ul className="text-sm text-amber-700 space-y-1">
             <li>
-              • {t("A single officer can be tagged to multiple services and multiple subdivisions", "एक अधिकारी को कई सेवाओं और कई अनुमंडलों से मैप किया जा सकता है")}
+              • {t("A single officer can be tagged to multiple services and multiple locations", "एक अधिकारी को कई सेवाओं और कई स्थानों से मैप किया जा सकता है")}
             </li>
             <li>
               • {t("Every SLA must have at least 1 officer - or the ticket will not be visible", "प्रत्येक SLA में कम से कम 1 अधिकारी होना चाहिए - अन्यथा शिकायत दिखाई नहीं देगी")}

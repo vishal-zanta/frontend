@@ -705,7 +705,7 @@ export function FieldVisitDetailDialog({
   const locationText =
     locationParts.length > 0
       ? locationParts.join(", ")
-      : divisionName || rawVisit.ward || "N/A";
+      : rawVisit.ward || "N/A";
 
   const visit = {
     id: isApiObject ? rawVisit.visitId || rawVisit._id : rawVisit.id,
@@ -765,10 +765,11 @@ export function FieldVisitDetailDialog({
     notes: isApiObject ? rawVisit.remarks || "N/A" : rawVisit.notes || "N/A",
     location: locationText,
     district: districtName || "N/A",
+    urbanPanchayat: urbanPanchayatName || "N/A",
+    ward: wardName || "N/A",
     panchayat: panchayatName || "N/A",
+    village: villageName || "N/A",
     block: blockName || "N/A",
-    subdivision: subdivisionName || "N/A",
-    division: divisionName || "N/A",
     pincode: loc.pincode || loc.pinCode || rawVisit.address?.pincode || "N/A",
   };
 
@@ -850,8 +851,21 @@ export function FieldVisitDetailDialog({
             <div className="text-xs lg:text-sm font-medium">
               {visit.location}
             </div>
-            {(visit.district !== "N/A" || visit.block !== "N/A") && (
+            {(visit.district !== "N/A" ||
+              visit.block !== "N/A" ||
+              visit.urbanPanchayat !== "N/A" ||
+              visit.ward !== "N/A" ||
+              visit.panchayat !== "N/A" ||
+              visit.village !== "N/A") && (
               <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-muted-foreground pt-1 border-t border-border/50">
+                {visit.village !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("Village:", "गाँव:")}{" "}
+                    </span>
+                    {visit.village}
+                  </div>
+                )}
                 {visit.panchayat !== "N/A" && (
                   <div>
                     <span className="font-medium text-foreground">
@@ -868,12 +882,20 @@ export function FieldVisitDetailDialog({
                     {visit.block}
                   </div>
                 )}
-                {visit.subdivision !== "N/A" && (
+                {visit.urbanPanchayat !== "N/A" && (
                   <div>
                     <span className="font-medium text-foreground">
-                      {t("Subdivision:", "अनुमंडल:")}{" "}
+                      {t("Urban Panchayat:", "नगर पंचायत:")}{" "}
                     </span>
-                    {visit.subdivision}
+                    {visit.urbanPanchayat}
+                  </div>
+                )}
+                {visit.ward !== "N/A" && (
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {t("Ward:", "वार्ड:")}{" "}
+                    </span>
+                    {visit.ward}
                   </div>
                 )}
                 {visit.district !== "N/A" && (
@@ -882,14 +904,6 @@ export function FieldVisitDetailDialog({
                       {t("District:", "जिला:")}{" "}
                     </span>
                     {visit.district}
-                  </div>
-                )}
-                {visit.division !== "N/A" && (
-                  <div>
-                    <span className="font-medium text-foreground">
-                      {t("Division:", "प्रमंडल:")}{" "}
-                    </span>
-                    {visit.division}
                   </div>
                 )}
                 {visit.pincode !== "N/A" && (
