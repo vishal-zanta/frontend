@@ -5,9 +5,9 @@ import SupervisorViewShift from "./components/SupervisorViewShift";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ShiftManagement() {
-  const {profile} = useAuth();
-  console.log({profile});
-  const isSupervisor = profile?.role?.designationEnglish !== "Call Centre Executive";
+  const { profile } = useAuth();
+  const hasOnlyCCE = profile?.role?.designationEnglish === "Call Centre Executive";
+  const isSupervisor = !hasOnlyCCE;
 
   return (
     <PortalLayout role="crm">

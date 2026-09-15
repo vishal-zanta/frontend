@@ -19,7 +19,7 @@ import { MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function SetShiftTiming() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const qc = useQueryClient();
   const { data, isLoading } = useGetShifts({ page: 1, limit: MAX_LIMIT });
   const [selectedAgent, setSelectedAgent] = useState("");
@@ -27,10 +27,28 @@ export default function SetShiftTiming() {
   const [selectedDate, setSelectedDate] = useState("2024-05-17");
 
   const shiftsData = data?.data?.data?.docs || [];
-  const agentOptions = shiftsData.map((a) => ({
-    label: `${a.name} (${a.role?.level || a.role?.designationEnglish || ""})`,
-    value: a._id,
-  }));
+  const agentOptions = shiftsData.map((a) => {
+    const rolesList = Array.isArray(a.roles)
+      ? a.roles
+      : a.role
+        ? [a.role]
+        : [];
+    const roleNames = rolesList
+      .map((r) =>
+        typeof r === "object"
+          ? (lang === "hi" && r.designationHindi
+              ? r.designationHindi
+              : r.designationEnglish || r.name || r.level)
+          : r,
+      )
+      .filter(Boolean);
+
+    const rolesStr = roleNames.length > 0 ? ` (${roleNames.join(", ")})` : "";
+    return {
+      label: `${a.name || "Agent"}${rolesStr}`,
+      value: a._id,
+    };
+  });
 
   const assignShiftMutation = useMutation({
     mutationFn: assignShift,

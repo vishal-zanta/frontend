@@ -10,7 +10,7 @@ export default function AgentStatusBoardCards({
   setEditingAgent,
   formatShift,
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   if (!shiftsData || shiftsData.length === 0) {
     return (
@@ -48,14 +48,30 @@ export default function AgentStatusBoardCards({
                     {a.name || "N/A"}
                   </div>
                   <div className="text-[11px] text-muted-foreground truncate">
-                    {a.role?.level || a.role?.designationEnglish || "N/A"}
+                    {(() => {
+                      const rolesList = Array.isArray(a.roles)
+                        ? a.roles
+                        : a.role
+                          ? [a.role]
+                          : [];
+                      const roleNames = rolesList
+                        .map((r) =>
+                          typeof r === "object"
+                            ? (lang === "hi" && r.designationHindi
+                                ? r.designationHindi
+                                : r.designationEnglish || r.name || r.level)
+                            : r,
+                        )
+                        .filter(Boolean);
+                      return roleNames.length > 0 ? roleNames.join(", ") : "N/A";
+                    })()}
                   </div>
                 </div>
               </div>
 
               <Badge
                 variant="outline"
-                className={`text-xs shrink-0 ${
+                className={`text-xs shrink-0 whitespace-nowrap text-nowrap ${
                   a?.status === "On Call"
                     ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
                     : a?.status === "Available"

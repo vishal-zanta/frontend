@@ -15,7 +15,7 @@ export default function AgentStatusBoard({
   isSupervisor = false,
   setAgentView = () => {},
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const isMobile = useIsMobile();
   const pageProps = usePagination();
   const { data, isLoading, error } = useGetShifts({
@@ -54,15 +54,15 @@ export default function AgentStatusBoard({
     { id: "agent", label: t("Agent", "एजेंट") },
     { id: "role", label: t("Role", "भूमिका") },
     { id: "shift", label: t("Shift", "शिफ्ट") },
-    { id: "callsToday", label: t("Calls Today", "आज की कॉल") },
+    { id: "callsToday", label: t("Calls Today", "आज की कॉल"), className: "whitespace-nowrap" },
     ...(isSupervisor
       ? [
-          { id: "resolvedToday", label: t("Resolved", "हल की गई") },
-          { id: "avgTalkTime", label: t("Avg Talk Time", "औसत बात करने का समय") },
-          { id: "csat", label: t("CSAT", "सीएसएटी") },
+          { id: "resolvedToday", label: t("Resolved", "हल की गई"), className: "whitespace-nowrap" },
+          { id: "avgTalkTime", label: t("Avg Talk Time", "औसत बात करने का समय"), className: "whitespace-nowrap" },
+          { id: "csat", label: t("CSAT", "सीएसएटी"), className: "whitespace-nowrap min-w-20" },
         ]
       : []),
-    { id: "status", label: t("Status", "स्थिति") },
+    { id: "status", label: t("Status", "स्थिति"), className: "whitespace-nowrap min-w-24" },
     ...(isSupervisor
       ? [
           {
@@ -96,7 +96,23 @@ export default function AgentStatusBoard({
         ),
       },
       role: {
-        value: a.role?.level || a.role?.designationEnglish || "N/A",
+        value: (() => {
+          const rolesList = Array.isArray(a.roles)
+            ? a.roles
+            : a.role
+              ? [a.role]
+              : [];
+          const roleNames = rolesList
+            .map((r) =>
+              typeof r === "object"
+                ? (lang === "hi" && r.designationHindi
+                    ? r.designationHindi
+                    : r.designationEnglish || r.name || r.level)
+                : r,
+            )
+            .filter(Boolean);
+          return roleNames.length > 0 ? roleNames.join(", ") : "N/A";
+        })(),
         className: "text-muted-foreground",
       },
       shift: {
@@ -114,17 +130,19 @@ export default function AgentStatusBoard({
         className: "text-muted-foreground",
       },
       csat: {
+        className: "whitespace-nowrap",
         render: () => (
-          <span className="text-amber-600 font-medium">
+          <span className="text-amber-600 font-medium whitespace-nowrap">
             ★ {a?.csat && a.csat !== "-" ? a.csat : "N/A"}
           </span>
         ),
       },
       status: {
+        className: "whitespace-nowrap",
         render: () => (
           <Badge
             variant="outline"
-            className={`text-xs ${
+            className={`text-xs whitespace-nowrap text-nowrap shrink-0 ${
               a?.status === "On Call"
                 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
                 : a?.status === "Available"
