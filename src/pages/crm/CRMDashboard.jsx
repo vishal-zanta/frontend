@@ -30,6 +30,7 @@ import { ComplaintId, CallId } from "@/components/ComplaintDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 const CCE_SCORECARD = {
   daily: {
@@ -80,8 +81,9 @@ const agentName = "Priya Sharma";
 
 export default function CRMDashboard() {
   const { t } = useLanguage();
-  const [profile] = usePortalProfile("crm");
-  const isSupervisor = profile === "supervisor";
+  const {profile} = useAuth();
+  const [profileData] = usePortalProfile("crm");
+  const isSupervisor = profileData === "supervisor";
   const [scorecardPeriod, setScorecardPeriod] = useState("daily");
 
   if (isSupervisor) {
@@ -373,8 +375,8 @@ export default function CRMDashboard() {
               <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
                 {t("My Scorecard", "मेरा स्कोरकार्ड")}
               </h1>
-              <p className="text-xs xs:text-sm md:text-base text-white/80">
-                {agentName} • CCE Agent • Morning Shift (06:00–14:00) • Agent
+              <p className="text-xs xs:text-sm md:text-base capitalize text-white/80">
+                {profile?.name} • CCE Agent • Morning Shift (06:00–14:00) • Agent
                 ID: cce-001
               </p>
             </div>
