@@ -23,7 +23,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
-import { PERMISSIONS } from "@/utils/constants";
+import { ADMIN_ROLES, PERMISSIONS } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import biharGovtLogo from "@/assets/bihar_govt.png";
@@ -53,6 +53,7 @@ export const sidebarSections = [
         path: "/crm",
         icon: LayoutDashboard,
         permissions: PERMISSIONS.CCE_DASHBOARD,
+        rolePermissions: { exclude: [...ADMIN_ROLES] },
       },
     ],
   },
@@ -145,6 +146,7 @@ export const sidebarSections = [
         path: "/crm/raise",
         icon: FileText,
         permissions: PERMISSIONS.RAISE_COMPLAINTS,
+        rolePermissions: { exclude: [...ADMIN_ROLES] },
       },
       {
         label: "Track Complaint",
@@ -158,6 +160,8 @@ export const sidebarSections = [
         labelHindi: "इनमेल",
         path: "/crm/inmail",
         icon: MessageSquare,
+        rolePermissions: { exclude: [...ADMIN_ROLES] },
+
         // permissions: PERMISSIONS.TRACK_COMPLAINTS,
       },
     ],
@@ -323,7 +327,7 @@ const profileLabelOverrides = {
 };
 
 function NavItem({ item, onNavigate, overrideLabel }) {
-  const { hasPermission  } = useAuth();
+  const { hasPermission } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
 
@@ -422,7 +426,7 @@ export default function Sidebar({
 }) {
   const config = roleConfig[role] || roleConfig.superadmin;
   const overrides = profileLabelOverrides[role]?.[profile] || {};
-  const { hasPermission, profiledata } = useAuth();
+  const { hasPermission, profiledata, hasRolePermission } = useAuth();
   const { t } = useLanguage();
 
   const navRef = useRef(null);
@@ -502,9 +506,13 @@ export default function Sidebar({
             className="flex-1 overflow-y-auto scrollbar-thin py-3 px-3"
           >
             {config.sections.map((section, si) => {
-              const visibleItems = section.items.filter((item) =>
-                hasPermission(item.permissions),
-              );
+              const visibleItems = section.items
+                .filter((item) => hasPermission(item.permissions))
+                .filter((item) =>
+                  item?.rolePermissions
+                    ? hasRolePermission(item?.rolePermissions)
+                    : true,
+                );
 
               if (visibleItems.length === 0) return null;
 
@@ -526,16 +534,20 @@ export default function Sidebar({
             })}
           </nav>
 
-       {profiledata?.isAdmin &&   <div className="px-4 py-3 border-t border-sidebar-border text-[10px] text-sidebar-foreground/50">
-            <div className="flex items-center gap-2 mb-1">
-              <Zap className="w-3 h-3 text-emerald-400" />
-              <span className="font-medium text-sidebar-foreground/70">
-                {t("System Status", "सिस्टम स्थिति")}
-              </span>
+          {profiledata?.isAdmin && (
+            <div className="px-4 py-3 border-t border-sidebar-border text-[10px] text-sidebar-foreground/50">
+              <div className="flex items-center gap-2 mb-1">
+                <Zap className="w-3 h-3 text-emerald-400" />
+                <span className="font-medium text-sidebar-foreground/70">
+                  {t("System Status", "सिस्टम स्थिति")}
+                </span>
+              </div>
+              <div>
+                {t("All services operational", "सभी सेवाएं सक्रिय हैं")}
+              </div>
+              <div className="mt-1">{PORTAL_META.version}</div>
             </div>
-            <div>{t("All services operational", "सभी सेवाएं सक्रिय हैं")}</div>
-            <div className="mt-1">{PORTAL_META.version}</div>
-          </div>}
+          )}
         </div>
       </aside>
     </>

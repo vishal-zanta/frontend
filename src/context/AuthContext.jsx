@@ -27,6 +27,18 @@ export const AuthProvider = ({ children }) => {
     // });
     return checkPermissionManual(validPermissions, permission);
   };
+
+  const hasRolePermission = ({exclude = null , include = null})=> {
+    if(!profile?.role) return false;
+   const role = profile?.role?.designationEnglish; 
+   if(!!exclude){
+    return !exclude.includes(role);
+   }   
+   if(!!include){
+    return include.includes(role);
+   }   
+   return false; 
+  }
   const profiledata = {
     role: profile?.role?.designationEnglish,
     isAdmin: profile?.role?.designationEnglish === USER_ROLES_EXECULDED?.[0],
@@ -56,11 +68,11 @@ export const AuthProvider = ({ children }) => {
   }, [profile, newPath]);
   return (
     <authContext.Provider
-      value={{ profile, setProfile, hasPermission, profiledata, setNewPath }}
+      value={{ profile, setProfile, hasPermission, profiledata, setNewPath, hasRolePermission }}
     >
       {newPath && newPath?.isLoading && <FullScreenLoader />}
       {children}
-    </authContext.Provider>
+  </authContext.Provider>
   );
 };
 

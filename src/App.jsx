@@ -55,7 +55,7 @@ import { useEffect } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import PermissionChecker from "./components/PermissionChecker";
 import NotAuthorized from "./pages/NotAuthorized";
-import { PERMISSIONS } from "./utils/constants";
+import { ADMIN_ROLES, PERMISSIONS } from "./utils/constants";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import CallStats from "./pages/crm/call-stats";
 import LanguageContextProvider from "./context/LanguageContext";
@@ -143,7 +143,10 @@ const router = createBrowserRouter([
               {
                 path: "",
                 element: (
-                  <PermissionChecker permission={PERMISSIONS.CCE_DASHBOARD}>
+                  <PermissionChecker
+                    permission={PERMISSIONS.CCE_DASHBOARD}
+                    rolePermission={{ exclude: [...ADMIN_ROLES] }}
+                  >
                     <CRMDashboard />
                   </PermissionChecker>
                 ),
@@ -151,7 +154,10 @@ const router = createBrowserRouter([
               {
                 path: "raise",
                 element: (
-                  <PermissionChecker permission={PERMISSIONS.RAISE_COMPLAINTS}>
+                  <PermissionChecker
+                    permission={PERMISSIONS.RAISE_COMPLAINTS}
+                    rolePermission={{ exclude: [...ADMIN_ROLES] }}
+                  >
                     <CRMRaiseComplaint />
                   </PermissionChecker>
                 ),
@@ -210,7 +216,14 @@ const router = createBrowserRouter([
               },
               {
                 path: "inmail",
-                element: <Inmail />,
+                element: (
+                  <PermissionChecker
+                    rolePermission={{ exclude: [...ADMIN_ROLES] }}
+                  >
+                    {" "}
+                    <Inmail />
+                  </PermissionChecker>
+                ),
               },
             ],
           },
@@ -369,13 +382,13 @@ function App() {
     <ThemeContextProvider>
       {/* <AuthProvider> */}
       {/* <LanguageContextProvider> */}
-        <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
-          <QueryClientProvider client={queryClientInstance}>
-            <RouterProvider router={router} />
-            {/* <Toaster /> */}
-            <SonnerToaster richColors position="top-center" />
-          </QueryClientProvider>
-        </GoogleReCaptchaProvider>
+      <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
+        <QueryClientProvider client={queryClientInstance}>
+          <RouterProvider router={router} />
+          {/* <Toaster /> */}
+          <SonnerToaster richColors position="top-center" />
+        </QueryClientProvider>
+      </GoogleReCaptchaProvider>
       {/* </LanguageContextProvider> */}
       {/* </AuthProvider> */}
     </ThemeContextProvider>

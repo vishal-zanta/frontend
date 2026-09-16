@@ -207,7 +207,7 @@ export default function Login() {
     <AuthLayout
       icon={LogIn}
       title={t("Sahyog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
-      subtitle={t("Log in to your account", "अपने खाते में लॉग इन करें")}
+      subtitle={t("Enter your user id to log in", "अपने यूजर आईडी डालें")}
       footer={null}
     >
       {error && (
@@ -263,7 +263,7 @@ export default function Login() {
           </div>
           <div className="min-w-0">
             <div className="text-xs font-bold leading-tight truncate">
-              {t("CCE Agent", "सीसीई एजेंट")}
+              {t("CCE", "सीसीई")}
             </div>
           </div>
         </button>

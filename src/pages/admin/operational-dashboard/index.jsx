@@ -19,6 +19,7 @@ import GrievanceTab from "./grievance";
 import CitizenInteractionTab from "./citizen-interaction";
 import SystemTab from "./system";
 import { useLanguage } from "@/context/LanguageContext";
+import TimeRangeFilter from "@/components/TimeRangeFilter";
 
 import { SectionTitle } from "@/components/ChartCard";
 
@@ -152,7 +153,15 @@ export default function OperationalDashboard() {
       grievanceXKey: "month",
     },
   };
-  const pd = periodData[period];
+  const pd =
+    periodData[period] || {
+      ...periodData.daily,
+      label:
+        dateRange?.from && dateRange?.to
+          ? `${new Date(dateRange.from).toLocaleDateString()} - ${new Date(dateRange.to).toLocaleDateString()}`
+          : t("Custom Range", "कस्टम अवधि"),
+      sub: t("custom range", "कस्टम अवधि"),
+    };
 
   return (
     <PortalLayout role="superadmin">
@@ -161,7 +170,15 @@ export default function OperationalDashboard() {
           title={`${t("Operational Dashboard", "परिचालन डैशबोर्ड")} -
               ${t(activeTab?.labelEn || "", activeTab?.labelHi || "")}`}
           subtitle={""}
-        />
+        >
+          <TimeRangeFilter
+            period={period}
+            setPeriod={setPeriod}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            boxClassName={"flex-wrap sm:flex-nowrap"}
+          />
+        </SectionTitle>
 
         {tab === "call-volume" && <CallVolumeTab pd={pd} />}
         {tab === "cce-performance" && <CcePerformanceTab pd={pd} />}
