@@ -323,7 +323,7 @@ const profileLabelOverrides = {
 };
 
 function NavItem({ item, onNavigate, overrideLabel }) {
-  const { hasPermission } = useAuth();
+  const { hasPermission  } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
 
@@ -422,7 +422,7 @@ export default function Sidebar({
 }) {
   const config = roleConfig[role] || roleConfig.superadmin;
   const overrides = profileLabelOverrides[role]?.[profile] || {};
-  const { hasPermission } = useAuth();
+  const { hasPermission, profiledata } = useAuth();
   const { t } = useLanguage();
 
   const navRef = useRef(null);
@@ -526,7 +526,7 @@ export default function Sidebar({
             })}
           </nav>
 
-          <div className="px-4 py-3 border-t border-sidebar-border text-[10px] text-sidebar-foreground/50">
+       {profiledata?.isAdmin &&   <div className="px-4 py-3 border-t border-sidebar-border text-[10px] text-sidebar-foreground/50">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-3 h-3 text-emerald-400" />
               <span className="font-medium text-sidebar-foreground/70">
@@ -535,7 +535,7 @@ export default function Sidebar({
             </div>
             <div>{t("All services operational", "सभी सेवाएं सक्रिय हैं")}</div>
             <div className="mt-1">{PORTAL_META.version}</div>
-          </div>
+          </div>}
         </div>
       </aside>
     </>

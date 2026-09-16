@@ -279,7 +279,7 @@ export default function TopBar({
       <Notifications/>
       <RoleSwitchPopover />
 
-        {!isSuperAdmin && (
+        {isCRM && (
           <button
             onClick={() => toggleBreakMutation.mutate()}
             disabled={toggleBreakMutation.isPending}

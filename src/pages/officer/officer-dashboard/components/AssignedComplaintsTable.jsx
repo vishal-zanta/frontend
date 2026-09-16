@@ -90,6 +90,19 @@ const formatLocation = (c, t) => {
   return "N/A";
 };
 
+const formatSla = (sla) => {
+  if (sla === "N/A" || sla === null || sla === undefined || sla === "")
+    return "N/A";
+  const num = Number(sla);
+  if (isNaN(num)) return String(sla);
+  if (num > 48) {
+    const days = Math.floor(num / 24);
+    const hrs = num % 24;
+    return hrs > 0 ? `${days}d ${hrs}h` : `${days}d`;
+  }
+  return `${num}h`;
+};
+
 const Table = ({ filtered = [], t }) => {
   return (
     <table className="w-full text-sm">
@@ -149,7 +162,7 @@ const Table = ({ filtered = [], t }) => {
               <td className="px-4 py-2.5">
                 <span className="text-xs text-muted-foreground text-nowrap">
                   <Clock className="w-3 h-3 inline mr-1" />
-                  {slaHours !== "N/A" ? `${slaHours}h` : "N/A"}
+                  {formatSla(slaHours)}
                 </span>
               </td>
               <td className="px-4 py-2.5 text-nowrap">
