@@ -32,7 +32,7 @@ export default function ClassificationSection({
     page: 1,
     limit: MAX_LIMIT,
     select: "title,titleHindi,name,nameHindi",
-    departmentId: selectedDepartment,
+    department: selectedDepartment,
   };
 
   const { data: servicesData, isLoading: servicesLoading } = useGetServices(

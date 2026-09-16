@@ -43,7 +43,7 @@ const locationOrPermanentAddress = z.object({
     .max(50, "Village cannot exceed 50 characters")
     .optional()
     .or(z.literal("")),
-  pincode: z.string().regex(/^$|^8\d{5}$/, "Enter a valid pin code of Bihar"),
+  pincode: z.string().min(1, "Pincode is required").regex(/^$|^8\d{5}$/, "Enter a valid pin code of Bihar"),
 
   // Urban
   urbanPanchayat: z
@@ -102,9 +102,8 @@ const finalAddressSchema = z.object({
     .or(z.literal("")),
   pincode: z
     .string()
-    .max(6, "Pincode cannot exceed 6 characters")
-    .optional()
-    .or(z.literal("")),
+    .min(1, "Pincode is required")
+    .max(6, "Pincode cannot exceed 6 characters"),
 
   // Urban
   urbanPanchayat: z

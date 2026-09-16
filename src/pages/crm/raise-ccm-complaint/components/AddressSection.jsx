@@ -177,6 +177,7 @@ export const PermanentAddress = ({ t }) => {
             placeholder="800001"
             inputClassName="tracking-widest"
             isNumsOnly
+            required
             maxLength={6}
           />
         </div>
@@ -501,6 +502,7 @@ export const CorrespondenceAddress = ({
             placeholder="800001"
             inputClassName="tracking-widest"
             isNumsOnly
+            required
             maxLength={6}
           />
         </div>
