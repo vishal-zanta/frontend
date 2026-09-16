@@ -31,6 +31,8 @@ export default function LocationDetailsSection({ t }) {
     isUrbanPanchayatsLoading,
     wardOptions,
     isWardsLoading,
+    thanaOptions,
+    isThanasLoading,
   } = useGetAddressFields(
     {
       lang,
@@ -89,6 +91,19 @@ export default function LocationDetailsSection({ t }) {
             required
           />
 
+          <RhfSelect
+            name={`${prefix}.block`}
+            label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+            placeholder={t(
+              "Select Block / Subdivision",
+              "प्रखंड / अनुमंडल चुनें",
+            )}
+            options={blockOptions}
+            disabled={!selectedDistrictId || isBlocksLoading}
+            isLoading={isBlocksLoading}
+            required
+          />
+
           {isUrban ? (
             <>
               <RhfSelect
@@ -118,19 +133,6 @@ export default function LocationDetailsSection({ t }) {
           ) : (
             <>
               <RhfSelect
-                name={`${prefix}.block`}
-                label={t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-                placeholder={t(
-                  "Select Block / Subdivision",
-                  "प्रखंड / अनुमंडल चुनें",
-                )}
-                options={blockOptions}
-                disabled={!selectedDistrictId || isBlocksLoading}
-                isLoading={isBlocksLoading}
-                required
-              />
-
-              <RhfSelect
                 name={`${prefix}.panchayat`}
                 label={t("Panchayat", "पंचायत")}
                 placeholder={t("Select Panchayat name", "पंचायत का नाम")}
@@ -148,15 +150,17 @@ export default function LocationDetailsSection({ t }) {
                 isLoading={isVillagesLoading}
                 disabled={!selectedPanchayatId || isVillagesLoading}
               />
-
-              <RhfInput
-                name={`${prefix}.thana`}
-                label={t("Thana", "थाना")}
-                placeholder={t("Enter Thana", "थाना दर्ज करें")}
-                maxLength={50}
-              />
             </>
           )}
+
+          <RhfSelect
+            name={`${prefix}.thana`}
+            label={t("Thana", "थाना")}
+            placeholder={t("Select Thana", "थाना चुनें")}
+            options={thanaOptions}
+            isLoading={isThanasLoading}
+            disabled={!selectedDistrictId || isThanasLoading}
+          />
 
           <RhfInput
             name={`${prefix}.landmark`}

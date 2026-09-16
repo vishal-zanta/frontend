@@ -1,30 +1,57 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { ChartCard } from "@/components/ChartCard";
-import { BarChartCard, PieChartCard } from "@/components/Charts";
+import { BarChartCard } from "@/components/Charts";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function LocationWiseComplaintsChart({ data }) {
   const { t } = useLanguage();
 
+  const formatLocationLabel = (loc) => {
+    if (!loc) return "";
+    const lower = String(loc).toLowerCase();
+    if (lower.includes("outer") || lower.includes("outside")) {
+      return t("Outside Bihar (Inter-State)", "बिहार के बाहर (अंतर्राज्यीय)");
+    }
+    if (
+      lower.includes("bihar") ||
+      lower.includes("intra") ||
+      lower.includes("within")
+    ) {
+      return t("Within Bihar (Intra-State)", "बिहार राज्य के भीतर");
+    }
+    return loc;
+  };
+
   const dummyBarData = [
     {
-      location: t("Bihar", "बिहार"),
+      location: t("Within Bihar (Intra-State)", "बिहार राज्य के भीतर"),
       complaints: 4820,
     },
     {
-      location: t("Outer Bihar", "बिहार से बाहर"),
+      location: t("Outside Bihar (Inter-State)", "बिहार के बाहर (अंतर्राज्यीय)"),
       complaints: 540,
     },
   ];
 
-  const chartData = data && data.length > 0 ? data : dummyBarData;
+  const chartData = useMemo(() => {
+    if (data && data.length > 0) {
+      return data.map((item) => ({
+        ...item,
+        location: formatLocationLabel(item.location || item.name || item.title),
+      }));
+    }
+    return dummyBarData;
+  }, [data, t]);
 
   return (
     <ChartCard
-      title={t("Bihar vs Outer Bihar Complaints", "बिहार बनाम बाहरी बिहार शिकायतें")}
+      title={t(
+        "Geographical Distribution of Grievances",
+        "शिकायतों का भौगोलिक वितरण",
+      )}
       subtitle={t(
-        "Grievances origin within vs outside Bihar",
-        "बिहार के भीतर बनाम बाहर से प्राप्त शिकायतें",
+        "Grievances originating within Bihar vs outside the state (Inter-State)",
+        "बिहार राज्य के भीतर एवं राज्य के बाहर से प्राप्त शिकायतों का विवरण",
       )}
     >
       <BarChartCard
@@ -33,7 +60,7 @@ export default function LocationWiseComplaintsChart({ data }) {
         bars={[
           {
             key: "complaints",
-            label: t("No. of Complaints", "शिकायतों की संख्या"),
+            label: t("No. of Grievances", "शिकायतों की संख्या"),
             color: "#6366f1",
           },
         ]}
@@ -43,3 +70,4 @@ export default function LocationWiseComplaintsChart({ data }) {
     </ChartCard>
   );
 }
+

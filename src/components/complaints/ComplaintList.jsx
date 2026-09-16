@@ -444,60 +444,31 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
   const excludedStatus = ["RESOLVED", "CLOSED"];
 
   const loc = c.location || {};
-  const isUrban = Boolean(
-    loc.isUrban ?? false,
-  );
+  const isUrban = Boolean(loc.isUrban ?? false);
 
-  const districtName =
-    getEntityLabel(
-      loc.district ,
-      t,
-    ) || "";
+  const districtName = getEntityLabel(loc.district, t) || "";
 
-  const urbanPanchayatName =
-    getEntityLabel(
-      loc.urbanPanchayat ,
-      t,
-    ) || "";
+  const urbanPanchayatName = getEntityLabel(loc.urbanPanchayat, t) || "";
 
-  const wardName =
-    getEntityLabel(
-      loc.ward ,
-      t,
-    ) || "";
+  const wardName = getEntityLabel(loc.ward, t) || "";
 
-  const villageName =
-    getEntityLabel(
-      loc.village ,
-      t,
-    ) || "";
+  const villageName = getEntityLabel(loc.village, t) || "";
 
-  const panchayatName =
-    getEntityLabel(
-      loc.panchayat ,
-      t,
-    ) || "";
+  const panchayatName = getEntityLabel(loc.panchayat, t) || "";
 
-  const blockName =
-    getEntityLabel(
-      loc.block ,
-      t,
-    ) || "";
+  const blockName = getEntityLabel(loc.block, t) || "";
 
-  const subdivisionName =
-    getEntityLabel(loc.subdivision , t) || "";
+  const subdivisionName = getEntityLabel(loc.subdivision, t) || "";
 
-  const pincode =
-    loc.pincode ||
-    loc.pinCode ;
+  const pincode = loc.pincode || loc.pinCode;
 
   const locationParts = (
     isUrban
-      ? [wardName, urbanPanchayatName, districtName, pincode]
+      ? [ blockName, districtName, pincode]
       : [
-          villageName,
-          panchayatName,
-          blockName ,
+          // villageName,
+          // panchayatName,
+          blockName,
           districtName,
           pincode,
         ]
@@ -514,11 +485,7 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
           .filter(Boolean)
           .join(", ") || "N/A";
 
-  const serviceTitle =
-    getEntityLabel(
-      c.classification?.service ,
-      t,
-    ) || "N/A";
+  const serviceTitle = getEntityLabel(c.classification?.service, t) || "N/A";
 
   return (
     <button
@@ -558,9 +525,7 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
           </div>
         )}
       </div>
-      <div className="text-sm text-foreground truncate">
-        {serviceTitle}
-      </div>
+      <div className="text-sm text-foreground truncate">{serviceTitle}</div>
       <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate">
         <MapPin className="w-3 h-3 shrink-0" />{" "}
         <span className="truncate">{locationText}</span>

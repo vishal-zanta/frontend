@@ -111,6 +111,17 @@ export default function ComplaintLocationSection({
               </div>
             )}
 
+            {(permAddr.block || permAddr.subdivision) && (
+              <div>
+                <span className="text-muted-foreground block font-medium">
+                  {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+                </span>
+                <span className="font-semibold text-foreground">
+                  {getEntityLabel(permAddr.block || permAddr.subdivision, t)}
+                </span>
+              </div>
+            )}
+
             {permAddr.isUrban ? (
               <>
                 {permAddr.urbanPanchayat && (
@@ -136,16 +147,6 @@ export default function ComplaintLocationSection({
               </>
             ) : (
               <>
-                {(permAddr.block || permAddr.subdivision) && (
-                  <div>
-                    <span className="text-muted-foreground block font-medium">
-                      {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {getEntityLabel(permAddr.block || permAddr.subdivision, t)}
-                    </span>
-                  </div>
-                )}
                 {permAddr.panchayat && (
                   <div>
                     <span className="text-muted-foreground block font-medium">
@@ -166,17 +167,18 @@ export default function ComplaintLocationSection({
                     </span>
                   </div>
                 )}
-                {permAddr.thana && (
-                  <div>
-                    <span className="text-muted-foreground block font-medium">
-                      {t("Thana", "थाना")}
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {getEntityLabel(permAddr.thana, t)}
-                    </span>
-                  </div>
-                )}
               </>
+            )}
+
+            {permAddr.thana && (
+              <div>
+                <span className="text-muted-foreground block font-medium">
+                  {t("Thana", "थाना")}
+                </span>
+                <span className="font-semibold text-foreground">
+                  {getEntityLabel(permAddr.thana, t)}
+                </span>
+              </div>
             )}
 
             {permAddr.landmark && (
@@ -273,6 +275,20 @@ export default function ComplaintLocationSection({
               </div>
             )}
 
+            {(effectiveCorrAddr.block || effectiveCorrAddr.subdivision) && (
+              <div>
+                <span className="text-muted-foreground block font-medium">
+                  {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+                </span>
+                <span className="font-semibold text-foreground">
+                  {getEntityLabel(
+                    effectiveCorrAddr.block || effectiveCorrAddr.subdivision,
+                    t,
+                  )}
+                </span>
+              </div>
+            )}
+
             {effectiveCorrAddr.isUrban ? (
               <>
                 {effectiveCorrAddr.urbanPanchayat && (
@@ -298,19 +314,6 @@ export default function ComplaintLocationSection({
               </>
             ) : (
               <>
-                {(effectiveCorrAddr.block || effectiveCorrAddr.subdivision) && (
-                  <div>
-                    <span className="text-muted-foreground block font-medium">
-                      {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {getEntityLabel(
-                        effectiveCorrAddr.block || effectiveCorrAddr.subdivision,
-                        t,
-                      )}
-                    </span>
-                  </div>
-                )}
                 {effectiveCorrAddr.panchayat && (
                   <div>
                     <span className="text-muted-foreground block font-medium">
@@ -331,16 +334,6 @@ export default function ComplaintLocationSection({
                     </span>
                   </div>
                 )}
-                {effectiveCorrAddr.thana && (
-                  <div>
-                    <span className="text-muted-foreground block font-medium">
-                      {t("Thana", "थाना")}
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {getEntityLabel(effectiveCorrAddr.thana, t)}
-                    </span>
-                  </div>
-                )}
                 {effectiveCorrAddr.villageOrWard && (
                   <div>
                     <span className="text-muted-foreground block font-medium">
@@ -352,6 +345,17 @@ export default function ComplaintLocationSection({
                   </div>
                 )}
               </>
+            )}
+
+            {effectiveCorrAddr.thana && (
+              <div>
+                <span className="text-muted-foreground block font-medium">
+                  {t("Thana", "थाना")}
+                </span>
+                <span className="font-semibold text-foreground">
+                  {getEntityLabel(effectiveCorrAddr.thana, t)}
+                </span>
+              </div>
             )}
 
             {effectiveCorrAddr.landmark && !effectiveCorrAddr.addressLine2 && (
@@ -428,6 +432,17 @@ export default function ComplaintLocationSection({
               </div>
             )}
 
+            {(loc.block || loc.subdivision) && (
+              <div>
+                <span className="text-muted-foreground block font-medium">
+                  {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
+                </span>
+                <span className="font-semibold text-foreground">
+                  {getEntityLabel(loc.block || loc.subdivision, t)}
+                </span>
+              </div>
+            )}
+
             {loc.isUrban ? (
               <>
                 {loc.urbanPanchayat && (
@@ -453,16 +468,6 @@ export default function ComplaintLocationSection({
               </>
             ) : (
               <>
-                {(loc.block || loc.subdivision) && (
-                  <div>
-                    <span className="text-muted-foreground block font-medium">
-                      {t("Block / Subdivision", "प्रखंड / अनुमंडल")}
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {getEntityLabel(loc.block || loc.subdivision, t)}
-                    </span>
-                  </div>
-                )}
                 {loc.panchayat && (
                   <div>
                     <span className="text-muted-foreground block font-medium">
@@ -483,17 +488,18 @@ export default function ComplaintLocationSection({
                     </span>
                   </div>
                 )}
-                {loc.thana && (
-                  <div>
-                    <span className="text-muted-foreground block font-medium">
-                      {t("Thana", "थाना")}
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {getEntityLabel(loc.thana, t)}
-                    </span>
-                  </div>
-                )}
               </>
+            )}
+
+            {loc.thana && (
+              <div>
+                <span className="text-muted-foreground block font-medium">
+                  {t("Thana", "थाना")}
+                </span>
+                <span className="font-semibold text-foreground">
+                  {getEntityLabel(loc.thana, t)}
+                </span>
+              </div>
             )}
 
             {loc.landmark && (

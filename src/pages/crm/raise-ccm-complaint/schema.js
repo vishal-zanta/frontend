@@ -25,9 +25,8 @@ const locationOrPermanentAddress = z.object({
   // Rural
   block: z
     .string()
-    .max(50, "Block cannot exceed 50 characters")
-    .optional()
-    .or(z.literal("")),
+     .min(1, "Field is required")
+    .max(50, "Block cannot exceed 50 characters"),
   panchayat: z
     .string()
     .max(50, "Panchayat cannot exceed 50 characters")
@@ -156,7 +155,7 @@ const addressSchema = locationOrPermanentAddress.superRefine((data, ctx) => {
       }
     });
   } else {
-    const requiredKeys = ["block", "panchayat"];
+    const requiredKeys = [ "panchayat"];
     requiredKeys.forEach((key) => {
       if (!data[key] || data[key].trim() === "") {
         ctx.addIssue({

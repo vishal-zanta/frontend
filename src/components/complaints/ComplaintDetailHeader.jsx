@@ -70,10 +70,16 @@ export function SLATimer({
       setIsUrgent(!hasValidResolvedAt && diff < 4 * 60 * 60 * 1000);
 
       const totalMinutes = Math.floor(diff / (1000 * 60));
-      const hours = Math.floor(totalMinutes / 60);
+      const totalHours = Math.floor(totalMinutes / 60);
       const minutes = totalMinutes % 60;
 
-      setTimeLeft(`${hours}h ${minutes}m ${t("left", "शेष")}`);
+      if (totalHours >= 48) {
+        const days = Math.floor(totalHours / 24);
+        const remainingHours = totalHours % 24;
+        setTimeLeft(`${days}d ${remainingHours}h ${t("left", "शेष")}`);
+      } else {
+        setTimeLeft(`${totalHours}h ${minutes}m ${t("left", "शेष")}`);
+      }
     };
 
     calculate();

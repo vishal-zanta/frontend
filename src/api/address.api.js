@@ -36,8 +36,10 @@ export const getWards = async (ulbId, params = {}) => {
 };
 export const getWardsByUlb = getWards;
 
-// Keeping getThanas for backward compatibility
-export const getThanas = async (blockId, params = {}) => {
-  return instance.get(`/address/blocks/${blockId}/thanas`, { params });
+// 7) GET thanas: /address/districts/:districtId/thanas
+export const getThanas = async (districtId, params = {}) => {
+  return instance.get(`/address/districts/${districtId}/thanas`, { params });
 };
-export const getThanasByBlock = getThanas;
+export const getThanasByDistrict = getThanas;
+
+

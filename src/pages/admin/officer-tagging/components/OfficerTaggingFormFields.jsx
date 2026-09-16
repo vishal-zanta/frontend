@@ -118,9 +118,9 @@ export default function OfficerTaggingFormFields({
     Array.isArray(selectedUrbanPanchayats) &&
     selectedUrbanPanchayats.length > 0;
 
-  // 3) Fetch Blocks (when rural & districts selected)
+  // 3) Fetch Blocks (when districts selected)
   const { data: blocksData, isLoading: blocksLoading } =
-    useGetBlocksByDistricts(selectedDistricts, hasRural && hasSelectedDistricts);
+    useGetBlocksByDistricts(selectedDistricts, hasSelectedDistricts);
 
   const blockOptions = useMemo(() => {
     return mapAddressOptions(blocksData || []);
@@ -172,9 +172,6 @@ export default function OfficerTaggingFormFields({
   // When areaType changes (e.g., removing rural or urban), reset respective fields to []
   useEffect(() => {
     if (!hasRural) {
-      if (Array.isArray(selectedBlocks) && selectedBlocks.length > 0) {
-        setValue("blocks", []);
-      }
       if (Array.isArray(selectedPanchayats) && selectedPanchayats.length > 0) {
         setValue("panchayats", []);
       }
@@ -191,7 +188,7 @@ export default function OfficerTaggingFormFields({
       }
     }
     prevAreaTypeRef.current = selectedAreaType;
-  }, [hasRural, hasUrban, selectedBlocks, selectedPanchayats, selectedUrbanPanchayats, selectedWards, setValue]);
+  }, [hasRural, hasUrban, selectedPanchayats, selectedUrbanPanchayats, selectedWards, setValue]);
 
   // When districts change, prune blocks and urbanPanchayats
   useEffect(() => {
@@ -343,6 +340,22 @@ export default function OfficerTaggingFormFields({
 
         <div>
           <RhfSelect
+            name="blocks"
+            label={t("Blocks", "प्रखंड")}
+            isMultiple={true}
+            options={blockOptions}
+            placeholder={
+              !hasSelectedDistricts
+                ? t("Select district first", "पहले ज़िला चुनें")
+                : t("Select blocks", "प्रखंड चुनें")
+            }
+            isLoading={blocksLoading}
+            disabled={!hasSelectedDistricts}
+          />
+        </div>
+
+        <div>
+          <RhfSelect
             name="areaType"
             label={t("Area Type", "क्षेत्र का प्रकार")}
             required
@@ -354,39 +367,21 @@ export default function OfficerTaggingFormFields({
 
         {/* Rural Fields */}
         {hasRural && (
-          <>
-            <div>
-              <RhfSelect
-                name="blocks"
-                label={t("Blocks", "प्रखंड")}
-                isMultiple={true}
-                options={blockOptions}
-                placeholder={
-                  !hasSelectedDistricts
-                    ? t("Select district first", "पहले ज़िला चुनें")
-                    : t("Select blocks", "प्रखंड चुनें")
-                }
-                isLoading={blocksLoading}
-                disabled={!hasSelectedDistricts}
-              />
-            </div>
-
-            <div>
-              <RhfSelect
-                name="panchayats"
-                label={t("Panchayats", "पंचायत")}
-                isMultiple={true}
-                options={panchayatOptions}
-                placeholder={
-                  !hasSelectedBlocks
-                    ? t("Select block first", "पहले प्रखंड चुनें")
-                    : t("Select panchayats", "पंचायत चुनें")
-                }
-                isLoading={panchayatsLoading}
-                disabled={!hasSelectedBlocks}
-              />
-            </div>
-          </>
+          <div>
+            <RhfSelect
+              name="panchayats"
+              label={t("Panchayats", "पंचायत")}
+              isMultiple={true}
+              options={panchayatOptions}
+              placeholder={
+                !hasSelectedBlocks
+                  ? t("Select block first", "पहले प्रखंड चुनें")
+                  : t("Select panchayats", "पंचायत चुनें")
+              }
+              isLoading={panchayatsLoading}
+              disabled={!hasSelectedBlocks}
+            />
+          </div>
         )}
 
         {/* Urban Fields */}

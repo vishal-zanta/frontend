@@ -76,7 +76,7 @@ export default function SuccessScreen({
           {grievanceId && (
             <div className="bg-muted/50 dark:bg-muted/30 border border-border rounded-xl p-4 mt-6 text-left">
               <div className="text-xs text-muted-foreground font-medium mb-1">
-                {t("Tracking ID", "ट्रैकिंग आईडी")}
+                {t("Tracking number", "ट्रैकिंग आईडी")}
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="font-mono text-base sm:text-lg font-bold text-primary tracking-wide">

@@ -25,7 +25,7 @@ export default function Form({
         gridClassName="space-y-4"
       />
 
-      <div className="py-4 sticky bottom-0 bg-card flex justify-between">
+      <div className="py-4 sticky bottom-0 z-10 bg-card flex justify-between">
         <div className="flex items-center">
           {Object.keys(errors).length > 0 && (
             <span className="text-destructive text-xs font-semibold animate-pulse">
