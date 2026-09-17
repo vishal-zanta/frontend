@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Phone, Users, Clock, Activity, BarChart3, Server } from "lucide-react";
+import React, { useState } from "react";
 import {
   IVR_STATS,
   HOURLY_DISPOSITION,
@@ -9,70 +7,17 @@ import {
   MONTHLY_VOLUME,
 } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
-import { useAuth } from "@/context/AuthContext";
-import { CCE_ROLES, MAX_LIMIT, PERMISSIONS } from "@/utils/constants";
-
-import CallVolumeTab from "./call-volume";
-import CcePerformanceTab from "./cce-performance";
-import SlaPerformanceTab from "./sla-performance";
-import GrievanceTab from "./grievance";
-import CitizenInteractionTab from "./citizen-interaction";
-import SystemTab from "./system";
+import { CCE_ROLES, MAX_LIMIT } from "@/utils/constants";
+import CcePerformanceTab from "@/pages/admin/operational-dashboard/cce-performance";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 import TimeRangeFilter from "@/components/TimeRangeFilter";
-
 import { SectionTitle } from "@/components/ChartCard";
-import { useGetUsers } from "../user-management/hooks";
+import { useGetUsers } from "@/pages/admin/user-management/hooks";
 
-const tabs = [
-  {
-    id: "call-volume",
-    labelEn: "Call Volume & Traffic",
-    labelHi: "कॉल मात्रा और ट्रैफ़िक",
-    icon: Phone,
-    permissions: PERMISSIONS.OPERATIONAL_CALL_VOLUME,
-  },
-  {
-    id: "cce-performance",
-    labelEn: "CCE Performance",
-    labelHi: "CCE प्रदर्शन",
-    icon: Users,
-    permissions: PERMISSIONS.OPERATIONAL_CCE_PERFORMANCE,
-  },
-  {
-    id: "sla-performance",
-    labelEn: "Service Level Performance",
-    labelHi: "सेवा स्तर का प्रदर्शन",
-    icon: Clock,
-    permissions: PERMISSIONS.OPERATIONAL_SLA_PERFORMANCE,
-  },
-  {
-    id: "grievance",
-    labelEn: "Grievance & Ticket Management",
-    labelHi: "शिकायत और टिकटिंग प्रबंधन",
-    icon: Activity,
-    permissions: PERMISSIONS.OPERATIONAL_GRIEVANCE,
-  },
-  {
-    id: "citizen-interaction",
-    labelEn: "Citizen Interaction Analytics",
-    labelHi: "नागरिक सहभागिता विश्लेषण",
-    icon: BarChart3,
-    permissions: PERMISSIONS.OPERATIONAL_CITIZEN_INTERACTION,
-  },
-  {
-    id: "system",
-    labelEn: "System & Infrastructure",
-    labelHi: "सिस्टम और अवसंरचना",
-    icon: Server,
-    permissions: PERMISSIONS.OPERATIONAL_SYSTEM,
-  },
-];
-
-export default function OperationalDashboard() {
+export default function CCEOperationalDashboard() {
   const { t } = useLanguage();
-  const { hasPermission, rolesMap } = useAuth();
-  const [searchParams] = useSearchParams();
+  const { rolesMap } = useAuth();
   const [period, setPeriod] = useState("daily");
   const [dateRange, setDateRange] = useState({});
   const [filters, setFilters] = useState({
@@ -85,6 +30,7 @@ export default function OperationalDashboard() {
     limit: MAX_LIMIT,
     roles: cceRoleIds.join(","),
   };
+
   const { data: userDataApi } = useGetUsers(
     [JSON.stringify(params)],
     params,
@@ -94,17 +40,6 @@ export default function OperationalDashboard() {
     label: v.name,
     value: v._id,
   }));
-  // console.log({usersData})
-  const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
-
-  const tab =
-    (filteredTabs.map((t) => t.id).includes(searchParams.get("tab"))
-      ? searchParams.get("tab")
-      : undefined) ??
-    filteredTabs?.[0]?.id ??
-    "call-volume";
-
-  const activeTab = filteredTabs.find((t) => t.id === tab);
 
   const periodData = {
     daily: {
@@ -173,6 +108,7 @@ export default function OperationalDashboard() {
       grievanceXKey: "month",
     },
   };
+
   const pd = periodData[period] || {
     ...periodData.daily,
     label:
@@ -182,19 +118,12 @@ export default function OperationalDashboard() {
     sub: t("custom range", "कस्टम अवधि"),
   };
 
-  useEffect(() => {
-    setFilters({
-      users: "",
-    });
-  }, [activeTab?.id]);
-
   return (
-    <PortalLayout role="superadmin">
+    <PortalLayout role="cce">
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
-          title={`${t("Operational Dashboard", "परिचालन डैशबोर्ड")} -
-              ${t(activeTab?.labelEn || "", activeTab?.labelHi || "")}`}
-          subtitle={""}
+          title={`${t("CCE Operational Dashboard", "सीसीई परिचालन डैशबोर्ड")} - ${t("CCE Performance", "सीसीई प्रदर्शन")}`}
+          subtitle=""
         >
           <TimeRangeFilter
             period={period}
@@ -202,28 +131,19 @@ export default function OperationalDashboard() {
             dateRange={dateRange}
             setDateRange={setDateRange}
             boxClassName={"flex-wrap sm:flex-nowrap"}
-            filterOptions={
-              tab === "cce-performance"
-                ? [
-                    {
-                      filterKey: "user",
-                      label: t("By Users", "पदनाम के अनुसार"),
-                      options: usersData,
-                    },
-                  ]
-                : []
-            }
+            filterOptions={[
+              {
+                filterKey: "user",
+                label: t("By Users", "उपयोगकर्ता के अनुसार"),
+                options: usersData,
+              },
+            ]}
             filters={filters}
             setFilters={setFilters}
           />
         </SectionTitle>
 
-        {tab === "call-volume" && <CallVolumeTab pd={pd} />}
-        {tab === "cce-performance" && <CcePerformanceTab pd={pd} />}
-        {tab === "sla-performance" && <SlaPerformanceTab />}
-        {tab === "grievance" && <GrievanceTab pd={pd} />}
-        {tab === "citizen-interaction" && <CitizenInteractionTab />}
-        {tab === "system" && <SystemTab />}
+        <CcePerformanceTab pd={pd} />
       </div>
     </PortalLayout>
   );

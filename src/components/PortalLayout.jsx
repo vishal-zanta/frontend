@@ -3,7 +3,6 @@ import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import Chatbot from "@/components/Chatbot";
 import ChatWidget from "@/components/chats";
-import { usePortalProfile } from "@/hooks/usePortalProfile";
 import clsx from "clsx";
 import { SocketProvider } from "@/context/SocketContext";
 import { useAuth } from "@/context/AuthContext";
@@ -36,15 +35,12 @@ export default function PortalLayout({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const portal = role === "crm" ? "crm" : role === "officer" ? "officer" : null;
-  const [profile, setProfile] = usePortalProfile(portal);
   const { hasPermission } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar
         role={role}
-        profile={profile}
         open={sidebarOpen}
         onClose={() => {
           if (typeof window !== "undefined" && window.innerWidth < 1024)
@@ -53,7 +49,6 @@ export default function PortalLayout({
       />
       <div className="flex-1 flex flex-col min-w-0">
         <TopBar
-       
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           sidebarOpen={sidebarOpen}
         />
@@ -72,3 +67,5 @@ export default function PortalLayout({
     </div>
   );
 }
+
+

@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Navigation } from "lucide-react";
-import { COMPLAINTS, OFFICERS, DISTRICT_WISE, SERVICES } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import { OfficerId } from "@/components/ComplaintDetailDialog";
-import { usePortalProfile } from "@/hooks/usePortalProfile";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import QuickActions from "@/components/officer/QuickActions";
 import AssignedComplaintsTable from "./components/AssignedComplaintsTable";
 import { useGetFieldVisits } from "@/hooks/query/useGetFieldVisits";
 import FieldVisitTable from "../field-visits/components/FieldVisitTable";
@@ -18,36 +15,29 @@ import WelcomeComponent from "./components/WelcomeComponent";
 import StatsCards from "./components/StatsCards";
 import { useGetDashboardData } from "./query";
 import { useLanguage } from "@/context/LanguageContext";
-
-const officerProfiles = {
-  l1: { officer: OFFICERS[0], label: "L1 Field Officer" },
-  l2: { officer: OFFICERS[3], label: "L2 Supervisory Officer" },
-  zone: { officer: OFFICERS[6], label: "Zone Administrator" },
-  division: { officer: OFFICERS[6], label: "Divisional Administrator" },
-  suda: { officer: OFFICERS[8], label: "SUDA Administrator" },
-};
+import { useAuth } from "@/context/AuthContext";
+import { getEntityLabel } from "@/utils/helpers";
 
 export default function OfficerDashboard() {
   const { t } = useLanguage();
-  const [profileId] = usePortalProfile("officer");
-  const profile = officerProfiles[profileId] || officerProfiles.l1;
-  const officer = profile.officer;
-  const [search, setSearch] = useState("");
+  const { profile } = useAuth();
+  const assignedServices =
+    profile?.officerTagging?.services ||
+    profile?.services ||
+    [];
 
   const {
     data: analyticsData,
     isLoading: statsLoading,
     error: statsError,
-  } = useGetDashboardData({ role: profileId });
+  } = useGetDashboardData();
 
-  const myComplaints = COMPLAINTS.filter(
-    (c) => c.l1Officer === officer.id || c.l2Officer === officer.id,
-  );
   const {
     page: visitPage,
     limit: visitLimit,
     ...visitPageProps
   } = usePagination(1);
+
   const {
     data: visitsApiData,
     isLoading: visitsLoading,
@@ -56,105 +46,17 @@ export default function OfficerDashboard() {
     page: visitPage,
     limit: visitLimit,
   });
+
   const fieldVisits = visitsApiData?.data?.data?.docs || [];
   const totalVisitPages =
     visitsApiData?.data?.data?.pagination?.totalPages ?? 1;
-  const filtered = search
-    ? myComplaints.filter(
-        (c) =>
-          c.id.toLowerCase().includes(search.toLowerCase()) ||
-          c.serviceName.toLowerCase().includes(search.toLowerCase()),
-      )
-    : myComplaints;
-
-  if (
-    profileId === "suda" ||
-    profileId === "division" ||
-    profileId === "zone"
-  ) {
-    return (
-      <PortalLayout role="officer">
-        <div className="p-3 lg:p-6 space-y-4 lg:space-y-6">
-          <WelcomeComponent
-            officer={officer}
-            profileId={profileId}
-            profileLabel={profile.label}
-          />
-
-          <StatsCards
-            officer={officer}
-            analyticsData={analyticsData}
-            isLoading={statsLoading}
-            error={statsError}
-          />
-
-          <div className="bg-card rounded-xl border border-border overflow-hidden">
-            <div className="px-5 py-3 border-b border-border">
-              <h3 className="font-bold text-foreground">
-                {t("District-wise Complaint Status", "जिला-वार शिकायत स्थिति")}
-              </h3>
-            </div>
-            <div className="overflow-x-auto max-h-[400px] overflow-y-auto scrollbar-thin">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/50 sticky top-0">
-                  <tr className="text-left text-xs text-muted-foreground">
-                    <th className="px-4 py-2 font-medium">
-                      {t("District", "जिला")}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-right">
-                      {t("Total", "कुल")}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-right">
-                      {t("Resolved", "हल की गई")}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-right">
-                      {t("Pending", "लंबित")}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-right">
-                      {t("Escalated", "बढ़ाया गया")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {DISTRICT_WISE.map((d, i) => (
-                    <tr key={i} className="hover:bg-muted/30">
-                      <td className="px-4 py-2.5 font-medium">{d.district}</td>
-                      <td className="px-4 py-2.5 text-right font-semibold">
-                        {d.total.toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-4 py-2.5 text-right text-emerald-600">
-                        {d.resolved.toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-4 py-2.5 text-right text-amber-600">
-                        {d.pending}
-                      </td>
-                      <td className="px-4 py-2.5 text-right text-red-600">
-                        {d.escalated}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <QuickActions officer={officer} />
-        </div>
-      </PortalLayout>
-    );
-  }
 
   return (
     <PortalLayout role="officer">
       <div className="p-3 lg:p-6 space-y-4 lg:space-y-6">
-        <WelcomeComponent
-          officer={officer}
-          profileId={profileId}
-          profileLabel={profile.label}
-        />
+        <WelcomeComponent analyticsData={analyticsData} />
 
         <StatsCards
-          officer={officer}
           analyticsData={analyticsData}
           isLoading={statsLoading}
           error={statsError}
@@ -167,38 +69,44 @@ export default function OfficerDashboard() {
               {t("Department & Services Assigned", "सौंपे गए विभाग और सेवाएं")}
             </h3>
             <span className="text-[10px] lg:text-xs text-muted-foreground shrink-0">
-              {t("Officer ID:", "अधिकारी आईडी:")} <OfficerId id={officer.id} />
+              {t("Officer ID:", "अधिकारी आईडी:")}{" "}
+              <OfficerId id={profile?.userCode || "-"} />
             </span>
           </div>
           <div className="flex flex-wrap gap-1.5 lg:gap-2">
-            {officer.services.length > 0 ? (
-              officer.services.map((sId) => {
-                const svc = SERVICES.find((s) => s.id === sId);
+            {assignedServices.length > 0 ? (
+              assignedServices.map((s, idx) => {
+                const serviceName =
+                  getEntityLabel(s, t) ||
+                  s?.title ||
+                  s?.name ||
+                  (typeof s === "string" ? s : "-");
+                const deptName =
+                  getEntityLabel(s?.department, t) ||
+                  s?.department?.title ||
+                  s?.department?.name ||
+                  "";
                 return (
                   <Badge
-                    key={sId}
+                    key={s._id || s.id || idx}
                     variant="outline"
                     className="text-[10px] lg:text-xs bg-primary/10 text-primary"
                   >
-                    {svc?.name || sId}
-                    {svc ? ` - ${svc.dept}` : ""}
+                    {serviceName}
+                    {deptName ? ` - ${deptName}` : ""}
                   </Badge>
                 );
               })
             ) : (
               <span className="text-xs lg:text-sm text-muted-foreground">
-                {t("All services (admin level)", "सभी सेवाएं (प्रशासन स्तर)")}
+                {t("No services assigned", "कोई सेवा सौंपी नहीं गई")}
               </span>
             )}
           </div>
         </div>
 
         {/* Assigned Complaints Table */}
-        <AssignedComplaintsTable
-          search={search}
-          setSearch={setSearch}
-          filtered={filtered}
-        />
+        <AssignedComplaintsTable />
 
         {/* Field Visits Table */}
         <div className="bg-card rounded-xl border border-border">
@@ -219,7 +127,7 @@ export default function OfficerDashboard() {
           </div>
           <LoaderErrWrapper isLoading={visitsLoading} error={visitsError}>
             <FieldVisitTable filtered={fieldVisits} isHideAction={true} />
-            <div className="">
+            <div>
               <Pagination
                 page={visitPage}
                 limit={visitLimit}

@@ -12,8 +12,8 @@ export default function ModeWiseComplaintsChart({  mainData=[] }) {
     >
       <BarChartCard
         data={(mainData || [])?.map((d) => ({
-          name: d?.name,
-          value: d?.count,
+          name: d?.name || d?.sourceName || d?.source || "Unknown",
+          value: Number(d?.count ?? d?.value ?? 0),
           color: "#1d4ed8",
         }))}
         xKey="name"

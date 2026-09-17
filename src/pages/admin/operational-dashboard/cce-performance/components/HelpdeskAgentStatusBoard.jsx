@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import ExportButton from "@/components/ExportButton";
 import { OfficerId } from "@/components/ComplaintDetailDialog";
 import EditDialog from "@/components/EditDialog";
+import SearchDebounced from "@/components/debounced/SearchDebounced";
 import AgentCallingMetricsDialogBody from "./AgentCallingMetricsDialogBody";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -112,6 +113,18 @@ export const HELPDESK_AGENTS = [
 export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
   const { t } = useLanguage();
   const [selectedAgent, setSelectedAgent] = useState(null);
+  const [search, setSearch] = useState("");
+
+  const filteredAgents = agents.filter((a) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      a.name?.toLowerCase().includes(q) ||
+      a.id?.toLowerCase().includes(q) ||
+      a.status?.toLowerCase().includes(q) ||
+      a.shift?.toLowerCase().includes(q)
+    );
+  });
 
   const getStatusText = (status) => {
     switch (status) {
@@ -146,23 +159,33 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
   return (
     <>
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <div className="p-4 border-b border-border flex items-center justify-between">
-          <h3 className="font-bold text-foreground">
+        <div className="p-4 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 className="font-bold text-foreground shrink-0">
             {t("Live Agent Availability", "लाइव एजेंट उपलब्धता")}
           </h3>
-          <ExportButton
-            data={agents}
-            columns={[
-              { key: "name", label: t("Agent", "एजेंट") },
-              { key: "status", label: t("Status", "स्थिति") },
-              { key: "calls", label: t("Calls", "कॉल") },
-              { key: "resolved", label: t("Resolved", "निराकृत") },
-              { key: "avgTalk", label: t("Avg Talk", "औसत बात") },
-              { key: "csat", label: t("CSAT", "CSAT") },
-              { key: "shift", label: t("Shift", "शिफ्ट") },
-            ]}
-            filename="helpdesk_agent_status"
-          />
+          <div className="flex items-center gap-2">
+            <SearchDebounced
+              handleDebouncedChange={setSearch}
+              initialValue={search}
+              placeholder={t("Search agent...", "एजेंट खोजें...")}
+              className="w-full sm:w-60"
+              inputClassName="h-9 text-xs"
+              delay={300}
+            />
+            <ExportButton
+              data={filteredAgents}
+              columns={[
+                { key: "name", label: t("Agent", "एजेंट") },
+                { key: "status", label: t("Status", "स्थिति") },
+                { key: "calls", label: t("Calls", "कॉल") },
+                { key: "resolved", label: t("Resolved", "निराकृत") },
+                { key: "avgTalk", label: t("Avg Talk", "औसत बात") },
+                { key: "csat", label: t("CSAT", "CSAT") },
+                { key: "shift", label: t("Shift", "शिफ्ट") },
+              ]}
+              filename="helpdesk_agent_status"
+            />
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -179,7 +202,7 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {agents.map((a, i) => (
+              {filteredAgents.map((a, i) => (
                 <tr key={i} className="hover:bg-muted/30">
                   <td
                     className="px-4 py-2.5 font-medium text-primary hover:underline cursor-pointer"
@@ -219,6 +242,16 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
                   </td>
                 </tr>
               ))}
+              {filteredAgents.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={8}
+                    className="text-center py-6 text-sm text-muted-foreground"
+                  >
+                    {t("No agents found.", "कोई एजेंट नहीं मिला।")}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -236,3 +269,4 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
     </>
   );
 }
+

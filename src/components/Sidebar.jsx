@@ -26,6 +26,7 @@ import { PORTAL_META } from "@/lib/biharData";
 import {
   ADMIN_ROLES,
   CCE_ONLY_ROLES,
+  CCS_ONLY_ROLES,
   CCE_ROLES,
   PERMISSIONS,
 } from "@/utils/constants";
@@ -117,6 +118,13 @@ export const sidebarSections = [
             permissions: PERMISSIONS.OPERATIONAL_SYSTEM,
           },
         ],
+      },
+      {
+        label: "CCE Operational Dashboard",
+        labelHindi: "सीसीई परिचालन डैशबोर्ड",
+        path: "/crm/operational",
+        icon: Activity,
+        rolePermissions: { include: [...CCS_ONLY_ROLES] },
       },
       {
         label: "AI Analytical Reports",
@@ -345,7 +353,9 @@ function NavItem({ item, onNavigate, overrideLabel }) {
   const location = useLocation();
 
   // Handle language translation for overrides and regular labels
-  let translatedLabel = item?.updateLabel ? item.updateLabel({isCCE :profiledata?.isCCE }, t)  : t(item.label, item.labelHindi);
+  let translatedLabel = item?.updateLabel
+    ? item.updateLabel({ isCCE: profiledata?.isCCE }, t)
+    : t(item.label, item.labelHindi);
   if (overrideLabel) {
     if (overrideLabel === "Shift Management") {
       translatedLabel = t("Shift Management", "शिफ्ट प्रबंधन");

@@ -25,7 +25,7 @@ const SelectDebounced = ({
   const timerRef = useRef(null);
 
   useEffect(() => {
-   !!initialValue &&  setValue(initialValue);
+    setValue(initialValue);
   }, [options, initialValue]);
 
   useEffect(() => {

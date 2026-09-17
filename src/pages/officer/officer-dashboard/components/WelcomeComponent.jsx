@@ -3,9 +3,14 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { getEntityLabel } from "@/utils/helpers";
 
-export default function WelcomeComponent({ officer, profileId, profileLabel }) {
+export default function WelcomeComponent({ analyticsData, profileId }) {
   const { t } = useLanguage();
   const { profile } = useAuth();
+
+  const apiData = analyticsData?.data?.data || {};
+  const current = apiData.currentPeriod || {};
+  const activeComplaints =
+    current.active ?? current.pending ?? current.totalAssigned ?? 0;
 
   const isStateLevel =
     profileId === "suda" || profileId === "division" || profileId === "zone";
@@ -35,7 +40,7 @@ export default function WelcomeComponent({ officer, profileId, profileLabel }) {
         </div>
         <div className="text-left sm:text-right shrink-0 bg-white/10 rounded-lg px-3 py-1.5 xs:px-4 xs:py-2 w-full sm:w-auto">
           <div className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold">
-            {(0).toLocaleString("en-IN")}
+            {activeComplaints.toLocaleString("en-IN")}
           </div>
           <div className="text-[10px] xs:text-[11px] sm:text-xs text-white/80 whitespace-nowrap">{t("Active Complaints", "सक्रिय शिकायतें")}</div>
         </div>

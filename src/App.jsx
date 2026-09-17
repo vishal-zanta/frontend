@@ -48,6 +48,8 @@ import AdminSettings from "./pages/admin/settings";
 import OfficerSettings from "./pages/officer/OfficerSettings";
 import CRMSettings from "./pages/crm/CRMSettings";
 import FieldVisits from "./pages/officer/field-visits";
+import CCEOperationalDashboard from "./pages/crm/CCEOperationalDashboard";
+import Profile from "./pages/profile";
 import Login from "./pages/Login";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import ErrorPage from "./components/ErrorPage";
@@ -58,6 +60,7 @@ import NotAuthorized from "./pages/NotAuthorized";
 import {
   ADMIN_ROLES,
   CCE_ONLY_ROLES,
+  CCS_ONLY_ROLES,
   CCE_ROLES,
   PERMISSIONS,
 } from "./utils/constants";
@@ -65,6 +68,7 @@ import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import CallStats from "./pages/crm/call-stats";
 import LanguageContextProvider from "./context/LanguageContext";
 import ThemeContextProvider from "./context/ThemeContext";
+import OfficerWrapper from "./pages/officer/OfficerWrapper";
 
 const RootLayout = () => {
   return (
@@ -110,7 +114,12 @@ const router = createBrowserRouter([
         ),
         children: [
           {
+            path: "profile",
+            element: <Profile />,
+          },
+          {
             path: "officer",
+            element : <OfficerWrapper/>,
             children: [
               {
                 path: "",
@@ -150,9 +159,19 @@ const router = createBrowserRouter([
                 element: (
                   <PermissionChecker
                     permission={PERMISSIONS.CCE_DASHBOARD}
-                    rolePermission={{ exclude: [...ADMIN_ROLES] }}
+                    rolePermission={{ include: [...CCE_ROLES] }}
                   >
                     <CRMDashboard />
+                  </PermissionChecker>
+                ),
+              },
+              {
+                path: "operational",
+                element: (
+                  <PermissionChecker
+                    rolePermission={{ include: [...CCS_ONLY_ROLES] }}
+                  >
+                    <CCEOperationalDashboard />
                   </PermissionChecker>
                 ),
               },

@@ -12,6 +12,8 @@ export default function FieldVisitTable({
   onEdit,
   onView,
   isHideAction = false,
+  onVisitClick,
+  onComplaintClick,
 }) {
   const { t, lang } = useLanguage();
 
@@ -56,14 +58,32 @@ export default function FieldVisitTable({
             return (
               <tr key={fv._id || i} className="hover:bg-muted/30">
                 <td className="px-4 py-3 text-nowrap">
-                  <FieldVisitId id={fv.visitId || fv._id || "N/A"} visit={fv} />
+                  {onVisitClick ? (
+                    <button
+                      onClick={() => onVisitClick(fv)}
+                      className="font-mono text-primary hover:underline cursor-pointer"
+                    >
+                      {fv.visitId || fv._id || "N/A"}
+                    </button>
+                  ) : (
+                    <FieldVisitId id={fv.visitId || fv._id || "N/A"} visit={fv} />
+                  )}
                 </td>
                 <td className="px-4 py-3 text-nowrap">
                   {fv.grievance?._id ? (
-                    <ComplaintId
-                      id={fv.grievance._id}
-                      complaint={fv.grievance}
-                    />
+                    onComplaintClick ? (
+                      <button
+                        onClick={() => onComplaintClick(fv.grievance)}
+                        className="font-mono text-primary hover:underline cursor-pointer"
+                      >
+                        {fv.grievance?.grievanceId || fv.grievance?._id}
+                      </button>
+                    ) : (
+                      <ComplaintId
+                        id={fv.grievance._id}
+                        complaint={fv.grievance}
+                      />
+                    )
                   ) : (
                     "N/A"
                   )}
@@ -113,15 +133,16 @@ export default function FieldVisitTable({
                     const divisionName = getEntityLabel(loc.division, t) || "";
                     const pincode = loc.pincode || loc.pinCode;
 
-                    const parts = (isUrban
-                      ? [wardName, urbanPanchayatName, districtName, pincode]
-                      : [
-                          villageName,
-                          panchayatName,
-                          blockName,
-                          districtName,
-                          pincode,
-                        ]
+                    const parts = (
+                      isUrban
+                        ? [wardName, urbanPanchayatName, districtName, pincode]
+                        : [
+                            villageName,
+                            panchayatName,
+                            blockName,
+                            districtName,
+                            pincode,
+                          ]
                     ).filter(Boolean);
 
                     const locationText =
@@ -148,8 +169,10 @@ export default function FieldVisitTable({
                 </td>
                 <td className="px-4 py-3 text-nowrap font-mono text-[10px] text-muted-foreground  text-center">
                   {(() => {
-                    const coords = fv.grievance?.geotaggedImages.find(g=> g?.coordinates)?.coordinates
-                   
+                    const coords = fv.grievance?.geotaggedImages.find(
+                      (g) => g?.coordinates,
+                    )?.coordinates;
+
                     return coords?.latitude && coords?.longitude
                       ? `${String(coords.latitude).slice(0, 7)} | ${String(coords.longitude).slice(0, 7)}`
                       : "N/A";

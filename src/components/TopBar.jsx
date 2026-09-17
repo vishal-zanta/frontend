@@ -335,9 +335,12 @@ export default function TopBar({
           </button>
           {showProfile && (
             <div className="absolute right-0 top-12 w-56 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50">
-              <div className="px-4 py-3 border-b border-border">
+              <Link
+                to="/profile"
+                onClick={() => setShowProfile(false)}
+                className="block px-4 py-3 border-b border-border hover:bg-muted/60 transition-colors"
+              >
                 <div className="font-semibold text-sm">
-                  {" "}
                   {profileData?.name}
                 </div>
                 <div className="text-xs text-muted-foreground">
@@ -348,7 +351,7 @@ export default function TopBar({
                         profileData?.role),
                   )}
                 </div>
-              </div>
+              </Link>
               {settingsPath && (
                 <Link
                   to={settingsPath}

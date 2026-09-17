@@ -125,6 +125,7 @@ export const PermanentAddress = ({ t }) => {
                 options={urbanPanchayatOptions}
                 isLoading={isUrbanPanchayatsLoading}
                 disabled={!selectedDistrictId || isUrbanPanchayatsLoading}
+                required
               />
 
               <RhfSelect
@@ -134,6 +135,7 @@ export const PermanentAddress = ({ t }) => {
                 options={wardOptions}
                 isLoading={isWardsLoading}
                 disabled={!selectedUrbanPanchayatId || isWardsLoading}
+                required
               />
             </>
           ) : (
@@ -155,6 +157,7 @@ export const PermanentAddress = ({ t }) => {
                 options={villageOptions}
                 isLoading={isVillagesLoading}
                 disabled={!selectedPanchayatId || isVillagesLoading}
+                required
               />
             </>
           )}
@@ -166,6 +169,7 @@ export const PermanentAddress = ({ t }) => {
             options={thanaOptions}
             isLoading={isThanasLoading}
             disabled={!selectedDistrictId || isThanasLoading}
+            required
           />
 
           <RhfInput
@@ -433,6 +437,7 @@ export const CorrespondenceAddress = ({
                     disabled={
                       !selectedDistrict || isUrbanPanchayatsLoading
                     }
+                    required
                   />
 
                   <RhfSelect
@@ -444,6 +449,7 @@ export const CorrespondenceAddress = ({
                     disabled={
                       !selectedUrbanPanchayat || isWardsLoading
                     }
+                    required
                   />
                 </>
               ) : (
@@ -471,6 +477,7 @@ export const CorrespondenceAddress = ({
                     options={villageOptions}
                     isLoading={isVillagesLoading}
                     disabled={!selectedPanchayat || isVillagesLoading}
+                    required
                   />
                 </>
               )}
@@ -482,6 +489,7 @@ export const CorrespondenceAddress = ({
                 options={thanaOptions}
                 isLoading={isThanasLoading}
                 disabled={!selectedDistrict || isThanasLoading}
+                required
               />
 
               <RhfInput

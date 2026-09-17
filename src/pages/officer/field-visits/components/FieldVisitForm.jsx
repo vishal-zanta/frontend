@@ -36,7 +36,7 @@ export default function FieldVisitForm({ onCancel, isLoading, fieldVisit }) {
       )}
       {status === "COMPLETED" && (
         <RhfTextarea
-          name="remarks"
+          name="remark"
           label="Remarks"
           required
           placeholder="Enter completion remarks..."

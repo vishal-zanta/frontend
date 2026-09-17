@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import ExportButton from "@/components/ExportButton";
 import EditDialog from "@/components/EditDialog";
+import SearchDebounced from "@/components/debounced/SearchDebounced";
 import AgentCallingMetricsDialogBody from "./AgentCallingMetricsDialogBody";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -18,19 +19,41 @@ const agentExportColumns = [
 export default function AgentPerformanceDetailTable({ data = [] }) {
   const { t } = useLanguage();
   const [selectedAgent, setSelectedAgent] = useState(null);
+  const [search, setSearch] = useState("");
+
+  const filteredData = data.filter((a) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    const agentName = a.agent || a.name || "";
+    const status = a.status || "";
+    return (
+      agentName.toLowerCase().includes(q) ||
+      status.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <>
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-          <h3 className="font-bold text-foreground">
+        <div className="px-5 py-3 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 className="font-bold text-foreground shrink-0">
             {t("Agent Performance Detail", "एजेंट प्रदर्शन विवरण")}
           </h3>
-          <ExportButton
-            data={data}
-            columns={agentExportColumns}
-            filename="agent_performance"
-          />
+          <div className="flex items-center gap-2">
+            <SearchDebounced
+              handleDebouncedChange={setSearch}
+              initialValue={search}
+              placeholder={t("Search agent...", "एजेंट खोजें...")}
+              className="w-full sm:w-60"
+              inputClassName="h-9 text-xs"
+              delay={300}
+            />
+            <ExportButton
+              data={filteredData}
+              columns={agentExportColumns}
+              filename="agent_performance"
+            />
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -47,7 +70,7 @@ export default function AgentPerformanceDetailTable({ data = [] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {data.map((a, i) => (
+              {filteredData.map((a, i) => (
                 <tr key={i} className="hover:bg-muted/30">
                   <td
                     className="px-4 py-2.5 font-medium text-primary hover:underline cursor-pointer"
@@ -81,6 +104,16 @@ export default function AgentPerformanceDetailTable({ data = [] }) {
                   </td>
                 </tr>
               ))}
+              {filteredData.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={8}
+                    className="text-center py-6 text-sm text-muted-foreground"
+                  >
+                    {t("No agent records found.", "कोई एजेंट रिकॉर्ड नहीं मिला।")}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -98,3 +131,4 @@ export default function AgentPerformanceDetailTable({ data = [] }) {
     </>
   );
 }
+

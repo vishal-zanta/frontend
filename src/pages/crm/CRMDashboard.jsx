@@ -22,7 +22,6 @@ import {
   CRM_AGENTS,
 } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
-import { usePortalProfile } from "@/hooks/usePortalProfile";
 import StatCard from "@/components/StatCard";
 import { ChartCard } from "@/components/ChartCard";
 import { BarChartCard, PieChartCard } from "@/components/Charts";
@@ -32,7 +31,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import ModeWiseComplaintsChart from "../admin/dashboard/components/charts/ModeWiseComplaintsChart";
-import { useGetDashboardData } from "../admin/dashboard/query";
+import { useGetCCEDashboardData } from "./query";
 
 const CCE_SCORECARD = {
   daily: {
@@ -83,289 +82,295 @@ const agentName = "Priya Sharma";
 
 export default function CRMDashboard() {
   const { t } = useLanguage();
-  const {profile, profiledata} = useAuth();
-  const [profileData] = usePortalProfile("crm");
-  const isSupervisor = profileData === "supervisor";
+  const { profile, profiledata } = useAuth();
+  const isSupervisor = profiledata?.isCCS || !profiledata?.isCCE;
   const [scorecardPeriod, setScorecardPeriod] = useState("daily");
-  const { data: dashboardApiData } = useGetDashboardData({
+  const { data: dashboardApiData } = useGetCCEDashboardData({
     period: scorecardPeriod,
   });
-  const modeData = dashboardApiData?.data?.data?.charts?.bySource;
 
-  if (isSupervisor) {
-    return (
-      <PortalLayout role="crm">
-        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-          <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
-              <div className="space-y-1">
-                <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
-                  {t("Supervisor Dashboard", "पर्यवेक्षक डैशबोर्ड")}
-                </h1>
-                <p className="text-xs xs:text-sm md:text-base text-white/80">
-                  {t(
-                    "Call centre performance overview • Shift: Full Day (08:00-20:00) • Supervisor: Sneha Gupta",
-                    "कॉल सेंटर प्रदर्शन अवलोकन • शिफ्ट: पूरा दिन (08:00-20:00) • पर्यवेक्षक: स्नेहा गुप्ता",
-                  )}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
-                <Link to="/admin/performance" className="flex-1 sm:flex-none">
-                  <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
-                    <BarChart3 className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                    {t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
-                  </Button>
-                </Link>
-                <Link to="/crm/shift" className="flex-1 sm:flex-none">
-                  <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
-                    <Users className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                    {t("Manage Agents", "एजेंटों का प्रबंधन करें")}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard
-              icon={Phone}
-              label={t("Calls Today", "आज की कॉल")}
-              value={IVR_STATS.totalCallsToday}
-              color="blue"
-              trend="up"
-              trendValue="+8% vs yesterday"
-            />
-            <StatCard
-              icon={CheckCircle2}
-              label={t("Calls Answered", "उत्तरित कॉल")}
-              value={IVR_STATS.callsAnswered}
-              color="green"
-              trend="up"
-              trendValue="+5% vs yesterday"
-            />
-            <StatCard
-              icon={Users}
-              label={t("Active Agents", "सक्रिय एजेंट")}
-              value={`${IVR_STATS.activeAgents}/${IVR_STATS.totalAgents}`}
-              color="purple"
-            />
-            <StatCard
-              icon={TrendingUp}
-              label={t("SLA Compliance", "एसएलए अनुपालन")}
-              value="95.1%"
-              color="green"
-              trend="up"
-              trendValue="+0.5% vs yesterday"
-              sublabel={t("Target: 95%", "लक्ष्य: 95%")}
-            />
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ChartCard
-              title={t("Hourly Call Disposition", "प्रति घंटा कॉल निपटान")}
-              subtitle={t(
-                "Calls received vs answered (today)",
-                "प्राप्त बनाम उत्तरित कॉल (आज)",
-              )}
-            >
-              <BarChartCard
-                data={HOURLY_DISPOSITION}
-                xKey="hour"
-                bars={[
-                  {
-                    key: "calls",
-                    label: t("Calls Received", "प्राप्त कॉल"),
-                    color: "#f59e0b",
-                  },
-                  {
-                    key: "answered",
-                    label: t("Calls Answered", "उत्तरित कॉल"),
-                    color: "#22c55e",
-                  },
-                ]}
-              />
-            </ChartCard>
-            <ChartCard
-              title={t("IVR Success Rate", "आईवीआर सफलता दर")}
-              subtitle={`${t("Overall", "कुल")}: ${IVR_STATS.successRate}%`}
-            >
-              <PieChartCard
-                data={[
-                  {
-                    name: t("Answered", "उत्तरित"),
-                    value: IVR_STATS.callsAnswered,
-                    color: "#22c55e",
-                  },
-                  {
-                    name: t("Missed", "छूटी हुई"),
-                    value: IVR_STATS.callsMissed,
-                    color: "#ef4444",
-                  },
-                ]}
-                height={280}
-              />
-            </ChartCard>
-          </div>
+  const modeData =
+    dashboardApiData?.data?.data?.sourceWiseComplaints ||
+    dashboardApiData?.data?.data?.charts?.bySource ||
+    dashboardApiData?.data?.sourceWiseComplaints ||
+    [];
 
-          <div className="bg-card rounded-xl border border-border overflow-hidden">
-            <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-              <h3 className="font-bold text-foreground">
-                {t("Agent Performance Overview", "एजेंट प्रदर्शन अवलोकन")}
-              </h3>
-              <Link
-                to="/admin/agents"
-                className="text-sm text-blue-600 hover:underline"
-              >
-                {t("Manage All Agents →", "सभी एजेंटों का प्रबंधन करें →")}
-              </Link>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/50">
-                  <tr className="text-left text-xs text-muted-foreground">
-                    <th className="px-4 py-2 font-medium">
-                      {t("Agent", "एजेंट")}
-                    </th>
-                    <th className="px-4 py-2 font-medium">
-                      {t("Role", "भूमिका")}
-                    </th>
-                    <th className="px-4 py-2 font-medium">
-                      {t("Shift", "शिफ्ट")}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-center">
-                      {t("Calls Today", "आज की कॉल")}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-center">
-                      {t("Resolved", "हल की गई")}
-                    </th>
-                    <th className="px-4 py-2 font-medium">
-                      {t("Avg Talk", "औसत बात")}
-                    </th>
-                    <th className="px-4 py-2 font-medium text-center">
-                      {t("CSAT", "सीएसएटी")}
-                    </th>
-                    <th className="px-4 py-2 font-medium">
-                      {t("Status", "स्थिति")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {CRM_AGENTS.map((a, i) => (
-                    <tr key={i} className="hover:bg-muted/30">
-                      <td className="px-4 py-2.5 font-medium">{a.name}</td>
-                      <td className="px-4 py-2.5">
-                        <Badge
-                          variant="outline"
-                          className={`text-xs ${a.role === "Supervisor" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"}`}
-                        >
-                          {a.role}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-2.5 text-xs text-muted-foreground">
-                        {a.shift}
-                      </td>
-                      <td className="px-4 py-2.5 text-center font-semibold">
-                        {a.callsToday}
-                      </td>
-                      <td className="px-4 py-2.5 text-center text-emerald-600 dark:text-emerald-400">
-                        {a.resolvedToday}
-                      </td>
-                      <td className="px-4 py-2.5 text-muted-foreground text-xs">
-                        {a.avgTalkTime}
-                      </td>
-                      <td className="px-4 py-2.5 text-center text-amber-600 dark:text-amber-400 font-medium">
-                        ★ {a.csat}/5
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <Badge
-                          variant="outline"
-                          className={`text-xs ${a.status === "Available" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : a.status === "On Call" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" : a.status === "Break" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" : "bg-muted/50 text-muted-foreground border-border"}`}
-                        >
-                          {a.status}
-                        </Badge>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+  // if (isSupervisor) {
+  //   return (
+  //     <PortalLayout role="crm">
+  //       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+  //         <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
+  //           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
+  //             <div className="space-y-1">
+  //               <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
+  //                 {t("Supervisor Dashboard", "पर्यवेक्षक डैशबोर्ड")}
+  //               </h1>
+  //               <p className="text-xs xs:text-sm md:text-base text-white/80">
+  //                 {t(
+  //                   "Call centre performance overview • Shift: Full Day (08:00-20:00) • Supervisor: Sneha Gupta",
+  //                   "कॉल सेंटर प्रदर्शन अवलोकन • शिफ्ट: पूरा दिन (08:00-20:00) • पर्यवेक्षक: स्नेहा गुप्ता",
+  //                 )}
+  //               </p>
+  //             </div>
+  //             <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
+  //               <Link to="/admin/performance" className="flex-1 sm:flex-none">
+  //                 <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+  //                   <BarChart3 className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
+  //                   {t("Performance Dashboard", "प्रदर्शन डैशबोर्ड")}
+  //                 </Button>
+  //               </Link>
+  //               <Link to="/crm/shift" className="flex-1 sm:flex-none">
+  //                 <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+  //                   <Users className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
+  //                   {t("Manage Agents", "एजेंटों का प्रबंधन करें")}
+  //                 </Button>
+  //               </Link>
+  //             </div>
+  //           </div>
+  //         </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-card rounded-xl border border-border">
-              <div className="px-5 py-3 border-b border-border">
-                <h3 className="font-bold text-foreground">
-                  {t("Agent Leaderboard", "एजेंट लीडरबोर्ड")}
-                </h3>
-              </div>
-              <div className="divide-y divide-border max-h-[350px] overflow-y-auto scrollbar-thin">
-                {AGENT_PERFORMANCE.map((a, i) => (
-                  <div
-                    key={i}
-                    className="px-5 py-3 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? "bg-amber-100 text-amber-700" : i === 1 ? "bg-slate-100 text-slate-600" : i === 2 ? "bg-orange-100 text-orange-700" : "bg-muted text-muted-foreground"}`}
-                      >
-                        {i + 1}
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm">{a.agent}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {a.calls} {t("calls", "कॉल")} • CSAT {a.csat} •{" "}
-                          {a.avgTalkTime}
-                        </div>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-xs">
-                      {a.slaCompliance}% SLA
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-card rounded-xl border border-border">
-              <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-                <h3 className="font-bold text-foreground">
-                  {t("Recent Calls", "हाल की कॉल")}
-                </h3>
-                <Link
-                  to="/crm/history"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  {t("View All →", "सभी देखें →")}
-                </Link>
-              </div>
-              <div className="divide-y divide-border max-h-[350px] overflow-y-auto scrollbar-thin">
-                {CALL_TRACKER.slice(0, 6).map((c, i) => (
-                  <div
-                    key={i}
-                    className="px-5 py-3 flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="text-xs">
-                        <CallId id={c.id} />
-                      </div>
-                      <div className="text-sm">
-                        {c.agent} - {c.duration}
-                      </div>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className={`text-xs ${c.status === "Missed" ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"}`}
-                    >
-                      {c.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </PortalLayout>
-    );
-  }
+  //         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+  //           <StatCard
+  //             icon={Phone}
+  //             label={t("Calls Today", "आज की कॉल")}
+  //             value={IVR_STATS.totalCallsToday}
+  //             color="blue"
+  //             trend="up"
+  //             trendValue="+8% vs yesterday"
+  //           />
+  //           <StatCard
+  //             icon={CheckCircle2}
+  //             label={t("Calls Answered", "उत्तरित कॉल")}
+  //             value={IVR_STATS.callsAnswered}
+  //             color="green"
+  //             trend="up"
+  //             trendValue="+5% vs yesterday"
+  //           />
+  //           <StatCard
+  //             icon={Users}
+  //             label={t("Active Agents", "सक्रिय एजेंट")}
+  //             value={`${IVR_STATS.activeAgents}/${IVR_STATS.totalAgents}`}
+  //             color="purple"
+  //           />
+  //           <StatCard
+  //             icon={TrendingUp}
+  //             label={t("SLA Compliance", "एसएलए अनुपालन")}
+  //             value="95.1%"
+  //             color="green"
+  //             trend="up"
+  //             trendValue="+0.5% vs yesterday"
+  //             sublabel={t("Target: 95%", "लक्ष्य: 95%")}
+  //           />
+  //         </div>
+
+  //         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  //           <ChartCard
+  //             title={t("Hourly Call Disposition", "प्रति घंटा कॉल निपटान")}
+  //             subtitle={t(
+  //               "Calls received vs answered (today)",
+  //               "प्राप्त बनाम उत्तरित कॉल (आज)",
+  //             )}
+  //           >
+  //             <BarChartCard
+  //               data={HOURLY_DISPOSITION}
+  //               xKey="hour"
+  //               bars={[
+  //                 {
+  //                   key: "calls",
+  //                   label: t("Calls Received", "प्राप्त कॉल"),
+  //                   color: "#f59e0b",
+  //                 },
+  //                 {
+  //                   key: "answered",
+  //                   label: t("Calls Answered", "उत्तरित कॉल"),
+  //                   color: "#22c55e",
+  //                 },
+  //               ]}
+  //             />
+  //           </ChartCard>
+  //           <ChartCard
+  //             title={t("IVR Success Rate", "आईवीआर सफलता दर")}
+  //             subtitle={`${t("Overall", "कुल")}: ${IVR_STATS.successRate}%`}
+  //           >
+  //             <PieChartCard
+  //               data={[
+  //                 {
+  //                   name: t("Answered", "उत्तरित"),
+  //                   value: IVR_STATS.callsAnswered,
+  //                   color: "#22c55e",
+  //                 },
+  //                 {
+  //                   name: t("Missed", "छूटी हुई"),
+  //                   value: IVR_STATS.callsMissed,
+  //                   color: "#ef4444",
+  //                 },
+  //               ]}
+  //               height={280}
+  //             />
+  //           </ChartCard>
+  //         </div>
+
+  //         <div className="bg-card rounded-xl border border-border overflow-hidden">
+  //           <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+  //             <h3 className="font-bold text-foreground">
+  //               {t("Agent Performance Overview", "एजेंट प्रदर्शन अवलोकन")}
+  //             </h3>
+  //             <Link
+  //               to="/admin/agents"
+  //               className="text-sm text-blue-600 hover:underline"
+  //             >
+  //               {t("Manage All Agents →", "सभी एजेंटों का प्रबंधन करें →")}
+  //             </Link>
+  //           </div>
+  //           <div className="overflow-x-auto">
+  //             <table className="w-full text-sm">
+  //               <thead className="bg-muted/50">
+  //                 <tr className="text-left text-xs text-muted-foreground">
+  //                   <th className="px-4 py-2 font-medium">
+  //                     {t("Agent", "एजेंट")}
+  //                   </th>
+  //                   <th className="px-4 py-2 font-medium">
+  //                     {t("Role", "भूमिका")}
+  //                   </th>
+  //                   <th className="px-4 py-2 font-medium">
+  //                     {t("Shift", "शिफ्ट")}
+  //                   </th>
+  //                   <th className="px-4 py-2 font-medium text-center">
+  //                     {t("Calls Today", "आज की कॉल")}
+  //                   </th>
+  //                   <th className="px-4 py-2 font-medium text-center">
+  //                     {t("Resolved", "हल की गई")}
+  //                   </th>
+  //                   <th className="px-4 py-2 font-medium">
+  //                     {t("Avg Talk", "औसत बात")}
+  //                   </th>
+  //                   <th className="px-4 py-2 font-medium text-center">
+  //                     {t("CSAT", "सीएसएटी")}
+  //                   </th>
+  //                   <th className="px-4 py-2 font-medium">
+  //                     {t("Status", "स्थिति")}
+  //                   </th>
+  //                 </tr>
+  //               </thead>
+  //               <tbody className="divide-y divide-border">
+  //                 {CRM_AGENTS.map((a, i) => (
+  //                   <tr key={i} className="hover:bg-muted/30">
+  //                     <td className="px-4 py-2.5 font-medium">{a.name}</td>
+  //                     <td className="px-4 py-2.5">
+  //                       <Badge
+  //                         variant="outline"
+  //                         className={`text-xs ${a.role === "Supervisor" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"}`}
+  //                       >
+  //                         {a.role}
+  //                       </Badge>
+  //                     </td>
+  //                     <td className="px-4 py-2.5 text-xs text-muted-foreground">
+  //                       {a.shift}
+  //                     </td>
+  //                     <td className="px-4 py-2.5 text-center font-semibold">
+  //                       {a.callsToday}
+  //                     </td>
+  //                     <td className="px-4 py-2.5 text-center text-emerald-600 dark:text-emerald-400">
+  //                       {a.resolvedToday}
+  //                     </td>
+  //                     <td className="px-4 py-2.5 text-muted-foreground text-xs">
+  //                       {a.avgTalkTime}
+  //                     </td>
+  //                     <td className="px-4 py-2.5 text-center text-amber-600 dark:text-amber-400 font-medium">
+  //                       ★ {a.csat}/5
+  //                     </td>
+  //                     <td className="px-4 py-2.5">
+  //                       <Badge
+  //                         variant="outline"
+  //                         className={`text-xs ${a.status === "Available" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : a.status === "On Call" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" : a.status === "Break" ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" : "bg-muted/50 text-muted-foreground border-border"}`}
+  //                       >
+  //                         {a.status}
+  //                       </Badge>
+  //                     </td>
+  //                   </tr>
+  //                 ))}
+  //               </tbody>
+  //             </table>
+  //           </div>
+  //         </div>
+
+  //         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  //           <div className="bg-card rounded-xl border border-border">
+  //             <div className="px-5 py-3 border-b border-border">
+  //               <h3 className="font-bold text-foreground">
+  //                 {t("Agent Leaderboard", "एजेंट लीडरबोर्ड")}
+  //               </h3>
+  //             </div>
+  //             <div className="divide-y divide-border max-h-[350px] overflow-y-auto scrollbar-thin">
+  //               {AGENT_PERFORMANCE.map((a, i) => (
+  //                 <div
+  //                   key={i}
+  //                   className="px-5 py-3 flex items-center justify-between"
+  //                 >
+  //                   <div className="flex items-center gap-3">
+  //                     <div
+  //                       className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? "bg-amber-100 text-amber-700" : i === 1 ? "bg-slate-100 text-slate-600" : i === 2 ? "bg-orange-100 text-orange-700" : "bg-muted text-muted-foreground"}`}
+  //                     >
+  //                       {i + 1}
+  //                     </div>
+  //                     <div>
+  //                       <div className="font-medium text-sm">{a.agent}</div>
+  //                       <div className="text-xs text-muted-foreground">
+  //                         {a.calls} {t("calls", "कॉल")} • CSAT {a.csat} •{" "}
+  //                         {a.avgTalkTime}
+  //                       </div>
+  //                     </div>
+  //                   </div>
+  //                   <Badge variant="outline" className="text-xs">
+  //                     {a.slaCompliance}% SLA
+  //                   </Badge>
+  //                 </div>
+  //               ))}
+  //             </div>
+  //           </div>
+  //           <div className="bg-card rounded-xl border border-border">
+  //             <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+  //               <h3 className="font-bold text-foreground">
+  //                 {t("Recent Calls", "हाल की कॉल")}
+  //               </h3>
+  //               <Link
+  //                 to="/crm/history"
+  //                 className="text-sm text-blue-600 hover:underline"
+  //               >
+  //                 {t("View All →", "सभी देखें →")}
+  //               </Link>
+  //             </div>
+  //             <div className="divide-y divide-border max-h-[350px] overflow-y-auto scrollbar-thin">
+  //               {CALL_TRACKER.slice(0, 6).map((c, i) => (
+  //                 <div
+  //                   key={i}
+  //                   className="px-5 py-3 flex items-center justify-between"
+  //                 >
+  //                   <div>
+  //                     <div className="text-xs">
+  //                       <CallId id={c.id} />
+  //                     </div>
+  //                     <div className="text-sm">
+  //                       {c.agent} - {c.duration}
+  //                     </div>
+  //                   </div>
+  //                   <Badge
+  //                     variant="outline"
+  //                     className={`text-xs ${c.status === "Missed" ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"}`}
+  //                   >
+  //                     {c.status}
+  //                   </Badge>
+  //                 </div>
+  //               ))}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </PortalLayout>
+  //   );
+  // }
 
   // ── CCE Agent personal scorecard ──
   const sc = CCE_SCORECARD[scorecardPeriod];
@@ -382,8 +387,8 @@ export default function CRMDashboard() {
                 {t("My Scorecard", "मेरा स्कोरकार्ड")}
               </h1>
               <p className="text-xs xs:text-sm md:text-base capitalize text-white/80">
-                {profile?.name} • CCE Agent • Morning Shift (06:00–14:00) • Agent
-                ID: cce-001
+                {profile?.name} • {profile?.role?.designationEnglish || "CCE Agent"} • {t("Agent ID:", "एजेंट आईडी:")}{" "}
+                {profile?.userCode || "-"}
               </p>
             </div>
          { profiledata?.isCCE  &&   <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">

@@ -119,6 +119,7 @@ export default function LocationDetailsSection({ t }) {
                 options={urbanPanchayatOptions}
                 isLoading={isUrbanPanchayatsLoading}
                 disabled={!selectedDistrictId || isUrbanPanchayatsLoading}
+                required
               />
 
               <RhfSelect
@@ -128,6 +129,7 @@ export default function LocationDetailsSection({ t }) {
                 options={wardOptions}
                 isLoading={isWardsLoading}
                 disabled={!selectedUrbanPanchayatId || isWardsLoading}
+                required
               />
             </>
           ) : (
@@ -149,6 +151,7 @@ export default function LocationDetailsSection({ t }) {
                 options={villageOptions}
                 isLoading={isVillagesLoading}
                 disabled={!selectedPanchayatId || isVillagesLoading}
+                required
               />
             </>
           )}
@@ -160,6 +163,7 @@ export default function LocationDetailsSection({ t }) {
             options={thanaOptions}
             isLoading={isThanasLoading}
             disabled={!selectedDistrictId || isThanasLoading}
+            required
           />
 
           <RhfInput

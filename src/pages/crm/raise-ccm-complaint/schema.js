@@ -144,6 +144,14 @@ const finalAddressSchema = z.object({
 });
 
 const addressSchema = locationOrPermanentAddress.superRefine((data, ctx) => {
+  if (!data.thana || data.thana.trim() === "") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Field is required",
+      path: ["thana"],
+    });
+  }
+
   if (!!data.isUrban) {
     const requiredKeys = ["urbanPanchayat", "ward"];
     requiredKeys.forEach((key) => {
@@ -156,7 +164,7 @@ const addressSchema = locationOrPermanentAddress.superRefine((data, ctx) => {
       }
     });
   } else {
-    const requiredKeys = ["panchayat"];
+    const requiredKeys = ["panchayat", "village"];
     requiredKeys.forEach((key) => {
       if (!data[key] || data[key].trim() === "") {
         ctx.addIssue({
@@ -180,7 +188,46 @@ const correspondenceAddressSchema = finalAddressSchema.superRefine(
     }
 
     if (data.state === "Bihar") {
-      // standard Bihar address handling
+      const commonRequired = [
+        "addressLine",
+        "district",
+        "block",
+        "pincode",
+        "thana",
+      ];
+      commonRequired.forEach((key) => {
+        if (!data[key] || data[key].trim() === "") {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Field is required",
+            path: [key],
+          });
+        }
+      });
+
+      if (!!data.isUrban) {
+        const requiredKeys = ["urbanPanchayat", "ward"];
+        requiredKeys.forEach((key) => {
+          if (!data[key] || data[key].trim() === "") {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Field is required",
+              path: [key],
+            });
+          }
+        });
+      } else {
+        const requiredKeys = ["panchayat", "village"];
+        requiredKeys.forEach((key) => {
+          if (!data[key] || data[key].trim() === "") {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Field is required",
+              path: [key],
+            });
+          }
+        });
+      }
     } else {
       const requiredKeys = ["addressLine", "city"];
       requiredKeys.forEach((key) => {

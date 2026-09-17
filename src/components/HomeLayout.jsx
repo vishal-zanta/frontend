@@ -109,7 +109,8 @@ const HomeLayout = ({ children }) => {
               {t("Honourable Chief Minister", "माननीय मुख्यमंत्री")}
             </p>
             <p className="text-sm text-muted-foreground mt-0.5 font-medium">
-              {t("Government of Bihar", "माननीय मुख्यमंत्री, बिहार")}
+               {t("Government of Bihar", "बिहार सरकार")}
+
             </p>
           </div>
 

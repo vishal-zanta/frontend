@@ -3,7 +3,7 @@ import { z } from "zod";
 export const fieldVisitSchema = z.object({
   status: z.string().min(1, "Status is required"),
   schedule: z.string().optional(),
-  remarks: z.string().optional(),
+  remark: z.string().optional(),
 }).superRefine((data, ctx) => {
   if (data.status !== "CANCELLED" && (!data.schedule || !data.schedule.trim())) {
     ctx.addIssue({
@@ -12,11 +12,11 @@ export const fieldVisitSchema = z.object({
       path: ["schedule"],
     });
   }
-  if (data.status === "COMPLETED" && (!data.remarks || !data.remarks.trim())) {
+  if (data.status === "COMPLETED" && (!data.remark || !data.remark.trim())) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: "Remarks are required when status is COMPLETED",
-      path: ["remarks"],
+      path: ["remark"],
     });
   }
 });

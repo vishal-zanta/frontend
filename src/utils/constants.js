@@ -147,14 +147,14 @@ export const PRIORITY_ACTIONS = [
     badgeLabel: "Normal",
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
   },
-  {
-    label: "Pending",
-    value: "PENDING",
-    icon: Clock,
-    color: "bg-blue-600 hover:bg-blue-700",
-    badgeLabel: "Pending",
-    badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
-  },
+  // {
+  //   label: "Pending",
+  //   value: "PENDING",
+  //   icon: Clock,
+  //   color: "bg-blue-600 hover:bg-blue-700",
+  //   badgeLabel: "Pending",
+  //   badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
+  // },
   {
     label: "Urgent",
     value: "URGENT",

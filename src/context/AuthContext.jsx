@@ -1,12 +1,14 @@
 import FullScreenLoader from "@/components/FullScreenLoader";
+import useGetRoles from "@/hooks/query/useGetRoles";
 import {
   CCE_ONLY_ROLES,
   CCE_ROLES,
   CCS_ONLY_ROLES,
+  MAX_LIMIT,
   USER_ROLES_EXECULDED,
 } from "@/utils/constants";
 import { checkPermissionManual } from "@/utils/helpers";
-import { createContext, useState, useContext, useEffect, useRef } from "react";
+import { createContext, useState, useContext, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 const authContext = createContext(null);
@@ -71,6 +73,19 @@ export const AuthProvider = ({ children }) => {
       clearTimeout(timerRef.current);
     };
   }, [profile, newPath]);
+
+  const { data } = useGetRoles([], { page: 1, limit: MAX_LIMIT }, !!profile);
+  const rolesMap = useMemo(()=> {
+const rolesMap = new Map();
+  (data?.data?.docs || []).forEach((role) => {
+    rolesMap.set(role.designationEnglish, role?._id);
+  });
+  return rolesMap;
+  },[data?.data?.docs]) 
+
+  // console.log({rolesMap});
+
+
   return (
     <authContext.Provider
       value={{
@@ -80,6 +95,7 @@ export const AuthProvider = ({ children }) => {
         profiledata,
         setNewPath,
         hasRolePermission,
+        rolesMap
       }}
     >
       {newPath && newPath?.isLoading && <FullScreenLoader />}

@@ -7,7 +7,6 @@ import ComplaintList from "@/components/complaints/ComplaintList";
 import ComplaintDetailView from "@/components/complaints/ComplaintDetailView";
 import { useGetComplaintsOfOfiicer } from "@/hooks/query/useGetComplaints";
 import { useGetDashboardData } from "../officer-dashboard/query";
-import { usePortalProfile } from "@/hooks/usePortalProfile";
 import { ArrowLeft } from "lucide-react";
 import useIsMobile from "@/hooks/useIsMobile";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,7 +15,6 @@ import ExternalComplaintView from "@/components/complaints/department-view";
 
 export default function OfficerComplaints() {
   const { t } = useLanguage();
-  const [profileId] = usePortalProfile("officer");
   const [selected, setSelected] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState(null);
   const isMobile = useIsMobile();
@@ -26,7 +24,7 @@ export default function OfficerComplaints() {
     data: analyticsData,
     isLoading: statsLoading,
     error: statsError,
-  } = useGetDashboardData({ role: profileId });
+  } = useGetDashboardData();
 
   return (
     <PortalLayout role="officer" isHideOverflow={true}>

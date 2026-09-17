@@ -84,7 +84,13 @@ export default function FieldVisits() {
           </p>
         </div>
 
-        <FieldVisitCards />
+        <FieldVisitCards
+          statusFilter={statusFilter}
+          onStatusChange={(val) => {
+            setStatusFilter(val);
+            pageProps.setPage(1);
+          }}
+        />
 
         <div className="flex gap-3">
           <SearchDebounced
@@ -161,7 +167,7 @@ export default function FieldVisits() {
                         .toISOString()
                         .split("T")[0]
                     : "",
-                remarks: editVisit.remarks || "",
+                remark: editVisit.remark || "",
               }}
               isValidation
               validationSchema={fieldVisitSchema}
@@ -174,9 +180,9 @@ export default function FieldVisits() {
                       formData.status === "CANCELLED"
                         ? undefined
                         : formData.schedule,
-                    remarks:
+                    remark:
                       formData.status === "COMPLETED"
-                        ? formData.remarks
+                        ? formData.remark
                         : undefined,
                   },
                 });

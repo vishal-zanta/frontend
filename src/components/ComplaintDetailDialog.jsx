@@ -252,15 +252,30 @@ export function ComplaintDetailDialog({
         status: activeComplaint.status,
         priority: activeComplaint.assignedPriority,
         source:
-          getEntityLabel(activeComplaint?.channel, t) || activeComplaint?.source || "N/A",
+          getEntityLabel(activeComplaint?.channel, t) ||
+          activeComplaint?.source ||
+          "N/A",
         citizenName: activeComplaint.citizenInfo?.fullName || "N/A",
         mobile: activeComplaint.citizenInfo?.mobile || "N/A",
         districtName:
-          getEntityLabel(activeComplaint.location?.district || activeComplaint.address?.district, t) || "N/A",
+          getEntityLabel(
+            activeComplaint.location?.district ||
+              activeComplaint.address?.district,
+            t,
+          ) || "N/A",
         ulbName:
-          getEntityLabel(activeComplaint.location?.subdivision || activeComplaint.address?.subdivision, t) || "N/A",
+          getEntityLabel(
+            activeComplaint.location?.subdivision ||
+              activeComplaint.address?.subdivision,
+            t,
+          ) || "N/A",
         ward:
-          getEntityLabel(activeComplaint.location?.panchayat || activeComplaint.address?.panchayat || activeComplaint.address?.villageOrWard, t) || "N/A",
+          getEntityLabel(
+            activeComplaint.location?.panchayat ||
+              activeComplaint.address?.panchayat ||
+              activeComplaint.address?.villageOrWard,
+            t,
+          ) || "N/A",
         createdDate: activeComplaint.createdAt,
         serviceName:
           getEntityLabel(
@@ -270,10 +285,8 @@ export function ComplaintDetailDialog({
             t,
           ) || "N/A",
         subserviceName:
-          getEntityLabel(
-            activeComplaint.classification?.subService,
-            t,
-          ) || "N/A",
+          getEntityLabel(activeComplaint.classification?.subService, t) ||
+          "N/A",
         subject: activeComplaint.classification?.subject || "N/A",
         description: activeComplaint.evidence?.details || "N/A",
         l1OfficerName: activeComplaint.l1Officer?.name || "Unassigned",
@@ -677,29 +690,35 @@ export function FieldVisitDetailDialog({
   const loc = rawVisit?.grievance?.location || {};
   const isUrban = Boolean(loc.isUrban);
   const districtName =
-    getEntityLabel(loc.district || rawVisit.address?.district || rawVisit.district, t) || "";
+    getEntityLabel(
+      loc.district || rawVisit.address?.district || rawVisit.district,
+      t,
+    ) || "";
   const urbanPanchayatName =
-    getEntityLabel(loc.urbanPanchayat || rawVisit.address?.urbanPanchayat, t) || "";
+    getEntityLabel(loc.urbanPanchayat || rawVisit.address?.urbanPanchayat, t) ||
+    "";
   const wardName =
-    getEntityLabel(loc.ward || rawVisit.address?.ward || rawVisit.ward, t) || "";
+    getEntityLabel(loc.ward || rawVisit.address?.ward || rawVisit.ward, t) ||
+    "";
   const villageName =
     getEntityLabel(loc.village || rawVisit.address?.village, t) || "";
   const panchayatName =
     getEntityLabel(loc.panchayat || rawVisit.address?.panchayat, t) || "";
   const blockName =
-    getEntityLabel(loc.block || loc.subdivision || rawVisit.address?.block || rawVisit.address?.subdivision, t) || "";
+    getEntityLabel(
+      loc.block ||
+        loc.subdivision ||
+        rawVisit.address?.block ||
+        rawVisit.address?.subdivision,
+      t,
+    ) || "";
   const divisionName = getEntityLabel(loc.division, t) || "";
   const pincode = loc.pincode || loc.pinCode || rawVisit.address?.pincode;
 
-  const locationParts = (isUrban
-    ? [wardName, urbanPanchayatName, districtName, pincode]
-    : [
-        villageName,
-        panchayatName,
-        blockName,
-        districtName,
-        pincode,
-      ]
+  const locationParts = (
+    isUrban
+      ? [wardName, urbanPanchayatName, districtName, pincode]
+      : [villageName, panchayatName, blockName, districtName, pincode]
   ).filter(Boolean);
 
   const locationText =
@@ -743,7 +762,8 @@ export function FieldVisitDetailDialog({
       : "N/A",
     service: isApiObject
       ? getEntityLabel(
-          rawVisit.serviceDetails || rawVisit.grievance?.classification?.service,
+          rawVisit.serviceDetails ||
+            rawVisit.grievance?.classification?.service,
           t,
         ) || "N/A"
       : rawVisit.service || "N/A",
@@ -924,6 +944,7 @@ export function FieldVisitDetailDialog({
               {t("Complaint ID", "शिकायत आईडी")}
             </div>
             {visit.complaintId && visit.complaintId !== "N/A" ? (
+              // <p> {visit.complaintId} </p>
               <ComplaintId id={visit.complaintId} complaint={visit.complaint} />
             ) : (
               "N/A"
@@ -946,7 +967,9 @@ export function FieldVisitDetailDialog({
                 <div className="flex flex-wrap gap-2 pt-1">
                   {visit.geotaggedImages.map((img, idx) => {
                     const url =
-                      typeof img === "string" ? img : img?.url || img?.path || "";
+                      typeof img === "string"
+                        ? img
+                        : img?.url || img?.path || "";
                     const displayUrl = url.startsWith("http")
                       ? url
                       : IMG_BASE_URL + url;
