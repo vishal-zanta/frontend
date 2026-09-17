@@ -26,7 +26,7 @@ export default function InmailStats({ stats, activeTab, onTabChange }) {
       />
       <StatCard
         icon={CheckCircle2}
-        label={t("Converted to Complaint", "शिकायत में परिवर्तित")}
+        label={t("Complaint register", "शिकायत में परिवर्तित")}
         value={stats.converted}
         color="green"
         isClicked={activeTab === "converted"}

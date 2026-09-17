@@ -23,7 +23,12 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
-import { ADMIN_ROLES, PERMISSIONS } from "@/utils/constants";
+import {
+  ADMIN_ROLES,
+  CCE_ONLY_ROLES,
+  CCE_ROLES,
+  PERMISSIONS,
+} from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import biharGovtLogo from "@/assets/bihar_govt.png";
@@ -54,6 +59,13 @@ export const sidebarSections = [
         icon: LayoutDashboard,
         permissions: PERMISSIONS.CCE_DASHBOARD,
         rolePermissions: { exclude: [...ADMIN_ROLES] },
+        updateLabel: (obj, t) => {
+          if (obj?.isCCE) {
+            return t("CCE Dashboard", "सीसीई डैशबोर्ड");
+          } else {
+            return t("Supervisor Dashboard", "पर्यवेक्षक डैशबोर्ड");
+          }
+        },
       },
     ],
   },
@@ -141,16 +153,16 @@ export const sidebarSections = [
         permissions: PERMISSIONS.FIELD_VISITS,
       },
       {
-        label: "Raise Complaint",
+        label: "Register Complaint",
         labelHindi: "शिकायत दर्ज करें",
         path: "/crm/raise",
         icon: FileText,
         permissions: PERMISSIONS.RAISE_COMPLAINTS,
-        rolePermissions: { exclude: [...ADMIN_ROLES] },
+        rolePermissions: { include: [...CCE_ONLY_ROLES] },
       },
       {
-        label: "Track Complaint",
-        labelHindi: "शिकायत ट्रैक करें",
+        label: "Check Complaint Status",
+        labelHindi: "शिकायत की स्थिति जाँचें",
         path: "/crm/track-complaint",
         icon: Search,
         permissions: PERMISSIONS.TRACK_COMPLAINTS,
@@ -160,7 +172,7 @@ export const sidebarSections = [
         labelHindi: "इनमेल",
         path: "/crm/inmail",
         icon: MessageSquare,
-        rolePermissions: { exclude: [...ADMIN_ROLES] },
+        rolePermissions: { include: [...CCE_ONLY_ROLES] },
 
         // permissions: PERMISSIONS.TRACK_COMPLAINTS,
       },
@@ -175,7 +187,8 @@ export const sidebarSections = [
         labelHindi: "आने वाली कॉल",
         path: "/crm/incoming-call",
         icon: Phone,
-        permissions: PERMISSIONS.INCOMING_CALL,
+        // permissions: PERMISSIONS.INCOMING_CALL,
+        rolePermissions: { include: [...CCE_ONLY_ROLES] },
       },
       {
         label: "Call Tracker",
@@ -327,12 +340,12 @@ const profileLabelOverrides = {
 };
 
 function NavItem({ item, onNavigate, overrideLabel }) {
-  const { hasPermission } = useAuth();
+  const { hasPermission, profiledata } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
 
   // Handle language translation for overrides and regular labels
-  let translatedLabel = t(item.label, item.labelHindi);
+  let translatedLabel = item?.updateLabel ? item.updateLabel({isCCE :profiledata?.isCCE }, t)  : t(item.label, item.labelHindi);
   if (overrideLabel) {
     if (overrideLabel === "Shift Management") {
       translatedLabel = t("Shift Management", "शिफ्ट प्रबंधन");
@@ -507,7 +520,9 @@ export default function Sidebar({
           >
             {config.sections.map((section, si) => {
               const visibleItems = section.items
-                .filter((item) => hasPermission(item.permissions))
+                .filter((item) =>
+                  item.permissions ? hasPermission(item.permissions) : true,
+                )
                 .filter((item) =>
                   item?.rolePermissions
                     ? hasRolePermission(item?.rolePermissions)

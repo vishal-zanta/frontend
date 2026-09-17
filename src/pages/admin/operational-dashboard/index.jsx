@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Phone, Users, Clock, Activity, BarChart3, Server } from "lucide-react";
 import {
@@ -10,7 +10,7 @@ import {
 } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
 import { useAuth } from "@/context/AuthContext";
-import { PERMISSIONS } from "@/utils/constants";
+import { CCE_ROLES, MAX_LIMIT, PERMISSIONS } from "@/utils/constants";
 
 import CallVolumeTab from "./call-volume";
 import CcePerformanceTab from "./cce-performance";
@@ -22,6 +22,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import TimeRangeFilter from "@/components/TimeRangeFilter";
 
 import { SectionTitle } from "@/components/ChartCard";
+import { useGetUsers } from "../user-management/hooks";
 
 const tabs = [
   {
@@ -74,7 +75,20 @@ export default function OperationalDashboard() {
   const [searchParams] = useSearchParams();
   const [period, setPeriod] = useState("daily");
   const [dateRange, setDateRange] = useState({});
-
+  const [filters, setFilters] = useState({
+    users: "",
+  });
+  const params = {
+    page: 1,
+    limit: MAX_LIMIT,
+    roles: CCE_ROLES.join(","),
+  };
+  const { data: userDataApi } = useGetUsers([JSON.stringify(params)], params);
+  const usersData = (userDataApi?.data?.data?.docs || []).map((v) => ({
+    label: v.name,
+    value: v._id,
+  }));
+  // console.log({usersData})
   const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
 
   const tab =
@@ -153,15 +167,20 @@ export default function OperationalDashboard() {
       grievanceXKey: "month",
     },
   };
-  const pd =
-    periodData[period] || {
-      ...periodData.daily,
-      label:
-        dateRange?.from && dateRange?.to
-          ? `${new Date(dateRange.from).toLocaleDateString()} - ${new Date(dateRange.to).toLocaleDateString()}`
-          : t("Custom Range", "कस्टम अवधि"),
-      sub: t("custom range", "कस्टम अवधि"),
-    };
+  const pd = periodData[period] || {
+    ...periodData.daily,
+    label:
+      dateRange?.from && dateRange?.to
+        ? `${new Date(dateRange.from).toLocaleDateString()} - ${new Date(dateRange.to).toLocaleDateString()}`
+        : t("Custom Range", "कस्टम अवधि"),
+    sub: t("custom range", "कस्टम अवधि"),
+  };
+
+  useEffect(() => {
+    setFilters({
+      users: "",
+    });
+  }, [activeTab?.id]);
 
   return (
     <PortalLayout role="superadmin">
@@ -177,6 +196,19 @@ export default function OperationalDashboard() {
             dateRange={dateRange}
             setDateRange={setDateRange}
             boxClassName={"flex-wrap sm:flex-nowrap"}
+            filterOptions={
+              tab === "cce-performance"
+                ? [
+                    {
+                      filterKey: "user",
+                      label: t("By Users", "पदनाम के अनुसार"),
+                      options: usersData,
+                    },
+                  ]
+                : []
+            }
+            filters={filters}
+            setFilters={setFilters}
           />
         </SectionTitle>
 

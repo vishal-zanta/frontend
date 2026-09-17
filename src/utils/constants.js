@@ -10,8 +10,13 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+export const CITIZEN_URL = "https://citizen.lumirex.tech/"
+
+
 export const ADMIN_ROLES = ["Admin"];
-export const CCE_ROLES = ["Call Centre Executive", "Call Centre Supervisor"];
+export const CCE_ONLY_ROLES = ["Call Centre Executive"];
+export const CCS_ONLY_ROLES = ["Call Centre Supervisor"]
+export const CCE_ROLES = [...CCE_ONLY_ROLES, ...CCS_ONLY_ROLES ];
 
 // export const ADMIN_LEVEL = ["Admin"];
 // export const CCE_LEVEL = ["CCE", "Supervisor"];
@@ -313,7 +318,7 @@ export const apiPermissionOptions = [
   { label: "Operational - System Monitoring", value: "OPERATIONAL_SYSTEM" },
 
   // Call Centre
-  { label: "Incoming Call", value: "INCOMING_CALL" },
+  // { label: "Incoming Call", value: "INCOMING_CALL" },
   { label: "Call Tracker", value: "CALL_TRACKER" },
   { label: "Call History Log", value: "CALL_HISTORY_LOG" },
   { label: "Shift & Agent", value: "SHIFT_AGENT" },
@@ -392,7 +397,7 @@ export const PERMISSIONS = {
   OPERATIONAL_SYSTEM: ["OPERATIONAL_DASHBOARD", "OPERATIONAL_SYSTEM"],
   AI_REPORTS: ["AI_REPORTS"],
   PERFORMANCE_DASHBOARD: ["PERFORMANCE_DASHBOARD"],
-  INCOMING_CALL: ["INCOMING_CALL"],
+  // INCOMING_CALL: ["INCOMING_CALL"],
   CALL_TRACKER: ["CALL_TRACKER"],
   CALL_HISTORY_LOG: ["CALL_HISTORY_LOG"],
   SHIFT_AGENT: ["SHIFT_AGENT"],

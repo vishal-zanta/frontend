@@ -202,7 +202,7 @@ export default function InmailPreviewDialog({
                   }}
                 >
                   <FilePlus2 className="w-3.5 h-3.5 mr-1" />
-                  {t("Raise Complaint", "शिकायत दर्ज करें")}
+                  {t("Register Complaint", "शिकायत दर्ज करें")}
                 </Button>
               </div>
             )}

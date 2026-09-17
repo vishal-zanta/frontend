@@ -43,6 +43,10 @@ export default function ImpactSection({ affectedBeneficiaryOptions, t }) {
             name="impact.vulnerability.economicallyWeakerSection"
             label={t("Economically Weaker Section", "आर्थिक रूप से कमजोर वर्ग")}
           />
+           <RhfBoolean
+            name="impact.vulnerability.general"
+            label={t("General", "सामान्य")}
+          />
         </div>
       </div>
     </FormSection>

@@ -68,6 +68,7 @@ export default function TopBar({
   const navigate = useNavigate();
   const isSuperAdmin = profileMetaData?.isAdmin;
   const isCRM = profileMetaData?.isCRM;
+  const isCCE = profileMetaData?.isCCE
   const isOfficer = profileMetaData?.isOfficer;
   const [showNotifs, setShowNotifs] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -279,7 +280,7 @@ export default function TopBar({
       <Notifications/>
       <RoleSwitchPopover />
 
-        {isCRM && (
+        {isCCE && (
           <button
             onClick={() => toggleBreakMutation.mutate()}
             disabled={toggleBreakMutation.isPending}

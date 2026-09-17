@@ -373,7 +373,7 @@ export default function IncomingCall() {
                     <Link to="/crm/raise" className="block">
                       <Button className="w-full bg-card text-primary hover:bg-white/90">
                         <FileText className="w-4 h-4 mr-1" />{" "}
-                        {t("Raise Complaint", "शिकायत दर्ज करें")}
+                        {t("Register Complaint", "शिकायत दर्ज करें")}
                       </Button>
                     </Link>
                   </div>

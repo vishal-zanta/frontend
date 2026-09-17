@@ -1,5 +1,10 @@
 import FullScreenLoader from "@/components/FullScreenLoader";
-import { USER_ROLES_EXECULDED } from "@/utils/constants";
+import {
+  CCE_ONLY_ROLES,
+  CCE_ROLES,
+  CCS_ONLY_ROLES,
+  USER_ROLES_EXECULDED,
+} from "@/utils/constants";
 import { checkPermissionManual } from "@/utils/helpers";
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -28,29 +33,29 @@ export const AuthProvider = ({ children }) => {
     return checkPermissionManual(validPermissions, permission);
   };
 
-  const hasRolePermission = ({exclude = null , include = null})=> {
-    if(!profile?.role) return false;
-   const role = profile?.role?.designationEnglish; 
-   if(!!exclude){
-    return !exclude.includes(role);
-   }   
-   if(!!include){
-    return include.includes(role);
-   }   
-   return false; 
-  }
+  const hasRolePermission = ({ exclude = null, include = null }) => {
+    if (!profile?.role) return false;
+    const role = profile?.role?.designationEnglish;
+    if (!!exclude) {
+      return !exclude.includes(role);
+    }
+    if (!!include) {
+      return include.includes(role);
+    }
+    return false;
+  };
   const profiledata = {
     role: profile?.role?.designationEnglish,
     isAdmin: profile?.role?.designationEnglish === USER_ROLES_EXECULDED?.[0],
-    isCRM:
-      profile?.role?.designationEnglish === USER_ROLES_EXECULDED?.[1] ||
-      profile?.role?.designationEnglish === USER_ROLES_EXECULDED?.[2],
+    isCRM: CCE_ROLES.includes(profile?.role?.designationEnglish),
     isOfficer: !USER_ROLES_EXECULDED.includes(
       profile?.role?.designationEnglish,
     ),
     isMultiRoles: Array.isArray(profile?.roles)
       ? profile?.roles?.length > 1
       : false,
+    isCCE: CCE_ONLY_ROLES.includes(profile?.role?.designationEnglish),
+    isCCS: CCS_ONLY_ROLES.includes(profile?.role?.designationEnglish),
   };
 
   useEffect(() => {
@@ -68,11 +73,18 @@ export const AuthProvider = ({ children }) => {
   }, [profile, newPath]);
   return (
     <authContext.Provider
-      value={{ profile, setProfile, hasPermission, profiledata, setNewPath, hasRolePermission }}
+      value={{
+        profile,
+        setProfile,
+        hasPermission,
+        profiledata,
+        setNewPath,
+        hasRolePermission,
+      }}
     >
       {newPath && newPath?.isLoading && <FullScreenLoader />}
       {children}
-  </authContext.Provider>
+    </authContext.Provider>
   );
 };
 

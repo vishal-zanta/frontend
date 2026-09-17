@@ -4,7 +4,8 @@ import biharGovtLogo from "@/assets/bihar_govt.png";
 import cmPhoto from "@/assets/cm_photo.jpg";
 import LangSelector from "@/components/LangSelector";
 import { useLanguage } from "@/context/LanguageContext";
-import { Zap } from "lucide-react";
+import { Home, Zap } from "lucide-react";
+import { CITIZEN_URL } from "@/utils/constants";
 
 const HomeLayout = ({ children }) => {
   const { t } = useLanguage();
@@ -31,7 +32,17 @@ const HomeLayout = ({ children }) => {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-6 text-sm">
+          <a
+            href={CITIZEN_URL}
+            // target=""
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm transition-all shadow-xs border border-white/20 cursor-pointer active:scale-95"
+          >
+            <Home className="w-4 h-4" />
+            <span>{t("Home Page", "मुख्य पृष्ठ")}</span>
+          </a>
+
+          {/* <div className="hidden md:flex items-center gap-6 text-sm">
             <div className="text-center">
               <div className="text-2xl font-bold">
                 {DASHBOARD_KPIS.totalComplaints.toLocaleString("en-IN")}
@@ -58,7 +69,7 @@ const HomeLayout = ({ children }) => {
                 {t("Satisfaction", "संतुष्टि")}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -69,9 +80,9 @@ const HomeLayout = ({ children }) => {
             {t(PORTAL_META.tagline, "सुशासन ही जनसेवा - बिहार सरकार")}
           </span>
           <div className="flex items-center gap-3 text-xs text-blue-600 dark:text-blue-400">
-            <span className="flex items-center gap-1">
+            {/* <span className="flex items-center gap-1">
               <Zap className="w-3 h-3 text-green-600 dark:text-green-400" /> {t("All systems operational", "सभी प्रणालियाँ चालू हैं")}
-            </span>
+            </span> */}
             {/* <span>-</span>
             <span>Last synced: {(new Date()).toISOString().split("T")?.[0]}</span> */}
           <LangSelector />

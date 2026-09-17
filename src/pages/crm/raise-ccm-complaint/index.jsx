@@ -79,42 +79,47 @@ export default function CRMRaiseComplaint() {
   const initialInmail = location.state?.INITIAL_INMAILS;
 
   const formInitialValues = useMemo(() => {
-    if (!initialInmail) return defaultValues;
+    if (!allChannels) return defaultValues;
 
-    const email =
-      initialInmail.fromEmail ||
-      (typeof initialInmail.from === "string" &&
-      initialInmail.from.includes("<")
-        ? initialInmail.from.match(/<([^>]+)>/)?.[1]
-        : initialInmail.from) ||
-      initialInmail.email ||
-      "";
-    const fullName =
-      initialInmail.fromName ||
-      (typeof initialInmail.from === "string"
-        ? initialInmail.from.split("<")[0].trim()
-        : "");
-    const emailBody =
-      initialInmail.body ||
-      initialInmail.content ||
-      initialInmail.text ||
-      initialInmail.html ||
-      "";
+    let channel = allChannels.find((v) => v?.label == "Voice")?.value;
+    if (!!initialInmail) {
+      const email =
+        initialInmail.fromEmail ||
+        (typeof initialInmail.from === "string" &&
+        initialInmail.from.includes("<")
+          ? initialInmail.from.match(/<([^>]+)>/)?.[1]
+          : initialInmail.from) ||
+        initialInmail.email ||
+        "";
+      const fullName =
+        initialInmail.fromName ||
+        (typeof initialInmail.from === "string"
+          ? initialInmail.from.split("<")[0].trim()
+          : "");
+      const emailBody =
+        initialInmail.body ||
+        initialInmail.content ||
+        initialInmail.text ||
+        initialInmail.html ||
+        "";
 
-    return {
-      ...defaultValues,
-      channel: allChannels.find((v) => v?.label == "Email")?.value,
-      citizenInfo: {
-        ...defaultValues.citizenInfo,
-        fullName: fullName || defaultValues.citizenInfo.fullName,
-        email: email,
-      },
-      evidence: {
-        ...defaultValues.evidence,
-        details: emailBody,
-      },
-      emailId: initialInmail?.id,
-    };
+      return {
+        ...defaultValues,
+        channel: allChannels.find((v) => v?.label == "Email")?.value,
+        citizenInfo: {
+          ...defaultValues.citizenInfo,
+          fullName: fullName || defaultValues.citizenInfo.fullName,
+          email: email,
+        },
+        evidence: {
+          ...defaultValues.evidence,
+          details: emailBody,
+        },
+        emailId: initialInmail?.id,
+      };
+    }
+
+    return { ...defaultValues, channel: channel };
   }, [initialInmail, allChannels]);
 
   const fileInputRef = useRef(null);
@@ -253,7 +258,7 @@ export default function CRMRaiseComplaint() {
     <PortalLayout role={role}>
       <div className="max-w-6xl mx-auto p-4 sm:p-6">
         <SectionTitle
-          title={t("Raise Complaint", "शिकायत दर्ज करें")}
+          title={t("Register Complaint", "शिकायत दर्ज करें")}
           subtitle={""}
           className="!mb-4 !sm:mb-6 !items-center"
         >

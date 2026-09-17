@@ -3,12 +3,17 @@ import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import FormSection from "./FormSection";
 import { PREFERRED_LANGUAGE_OPTIONS } from "../schema";
+import { useAuth } from "@/context/AuthContext";
 
-export default function CitizenInfoSection({ t, allChannels , complaintSourcesLoading }) {
+export default function CitizenInfoSection({
+  t,
+  allChannels,
+  complaintSourcesLoading,
+}) {
+  const { profiledata } = useAuth();
   return (
     <FormSection title={t("Applicant Information", "शिकायतकर्ता का विवरण")}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      
         <RhfInput
           name="citizenInfo.fullName"
           label={t("Full Name", "पूरा नाम")}
@@ -31,7 +36,6 @@ export default function CitizenInfoSection({ t, allChannels , complaintSourcesLo
           placeholder={t("Optional alternate number", "वैकल्पिक नंबर")}
           isNumsOnly={true}
           maxLength={10}
-
         />
         <RhfInput
           name="citizenInfo.email"
@@ -47,13 +51,19 @@ export default function CitizenInfoSection({ t, allChannels , complaintSourcesLo
           options={PREFERRED_LANGUAGE_OPTIONS}
           required
         /> */}
+        {!profiledata?.isCCE && (
           <RhfSelect
-          name="channel"
-          label={t("Channel", "चैनल")}
-          placeholder={complaintSourcesLoading ? t("Loading...", "लोड हो रहा है...") : t("Select channel", "चैनल चुनें")}
-          options={allChannels}
-          required
-        />
+            name="channel"
+            label={t("Channel", "चैनल")}
+            placeholder={
+              complaintSourcesLoading
+                ? t("Loading...", "लोड हो रहा है...")
+                : t("Select channel", "चैनल चुनें")
+            }
+            options={allChannels}
+            required
+          />
+        )}
       </div>
     </FormSection>
   );

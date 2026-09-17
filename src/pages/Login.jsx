@@ -207,7 +207,7 @@ export default function Login() {
     <AuthLayout
       icon={LogIn}
       title={t("Sahyog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
-      subtitle={t("Enter your user id to log in", "अपने यूजर आईडी डालें")}
+      subtitle={t("Enter your user id to login", "अपने यूजर आईडी डालें")}
       footer={null}
     >
       {error && (
@@ -361,7 +361,7 @@ export default function Login() {
               {t("Logging in...", "लॉगिन हो रहा है...")}
             </>
           ) : (
-            t("Log in", "लॉग इन करें")
+            t("Login", "लॉग इन करें")
           )}
         </Button>
       </form>

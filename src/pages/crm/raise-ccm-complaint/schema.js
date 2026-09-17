@@ -1,3 +1,4 @@
+import { CCE_ROLES } from "@/utils/constants";
 import { z } from "zod";
 
 export const PREFERRED_LANGUAGE_OPTIONS = [
@@ -25,7 +26,7 @@ const locationOrPermanentAddress = z.object({
   // Rural
   block: z
     .string()
-     .min(1, "Field is required")
+    .min(1, "Field is required")
     .max(50, "Block cannot exceed 50 characters"),
   panchayat: z
     .string()
@@ -155,7 +156,7 @@ const addressSchema = locationOrPermanentAddress.superRefine((data, ctx) => {
       }
     });
   } else {
-    const requiredKeys = [ "panchayat"];
+    const requiredKeys = ["panchayat"];
     requiredKeys.forEach((key) => {
       if (!data[key] || data[key].trim() === "") {
         ctx.addIssue({
@@ -196,7 +197,8 @@ const correspondenceAddressSchema = finalAddressSchema.superRefine(
 );
 
 export const grievanceSchema = z.object({
-  channel: z.string().min(1, "Channel is required"),
+  channel: z.string().optional()
+    .or(z.literal("")),
   citizenInfo: z.object({
     fullName: z
       .string()
@@ -241,6 +243,8 @@ export const grievanceSchema = z.object({
       woman: z.boolean().optional(),
       personWithDisability: z.boolean().optional(),
       economicallyWeakerSection: z.boolean().optional(),
+      general: z.boolean().optional(),
+
     }),
   }),
   communication: z.object({
@@ -287,6 +291,7 @@ export const defaultValues = {
       woman: false,
       personWithDisability: false,
       economicallyWeakerSection: false,
+      general: false,
     },
   },
   communication: {

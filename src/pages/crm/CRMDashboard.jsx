@@ -31,6 +31,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
+import ModeWiseComplaintsChart from "../admin/dashboard/components/charts/ModeWiseComplaintsChart";
+import { useGetDashboardData } from "../admin/dashboard/query";
 
 const CCE_SCORECARD = {
   daily: {
@@ -81,10 +83,14 @@ const agentName = "Priya Sharma";
 
 export default function CRMDashboard() {
   const { t } = useLanguage();
-  const {profile} = useAuth();
+  const {profile, profiledata} = useAuth();
   const [profileData] = usePortalProfile("crm");
   const isSupervisor = profileData === "supervisor";
   const [scorecardPeriod, setScorecardPeriod] = useState("daily");
+  const { data: dashboardApiData } = useGetDashboardData({
+    period: scorecardPeriod,
+  });
+  const modeData = dashboardApiData?.data?.data?.charts?.bySource;
 
   if (isSupervisor) {
     return (
@@ -380,20 +386,20 @@ export default function CRMDashboard() {
                 ID: cce-001
               </p>
             </div>
-            <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
+         { profiledata?.isCCE  &&   <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
               <Link to="/crm/incoming-call" className="flex-1 sm:flex-none">
                 <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
                   <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
                   {t("Incoming Call", "आगमन कॉल")}
                 </Button>
               </Link>
-              <Link to="/crm/raise" className="flex-1 sm:flex-none">
+            <Link to="/crm/raise" className="flex-1 sm:flex-none">
                 <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
                   <Headphones className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                  {t("Raise Complaint", "शिकायत दर्ज करें")}
+                  {t("Register Complaint", "शिकायत दर्ज करें")}
                 </Button>
               </Link>
-            </div>
+            </div>}
           </div>
         </div>
 
@@ -462,6 +468,9 @@ export default function CRMDashboard() {
             sublabel={`SLA: ${sc.sla}%`}
           />
         </div>
+
+        {/* Source-wise Complaints Chart */}
+        <ModeWiseComplaintsChart mainData={modeData} />
 
         {/* Performance summary card */}
         <div className="bg-card rounded-xl border border-border p-5">

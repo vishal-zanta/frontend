@@ -11,6 +11,7 @@ export default function ComplaintEvidenceSection({
   impact = null,
   resolvedReason = null,
 }) {
+  // console.log({description});
   const { t } = useLanguage();
   const { profiledata } = useAuth();
 
@@ -36,6 +37,12 @@ export default function ComplaintEvidenceSection({
       label: t("Economically Weaker Section", "आर्थिक रूप से कमजोर वर्ग"),
     });
   }
+  if (impact?.vulnerability?.general) {
+    vulnerabilities.push({
+      key: "general",
+      label: t("General", "सामान्य"),
+    });
+  }
 
   const affectedBeneficiaryText =
     typeof impact?.affectedBeneficiary === "object"
@@ -56,7 +63,7 @@ export default function ComplaintEvidenceSection({
         <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">
           {t("Brief Description / Details", "संक्षिप्त विवरण / विवरण")}
         </div>
-        <p className="text-xs lg:text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+        <p className="text-xs lg:text-sm leading-relaxed text-foreground whitespace-pre-wrap ">
           {description || "N/A"}
         </p>
       </div>

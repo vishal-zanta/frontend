@@ -94,7 +94,7 @@ const KB = [
   {
     keywords: ["document", "upload", "photo"],
     response:
-      "Yes! You can upload photos and supporting documents when filing a complaint. Geo-tagged photos are especially helpful. Just click 'Raise Complaint' in the sidebar and upload on Step 3.",
+      "Yes! You can upload photos and supporting documents when filing a complaint. Geo-tagged photos are especially helpful. Just click 'Register Complaint' in the sidebar and upload on Step 3.",
   },
   {
     keywords: ["track", "status"],

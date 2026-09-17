@@ -55,7 +55,12 @@ import { useEffect } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import PermissionChecker from "./components/PermissionChecker";
 import NotAuthorized from "./pages/NotAuthorized";
-import { ADMIN_ROLES, PERMISSIONS } from "./utils/constants";
+import {
+  ADMIN_ROLES,
+  CCE_ONLY_ROLES,
+  CCE_ROLES,
+  PERMISSIONS,
+} from "./utils/constants";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import CallStats from "./pages/crm/call-stats";
 import LanguageContextProvider from "./context/LanguageContext";
@@ -156,7 +161,7 @@ const router = createBrowserRouter([
                 element: (
                   <PermissionChecker
                     permission={PERMISSIONS.RAISE_COMPLAINTS}
-                    rolePermission={{ exclude: [...ADMIN_ROLES] }}
+                    rolePermission={{ include: [...CCE_ONLY_ROLES] }}
                   >
                     <CRMRaiseComplaint />
                   </PermissionChecker>
@@ -181,7 +186,9 @@ const router = createBrowserRouter([
               {
                 path: "incoming-call",
                 element: (
-                  <PermissionChecker permission={PERMISSIONS.INCOMING_CALL}>
+                  <PermissionChecker
+                    rolePermission={{ include: [...CCE_ONLY_ROLES] }}
+                  >
                     <IncomingCall />
                   </PermissionChecker>
                 ),
@@ -218,7 +225,7 @@ const router = createBrowserRouter([
                 path: "inmail",
                 element: (
                   <PermissionChecker
-                    rolePermission={{ exclude: [...ADMIN_ROLES] }}
+                    rolePermission={{ include: [...CCE_ONLY_ROLES] }}
                   >
                     {" "}
                     <Inmail />

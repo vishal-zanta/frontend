@@ -93,6 +93,9 @@ export const getFormData = (data, attachments = [], extraObj = {}) => {
         economicallyWeakerSection: Boolean(
           data.impact.vulnerability?.economicallyWeakerSection ?? false,
         ),
+        general: Boolean(
+          data.impact.vulnerability?.general ?? false,
+        ),
       },
     }),
   );
