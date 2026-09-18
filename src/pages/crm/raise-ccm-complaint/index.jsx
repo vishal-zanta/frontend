@@ -61,7 +61,12 @@ export default function CRMRaiseComplaint() {
     complaintSourcesLoading,
   } = useRaiseComplaintData(lang);
 
-  const initialInmail = location.state?.INITIAL_INMAILS;
+  const inmailState = location.state?.INITIAL_INMAILS;
+  const initialInmailRef = useRef(inmailState);
+  if (inmailState && !initialInmailRef.current) {
+    initialInmailRef.current = inmailState;
+  }
+  const initialInmail = initialInmailRef.current || inmailState;
 
   // Sync state with URL params
   useEffect(() => {
@@ -85,7 +90,10 @@ export default function CRMRaiseComplaint() {
         }
         return params;
       },
-      { replace: true },
+      {
+        replace: true,
+        state: location.state || (initialInmail ? { INITIAL_INMAILS: initialInmail } : undefined),
+      },
     );
   };
 
@@ -194,6 +202,8 @@ export default function CRMRaiseComplaint() {
     };
   }, [initialInmail, allChannels, selectedDept]);
 
+  console.log({formInitialValues});
+
   const fileInputRef = useRef(null);
   const [attachments, setAttachments] = useState([]);
   const [fileError, setFileError] = useState("");
@@ -283,7 +293,7 @@ export default function CRMRaiseComplaint() {
 
   const handleSubmit = (data) => {
     const formData = getFormData(data, attachments, {
-      emailId: searchParams.get("inmail"),
+      emailId: searchParams.get("inmail") || initialInmail?.id,
     });
     console.log("JSON DATA", data);
     console.log("Final FormData:", Object.fromEntries(formData));
