@@ -5,11 +5,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Building2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Building2, Search } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 
 import PortalLayout from "@/components/PortalLayout";
 import RhfWrapper from "@/components/RhfWrapper";
+import { Input } from "@/components/ui/input";
 
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -32,40 +34,23 @@ import SuccessScreen from "./components/SuccessScreen";
 import { postComplaint, postExternalComplaint } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
-import { SectionTitle } from "@/components/ChartCard";
-import { useSearchParams, useLocation } from "react-router-dom";
-import Department104Form from "./department-forms/health-department";
-import { departmentsList } from "@/utils/departments";
-
-// let departmentsList = [
-//   {
-//     id: 1,
-//     name: "CM Helpline",
-//     key: "cm-helpline",
-//     component: null,
-//   },
-//   {
-//     id: 2,
-//     name: "Department 104",
-//     key: "department-104",
-//     component: Department104Form,
-//   },
-// ];
-
-import MySelect from "@/components/inputs/MySelect";
+import { departmentsList, getExternalDepartment } from "@/utils/departments";
 
 export default function CRMRaiseComplaint() {
   const role = "crm";
-  const { t, lang, setLang } = useLanguage();
+  const { t, lang } = useLanguage();
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [dept, setDept] = useState(() => {
-    const searchDept = searchParams.get("dept");
-    return searchDept
-      ? departmentsList.find((item) => item?.key === searchDept)?.key || ""
-      : departmentsList?.[0]?.key;
+
+  const [step, setStep] = useState(1);
+  const [selectedDept, setSelectedDept] = useState(() => {
+    return searchParams.get("dept") || "";
   });
+  const [searchQuery, setSearchQuery] = useState("");
   const [externalComplaintId, setExternalComplaintId] = useState(null);
+
   const {
     departmentOptions,
     departmentsLoading,
@@ -75,13 +60,93 @@ export default function CRMRaiseComplaint() {
     allChannels,
     complaintSourcesLoading,
   } = useRaiseComplaintData(lang);
-  const location = useLocation();
+
   const initialInmail = location.state?.INITIAL_INMAILS;
 
-  const formInitialValues = useMemo(() => {
-    if (!allChannels) return defaultValues;
+  // Sync state with URL params
+  useEffect(() => {
+    const deptParam = searchParams.get("dept");
+    if (deptParam && deptParam !== selectedDept) {
+      setSelectedDept(deptParam);
+    } else if (!deptParam && selectedDept) {
+      setSelectedDept("");
+    }
+  }, [searchParams]);
 
-    let channel = allChannels.find((v) => v?.label == "Voice")?.value;
+  const handleSelectDept = (key) => {
+    setSelectedDept(key);
+    setStep(1);
+    setSearchParams(
+      (params) => {
+        if (key) {
+          params.set("dept", key);
+        } else {
+          params.delete("dept");
+        }
+        return params;
+      },
+      { replace: true },
+    );
+  };
+
+  // Combine internal and external departments for selection boxes
+  const allDepartmentBoxes = useMemo(() => {
+    const externalBoxes = departmentsList
+      .filter((d) => !d.isHide)
+      .map((d) => ({
+        id: d.key,
+        key: d.key,
+        name: d.name,
+        nameHindi: d.nameHindi || d.name,
+        isExternal: true,
+      }));
+
+    const internalBoxes = (departmentOptions || []).map((d) => ({
+      id: d.value,
+      key: d.value,
+      name: d.label,
+      nameHindi: d.titleHindi || d.nameHindi || d.label,
+      isExternal: false,
+    }));
+
+    return [...externalBoxes, ...internalBoxes];
+  }, [departmentOptions]);
+
+  const filteredDepartments = useMemo(() => {
+    if (!searchQuery.trim()) return allDepartmentBoxes;
+    const q = searchQuery.toLowerCase().trim();
+    return allDepartmentBoxes.filter(
+      (d) =>
+        d.name?.toLowerCase().includes(q) ||
+        d.nameHindi?.toLowerCase().includes(q),
+    );
+  }, [allDepartmentBoxes, searchQuery]);
+
+  // Check if selected department is external
+  const selectedExternalDept = useMemo(() => {
+    if (!selectedDept) return null;
+    return getExternalDepartment(selectedDept);
+  }, [selectedDept]);
+
+  const selectedDepartmentItem = useMemo(() => {
+    if (!selectedDept) return null;
+    return (
+      allDepartmentBoxes.find(
+        (d) => d.key === selectedDept || d.id === selectedDept,
+      ) || null
+    );
+  }, [selectedDept, allDepartmentBoxes]);
+
+  const formInitialValues = useMemo(() => {
+    let base = { ...defaultValues };
+
+    if (allChannels) {
+      const voiceChannel = allChannels.find((v) => v?.label === "Voice")?.value;
+      if (voiceChannel) {
+        base.channel = voiceChannel;
+      }
+    }
+
     if (!!initialInmail) {
       const email =
         initialInmail.fromEmail ||
@@ -103,24 +168,31 @@ export default function CRMRaiseComplaint() {
         initialInmail.html ||
         "";
 
-      return {
-        ...defaultValues,
-        channel: allChannels.find((v) => v?.label == "Email")?.value,
+      base = {
+        ...base,
+        channel:
+          allChannels?.find((v) => v?.label === "Email")?.value || base.channel,
         citizenInfo: {
-          ...defaultValues.citizenInfo,
-          fullName: fullName || defaultValues.citizenInfo.fullName,
+          ...base.citizenInfo,
+          fullName: fullName || base.citizenInfo.fullName,
           email: email,
         },
         evidence: {
-          ...defaultValues.evidence,
+          ...base.evidence,
           details: emailBody,
         },
         emailId: initialInmail?.id,
       };
     }
 
-    return { ...defaultValues, channel: channel };
-  }, [initialInmail, allChannels]);
+    return {
+      ...base,
+      classification: {
+        ...base.classification,
+        department: selectedDept || "",
+      },
+    };
+  }, [initialInmail, allChannels, selectedDept]);
 
   const fileInputRef = useRef(null);
   const [attachments, setAttachments] = useState([]);
@@ -219,23 +291,6 @@ export default function CRMRaiseComplaint() {
     postComplaintMutation.mutate(formData);
   };
 
-  useEffect(() => {
-    const searchDept = searchParams?.get("dept");
-    if (searchDept) {
-      const found = departmentsList.find((item) => item?.key === searchDept);
-      if (found && found.key !== dept) {
-        setDept(found.key);
-      }
-    } else if (!searchDept && dept !== "") {
-      setDept(departmentsList?.[0]?.key);
-    }
-  }, [searchParams]);
-
-  const SelectedDept = useMemo(() => {
-    if (!dept) return null;
-    return departmentsList.find((d) => d.key === dept) || null;
-  }, [dept]);
-
   if (submitted?.[0] || submitted === true) {
     return (
       <SuccessScreen
@@ -249,60 +304,167 @@ export default function CRMRaiseComplaint() {
           setExternalComplaintId(null);
           setAttachments([]);
           setFileError("");
+          setSelectedDept("");
+          setSearchParams((params) => {
+            params.delete("dept");
+            return params;
+          });
         }}
       />
     );
   }
 
+  // Department Selection Screen
+  if (!selectedDept) {
+    return (
+      <PortalLayout role={role}>
+        <div className="max-w-6xl mx-auto p-4 sm:p-6">
+          <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="p-2 rounded-lg border border-border hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                title={t("Back", "पीछे जाएं")}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+                  {t("Register Complaint", "शिकायत दर्ज करें")}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {t(
+                    "Please choose a department to proceed with your complaint",
+                    "शिकायत दर्ज करने के लिए कृपया एक विभाग चुनें",
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Search bar */}
+          <div className="mb-6 relative max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t("Search department...", "विभाग खोजें...")}
+              className="pl-10 h-11 rounded-xl bg-card border-border shadow-xs"
+            />
+          </div>
+
+          {/* Departments Grid Boxes */}
+          {departmentsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-24 rounded-2xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-800 animate-pulse"
+                />
+              ))}
+            </div>
+          ) : filteredDepartments.length === 0 ? (
+            <div className="text-center py-12 border border-dashed border-border rounded-2xl bg-card/50">
+              <Building2 className="w-10 h-10 text-muted-foreground mx-auto mb-2 opacity-50" />
+              <p className="text-sm text-muted-foreground font-medium">
+                {t("No departments found", "कोई विभाग नहीं मिला")}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+              {filteredDepartments.map((dept) => {
+                const label =
+                  lang === "hi" && dept.nameHindi ? dept.nameHindi : dept.name;
+
+                return (
+                  <button
+                    key={dept.key}
+                    type="button"
+                    onClick={() => handleSelectDept(dept.key)}
+                    className="group relative flex flex-col justify-between p-4 rounded-2xl bg-card hover:bg-blue-50/60 dark:hover:bg-blue-950/30 border border-border hover:border-blue-500 dark:hover:border-blue-600 transition-all duration-200 shadow-xs hover:shadow-md text-left cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                  >
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors flex items-center justify-center shrink-0">
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                        {t(label, dept.nameHindi)}
+                      </h3>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </PortalLayout>
+    );
+  }
+
+  // Selected Department Form Screen
+  const selectedDeptTitle = selectedDepartmentItem
+    ? lang === "hi" && selectedDepartmentItem.nameHindi
+      ? selectedDepartmentItem.nameHindi
+      : selectedDepartmentItem.name
+    : selectedDept;
+
   return (
     <PortalLayout role={role}>
       <div className="max-w-6xl mx-auto p-4 sm:p-6">
-        <SectionTitle
-          title={t("Register Complaint", "शिकायत दर्ज करें")}
-          subtitle={""}
-          className="!mb-4 !sm:mb-6 !items-center"
-        >
-          <DepartmentSelect
-            list={departmentsList}
-            selectedKey={typeof dept === "string" ? dept : dept?.key}
-            onSelect={(key) => {
-              setSearchParams(
-                (params) => {
-                  if (key) {
-                    params.set("dept", key);
-                  } else {
-                    params.delete("dept");
-                  }
-
-                  return params;
-                },
-                { replace: true },
-              );
-
-              setDept(key || "");
-            }}
-            t={t}
-          />
-        </SectionTitle>
-
-        {!SelectedDept ? (
-          <div className="flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-2xl border border-dashed border-border bg-card/60 shadow-sm my-6">
-            <div className="p-4 rounded-full bg-primary/10 text-primary mb-3">
-              <Building2 className="w-10 h-10 stroke-[1.5]" />
+        {/* Page header */}
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                if (selectedExternalDept) {
+                  handleSelectDept("");
+                } else if (step > 1) {
+                  setStep((prev) => prev - 1);
+                } else {
+                  handleSelectDept("");
+                }
+              }}
+              className="p-2 rounded-lg border border-border hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              title={t("Back", "पीछे जाएं")}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+                {t("Register Complaint", "शिकायत दर्ज करें")}
+              </h1>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
-              {t("No Department Selected", "कोई विभाग नहीं चुना गया")}
-            </h3>
-            <p className="text-sm text-muted-foreground max-w-md">
-              {t(
-                "Please select a department from the dropdown above to proceed with registering a complaint.",
-                "शिकायत दर्ज करने के लिए कृपया ऊपर दिए गए ड्रॉपडाउन से एक विभाग चुनें।",
-              )}
-            </p>
           </div>
-        ) : SelectedDept?.component ? (
-          <SelectedDept.component
-            selectedDept={SelectedDept?.key}
+
+          {/* Current selected department badge & change action */}
+          <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-xl px-3 py-1.5">
+            <Building2 className="w-4 h-4 text-primary shrink-0" />
+            <div className="text-xs">
+              <span className="text-muted-foreground font-medium mr-1">
+                {t("Department:", "विभाग:")}
+              </span>
+              <span className="font-semibold text-foreground">
+                {selectedDeptTitle}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleSelectDept("")}
+              className="ml-2 text-xs font-semibold text-primary hover:underline cursor-pointer"
+            >
+              {t("Change", "बदलें")}
+            </button>
+          </div>
+        </div>
+
+        {/* Render External Department Form or Internal 3-Step Wizard */}
+        {selectedExternalDept?.component ? (
+          <selectedExternalDept.component
+            selectedDept={selectedExternalDept.key}
             onSuccess={(payload) =>
               postExternalComplaintMutation.mutate(payload)
             }
@@ -310,6 +472,7 @@ export default function CRMRaiseComplaint() {
           />
         ) : (
           <RhfWrapper
+            key={selectedDept}
             initialValues={formInitialValues}
             isValidation
             validationSchema={grievanceSchema}
@@ -334,6 +497,8 @@ export default function CRMRaiseComplaint() {
               allChannels={allChannels}
               complaintSourcesLoading={complaintSourcesLoading}
               grievanceMaxUploadSizeMB={grievanceMaxUploadSizeMB}
+              step={step}
+              setStep={setStep}
             />
           </RhfWrapper>
         )}
@@ -359,9 +524,10 @@ function FormWizard({
   allChannels,
   complaintSourcesLoading,
   grievanceMaxUploadSizeMB,
+  step = 1,
+  setStep,
 }) {
   const methods = useFormContext();
-  const [step, setStep] = useState(1);
 
   const steps = [
     {
@@ -490,9 +656,6 @@ function FormWizard({
                 >
                   {s.label}
                 </p>
-                {/* <p className="text-[10px] text-muted-foreground hidden sm:block">
-                  {s.description}
-                </p> */}
               </div>
             </div>
           );
@@ -527,6 +690,7 @@ function FormWizard({
               naturesLoading={naturesLoading}
               t={t}
               lang={lang}
+              isDepartmentFixed={true}
             />
             <LocationDetailsSection t={t} />
             <ImpactSection
@@ -554,34 +718,6 @@ function FormWizard({
         isSubmitting={postComplaintMutation.isPending}
         t={t}
       />
-    </div>
-  );
-}
-
-function DepartmentSelect({ list = [], selectedKey, onSelect, t }) {
-  const options = list.map((item) => ({
-    label: item.name,
-    value: item.key ?? item.id,
-  }));
-
-  return (
-    <div className="mb-0 max-w-xs w-full flex flex-col  gap-1 ">
-      <p className="text-[10px] text-left font-semibold uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">
-        {t ? t("Select Department", "विभाग") : "Dept"}
-      </p>
-      <div className="flex-1 min-w-0">
-        <MySelect
-          placeholder={
-            t
-              ? t("Choose a department...", "विभाग चुनें...")
-              : "Choose a department..."
-          }
-          options={options}
-          value={selectedKey || ""}
-          onValueChange={(val) => onSelect?.(val)}
-          nonClearable
-        />
-      </div>
     </div>
   );
 }

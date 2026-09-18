@@ -18,6 +18,7 @@ export default function ClassificationSection({
   naturesLoading,
   t,
   lang,
+  isDepartmentFixed = false,
 }) {
   const { setValue, watch, control } = useFormContext();
   const selectedDepartment = useWatch({
@@ -113,7 +114,7 @@ export default function ClassificationSection({
               : t("Select department", "विभाग चुनें")
           }
           options={departmentOptions}
-          disabled={departmentsLoading}
+          disabled={departmentsLoading || isDepartmentFixed}
           required
         />
 

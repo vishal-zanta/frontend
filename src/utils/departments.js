@@ -18,7 +18,10 @@ export let departmentsList = [
   {
     id: 1,
     name: "CM Helpline",
+    nameHindi: "मुख्यमंत्री हेल्पलाइन",
     key: "cm-helpline",
+    isExternal: true,
+    isHide: true,
     component: null,
     listComponent: null,
     viewComponent: null,
@@ -26,7 +29,9 @@ export let departmentsList = [
   {
     id: 2,
     name: "Health Department",
+    nameHindi: "स्वास्थ्य विभाग",
     key: "HEALTH",
+    isExternal: true,
     component: Department104Form, // onSuccess(data : formData), isLoading, selectedDept
     listComponent: HealthDepartmentListCard, // data, onClick, isSelected
     viewComponent: HealthDepartmentViewCard, // data
@@ -34,17 +39,35 @@ export let departmentsList = [
   {
     id: 3,
     name: "Education Department",
+    nameHindi: "शिक्षा विभाग",
     key: "EDUCATION",
+    isExternal: true,
     component: EducationDeptForm, // onSuccess(data : formData),isLoading, selectedDept
-    listComponent: EduDeptListCard, 
+    listComponent: EduDeptListCard,
     viewComponent: EduDeptViewCard,
   },
   {
     id: 4,
     name: "Food & Consumer Protection Department",
+    nameHindi: "खाद्य एवं उपभोक्ता संरक्षण विभाग",
     key: "FOOD",
+    isExternal: true,
     component: FoodDepartment, // onSuccess(data : formData),isLoading, selectedDept
-    listComponent: FoodDeptList, 
+    listComponent: FoodDeptList,
     viewComponent: FoodDeptView,
   },
 ];
+
+export const isExternalDepartment = (keyOrId) => {
+  return departmentsList.some(
+    (dept) => !dept.isHide && (dept.key === keyOrId || dept.id === keyOrId),
+  );
+};
+
+export const getExternalDepartment = (keyOrId) => {
+  return (
+    departmentsList.find(
+      (dept) => dept.key === keyOrId || dept.id === keyOrId,
+    ) || null
+  );
+};
