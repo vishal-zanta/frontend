@@ -14,46 +14,100 @@ import {
   Send,
   ArrowRight,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const iconMap = {
-  FilePlus2,
-  UserCheck,
-  MapPin,
-  AlertTriangle,
-  CheckCircle2,
-  MessageSquare,
-  Camera,
-  Star,
-  Lock,
-  Flag,
-  Clock,
-  Send,
-  ArrowRight,
+  COMPLAINT_REGISTERED: FilePlus2,
+  PRIORITY_SET: AlertTriangle,
+  PRIORITY_UPDATED: AlertTriangle,
+  ASSIGNED: UserCheck,
+  OFFICER_ASSIGNED: UserCheck,
+  SMS_SENT: Send,
+  FIELD_VISIT_STATUS: MapPin,
+  FIELD_VISIT_REMARK: MessageSquare,
+  FIELD_VISIT_SCHEDULE: Clock,
+  FIELD_VISIT_REPORT_SUBMITTED: MapPin,
+  ESCALATED: Flag,
+  TRANSFERRED: ArrowRight,
+  OFFICER_TRANSFERRED: ArrowRight,
+  RESOLVED: CheckCircle2,
+  RESOLUTION_PHOTO: Camera,
+  CITIZEN_FEEDBACK: Star,
+  FEEDBACK_SUBMITTED: Star,
+  COMPLAINT_CLOSED: Lock,
+  STATUS_CHANGE: CheckCircle2,
+  STATUS_CHANGED: CheckCircle2,
+  STATUS_UPDATED: CheckCircle2,
+  COMMENT_ADDED: MessageSquare,
+  GEOTAGGED_IMAGE_UPLOADED: Camera,
 };
 
-export default function ComplaintTimeline({ events }) {
+const eventTranslations = {
+  COMPLAINT_REGISTERED: { en: "Complaint Registered", hi: "शिकायत दर्ज की गई" },
+  PRIORITY_SET: { en: "Priority Set", hi: "प्राथमिकता निर्धारित" },
+  PRIORITY_UPDATED: { en: "Priority Updated", hi: "प्राथमिकता अपडेट की गई" },
+  ASSIGNED: { en: "Officer Assigned", hi: "अधिकारी नियुक्त" },
+  OFFICER_ASSIGNED: { en: "Officer Assigned", hi: "अधिकारी नियुक्त" },
+  SMS_SENT: { en: "SMS Notification Sent", hi: "एसएमएस सूचना भेजी गई" },
+  FIELD_VISIT_STATUS: { en: "Field Visit Status", hi: "क्षेत्रीय दौरा स्थिति" },
+  FIELD_VISIT_REMARK: { en: "Field Visit Remark", hi: "क्षेत्रीय दौरा टिप्पणी" },
+  FIELD_VISIT_SCHEDULE: { en: "Field Visit Scheduled", hi: "क्षेत्रीय दौरा निर्धारित" },
+  FIELD_VISIT_REPORT_SUBMITTED: { en: "Field Visit Report Submitted", hi: "क्षेत्रीय दौरा रिपोर्ट सबमिट की गई" },
+  ESCALATED: { en: "Complaint Escalated", hi: "शिकायत अग्रेषित की गई" },
+  TRANSFERRED: { en: "Complaint Transferred", hi: "शिकायत स्थानांतरित" },
+  OFFICER_TRANSFERRED: { en: "Officer Transferred", hi: "अधिकारी स्थानांतरित" },
+  RESOLVED: { en: "Complaint Resolved", hi: "शिकायत हल की गई" },
+  RESOLUTION_PHOTO: { en: "Resolution Photo Uploaded", hi: "समाधान फोटो अपलोड की गई" },
+  CITIZEN_FEEDBACK: { en: "Citizen Feedback", hi: "नागरिक फीडबैक" },
+  FEEDBACK_SUBMITTED: { en: "Feedback Submitted", hi: "फीडबैक सबमिट किया गया" },
+  COMPLAINT_CLOSED: { en: "Complaint Closed", hi: "शिकायत बंद कर दी गई" },
+  STATUS_CHANGE: { en: "Status Changed", hi: "स्थिति बदली गई" },
+  STATUS_CHANGED: { en: "Status Changed", hi: "स्थिति बदली गई" },
+  STATUS_UPDATED: { en: "Status Updated", hi: "स्थिति अपडेट की गई" },
+  COMMENT_ADDED: { en: "Comment Added", hi: "टिप्पणी जोड़ी गई" },
+  GEOTAGGED_IMAGE_UPLOADED: { en: "Geo-tagged Photo Uploaded", hi: "जियो-टैग फोटो अपलोड की गई" },
+};
+
+export default function ComplaintTimeline({ events, t }) {
+  const { t: hookT } = useLanguage();
+  const translate = t || hookT;
+
+  const getLocalizedType = (type) => {
+    const item = eventTranslations[type];
+    if (!item) {
+      const fallbackEn = (type || "")
+        .split("_")
+        .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
+        .join(" ");
+      return translate ? translate(fallbackEn, fallbackEn) : fallbackEn;
+    }
+    return translate ? translate(item.en, item.hi) : item.en;
+  };
+
   return (
     <div className="relative pl-6 xs:pl-7 sm:pl-8">
       {/* Vertical line */}
       <div className="absolute left-2.5 xs:left-3 top-2 bottom-2 w-0.5 bg-gradient-to-b from-blue-500 via-sky-300 to-slate-200 dark:to-slate-800"></div>
 
-      {[...events].reverse().map((event, i) => {
-        const iconMapping = {
-          COMPLAINT_REGISTERED: "FilePlus2",
-          PRIORITY_SET: "Flag",
-          STATUS_UPDATED: "Clock",
-          OFFICER_ASSIGNED: "UserCheck",
-          GEOTAGGED_IMAGE_UPLOADED: "Camera",
-          FIELD_VISIT_REPORT_SUBMITTED: "MapPin",
-        };
-        const iconName = event.icon || iconMapping[event.type] || "FilePlus2";
-        const Icon = iconMap[iconName] || FilePlus2;
-        const notes =
-          event.notes || event.metadata?.description || event.description;
+      {[...(events || [])].reverse().map((event, i) => {
+        const Icon = iconMap[event.type] || FilePlus2;
+        const actorName = event.actor?.name || event.actor?.role || (translate ? translate("System", "सिस्टम") : "System");
+        
+        const descEn =
+          event.metadata?.description ||
+          event.description ||
+          event.notes ||
+          "";
+        const descLocal =
+          event.metadata?.description_local ||
+          event.description_local ||
+          descEn;
+
+        const description = translate ? translate(descEn, descLocal) : (descLocal || descEn);
         const eventTime = event.timestamp || event.createdAt;
 
         return (
-          <div key={i} className="relative mb-3.5 xs:mb-4 sm:mb-6 last:mb-0">
+          <div key={event._id || i} className="relative mb-3.5 xs:mb-4 sm:mb-6 last:mb-0">
             {/* Dot */}
             <div className="absolute -left-[23px] xs:-left-[31px] top-0.5 xs:top-0 w-5 h-5 xs:w-6 xs:h-6 rounded-full bg-white dark:bg-zinc-950 border-2 border-blue-500 flex items-center justify-center shadow-sm">
               <Icon className="w-2.5 h-2.5 xs:w-3 xs:h-3 text-blue-600 dark:text-blue-400" />
@@ -63,14 +117,14 @@ export default function ComplaintTimeline({ events }) {
               <div className="flex flex-col xs:flex-row items-start justify-between gap-1 xs:gap-2">
                 <div className="flex-1 min-w-0">
                   <div className="text-xs xs:text-sm font-semibold text-foreground leading-snug">
-                    {event.type?.replace(/_/g, " ")}
+                    {getLocalizedType(event.type)}
                   </div>
                   <div className="text-[10px] xs:text-[11px] text-muted-foreground mt-0.5">
-                    by {event.actor?.name || event.actor?.role || "N/A"}
+                    {translate ? translate("by", "द्वारा") : "by"} {actorName}
                   </div>
-                  {notes && (
+                  {description && (
                     <div className="text-xs xs:text-sm text-muted-foreground mt-1 leading-relaxed">
-                      {notes}
+                      {description}
                     </div>
                   )}
                 </div>

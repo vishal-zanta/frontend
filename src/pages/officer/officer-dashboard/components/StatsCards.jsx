@@ -14,12 +14,23 @@ export default function StatsCards({ officer, analyticsData, isLoading, error })
   const total = current.totalAssigned ?? 0;
   const pending = current.pending ?? 0;
   const resolved = current.resolved ?? 0;
-  const slaBreached = current.slaBreached ?? 0;
+  const slaBreached =
+    current.slaBreachIn48Hours ??
+    current.slaBreachNext48Hrs ??
+    current.slaBreachedIn48Hours ??
+    current.slaBreached ??
+    0;
 
   const totalTrend = getTrendProps(current.totalAssigned, previous.totalAssigned);
   const pendingTrend = getTrendProps(current.pending, previous.pending);
   const resolvedTrend = getTrendProps(current.resolved, previous.resolved);
-  const slaTrend = getTrendProps(current.slaBreached, previous.slaBreached, true);
+  const previousSlaBreached =
+    previous.slaBreachIn48Hours ??
+    previous.slaBreachNext48Hrs ??
+    previous.slaBreachedIn48Hours ??
+    previous.slaBreached ??
+    0;
+  const slaTrend = getTrendProps(slaBreached, previousSlaBreached, true);
 
   return (
     <LoaderErrWrapper isLoading={isLoading} error={error}>
@@ -47,7 +58,7 @@ export default function StatsCards({ officer, analyticsData, isLoading, error })
         />
         <StatCard
           icon={AlertTriangle}
-          label={t("SLA Breached", "एसएलए उल्लंघन")}
+          label={t("SLA Breach in Next 48 Hrs", "अगले 48 घंटों में SLA उल्लंघन")}
           value={slaBreached}
           color="red"
           {...slaTrend}
