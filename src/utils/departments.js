@@ -5,6 +5,9 @@ import HealthDepartmentViewCard from "@/components/complaints/department-view/he
 import EducationDeptForm from "../pages/crm/raise-ccm-complaint/department-forms/education-department";
 import EduDeptListCard from "@/components/complaints/department-list/education-department"
 import EduDeptViewCard from "@/components/complaints/department-view/education-department"
+import FoodDepartment from "@/pages/crm/raise-ccm-complaint/department-forms/food-department";
+import FoodDeptList from "@/components/complaints/department-list/food-department";
+import FoodDeptView from "@/components/complaints/department-view/food-department";
 
 
 //component = form component
@@ -35,5 +38,13 @@ export let departmentsList = [
     component: EducationDeptForm, // onSuccess(data : formData),isLoading, selectedDept
     listComponent: EduDeptListCard, 
     viewComponent: EduDeptViewCard,
+  },
+  {
+    id: 4,
+    name: "Food & Consumer Protection Department",
+    key: "FOOD",
+    component: FoodDepartment, // onSuccess(data : formData),isLoading, selectedDept
+    listComponent: FoodDeptList, 
+    viewComponent: FoodDeptView,
   },
 ];

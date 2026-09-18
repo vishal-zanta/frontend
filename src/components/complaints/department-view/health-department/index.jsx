@@ -1,5 +1,6 @@
 import React from "react";
 import { StatusBadge } from "@/components/Badges";
+import ComplaintTimeline from "@/components/ComplaintTimeline";
 import {
   MapPin,
   Phone,
@@ -11,7 +12,7 @@ import {
   Mail,
   Stethoscope,
   AlertCircle,
-  CheckCircle2,
+  Clock,
 } from "lucide-react";
 import moment from "moment";
 
@@ -150,6 +151,17 @@ const HealthDepartmentDetailView = ({ data }) => {
             <SectionCard title="Description" icon={FileText}>
               <p className="text-sm text-foreground leading-relaxed pt-1">{payload.description}</p>
             </SectionCard>
+          )}
+
+          {/* Timeline / Activity Log — spans 2 cols on xl */}
+          {Array.isArray(data?.timeline) && data.timeline.length > 0 && (
+            <div className="xl:col-span-2">
+              <SectionCard title="Status & Activity Timeline" icon={Clock}>
+                <div className="pt-2">
+                  <ComplaintTimeline events={data.timeline} />
+                </div>
+              </SectionCard>
+            </div>
           )}
         </div>
       </div>

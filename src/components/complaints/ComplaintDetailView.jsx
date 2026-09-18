@@ -408,7 +408,7 @@ export default function ComplaintDetailView({
         {/* Timeline */}
         <div className="bg-card rounded-xl border border-border p-3 lg:p-5">
           <h3 className="font-bold text-foreground text-xs lg:text-sm mb-3 lg:mb-4">
-            {t("Complaint Timeline", "शिकायत समयरेखा")}
+            {t("Complaint Timeline", "शिकायत समयसीमा")}
           </h3>
           <ComplaintTimeline events={c.timeline || []} />
         </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { StatusBadge, TypeBadge, SourceBadge } from "@/components/Badges";
+import ComplaintTimeline from "@/components/ComplaintTimeline";
 import {
   MapPin,
   Phone,
@@ -14,6 +15,7 @@ import {
   Tag,
   Shield,
   Layers,
+  Clock,
 } from "lucide-react";
 import moment from "moment";
 import {
@@ -319,6 +321,17 @@ const EducationDepartmentDetailView = ({ data }) => {
                 <p className="text-sm text-foreground leading-relaxed pt-1 whitespace-pre-wrap">
                   {payload.complaint}
                 </p>
+              </SectionCard>
+            </div>
+          )}
+
+          {/* Timeline / Activity Log — spans 2 cols on xl */}
+          {Array.isArray(data?.timeline) && data.timeline.length > 0 && (
+            <div className="xl:col-span-2">
+              <SectionCard title="Status & Activity Timeline" icon={Clock}>
+                <div className="pt-2">
+                  <ComplaintTimeline events={data.timeline} />
+                </div>
               </SectionCard>
             </div>
           )}

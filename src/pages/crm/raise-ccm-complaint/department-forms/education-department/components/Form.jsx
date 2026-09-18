@@ -20,6 +20,37 @@ const Form = ({ fields, isLoading }) => {
       isLoading={isLoading}
     >
       <div className="px-4 space-y-6">
+         {/* Section 2: Complainant Details */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">
+            <User className="w-4 h-4 text-primary" />
+            <span>Complainant Details</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <RhfInput
+              name="complainant.name"
+              label="Complainant Name"
+              placeholder="Enter complainant name"
+              required
+            />
+            <RhfInput
+              name="complainant.mobile"
+              label="Complainant Mobile Number"
+              placeholder="Enter 10-digit mobile number"
+              isNumsOnly={true}
+              maxLength={10}
+              required
+            />
+          </div>
+
+          <RhfBoolean
+            name="complainant.shareNumberWithOfficer"
+            label="Share Mobile Number with Officer"
+            description="Allow the investigating officer to view the complainant's contact number."
+          />
+        </div>
+
         {/* Section 1: Complaint & Classification Details */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">
@@ -74,37 +105,7 @@ const Form = ({ fields, isLoading }) => {
           />
         </div>
 
-        {/* Section 2: Complainant Details */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">
-            <User className="w-4 h-4 text-primary" />
-            <span>Complainant Details</span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <RhfInput
-              name="complainant.name"
-              label="Complainant Name"
-              placeholder="Enter complainant name"
-              required
-            />
-            <RhfInput
-              name="complainant.mobile"
-              label="Complainant Mobile Number"
-              placeholder="Enter 10-digit mobile number"
-              isNumsOnly={true}
-              maxLength={10}
-              required
-            />
-          </div>
-
-          <RhfBoolean
-            name="complainant.shareNumberWithOfficer"
-            label="Share Mobile Number with Officer"
-            description="Allow the investigating officer to view the complainant's contact number."
-          />
-        </div>
-
+       
         {/* Section 3: Location Details */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">

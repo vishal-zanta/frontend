@@ -341,7 +341,7 @@ export default function OfficerTaggingFormFields({
         <div>
           <RhfSelect
             name="blocks"
-            label={t("Blocks", "प्रखंड")}
+            label={t("Block", "प्रखंड")}
             isMultiple={true}
             options={blockOptions}
             placeholder={

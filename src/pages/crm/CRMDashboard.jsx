@@ -384,7 +384,7 @@ export default function CRMDashboard() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
             <div className="space-y-1">
               <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
-                {t("My Scorecard", "मेरा स्कोरकार्ड")}
+                {t(isSupervisor? "Team Scorecard" : "My Scorecard", isSupervisor? "टीम स्कोरकार्ड" :  "मेरा स्कोरकार्ड")}
               </h1>
               <p className="text-xs xs:text-sm md:text-base capitalize text-white/80">
                 {profile?.name} • {profile?.role?.designationEnglish || "CCE Agent"} • {t("Agent ID:", "एजेंट आईडी:")}{" "}
