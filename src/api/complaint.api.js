@@ -70,3 +70,7 @@ export const getComplaintAnalyticsSummary = async (params = {}) => {
 export const getVisitStats = async (params) => {
   return instance.get("/visits/stats", { params });
 };
+
+export const postComplaintFeedback = async ({ id, data }) => {
+  return instance.post(`/grievances/officer/${id}/feedback`, data).then((res) => res.data);
+};

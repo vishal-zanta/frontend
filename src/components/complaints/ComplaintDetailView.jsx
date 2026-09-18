@@ -402,6 +402,8 @@ export default function ComplaintDetailView({
             fieldVisit={fieldVisit}
             geotaggedImages={geotaggedImages}
             maxMbAllowed={maxMbAllowed}
+            existingRating={c.rating}
+            existingFeedback={c.feedbackText}
           />
         </div>
 

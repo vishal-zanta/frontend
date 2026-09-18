@@ -85,8 +85,9 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Resolved",
     badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     isRemark: true,
-    disabled: ["RESOLVED", "CLOSED"],
-    roleHidden: USER_ROLES_EXECULDED,
+    disabled: ["RESOLVED", "IN_PROGRESS", "OPEN"],
+    roleHidden: null,
+    roleAllowed : CCE_ROLES,
     requireFieldVisit: true,
   },
   {
@@ -98,6 +99,7 @@ export const STATUS_ACTIONS = [
     badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
+    roleHidden : CCE_ROLES,
   },
   {
     label: "In Progress",
@@ -125,7 +127,7 @@ export const STATUS_ACTIONS = [
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Pending",
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-    disabled: ["RESOLVED", "CLOSED"],
+    disabled: ["RESOLVED", "CLOSED", "IN_PROGRESS"],
   },
   // {
   //   label: "Escalate",

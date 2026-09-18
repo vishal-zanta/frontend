@@ -1,0 +1,93 @@
+{
+
+  "energy": [
+    {
+      "hindi": "गैर कानूनी बिजली कनेक्शन / बिजली चोरी के संबंध में |",
+      "english": "Regarding illegal electricity connection / power theft"
+    },
+    {
+      "hindi": "ट्रांसफॉर्मर / मीटर में खराबी एवं नहीं बदले जाने के सम्बन्ध में |",
+      "english": "Regarding defect in transformer / meter and delay/failure in replacement"
+    },
+    {
+      "hindi": "विद्युतीकरण के संबंध में |",
+      "english": "Regarding electrification"
+    },
+    {
+      "hindi": "बिजली बिल के सम्बन्ध में |",
+      "english": "Regarding electricity bill"
+    },
+    {
+      "hindi": "कम वोल्टेज / बिजली नहीं रहने के संबंध में |",
+      "english": "Regarding low voltage / power outage"
+    },
+    {
+      "hindi": "पदाधिकारियों के खिलाफ आक्षेप के संबंध में",
+      "english": "Regarding allegations/complaints against officials"
+    },
+    {
+      "hindi": "अनुकम्पा पर नौकरी के संबंध में |",
+      "english": "Regarding employment on compassionate grounds"
+    },
+    {
+      "hindi": "अन्य",
+      "english": "Others"
+    },
+    {
+      "hindi": "जल विद्युत से संबंधित मामले",
+      "english": "Issues related to hydroelectric power"
+    },
+    {
+      "hindi": "सौर ऊर्जा से संबंधित मामले",
+      "english": "Issues related to solar energy"
+    },
+    {
+      "hindi": "मुख्यमंत्री विद्युत निश्चय योजना",
+      "english": "Mukhyamantri Vidyut Nishchay Yojana"
+    },
+    {
+      "hindi": "ग्रामीण विद्युतीकरण योजना",
+      "english": "Rural Electrification Scheme"
+    },
+    {
+      "hindi": "दीनदयाल उपाध्याय ग्राम ज्योति योजना",
+      "english": "Deendayal Upadhyaya Gram Jyoti Yojana"
+    },
+    {
+      "hindi": "विद्युत तार टूटने, झुलने से संबंधित मामले",
+      "english": "Issues related to broken or sagging power lines"
+    },
+    {
+      "hindi": "विद्युत कनेक्शन से संबंधित मामले",
+      "english": "Issues related to electricity connection"
+    },
+    {
+      "hindi": "विद्युत विपत्र से संबंधित मामले",
+      "english": "Issues related to electricity bills / billing"
+    },
+    {
+      "hindi": "ट्रांसफारमर एवं उसके बदलाव से संबंधित मामले",
+      "english": "Issues related to transformer and its replacement"
+    },
+    {
+      "hindi": "विद्युत वितरण से संबंधित मामले",
+      "english": "Issues related to power distribution"
+    },
+    {
+      "hindi": "ट्रांसफारमर एवं उसके बदलाव से संबंधित मामले",
+      "english": "Issues related to transformer and its replacement"
+    },
+    {
+      "hindi": "विद्युत वितरण से संबंधित मामले",
+      "english": "Issues related to power distribution"
+    },
+    {
+      "hindi": "विद्युत स्पर्शाघात से मानव क्षति से संबंधित शिकायत",
+      "english": "Complaint regarding human loss/ injury due to electric shock"
+    },
+    {
+      "hindi": "नियमित कर्मचारी एवं पदाधिकारियों की सेवा मामलों एवं सेवांत लाभों से संबंधित",
+      "english": "Related to service matters and retirement/terminal benefits of regular employees and officials"
+    }
+  ]
+}

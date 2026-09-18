@@ -9,6 +9,7 @@ import { getErrorToast } from "@/utils/helpers";
 import { Label } from "../ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import OfficerComplaintFeedback from "./OfficerComplaintFeedback";
 
 const initialRemark = { isOpen: false, value: "", id: null, status: null };
 
@@ -29,6 +30,8 @@ export default function ComplaintActionSection({
   fieldVisit,
   geotaggedImages,
   maxMbAllowed,
+  existingRating,
+  existingFeedback,
 }) {
 
 
@@ -131,7 +134,9 @@ export default function ComplaintActionSection({
               value: a.value,
               disabled:
                 (a.disabled && a.disabled.includes(currentStatus)) ||
-                (a.roleHidden && a.roleHidden.includes(profiledata?.role)),
+                (a.roleHidden && a.roleHidden.includes(profiledata?.role) || (a.roleAllowed && !a.roleAllowed.includes(profiledata?.role))) ||
+                // RESOLVED blocked when CLOSED and citizen feedback not yet submitted
+                (a.value === "RESOLVED" &&( (currentStatus === "CLOSED" && !(existingRating && existingFeedback)) || currentStatus != "CLOSED")),
             }))}
             className={"w-full"}
              customStyles={{
@@ -165,6 +170,16 @@ export default function ComplaintActionSection({
           </div>
         )}
       </div>
+
+      {/* Feedback section when CLOSED — only visible to CCE users */}
+      {currentStatus === "CLOSED" && profiledata?.isCCE && (
+        <OfficerComplaintFeedback
+          complaintId={selectedId}
+          existingRating={existingRating}
+          existingFeedback={existingFeedback}
+          t={t}
+        />
+      )}
 
       {/* Priority actions */}
       <div className="border-t border-border pt-4">

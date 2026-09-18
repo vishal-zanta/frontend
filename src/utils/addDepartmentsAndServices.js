@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 const API_BASE_URL = 'https://portal-backend.lumirex.tech/api/v1';
 const AUTH_TOKEN =
-  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNjczZDc2YzliYzIyN2I0NTk5OTJmMSIsInJvbGUiOnsiX2lkIjoiNmE2NzNkNGEzOWQzYmE2NDBkYWJlOWZhIiwiZGVzaWduYXRpb25FbmdsaXNoIjoiQWRtaW4iLCJfX3YiOjAsImFjdGl2ZSI6dHJ1ZSwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yN1QxMToxMzoxNC43MjVaIiwiZGVzaWduYXRpb25IaW5kaSI6IkFkbWluIiwibGV2ZWwiOiJBZG1pbiIsInBlcm1pc3Npb25zIjpbIkFMTCJdLCJ1cGRhdGVkQXQiOiIyMDI2LTA3LTI3VDExOjEzOjE0LjcyNVoifSwiaWF0IjoxNzg4ODY2MTE1LCJleHAiOjE3ODg5NTI1MTV9.VrhB9EsEJTGNhMxV3L_xQgcufWP_wAwLnIQuwzRbpPQ';
+  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNjczZDc2YzliYzIyN2I0NTk5OTJmMSIsInJvbGVzIjpbeyJfaWQiOiI2YTY3M2Q0YTM5ZDNiYTY0MGRhYmU5ZmEiLCJkZXNpZ25hdGlvbkVuZ2xpc2giOiJBZG1pbiIsIl9fdiI6MCwiYWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI2LTA3LTI3VDExOjEzOjE0LjcyNVoiLCJkZXNpZ25hdGlvbkhpbmRpIjoiQWRtaW4iLCJsZXZlbCI6IkFkbWluIiwicGVybWlzc2lvbnMiOlsiQUxMIl0sInVwZGF0ZWRBdCI6IjIwMjYtMDctMjdUMTE6MTM6MTQuNzI1WiJ9XSwiaWF0IjoxNzg5NzMwNzIxLCJleHAiOjE3ODk4MTcxMjF9.O3sXjQrz-m21V5jE26nlglB5XfaIJivvkrBUV1lMy_g';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -78,6 +78,7 @@ async function addService(service, departmentId) {
     titleHindi: service.hindi,
     department: departmentId,
     departmentObj: {},
+    sla: 48
   };
 
   try {
@@ -95,7 +96,7 @@ async function addService(service, departmentId) {
 }
 
 async function main() {
-  const jsonPath = path.join(__dirname, 'deparmtnent.json');
+  const jsonPath = path.join(__dirname, 'departments.json');
   if (!fs.existsSync(jsonPath)) {
     console.error(`File not found: ${jsonPath}`);
     process.exit(1);
