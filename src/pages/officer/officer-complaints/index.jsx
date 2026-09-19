@@ -56,11 +56,11 @@ export default function OfficerComplaints() {
               externalDeptProps={externalDeptProps}
             />
           ) : ( */}
-            <ComplaintDetailView
-              selected={selected}
-              statusUpdate={statusUpdate}
-              setStatusUpdate={setStatusUpdate}
-            />
+          <ComplaintDetailView
+            selected={selected}
+            statusUpdate={statusUpdate}
+            setStatusUpdate={setStatusUpdate}
+          />
           {/* )} */}
         </div>
 
@@ -81,11 +81,11 @@ export default function OfficerComplaints() {
                   externalDeptProps={externalDeptProps}
                 />
               ) : ( */}
-                <ComplaintDetailView
-                  selected={selected}
-                  statusUpdate={statusUpdate}
-                  setStatusUpdate={setStatusUpdate}
-                />
+              <ComplaintDetailView
+                selected={selected}
+                statusUpdate={statusUpdate}
+                setStatusUpdate={setStatusUpdate}
+              />
               {/* )} */}
             </div>
           ) : (

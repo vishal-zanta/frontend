@@ -464,7 +464,7 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
 
   const locationParts = (
     isUrban
-      ? [ blockName, districtName, pincode]
+      ? [blockName, districtName, pincode]
       : [
           // villageName,
           // panchayatName,
