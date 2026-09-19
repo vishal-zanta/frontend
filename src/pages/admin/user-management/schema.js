@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CCE_ROLES } from "@/utils/constants";
+import { CCE_ROLES, CCE_ONLY_ROLES } from "@/utils/constants";
 
 export const getAddSchema = (rolesList = []) => {
   return z
@@ -13,6 +13,7 @@ export const getAddSchema = (rolesList = []) => {
       email: z.string().optional(),
       loginId: z.string().optional(),
       phone: z.string().optional(),
+      supervisor: z.string().optional(),
       password: z.string().min(1, "Password is required"),
       confirmPassword: z.string().min(1, "Confirm password is required"),
     })
@@ -33,6 +34,19 @@ export const getAddSchema = (rolesList = []) => {
       const isCCE = selectedRoles.some((r) =>
         CCE_ROLES.includes(r.designationEnglish || ""),
       );
+      const isCCEOnly = selectedRoles.some((r) =>
+        CCE_ONLY_ROLES.includes(r.designationEnglish || ""),
+      );
+
+      if (isCCEOnly) {
+        if (!data.supervisor || data.supervisor.trim() === "") {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "CCS is required",
+            path: ["supervisor"],
+          });
+        }
+      }
 
       if (isCCE) {
         // For CCE, loginId is required
@@ -98,6 +112,7 @@ export const getEditSchema = (rolesList = []) => {
       email: z.string().optional(),
       loginId: z.string().optional(),
       phone: z.string().optional(),
+      supervisor: z.string().optional(),
       password: z.string().optional(),
       confirmPassword: z.string().optional(),
     })
@@ -121,6 +136,19 @@ export const getEditSchema = (rolesList = []) => {
       const isCCE = selectedRoles.some((r) =>
         CCE_ROLES.includes(r.designationEnglish || ""),
       );
+      const isCCEOnly = selectedRoles.some((r) =>
+        CCE_ONLY_ROLES.includes(r.designationEnglish || ""),
+      );
+
+      if (isCCEOnly) {
+        if (!data.supervisor || data.supervisor.trim() === "") {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "CCS is required",
+            path: ["supervisor"],
+          });
+        }
+      }
 
       if (isCCE) {
         // For CCE, loginId is required

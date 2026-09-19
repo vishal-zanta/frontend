@@ -23,38 +23,44 @@ export default function UserManageTable({
     {
       id: "user",
       label: t("User", "उपयोगकर्ता"),
-      className: "bg-[#F4F7FA] dark:bg-[#172033] sticky left-0",
+      className:
+        "bg-[#F4F7FA] dark:bg-[#172033] sticky left-0 z-10 whitespace-nowrap min-w-[180px]",
     },
     {
       id: "role",
       label: t("Designation", "पदनाम"),
+      className: "min-w-[180px] whitespace-nowrap",
     },
     {
       id: "district",
       label: t("District", "जिला"),
+      className: "whitespace-nowrap min-w-[100px]",
     },
     {
       id: "skills",
       label: t("Skills", "कौशल"),
-      className: "min-w-[200px]",
+      className: "min-w-[180px] whitespace-nowrap",
     },
     {
       id: "languages",
       label: t("Languages", "भाषाएँ"),
-      className: "min-w-[150px]",
+      className: "min-w-[140px] whitespace-nowrap",
     },
     {
       id: "lastLogin",
       label: t("Last Login", "अंतिम लॉगिन"),
+      className: "whitespace-nowrap min-w-[140px]",
     },
     {
       id: "status",
       label: t("Status", "स्थिति"),
+      className: "whitespace-nowrap",
     },
     {
       id: "actions",
       label: t("Actions", "कार्रवाई"),
-      className: "text-center bg-[#F4F7FA] dark:bg-[#172033] sticky right-0",
+      className:
+        "text-center bg-[#F4F7FA] dark:bg-[#172033] sticky right-0 z-10 whitespace-nowrap",
     },
   ];
 
@@ -69,7 +75,6 @@ export default function UserManageTable({
       : typeof u.preferredLanguages === "string" && u.preferredLanguages.trim()
         ? u.preferredLanguages.split(", ").filter(Boolean)
         : [];
-      
 
     const isCCE =
       u.isCCE ??
@@ -84,10 +89,11 @@ export default function UserManageTable({
 
     return {
       user: {
-        className: "bg-white dark:bg-[#0f1729] sticky left-0",
+        className:
+          "bg-white dark:bg-[#0f1729] sticky left-0 z-10 whitespace-nowrap min-w-[180px]",
         value: (
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold shrink-0">
               {(u.name || "U")
                 .split(" ")
                 .filter(Boolean)
@@ -96,14 +102,14 @@ export default function UserManageTable({
                 .slice(0, 2) || "U"}
             </div>
             <div>
-              <div className="font-medium">{u.name || "N/A"}</div>
+              <div className="font-medium whitespace-nowrap">{u.name || "N/A"}</div>
               {!isCCE && (
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground whitespace-nowrap">
                   {u.email || "N/A"}
                 </div>
               )}
               {isCCE && (
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground whitespace-nowrap">
                   {u?.loginId || u?.email || "N/A"}
                 </div>
               )}
@@ -112,17 +118,25 @@ export default function UserManageTable({
         ),
       },
       role: {
+        className: "whitespace-nowrap min-w-[180px]",
         value:
           Array.isArray(u.roles) && u.roles.length > 0 ? (
-            <div className="flex flex-wrap gap-1 max-w-[200px]">
+            <div className="flex flex-wrap gap-1 max-w-[220px] max-h-16 overflow-y-auto py-1">
               {u.roles.map((r, idx) => (
-                <Badge key={idx} variant="outline" className="text-xs">
+                <Badge
+                  key={idx}
+                  variant="outline"
+                  className="text-[10px] text-nowrap whitespace-nowrap"
+                >
                   {r}
                 </Badge>
               ))}
             </div>
           ) : u?.role ? (
-            <Badge variant="outline" className="text-xs">
+            <Badge
+              variant="outline"
+              className="text-[10px] text-nowrap whitespace-nowrap"
+            >
               {u.role}
             </Badge>
           ) : (
@@ -130,18 +144,18 @@ export default function UserManageTable({
           ),
       },
       district: {
-        className: "text-muted-foreground",
+        className: "text-muted-foreground whitespace-nowrap min-w-[100px]",
         value: u.district || "N/A",
       },
       skills: {
-        className: "min-w-[200px]",
+        className: "min-w-[180px]",
         value: (
-          <div className="flex flex-wrap gap-1 max-w-[300px] max-h-20 overflow-y-auto">
+          <div className="flex flex-wrap gap-1 max-w-[250px] max-h-16 overflow-y-auto py-1">
             {skillsList.map((sk, skIdx) => (
               <Badge
                 key={typeof sk === "object" ? sk._id || skIdx : skIdx}
                 variant="secondary"
-                className="text-[10px] bg-muted text-foreground text-nowrap"
+                className="text-[10px] bg-muted text-foreground text-nowrap whitespace-nowrap"
               >
                 {typeof sk === "object" ? sk.name || sk.label || "N/A" : sk}
               </Badge>
@@ -151,14 +165,14 @@ export default function UserManageTable({
         ),
       },
       languages: {
-        className: "min-w-[150px]",
+        className: "min-w-[140px]",
         value: (
-          <div className="flex flex-wrap gap-1 max-w-[200px] max-h-20 overflow-y-auto">
+          <div className="flex flex-wrap gap-1 max-w-[200px] max-h-16 overflow-y-auto py-1">
             {languagesList.map((lang, langIdx) => (
               <Badge
                 key={langIdx}
                 variant="outline"
-                className="text-[10px] text-nowrap"
+                className="text-[10px] text-nowrap whitespace-nowrap"
               >
                 {typeof lang === "object"
                   ? lang.name || lang.label || "N/A"
@@ -170,14 +184,15 @@ export default function UserManageTable({
         ),
       },
       lastLogin: {
-        className: "text-xs text-muted-foreground",
+        className: "text-xs text-muted-foreground whitespace-nowrap min-w-[140px]",
         value: u.lastLogin || "N/A",
       },
       status: {
+        className: "whitespace-nowrap",
         value: (
           <Badge
             variant="outline"
-            className={`text-xs capitalize ${
+            className={`text-xs capitalize whitespace-nowrap ${
               u.status === "ACTIVE"
                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                 : u.status === "inactive"
@@ -192,7 +207,8 @@ export default function UserManageTable({
         ),
       },
       actions: {
-        className: "text-center bg-white dark:bg-[#0f1729] sticky right-0",
+        className:
+          "text-center bg-white dark:bg-[#0f1729] sticky right-0 z-10 whitespace-nowrap",
         value: (
           <div className="flex gap-1 justify-end">
             <Button

@@ -6,6 +6,7 @@ import { convertJSONToFormdata } from "../../helpers";
 import { usePostPreCall } from "./hooks";
 import { getFinalFormData } from "./helpers";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
+import { useLanguage } from "@/context/LanguageContext";
 
 let defaultValues = {
   tenantId: "bh.health",
@@ -62,11 +63,16 @@ let defaultValues = {
   },
 };
 const index = ({ onSuccess, isLoading }) => {
+  const { t } = useLanguage();
   const { fields, isLoading : isFormOptionsLoading, error } = usePostPreCall();
   console.log({ fields });
 
   return (
-    <LoaderErrWrapper isLoading={isFormOptionsLoading} error={error} loadingText={"Loading fields options...."}>
+    <LoaderErrWrapper
+      isLoading={isFormOptionsLoading}
+      error={error}
+      loadingText={t("Loading fields options....", "फ़ील्ड विकल्प लोड हो रहे हैं...")}
+    >
       <RhfWrapper
         initialValues={defaultValues}
         isValidation

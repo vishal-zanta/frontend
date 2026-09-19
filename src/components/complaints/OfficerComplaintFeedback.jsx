@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MessageSquare, Send, CheckCircle2, Star } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
@@ -84,6 +84,14 @@ export default function OfficerComplaintFeedback({
       getErrorToast(err);
     },
   });
+  useEffect(()=> {
+    if(rating!== existingRating){
+      setRating(existingRating || 0);
+    }
+    if(feedback !== existingFeedback){
+      setFeedback(existingFeedback || "");
+    }
+  },[existingRating,existingFeedback])
 
   const handleSubmit = (e) => {
     e.preventDefault();

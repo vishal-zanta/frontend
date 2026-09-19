@@ -16,7 +16,7 @@ export const CITIZEN_URL = "https://citizen.lumirex.tech/"
 export const ADMIN_ROLES = ["Admin"];
 export const CCE_ONLY_ROLES = ["Call Centre Executive"];
 export const CCS_ONLY_ROLES = ["Call Centre Supervisor"]
-export const CCE_ROLES = [...CCE_ONLY_ROLES, ...CCS_ONLY_ROLES ];
+export const CCE_ROLES = [...CCE_ONLY_ROLES, ...CCS_ONLY_ROLES];
 
 // export const ADMIN_LEVEL = ["Admin"];
 // export const CCE_LEVEL = ["CCE", "Supervisor"];
@@ -24,8 +24,8 @@ export const CCE_ROLES = [...CCE_ONLY_ROLES, ...CCS_ONLY_ROLES ];
 export const USER_ROLES_EXECULDED = [...ADMIN_ROLES, ...CCE_ROLES];
 
 export const LANGUAGES = [
-  { label: "English", value: "English", labelSmall : "En" },
-  { label: "हिन्दी", value: "Hindi", labelSmall : "हि" },
+  { label: "English", value: "English", labelSmall: "En" },
+  { label: "हिन्दी", value: "Hindi", labelSmall: "हि" },
 ];
 
 export const MAX_LIMIT = 200;
@@ -63,7 +63,7 @@ export const QUERY_KEYS = {
   FIELD_VISITS: "field-visits",
   VISIT_STATS: "visit-stats",
   API_KEYS: "api-keys",
-  EXTERNAL_COMPLAINTS : "external-complaints",
+  EXTERNAL_COMPLAINTS: "external-complaints",
   INMAILS: "inmails",
   INMAIL_STATS: "inmail-stats",
   EMAILS: "emails",
@@ -85,10 +85,11 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Resolved",
     badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     isRemark: true,
-    disabled: ["RESOLVED", "IN_PROGRESS", "OPEN"],
+    disabled: ["RESOLVED", "IN_PROGRESS", "OPEN", "REOPENED"],
     roleHidden: null,
-    roleAllowed : CCE_ROLES,
+    roleAllowed: CCE_ROLES,
     requireFieldVisit: true,
+    requireFeedback : true,
   },
   {
     label: "Closed",
@@ -99,7 +100,7 @@ export const STATUS_ACTIONS = [
     badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
-    roleHidden : CCE_ROLES,
+    roleHidden: CCE_ROLES,
   },
   {
     label: "In Progress",
@@ -109,6 +110,7 @@ export const STATUS_ACTIONS = [
     badgeLabel: "In Progress",
     badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     disabled: ["RESOLVED", "CLOSED"],
+    roleHidden: CCE_ROLES,
   },
   {
     label: "Reopen",
@@ -118,7 +120,11 @@ export const STATUS_ACTIONS = [
     badgeLabel: "Reopened",
     badgeClass: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20",
     isRemark: true,
-    disabled: ["REOPENED", "OPEN", "ESCALATED", "IN_PROGRESS"]
+    disabled: ["REOPENED", "OPEN", "ESCALATED", "IN_PROGRESS"],
+    roleAllowed: CCE_ROLES,
+    requireFeedback : true,
+
+    
   },
   {
     label: "Open",
@@ -127,7 +133,7 @@ export const STATUS_ACTIONS = [
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Pending",
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-    disabled: ["RESOLVED", "CLOSED", "IN_PROGRESS"],
+    disabled: ["RESOLVED", "CLOSED", "IN_PROGRESS", "REOPENED"],
   },
   // {
   //   label: "Escalate",
@@ -336,7 +342,7 @@ export const apiPermissionOptions = [
 
   { label: "Call statistics", value: "CALL_STATS" },
   { label: "Department Management", value: "DEPARTMENT_MANAGEMENT" },
-  {label : "File Size Management", value : "FILE_MANAGEMENT"}
+  { label: "File Size Management", value: "FILE_MANAGEMENT" }
   // {label : "Skill Management",value : "SKILL_SET_MANAGEMENT"}
 ];
 

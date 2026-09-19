@@ -70,6 +70,7 @@ export default function UserManagement() {
     password: "",
     confirmPassword: "",
     roles: [],
+    supervisor: "",
     district: "",
     skills: [],
     preferredLanguages: [],
@@ -167,6 +168,7 @@ export default function UserManagement() {
       phone: formData.phone,
       password: formData.password,
       roles: formData.roles,
+      supervisor: formData.supervisor,
       district: formData.district,
       loginId: formData.loginId,
       skills: formData.skills,
@@ -181,6 +183,7 @@ export default function UserManagement() {
       email: formData.email,
       phone: formData.phone,
       roles: formData.roles,
+      supervisor: formData.supervisor,
       district: formData.district,
       loginId: formData.loginId,
       skills: formData.skills,
@@ -249,6 +252,7 @@ export default function UserManagement() {
                   password: "",
                   confirmPassword: "",
                   roles: [],
+                  supervisor: "",
                   district: "",
                 });
                 setAddUserOpen(true);
@@ -273,6 +277,7 @@ export default function UserManagement() {
                   password: "",
                   confirmPassword: "",
                   roles: superAdminId ? [superAdminId] : [],
+                  supervisor: "",
                   district: "",
                 });
                 setAddUserOpen(true);
@@ -378,6 +383,10 @@ export default function UserManagement() {
                 district:
                   editUser?.apiData?.district?._id ||
                   editUser?.apiData?.district ||
+                  "",
+                supervisor:
+                  editUser?.apiData?.supervisor?._id ||
+                  editUser?.apiData?.supervisor ||
                   "",
                 status: editUser?.apiData?.status || "",
                 skills: (editUser?.apiData?.skills || []).map(

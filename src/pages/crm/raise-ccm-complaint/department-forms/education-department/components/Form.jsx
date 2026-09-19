@@ -6,6 +6,7 @@ import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import RhfTextarea from "@/components/rhfinputs/RhfTextarea";
 import RhfBoolean from "@/components/rhfinputs/RhfBoolean";
 import { FileText, User, MapPin, UserX } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   useGetBlockOptions,
   useGetPanchayatOptions,
@@ -14,30 +15,32 @@ import {
 } from "../hooks";
 
 const Form = ({ fields, isLoading }) => {
+  const { t } = useLanguage();
+
   return (
     <FormWrappers
-      heading="Education Department - Raise Grievance"
+      heading={t("Education Department - Raise Grievance", "शिक्षा विभाग - शिकायत दर्ज करें")}
       isLoading={isLoading}
     >
       <div className="px-4 space-y-6">
-         {/* Section 2: Complainant Details */}
+        {/* Section 1: Complainant Details */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">
             <User className="w-4 h-4 text-primary" />
-            <span>Complainant Details</span>
+            <span>{t("Complainant Details", "शिकायतकर्ता का विवरण")}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RhfInput
               name="complainant.name"
-              label="Complainant Name"
-              placeholder="Enter complainant name"
+              label={t("Complainant Name", "शिकायतकर्ता का नाम")}
+              placeholder={t("Enter complainant name", "शिकायतकर्ता का नाम दर्ज करें")}
               required
             />
             <RhfInput
               name="complainant.mobile"
-              label="Complainant Mobile Number"
-              placeholder="Enter 10-digit mobile number"
+              label={t("Complainant Mobile Number", "शिकायतकर्ता का मोबाइल नंबर")}
+              placeholder={t("Enter 10-digit mobile number", "10 अंकों का मोबाइल नंबर दर्ज करें")}
               isNumsOnly={true}
               maxLength={10}
               required
@@ -46,51 +49,53 @@ const Form = ({ fields, isLoading }) => {
 
           <RhfBoolean
             name="complainant.shareNumberWithOfficer"
-            label="Share Mobile Number with Officer"
-            description="Allow the investigating officer to view the complainant's contact number."
+            label={t("Share Mobile Number with Officer", "अधिकारी के साथ मोबाइल नंबर साझा करें")}
+            description={t(
+              "Allow the investigating officer to view the complainant's contact number.",
+              "जांच अधिकारी को शिकायतकर्ता का संपर्क नंबर देखने की अनुमति दें।",
+            )}
           />
         </div>
 
-        {/* Section 1: Complaint & Classification Details */}
+        {/* Section 2: Complaint & Classification Details */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">
             <FileText className="w-4 h-4 text-primary" />
-            <span>Complaint Information</span>
+            <span>{t("Complaint Information", "शिकायत की जानकारी")}</span>
           </div>
 
           <RhfSelect
             name="type"
-            label="Type"
-            placeholder="Select Type"
+            label={t("Type", "प्रकार")}
+            placeholder={t("Select Type", "प्रकार चुनें")}
             options={fields?.type || []}
             required
-
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RhfSelect
               name="categoryId"
-              label="Category"
-              placeholder="Select Category"
+              label={t("Category", "श्रेणी")}
+              placeholder={t("Select Category", "श्रेणी चुनें")}
               options={fields?.categoryId || []}
               required
             />
             <RhfInput
               name="categoryOther"
-              label="Category (Other)"
-              placeholder="Enter category details if other"
+              label={t("Category (Other)", "श्रेणी (अन्य)")}
+              placeholder={t("Enter category details if other", "यदि अन्य है तो श्रेणी का विवरण दर्ज करें")}
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RhfSelect
               name="source"
-              label="Source"
-              placeholder="Select Source"
+              label={t("Source", "स्रोत")}
+              placeholder={t("Select Source", "स्रोत चुनें")}
               options={fields?.source || []}
             />
             <RhfInput
               name="registeredAt"
-              label="Registered At"
+              label={t("Registered At", "पंजीकरण की तिथि")}
               type="date"
               isDisableFutureDates
             />
@@ -98,69 +103,64 @@ const Form = ({ fields, isLoading }) => {
 
           <RhfTextarea
             name="complaint"
-            label="Complaint Description"
-            placeholder="Enter detailed description of the complaint..."
+            label={t("Complaint Description", "शिकायत का विवरण")}
+            placeholder={t("Enter detailed description of the complaint...", "शिकायत का विस्तृत विवरण दर्ज करें...")}
             rows={4}
             required
           />
         </div>
 
-       
         {/* Section 3: Location Details */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">
             <MapPin className="w-4 h-4 text-primary" />
-            <span>Location Details</span>
+            <span>{t("Location Details", "स्थान का विवरण")}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <RhfSelect
               name="location.districtCode"
-              label="District"
-              placeholder="Select District"
+              label={t("District", "जिला")}
+              placeholder={t("Select District", "जिला चुनें")}
               options={fields?.districtCode || fields?.district || []}
               required
             />
             <BlockCode />
             <RhfSelect
               name="location.clusterCode"
-              label="Cluster"
-              placeholder="Select Cluster"
+              label={t("Cluster", "क्लस्टर")}
+              placeholder={t("Select Cluster", "क्लस्टर चुनें")}
               options={fields?.clusterCode || fields?.cluster || []}
             />
             <PanchayatCode />
             <VillageCode />
             <SchoolCode />
-             <RhfSelect
+            <RhfSelect
               name="location.teacherCode"
-              label="Teacher"
-              placeholder="Select Teacher"
+              label={t("Teacher", "शिक्षक")}
+              placeholder={t("Select Teacher", "शिक्षक चुनें")}
               options={fields?.teacherCode || fields?.teacher || []}
             />
           </div>
-
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           
-          </div> */}
         </div>
 
         {/* Section 4: Accused Details */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-border text-foreground font-semibold text-base">
             <UserX className="w-4 h-4 text-primary" />
-            <span>Accused Details</span>
+            <span>{t("Accused Details", "आरोपी का विवरण")}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RhfInput
               name="accused.name"
-              label="Accused Person Name"
-              placeholder="Enter accused person's name"
+              label={t("Accused Person Name", "आरोपी व्यक्ति का नाम")}
+              placeholder={t("Enter accused person's name", "आरोपी व्यक्ति का नाम दर्ज करें")}
             />
             <RhfInput
               name="accused.designation"
-              label="Accused Person Designation"
-              placeholder="Enter designation (e.g., Principal, Headmaster, Teacher)"
+              label={t("Accused Person Designation", "आरोपी व्यक्ति का पद")}
+              placeholder={t("Enter designation (e.g., Principal, Headmaster, Teacher)", "पद दर्ज करें (उदा. प्रधानाचार्य, प्रधानाध्यापक, शिक्षक)")}
             />
           </div>
         </div>
@@ -170,6 +170,7 @@ const Form = ({ fields, isLoading }) => {
 };
 
 const BlockCode = () => {
+  const { t } = useLanguage();
   const { resetField } = useFormContext();
   const districtCode = useWatch({ name: "location.districtCode" });
   const isFirstRender = useRef(true);
@@ -187,8 +188,12 @@ const BlockCode = () => {
   return (
     <RhfSelect
       name="location.blockCode"
-      label="Block"
-      placeholder={!districtCode ? "Select District First" : "Select Block"}
+      label={t("Block", "प्रखंड")}
+      placeholder={
+        !districtCode
+          ? t("Select District First", "पहले जिला चुनें")
+          : t("Select Block", "प्रखंड चुनें")
+      }
       options={blockOptions}
       disabled={!districtCode}
       isLoading={isLoading}
@@ -197,6 +202,7 @@ const BlockCode = () => {
 };
 
 const PanchayatCode = () => {
+  const { t } = useLanguage();
   const { resetField } = useFormContext();
   const blockCode = useWatch({ name: "location.blockCode" });
   const isFirstRender = useRef(true);
@@ -214,8 +220,12 @@ const PanchayatCode = () => {
   return (
     <RhfSelect
       name="location.panchayatCode"
-      label="Panchayat"
-      placeholder={!blockCode ? "Select Block First" : "Select Panchayat"}
+      label={t("Panchayat", "पंचायत")}
+      placeholder={
+        !blockCode
+          ? t("Select Block First", "पहले प्रखंड चुनें")
+          : t("Select Panchayat", "पंचायत चुनें")
+      }
       options={panchayatOptions}
       disabled={!blockCode}
       isLoading={isLoading}
@@ -224,6 +234,7 @@ const PanchayatCode = () => {
 };
 
 const VillageCode = () => {
+  const { t } = useLanguage();
   const { resetField } = useFormContext();
   const blockCode = useWatch({ name: "location.blockCode" });
   const isFirstRender = useRef(true);
@@ -241,8 +252,12 @@ const VillageCode = () => {
   return (
     <RhfSelect
       name="location.villageCode"
-      label="Village"
-      placeholder={!blockCode ? "Select Block First" : "Select Village"}
+      label={t("Village", "गाँव")}
+      placeholder={
+        !blockCode
+          ? t("Select Block First", "पहले प्रखंड चुनें")
+          : t("Select Village", "गाँव चुनें")
+      }
       options={villageOptions}
       disabled={!blockCode}
       isLoading={isLoading}
@@ -251,6 +266,7 @@ const VillageCode = () => {
 };
 
 const SchoolCode = () => {
+  const { t } = useLanguage();
   const { resetField } = useFormContext();
   const blockCode = useWatch({ name: "location.blockCode" });
   const isFirstRender = useRef(true);
@@ -268,8 +284,12 @@ const SchoolCode = () => {
   return (
     <RhfSelect
       name="location.schoolCode"
-      label="School"
-      placeholder={!blockCode ? "Select Block First" : "Select School"}
+      label={t("School", "विद्यालय")}
+      placeholder={
+        !blockCode
+          ? t("Select Block First", "पहले प्रखंड चुनें")
+          : t("Select School", "विद्यालय चुनें")
+      }
       options={schoolOptions}
       disabled={!blockCode}
       isLoading={isLoading}

@@ -76,6 +76,19 @@ const ViewDialog = ({viewUser, setViewUser}) => {
                   <span className="font-medium text-foreground block">{viewUser?.lastLogin || "N/A"}</span>
                 </div>
 
+                {viewUser?.apiData?.supervisor && (
+                  <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Shield className="w-3.5 h-3.5 text-indigo-500" /> CCS
+                    </span>
+                    <span className="font-medium text-foreground block">
+                      {typeof viewUser.apiData.supervisor === "object"
+                        ? viewUser.apiData.supervisor.name || viewUser.apiData.supervisor.loginId || "-"
+                        : viewUser.apiData.supervisor}
+                    </span>
+                  </div>
+                )}
+
                 <div className="md:col-span-2 space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <Key className="w-3.5 h-3.5 text-emerald-500" /> Permissions ({viewUser?.permissions?.length || 0})

@@ -32,9 +32,8 @@ export default function ComplaintActionSection({
   maxMbAllowed,
   existingRating,
   existingFeedback,
+
 }) {
-
-
   const { t } = useLanguage();
   const { profiledata } = useAuth();
   const [remark, setRemark] = useState(initialRemark);
@@ -129,18 +128,27 @@ export default function ComplaintActionSection({
             nonClearable
             disabled={updateStatusMutation.isPending}
             placeholder={t("Select Status", "स्थिति चुनें")}
-            options={STATUS_ACTIONS.map((a) => ({
-              label: a.badgeLabel || a.label,
-              value: a.value,
-              disabled:
-                (a.disabled && a.disabled.includes(currentStatus)) ||
-                (a.roleHidden && a.roleHidden.includes(profiledata?.role) || (a.roleAllowed && !a.roleAllowed.includes(profiledata?.role))) ||
-                // RESOLVED blocked when CLOSED and citizen feedback not yet submitted
-                (a.value === "RESOLVED" &&( (currentStatus === "CLOSED" && !(existingRating && existingFeedback)) || currentStatus != "CLOSED")),
-            }))}
+            options={STATUS_ACTIONS.map((a) => {
+             
+              return {
+                label: a.badgeLabel || a.label,
+                value: a.value,
+                disabled:
+                  (a.disabled && a.disabled.includes(currentStatus)) ||
+                  (a.roleHidden && a.roleHidden.includes(profiledata?.role)) ||
+                  (a.roleAllowed &&
+                    !a.roleAllowed.includes(profiledata?.role)) ||
+                  // RESOLVED blocked when CLOSED and citizen feedback not yet submitted
+                  // (a.value === "RESOLVED" &&
+                  //   ((currentStatus === "CLOSED" &&
+                  //     !(existingRating && existingFeedback)) ||
+                  //     currentStatus != "CLOSED")),
+                  (a.requireFeedback && !(existingRating && existingFeedback))
+              };
+            })}
             className={"w-full"}
-             customStyles={{
-              containerWidth : "200px"
+            customStyles={{
+              containerWidth: "200px",
             }}
           />
 
@@ -172,7 +180,7 @@ export default function ComplaintActionSection({
       </div>
 
       {/* Feedback section when CLOSED — only visible to CCE users */}
-      {currentStatus === "CLOSED" && profiledata?.isCCE && (
+      {((currentStatus === "CLOSED"  && profiledata?.isCCE) || existingRating) && (
         <OfficerComplaintFeedback
           complaintId={selectedId}
           existingRating={existingRating}
@@ -200,9 +208,8 @@ export default function ComplaintActionSection({
             }))}
             className={"w-full"}
             customStyles={{
-              containerWidth : "200px"
+              containerWidth: "200px",
             }}
-
           />
           {selectedPriority !== currentPriority && (
             <Button

@@ -404,6 +404,7 @@ export default function ComplaintDetailView({
             maxMbAllowed={maxMbAllowed}
             existingRating={c.rating}
             existingFeedback={c.feedbackText}
+            updatedAt={c.updatedAt}
           />
         </div>
 

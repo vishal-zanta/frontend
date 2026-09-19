@@ -43,6 +43,8 @@ export const useRaiseComplaintData = (lang) => {
         ? d.titleHindi || d.nameHindi
         : d.title || d.name,
     value: d._id,
+    title: d.title,
+    titleHindi: d.titleHindi,
   }));
 
   // Filter grievance natures to only "grievanceNature" type

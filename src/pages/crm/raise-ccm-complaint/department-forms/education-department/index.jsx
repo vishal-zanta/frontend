@@ -3,9 +3,9 @@ import React from "react";
 import Form from "./components/Form";
 import RhfWrapper from "@/components/RhfWrapper";
 import { useGetFieldsOptions } from "./hooks";
-import {getFinalData} from "./helpers";
+import { getFinalData } from "./helpers";
 import validationSchema from "./schema";
-// import { getSuccessToast } from "@/utils/helpers";
+import { useLanguage } from "@/context/LanguageContext";
 
 const defaultValue = {
   externalRef: "",
@@ -36,7 +36,7 @@ const defaultValue = {
 };
 
 const index = ({ onSuccess, isLoading, selectedDept }) => {
-  // console.log({selectedDept})
+  const { t } = useLanguage();
   const {
     fields,
     error,
@@ -47,7 +47,7 @@ const index = ({ onSuccess, isLoading, selectedDept }) => {
     <LoaderErrWrapper
       isLoading={isFieldsLoading}
       error={error}
-      loadingText="Loading form options..."
+      loadingText={t("Loading form options...", "फ़ॉर्म विकल्प लोड हो रहे हैं...")}
     >
       <RhfWrapper
         initialValues={defaultValue}

@@ -4,6 +4,7 @@ import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import { Button } from "@/components/ui/button";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDistricts } from "../../master-data/hooks";
+import { useGetUsers } from "../hooks";
 import { Save, UserPlus, Loader2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import {
@@ -11,8 +12,11 @@ import {
   LANGUAGES,
   CCE_ROLES,
   ADMIN_ROLES,
+  CCS_ONLY_ROLES,
+  CCE_ONLY_ROLES,
 } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Form({
   onCancel,
@@ -23,25 +27,58 @@ export default function Form({
   skillsOptions = [],
 }) {
   const { t } = useLanguage();
+  const { rolesMap } = useAuth();
   const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
   const { data: districtData } = useGetDistricts();
 
   const { watch } = useFormContext();
   const selectedRoleIds = watch("roles") || [];
-  const selectedRoleDocs = (rolesApiData?.data?.docs || []).filter((r) =>
-    selectedRoleIds.includes(r._id),
-  );
-  const isCCE = selectedRoleDocs.some((r) =>
-    CCE_ROLES.includes(r.designationEnglish || ""),
-  );
-  const isAdmin = selectedRoleDocs.some((r) =>
-    ADMIN_ROLES.includes(r.designationEnglish || ""),
-  );
-  const isOther = selectedRoleIds.length > 0 && !isAdmin && !isCCE;
 
   const roleOptions = (rolesApiData?.data?.docs || []).map((r) => ({
     label: r.designationEnglish,
     value: r._id,
+  }));
+
+  const cceRoleIds = CCE_ROLES.map(
+    (r) => rolesMap?.get(r) || roleOptions.find((opt) => opt.label === r)?.value
+  ).filter(Boolean);
+  const cceOnlyRoleIds = CCE_ONLY_ROLES.map(
+    (r) => rolesMap?.get(r) || roleOptions.find((opt) => opt.label === r)?.value
+  ).filter(Boolean);
+  const adminRoleIds = ADMIN_ROLES.map(
+    (r) => rolesMap?.get(r) || roleOptions.find((opt) => opt.label === r)?.value
+  ).filter(Boolean);
+  const ccsRoleIds = CCS_ONLY_ROLES.map(
+    (r) => rolesMap?.get(r) || roleOptions.find((opt) => opt.label === r)?.value
+  ).filter(Boolean);
+  const ccsRoleQuery = ccsRoleIds.join(",");
+
+  const isCCE = selectedRoleIds.some((id) => cceRoleIds.includes(id));
+  const isCCEOnly = selectedRoleIds.some((id) => cceOnlyRoleIds.includes(id));
+  const isAdmin = selectedRoleIds.some((id) => adminRoleIds.includes(id));
+  const isOther = selectedRoleIds.length > 0 && !isAdmin && !isCCE;
+
+  const { data: ccsUsersData, isLoading: isCcsLoading } = useGetUsers(
+    ["ccs-supervisors", ccsRoleQuery],
+    {
+      page: 1,
+      limit: MAX_LIMIT,
+      designation: ccsRoleQuery,
+      roles: ccsRoleQuery,
+      role: ccsRoleQuery,
+    },
+    isCCEOnly && !!ccsRoleQuery,
+  );
+
+  const ccsOptions = (
+    ccsUsersData?.data?.data?.docs ||
+    ccsUsersData?.data?.docs ||
+    []
+  ).map((u) => ({
+    label: u.name
+      ? `${u.name}${u.loginId ? ` (${u.loginId})` : ""}`
+      : u.loginId || u.email || u._id,
+    value: u._id,
   }));
 
   const districtOptions = (
@@ -70,6 +107,20 @@ export default function Form({
         placeholder={t("Select designations", "पदनाम चुनें")}
         isMultiple={true}
       />
+      {isCCEOnly && (
+        <RhfSelect
+          name="supervisor"
+          label={t("CCS", "CCS")}
+          required
+          options={ccsOptions}
+          placeholder={
+            isCcsLoading
+              ? t("Loading CCS...", "CCS लोड हो रहा है...")
+              : t("Select CCS", "CCS चुनें")
+          }
+          isLoading={isCcsLoading}
+        />
+      )}
       <RhfInput
         label="Name"
         name="name"

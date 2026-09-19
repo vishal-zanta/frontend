@@ -92,7 +92,9 @@ export default function CRMRaiseComplaint() {
       },
       {
         replace: true,
-        state: location.state || (initialInmail ? { INITIAL_INMAILS: initialInmail } : undefined),
+        state:
+          location.state ||
+          (initialInmail ? { INITIAL_INMAILS: initialInmail } : undefined),
       },
     );
   };
@@ -202,7 +204,7 @@ export default function CRMRaiseComplaint() {
     };
   }, [initialInmail, allChannels, selectedDept]);
 
-  console.log({formInitialValues});
+  console.log({ formInitialValues });
 
   const fileInputRef = useRef(null);
   const [attachments, setAttachments] = useState([]);
@@ -345,8 +347,8 @@ export default function CRMRaiseComplaint() {
                 </h1>
                 <p className="text-sm text-muted-foreground mt-0.5">
                   {t(
-                    "Please choose a department to proceed with your complaint",
-                    "शिकायत दर्ज करने के लिए कृपया एक विभाग चुनें",
+                    "Currently, complaints can be registered for the following departments",
+                    "वर्तमान में निम्न विभागों से संबंधित शिकायत दर्ज कर सकते है",
                   )}
                 </p>
               </div>

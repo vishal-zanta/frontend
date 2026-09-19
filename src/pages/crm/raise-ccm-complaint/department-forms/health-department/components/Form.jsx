@@ -2,35 +2,31 @@ import React, { useEffect } from "react";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import RhfTextarea from "@/components/rhfinputs/RhfTextarea";
-import RhfFileUpload from "@/components/rhfinputs/RhfFileUpload";
-import { Button } from "@/components/ui/button";
-import { Loader2, Send } from "lucide-react";
+import FormWrappers from "../../FormWrappers";
 import { useFormContext, useWatch } from "react-hook-form";
-import { usePostPreCall } from "../hooks";
+import { useLanguage } from "@/context/LanguageContext";
 
+export default function Form({ fields, isLoading }) {
+  const { t } = useLanguage();
 
-export default function Form({ fields , isLoading}) {
-  // console.log({ fields });
   return (
-    <div className="bg-card border border-border rounded-xl px-0 sm:px-0 p-4 sm:p-6 shadow-sm space-y-6">
-      <h2 className="text-xl font-bold text-foreground border-b border-border pb-3 px-4">
-        Raise New Grievance
-      </h2>
-   
-
+    <FormWrappers
+      heading={t("Health Department - Raise Grievance", "स्वास्थ्य विभाग - शिकायत दर्ज करें")}
+      isLoading={isLoading}
+    >
       <div className="space-y-4 px-4">
         {/* Date & Location */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RhfInput
             name="dateOfIncident"
-            label="Date of Incident"
+            label={t("Date of Incident", "घटना की तिथि")}
             type="date"
             required
           />
           <RhfInput
             name="locationOfIncident"
-            label="Location of Incident"
-            placeholder="Enter location of incident"
+            label={t("Location of Incident", "घटना का स्थान")}
+            placeholder={t("Enter location of incident", "घटना का स्थान दर्ज करें")}
           />
         </div>
 
@@ -38,14 +34,14 @@ export default function Form({ fields , isLoading}) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RhfInput
             name="citizen.name"
-            label="Complainant Name"
-            placeholder="Enter complainant name"
+            label={t("Complainant Name", "शिकायतकर्ता का नाम")}
+            placeholder={t("Enter complainant name", "शिकायतकर्ता का नाम दर्ज करें")}
             required
           />
           <RhfInput
             name="citizen.mobileNumber"
-            label="Complainant Mobile Number"
-            placeholder="Enter 10-digit mobile number"
+            label={t("Complainant Mobile Number", "शिकायतकर्ता का मोबाइल नंबर")}
+            placeholder={t("Enter 10-digit mobile number", "10 अंकों का मोबाइल नंबर दर्ज करें")}
             required
             isNumsOnly={true}
             maxLength={10}
@@ -56,40 +52,28 @@ export default function Form({ fields , isLoading}) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RhfSelect
             name="citizen.gender"
-            label="Gender"
-            placeholder="Select Gender"
+            label={t("Gender", "लिंग")}
+            placeholder={t("Select Gender", "लिंग चुनें")}
             options={fields?.gender || []}
           />
           <RhfSelect
             name="complainantType"
-            label="Complainant Type"
-            placeholder="Select Complainant Type"
+            label={t("Complainant Type", "शिकायतकर्ता का प्रकार")}
+            placeholder={t("Select Complainant Type", "शिकायतकर्ता का प्रकार चुनें")}
             required
             options={fields?.complainantType || []}
           />
         </div>
 
-        {/* Grievance Type & Sub-Type */}
+        {/* Grievance Type */}
         <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
           <RhfSelect
             name="grievanceType"
-            label="Grievance Type"
-            placeholder="Select Grievance Type"
+            label={t("Grievance Type", "शिकायत का प्रकार")}
+            placeholder={t("Select Grievance Type", "शिकायत का प्रकार चुनें")}
             required
             options={fields?.grievanceType || []}
           />
-          {/* <RhfSelect
-            name="grievanceSubType"
-            label="Grievance Sub-Type"
-            placeholder="Select Grievance Sub-Type"
-            required
-            options={[
-              { label: "Delay in Service", value: "delay_in_service" },
-              { label: "Denial of Service", value: "denial_of_service" },
-              { label: "Quality Issue", value: "quality_issue" },
-              { label: "Others", value: "others" },
-            ]}
-          /> */}
         </div>
 
         {/* District, Block, Village */}
@@ -99,15 +83,15 @@ export default function Form({ fields , isLoading}) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RhfSelect
             name="institutionType"
-            label="Institution Type"
-            placeholder="Select Institution Type"
+            label={t("Institution Type", "संस्थान का प्रकार")}
+            placeholder={t("Select Institution Type", "संस्थान का प्रकार चुनें")}
             required
             options={fields?.institutionType || []}
           />
           <RhfSelect
             name="institutionName"
-            label="Institution Name"
-            placeholder="Select Institution Name"
+            label={t("Institution Name", "संस्थान का नाम")}
+            placeholder={t("Select Institution Name", "संस्थान का नाम चुनें")}
             options={fields?.institutionName || []}
           />
         </div>
@@ -115,68 +99,56 @@ export default function Form({ fields , isLoading}) {
         {/* Grievance Against Whom */}
         <RhfInput
           name="grievanceAgainstWhom"
-          label="Grievance Against Whom"
-          placeholder="Enter person / department / authority name"
+          label={t("Grievance Against Whom", "किसके खिलाफ शिकायत")}
+          placeholder={t("Enter person / department / authority name", "व्यक्ति / विभाग / प्राधिकारी का नाम दर्ज करें")}
         />
 
         {/* Brief of Grievance */}
         <RhfTextarea
           name="description"
-          label="Brief of Grievance"
-          placeholder="Enter brief description of grievance..."
+          label={t("Brief of Grievance", "शिकायत का संक्षिप्त विवरण")}
+          placeholder={t("Enter brief description of grievance...", "शिकायत का संक्षिप्त विवरण दर्ज करें...")}
           required
           rows={4}
         />
-
-        {/* Upload Related Document */}
-        {/* <RhfFileUpload
-          name="uploadRelatedDocument"
-          label="Upload Related Document"
-          accept="image/*,application/pdf"
-          MAX_SIZE={10}
-        /> */}
       </div>
-
-      <div className="flex justify-center pt-4 border-t border-border">
-        <Button
-          type="submit"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground"
-          disabled={isLoading}
-        >
-          {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-          Submit Grievance
-        </Button>
-      </div>
-    </div>
+    </FormWrappers>
   );
 }
 
 const DistrictPart = ({ fields }) => {
-  const { watch, setValue, control } = useFormContext();
+  const { t } = useLanguage();
+  const { setValue, control } = useFormContext();
   const districtValue = useWatch({ name: "address.district", control });
   const blockValue = useWatch({ name: "address.block", control });
 
   useEffect(() => {
     setValue("address.block", "");
     setValue("address.village", "");
-  }, [districtValue]);
+  }, [districtValue, setValue]);
+
   useEffect(() => {
     setValue("address.village", "");
-  }, [blockValue]);
+  }, [blockValue, setValue]);
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <RhfSelect
           name="address.district"
-          label="District"
-          placeholder="Select District"
+          label={t("District", "जिला")}
+          placeholder={t("Select District", "जिला चुनें")}
           required
           options={fields?.district || []}
         />
         <RhfSelect
           name="address.block"
-          label="Block"
-          placeholder="Select Block"
+          label={t("Block", "प्रखंड")}
+          placeholder={
+            !districtValue
+              ? t("Select District First", "पहले जिला चुनें")
+              : t("Select Block", "प्रखंड चुनें")
+          }
           required
           options={(fields?.block || []).filter(
             (o) => o.district === districtValue,
@@ -186,8 +158,12 @@ const DistrictPart = ({ fields }) => {
       </div>
       <RhfSelect
         name="address.village"
-        label="Village"
-        placeholder="Select Village"
+        label={t("Village", "गाँव")}
+        placeholder={
+          !districtValue || !blockValue
+            ? t("Select Block First", "पहले प्रखंड चुनें")
+            : t("Select Village", "गाँव चुनें")
+        }
         options={(fields?.village || []).filter((o) => o.block === blockValue)}
         disabled={!blockValue || !districtValue}
       />

@@ -128,12 +128,12 @@ function UserCard({
               {t("Designation", "पदनाम")}
             </span>
             {Array.isArray(u?.roles) && u.roles.length > 0 ? (
-              <div className="flex flex-wrap gap-1 mt-1">
+              <div className="flex flex-wrap gap-1 mt-1 max-h-16 overflow-y-auto">
                 {u.roles.map((r, idx) => (
                   <Badge
                     key={idx}
                     variant="outline"
-                    className="text-[9px] xs:text-[10px]"
+                    className="text-[9px] xs:text-[10px] whitespace-nowrap"
                   >
                     {r}
                   </Badge>
@@ -142,7 +142,7 @@ function UserCard({
             ) : u?.role ? (
               <Badge
                 variant="outline"
-                className="text-[9px] xs:text-[10px] mt-0.5"
+                className="text-[9px] xs:text-[10px] mt-0.5 whitespace-nowrap"
               >
                 {u.role}
               </Badge>
@@ -175,12 +175,12 @@ function UserCard({
               {t("Skills:", "कौशल:")}
             </span>
             {skillsList.length > 0 ? (
-              <div className="flex flex-wrap gap-1 mt-1">
+              <div className="flex flex-wrap gap-1 mt-1 max-h-16 overflow-y-auto">
                 {skillsList.map((sk, skIdx) => (
                   <Badge
                     key={typeof sk === "object" ? sk._id || skIdx : skIdx}
                     variant="secondary"
-                    className="text-[9px] xs:text-[10px] bg-muted text-foreground px-1.5 py-0.5"
+                    className="text-[9px] xs:text-[10px] bg-muted text-foreground px-1.5 py-0.5 whitespace-nowrap"
                   >
                     {typeof sk === "object" ? sk.name || sk.label || "N/A" : sk}
                   </Badge>
@@ -196,12 +196,12 @@ function UserCard({
               {t("Languages:", "भाषाएँ:")}
             </span>
             {languagesList.length > 0 ? (
-              <div className="flex flex-wrap gap-1 mt-1">
+              <div className="flex flex-wrap gap-1 mt-1 max-h-16 overflow-y-auto">
                 {languagesList.map((lang, langIdx) => (
                   <Badge
                     key={langIdx}
                     variant="outline"
-                    className="text-[9px] xs:text-[10px] px-1.5 py-0.5"
+                    className="text-[9px] xs:text-[10px] px-1.5 py-0.5 whitespace-nowrap"
                   >
                     {typeof lang === "object"
                       ? lang.name || lang.label || "N/A"

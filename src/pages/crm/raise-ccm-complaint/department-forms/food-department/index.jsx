@@ -5,6 +5,7 @@ import Form from "./components/Form";
 import { useGetFoodOptions } from "./hooks";
 import validationSchema from "./schema";
 import { getFinalFoodData } from "./helpers";
+import { useLanguage } from "@/context/LanguageContext";
 
 const defaultValues = {
   name: "",
@@ -21,6 +22,7 @@ const defaultValues = {
 };
 
 const FoodDepartmentForm = ({ onSuccess, isLoading, selectedDept = "FOOD" }) => {
+  const { t } = useLanguage();
   const {
     options,
     error,
@@ -31,7 +33,7 @@ const FoodDepartmentForm = ({ onSuccess, isLoading, selectedDept = "FOOD" }) => 
     <LoaderErrWrapper
       isLoading={isOptionsLoading}
       error={error}
-      loadingText="Loading form options..."
+      loadingText={t("Loading form options...", "फ़ॉर्म विकल्प लोड हो रहे हैं...")}
     >
       <RhfWrapper
         initialValues={defaultValues}
