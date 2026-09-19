@@ -39,7 +39,7 @@ export const useRaiseComplaintData = (lang) => {
 
   const departmentOptions = allDepartments.map((d) => ({
     label:
-      lang === "hi" && (d.titleHindi || d.nameHindi)
+      (lang === "hi" || lang === "Hindi") && (d.titleHindi || d.nameHindi)
         ? d.titleHindi || d.nameHindi
         : d.title || d.name,
     value: d._id,
@@ -51,14 +51,14 @@ export const useRaiseComplaintData = (lang) => {
   const grievanceNatureOptions = allNatures
     .filter((n) => n.type === "Grievance Nature")
     .map((n) => ({
-      label: lang === "hi" && n.titleHindi ? n.titleHindi : n.title,
+      label: (lang === "hi" || lang === "Hindi") && n.titleHindi ? n.titleHindi : n.title,
       value: n._id,
     }));
 
   const affectedBeneficiaryOptions = allNatures
     .filter((n) => n.type === "Affected Beneficiaries")
     .map((n) => ({
-      label: lang === "hi" && n.titleHindi ? n.titleHindi : n.title,
+      label: (lang === "hi" || lang === "Hindi") && n.titleHindi ? n.titleHindi : n.title,
       value: n._id,
     }));
 
@@ -66,7 +66,7 @@ export const useRaiseComplaintData = (lang) => {
     label: v.title,
     value: v?._id,
   }));
-
+  
   return {
     departmentOptions,
     departmentsLoading,
@@ -213,12 +213,12 @@ export const useGetAddressFields = (
   const mapOptions = (arr = []) => {
     return arr.map((item) => ({
       label:
-        lang === "hi" && item.name_local
+        (lang === "hi" || lang === "Hindi") && item.name_local
           ? item.name_local
           : item.name_en || item.name || item.title || "",
       value: isValueId
         ? item._id
-        : lang === "hi" && item.name_local
+        : (lang === "hi" || lang === "Hindi") && item.name_local
           ? item.name_local
           : item.name_en || item.name || item.title || "",
       raw: item,

@@ -15,7 +15,8 @@ const GrievenceItems = ({ rawItems = [], setDialog, sortProps }) => {
   }
 
   const tableHeaders = [
-    { id: "title", label: t("Title", "शीर्षक") },
+    { id: "title", label: t("Title (English)", "शीर्षक (अंग्रेज़ी)") },
+    { id: "titleHindi", label: t("Title (Hindi)", "शीर्षक (हिंदी)") },
     { id: "type", label: t("Type", "प्रकार"), isSortable: true },
     { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-center" },
   ];
@@ -24,6 +25,10 @@ const GrievenceItems = ({ rawItems = [], setDialog, sortProps }) => {
     title: {
       value: item.title,
       className: "font-medium text-foreground",
+    },
+    titleHindi: {
+      value: item.titleHindi || "N/A",
+      className: "text-muted-foreground",
     },
     type: {
       value: item.type,

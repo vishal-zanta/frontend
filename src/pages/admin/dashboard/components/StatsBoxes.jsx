@@ -28,18 +28,23 @@ export default function StatsBoxes({ metrics }) {
   const totalTrend = getTrendProps(
     current.totalComplaints,
     previous.totalComplaints,
+    false,
+    t,
   );
-  const activeTrend = getTrendProps(current.active, previous.active);
-  const resolvedTrend = getTrendProps(current.resolved, previous.resolved);
+  const activeTrend = getTrendProps(current.active, previous.active, false, t);
+  const resolvedTrend = getTrendProps(current.resolved, previous.resolved, false, t);
   const escalatedTrend = getTrendProps(
     current.escalated,
     previous.escalated,
     true,
+    t,
   );
-  const slaTrend = getTrendProps(current.slaCompliance, previous.slaCompliance);
+  const slaTrend = getTrendProps(current.slaCompliance, previous.slaCompliance, false, t);
   const satisfactionTrend = getTrendProps(
     current.satisfaction,
     previous.satisfaction,
+    false,
+    t,
   );
 
   function toggleClick(key) {

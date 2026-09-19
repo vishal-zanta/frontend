@@ -36,9 +36,11 @@ function Card({ item, setDialog, t }) {
             <div className="font-semibold text-sm text-foreground truncate">
               {item.title || "N/A"}
             </div>
-            {/* <div className="text-[11px] text-muted-foreground mt-0.5">
-              {t("Grievance Nature", "शिकायत प्रकृति")}
-            </div> */}
+            {item.titleHindi && (
+              <div className="text-xs text-muted-foreground truncate mt-0.5">
+                {item.titleHindi}
+              </div>
+            )}
           </div>
         </div>
 

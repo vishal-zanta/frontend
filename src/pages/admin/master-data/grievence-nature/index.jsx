@@ -54,6 +54,7 @@ export default function GrievenceNatureTab() {
     if (dialog?.type === "edit") {
       return {
         title: dialog.item?.title ?? "",
+        titleHindi: dialog.item?.titleHindi ?? "",
         type: dialog.item?.type ?? "",
       };
     }
@@ -118,11 +119,20 @@ export default function GrievenceNatureTab() {
   // ── Form submit ─────────────────────────────────────────────────────────────
   const handleSubmit = (formData) => {
     if (dialog?.type === "add") {
-      postMutation.mutate({ title: formData.title, type: formData.type });
+      postMutation.mutate({
+        title: formData.title,
+        titleHindi: formData.titleHindi,
+        type: formData.type,
+      });
     } else if (dialog?.type === "edit") {
       putMutation.mutate({
         optionId: dialog.item._id,
-        option: { ...dialog.item, title: formData.title, type: formData.type },
+        option: {
+          ...dialog.item,
+          title: formData.title,
+          titleHindi: formData.titleHindi,
+          type: formData.type,
+        },
       });
     }
   };

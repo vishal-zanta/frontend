@@ -1,8 +1,14 @@
-import React from "react";
-import { IMG_BASE_URL } from "@/utils/constants";
+import React, { useState, useEffect } from "react";
+import { IMG_BASE_URL, PERMISSIONS, QUERY_KEYS } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Trash2, Check } from "lucide-react";
+import DeleteDialog from "@/components/DeleteDialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateComplaintByOfficer } from "@/api/complaint.api";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 
 export default function ComplaintEvidenceSection({
   description,
@@ -10,10 +16,78 @@ export default function ComplaintEvidenceSection({
   geotaggedImages = [],
   impact = null,
   resolvedReason = null,
+  status = "",
+  complaintId = null,
 }) {
-  // console.log({description});
+  const deleteAllowedOnStatus = ["REOPENED", "IN_PROGRESS"];
+
   const { t } = useLanguage();
-  const { profiledata } = useAuth();
+  const { profiledata, hasPermission } = useAuth();
+  const queryClient = useQueryClient();
+
+  const canDeleteGeoImages = Boolean(
+    deleteAllowedOnStatus.includes(status) &&
+    profiledata?.isOfficer &&
+    hasPermission(PERMISSIONS.UPDATE_GRIEVANCE),
+  );
+  const [selectedIndices, setSelectedIndices] = useState([]);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedIndices([]);
+  }, [geotaggedImages.length]);
+
+  const toggleSelect = (idx) => {
+    setSelectedIndices((prev) =>
+      prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
+    );
+  };
+
+  const handleToggleSelectAll = () => {
+    if (selectedIndices.length === geotaggedImages.length) {
+      setSelectedIndices([]);
+    } else {
+      setSelectedIndices(geotaggedImages.map((_, idx) => idx));
+    }
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: (remainingImages) =>
+      updateComplaintByOfficer({
+        id: complaintId,
+        data: { geotaggedImages: remainingImages },
+      }),
+    onSuccess: () => {
+      getSuccessToast(
+        t(
+          "Geo-tagged images deleted successfully",
+          "जियो-टैग की गई तस्वीरें सफलतापूर्वक हटा दी गईं",
+        ),
+      );
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMPLAINTS] });
+      queryClient.invalidateQueries({ queryKey: ["complaint", complaintId] });
+      queryClient.invalidateQueries({
+        queryKey: ["complaint-officer", complaintId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["grievances"] });
+      queryClient.invalidateQueries({ queryKey: ["grievance"] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_DETAIL_OFFICER],
+      });
+      setSelectedIndices([]);
+      setIsDeleteDialogOpen(false);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const handleDeleteConfirm = () => {
+    const remainingImages = geotaggedImages.filter(
+      (_, idx) => !selectedIndices.includes(idx),
+    );
+    deleteMutation.mutate(remainingImages);
+  };
 
   const vulnerabilities = [];
   if (impact?.vulnerability?.seniorCitizen) {
@@ -122,8 +196,8 @@ export default function ComplaintEvidenceSection({
       {attachments.length > 0 && (
         <div className="mb-4">
           <div className="text-[10px] lg:text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wide">
-            {t("uploaded Attachments", "अपलोड किए गए संलग्नक")} ({attachments.length}
-            )
+            {t("uploaded Attachments", "अपलोड किए गए संलग्नक")} (
+            {attachments.length})
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {attachments.map((att, idx) => {
@@ -172,10 +246,48 @@ export default function ComplaintEvidenceSection({
       {/* Geotagged Images */}
       {geotaggedImages.length > 0 && (
         <div className="mb-4">
-          <div className="text-[10px] lg:text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wide">
-            {t("Geo-Tagged Field Photos", "जियो-टैग की गई फील्ड तस्वीरें")} (
-            {geotaggedImages.length})
+          <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+            <div className="text-[10px] lg:text-xs text-muted-foreground font-semibold uppercase tracking-wide">
+              {t("Geo-Tagged Field Photos", "जियो-टैग की गई फील्ड तस्वीरें")} (
+              {geotaggedImages.length})
+            </div>
+
+            {canDeleteGeoImages && (
+              <div className="flex items-center gap-1.5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleToggleSelectAll}
+                  className="h-7 text-xs px-2 text-muted-foreground hover:text-foreground cursor-pointer"
+                >
+                  {selectedIndices.length === geotaggedImages.length
+                    ? t("Deselect All", "सभी अचयनित करें")
+                    : t("Select All", "सभी चुनें")}
+                </Button>
+
+                {selectedIndices.length > 0 && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                    disabled={deleteMutation.isPending}
+                    className="h-7 text-xs px-2.5 flex items-center gap-1.5 cursor-pointer bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>
+                      {selectedIndices.length === geotaggedImages.length
+                        ? t("Delete All", "सभी हटाएँ")
+                        : t("Delete Selected", "चयनित हटाएँ")}{" "}
+                      ({selectedIndices.length})
+                    </span>
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
+
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {geotaggedImages.map((img, idx) => {
               const url =
@@ -190,12 +302,44 @@ export default function ComplaintEvidenceSection({
               const isImage =
                 (typeof img === "object" && img?.type === "IMAGE") ||
                 !!url.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+              const isSelected = selectedIndices.includes(idx);
 
               return (
                 <div
                   key={idx}
-                  className="border border-border rounded-lg p-2 bg-card overflow-hidden"
+                  className={`relative border rounded-lg p-2 bg-card overflow-hidden transition-all ${
+                    isSelected
+                      ? "border-red-500 ring-2 ring-red-500/40 bg-red-50/20 dark:bg-red-950/20"
+                      : "border-border hover:border-primary/50"
+                  }`}
                 >
+                  {canDeleteGeoImages && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleSelect(idx);
+                      }}
+                      className={`absolute top-2 left-2 z-20 w-6 h-6 rounded-md flex items-center justify-center transition-all cursor-pointer shadow-md ${
+                        isSelected
+                          ? "bg-red-600 text-white ring-2 ring-red-600/30"
+                          : "bg-background/90 text-muted-foreground hover:bg-background hover:text-foreground border border-border"
+                      }`}
+                      title={
+                        isSelected
+                          ? t("Deselect", "अचयनित करें")
+                          : t("Select", "चुनें")
+                      }
+                    >
+                      {isSelected ? (
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      ) : (
+                        <div className="w-3 h-3 rounded-sm border border-muted-foreground/60" />
+                      )}
+                    </button>
+                  )}
+
                   {isImage ? (
                     <a
                       href={displayUrl}
@@ -205,7 +349,7 @@ export default function ComplaintEvidenceSection({
                       <img
                         src={displayUrl}
                         alt={fileName}
-                        className="max-h-48 max-w-48 mx-auto w-full h-full object-contain  rounded hover:scale-105 transition-transform"
+                        className="max-h-48 max-w-48 mx-auto w-full h-full object-contain rounded hover:scale-105 transition-transform"
                       />
                     </a>
                   ) : (
@@ -228,6 +372,25 @@ export default function ComplaintEvidenceSection({
             })}
           </div>
         </div>
+      )}
+
+      {isDeleteDialogOpen && (
+        <DeleteDialog
+          title={
+            selectedIndices.length === geotaggedImages.length
+              ? t(
+                  "All Geo-Tagged Field Photos",
+                  "सभी जियो-टैग की गई फील्ड तस्वीरें",
+                )
+              : `${selectedIndices.length} ${t(
+                  "Selected Photo(s)",
+                  "चयनित फोटो",
+                )}`
+          }
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onDelete={handleDeleteConfirm}
+          deleting={deleteMutation.isPending}
+        />
       )}
     </>
   );

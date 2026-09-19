@@ -88,11 +88,11 @@ export default function ComplaintActionSection({
     setStatusErr(null);
     if (statusObj?.requireFieldVisit) {
       console.log({ fieldVisit, geotaggedImages });
-      if (fieldVisit?.status == "COMPLETED" && !!geotaggedImages?.[0]?.url) {
+      if ((fieldVisit?.status == "COMPLETED" || fieldVisit?.status === "NOT_APPLICABLE") && !!geotaggedImages?.[0]?.url) {
         setSelectedStatus(e.target.value);
       } else {
         getErrorToast(
-          fieldVisit?.status !== "COMPLETED"
+         ( fieldVisit?.status !== "COMPLETED" && fieldVisit?.status !== "NOT_APPLICABLE")
             ? t("Field visit not completed", "फील्ड विजिट पूरा नहीं हुआ")
             : t("Geo-tag photo not uploaded", "जियो-टैग फोटो अपलोड नहीं की गई"),
         );
@@ -110,6 +110,88 @@ export default function ComplaintActionSection({
   };
   return (
     <>
+
+     {/* Geo-tag upload */}
+      {!isCCE && (
+        <div className="border-t border-border pt-4 mt-4">
+          <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
+            {t("Geo-Tag Photo Upload", "जियो-टैग फोटो अपलोड")}
+          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+          />
+          {selectedFiles.length === 0 ? (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer"
+            >
+              <Camera className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  "Click to capture/upload field photo with geo-tag (multiple allowed)",
+                  "जियो-टैग के साथ फील्ड फोटो कैप्चर/अपलोड करने के लिए क्लिक करें (एकाधिक अनुमत)",
+                )}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+                {selectedFiles.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-2.5 border border-border rounded-lg bg-muted/20"
+                  >
+                    {item.preview && (
+                      <img
+                        src={item.preview}
+                        alt={`Preview ${idx}`}
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-foreground truncate">
+                        {item.file.name}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {(item.file.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeFile(idx)}
+                      className="text-xs text-red-500 hover:underline px-2 py-1 cursor-pointer"
+                    >
+                      {t("Remove", "हटाएं")}
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  variant="outline"
+                  className="flex-1 cursor-pointer"
+                >
+                  {t("Add More", "और जोड़ें")}
+                </Button>
+                <Button
+                  onClick={handleUpload}
+                  disabled={postMutation.isPending}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+                >
+                  {postMutation.isPending
+                    ? t("Uploading...", "अपलोड हो रहा है...")
+                    : `${t("Save", "सहेजें")} ${selectedFiles.length} ${t("Image(s)", "छवि(याँ)")}`}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       {/* Status actions */}
       <div className="border-t border-border pt-4">
         <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
@@ -226,87 +308,7 @@ export default function ComplaintActionSection({
         </div>
       </div>
 
-      {/* Geo-tag upload */}
-      {!isCCE && (
-        <div className="border-t border-border pt-4 mt-4">
-          <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
-            {t("Geo-Tag Photo Upload", "जियो-टैग फोटो अपलोड")}
-          </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept="image/*"
-            multiple
-            onChange={handleFileChange}
-          />
-          {selectedFiles.length === 0 ? (
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer"
-            >
-              <Camera className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">
-                {t(
-                  "Click to capture/upload field photo with geo-tag (multiple allowed)",
-                  "जियो-टैग के साथ फील्ड फोटो कैप्चर/अपलोड करने के लिए क्लिक करें (एकाधिक अनुमत)",
-                )}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
-                {selectedFiles.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-3 p-2.5 border border-border rounded-lg bg-muted/20"
-                  >
-                    {item.preview && (
-                      <img
-                        src={item.preview}
-                        alt={`Preview ${idx}`}
-                        className="w-10 h-10 object-cover rounded"
-                      />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-foreground truncate">
-                        {item.file.name}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground">
-                        {(item.file.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => removeFile(idx)}
-                      className="text-xs text-red-500 hover:underline px-2 py-1 cursor-pointer"
-                    >
-                      {t("Remove", "हटाएं")}
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  variant="outline"
-                  className="flex-1 cursor-pointer"
-                >
-                  {t("Add More", "और जोड़ें")}
-                </Button>
-                <Button
-                  onClick={handleUpload}
-                  disabled={postMutation.isPending}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
-                >
-                  {postMutation.isPending
-                    ? t("Uploading...", "अपलोड हो रहा है...")
-                    : `${t("Save", "सहेजें")} ${selectedFiles.length} ${t("Image(s)", "छवि(याँ)")}`}
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+     
 
       {remark.isOpen && (
         <EditDialog

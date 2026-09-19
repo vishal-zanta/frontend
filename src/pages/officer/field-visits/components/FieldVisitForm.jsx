@@ -12,7 +12,7 @@ export default function FieldVisitForm({ onCancel, isLoading, fieldVisit }) {
   const status = watch("status");
   // console.log({fieldVisit});
   const isDisabled =  ["RESOLVED", "CLOSED"].includes(fieldVisit?.grievance?.status || "");
-
+// console.log({status, isDisabled, fv: fieldVisit?.grievance?.status});
 
   return (
     <div className="space-y-4">

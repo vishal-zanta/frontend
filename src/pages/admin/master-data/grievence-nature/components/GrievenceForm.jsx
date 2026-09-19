@@ -23,11 +23,18 @@ const GrievenceForm = ({ initialValues, handleSubmit, typeOptions = [] }) => {
         isCreatable={true}
         isMultiple={false}
       />
-      {/* Title */}
+       {/* Title (English) */}
       <RhfInput
         name="title"
-        label="Title"
+        label="Title (English)"
         placeholder="e.g., Community, Family, Self"
+        required
+      />
+      {/* Title (Hindi) */}
+      <RhfInput
+        name="titleHindi"
+        label="Title (Hindi)"
+        placeholder="उदा., समुदाय, परिवार, स्वयं"
         required
       />
 

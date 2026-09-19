@@ -11,6 +11,7 @@ import {
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import {
@@ -94,6 +95,7 @@ const Notifications = ({ title = "Notifications" }) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryFn: ({ pageParam = 1 }) =>
       getNotification({ page: pageParam, limit: 10 }),
@@ -104,7 +106,19 @@ const Notifications = ({ title = "Notifications" }) => {
       return undefined;
     },
     queryKey: [QUERY_KEYS.NOTIFICATIONS],
-    refetchInterval: 30 * 1000,
+    // refetchInterval: 30 * 1000,
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
+  });
+
+  const { data: latestDataApi } = useQuery({
+    queryKey: [QUERY_KEYS.NOTIFICATIONS, "latest"],
+    queryFn: () =>
+      getNotification({
+        page: 1,
+        limit: 10,
+      }),
+    refetchInterval: 30_000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -112,7 +126,9 @@ const Notifications = ({ title = "Notifications" }) => {
   const notificationList =
     data?.pages?.flatMap((res) => res?.data?.data?.docs ?? []) ?? [];
   const totalCount = data?.pages?.[0]?.data?.data?.pagination?.total ?? 0;
-  const hasUnread = (data?.pages?.[0]?.data?.data?.unreadCount ?? 0) > 0;
+  const hasUnread =
+    ((latestDataApi?.data?.data?.unreadCount ?? 0) ||
+      (data?.pages?.[0]?.data?.data?.unreadCount ?? 0)) > 0;
 
   // Close panel on outside click
   useEffect(() => {
@@ -201,6 +217,12 @@ const Notifications = ({ title = "Notifications" }) => {
     setShowNotifs(false);
   };
 
+  useEffect(() => {
+    if (showNotifs) {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] });
+    }
+  }, [showNotifs]);
+
   return (
     <div className="relative" ref={notifRef}>
       {/* Bell button */}
@@ -263,7 +285,9 @@ const Notifications = ({ title = "Notifications" }) => {
 
               {notificationList.map((n) => {
                 const cfg = getTypeConfig(n.type);
-                const hasLink = !!(n.metadata?.visitId || n.metadata?.grievanceRef);
+                const hasLink = !!(
+                  n.metadata?.visitId || n.metadata?.grievanceRef
+                );
                 return (
                   <div
                     key={n._id}
@@ -278,11 +302,15 @@ const Notifications = ({ title = "Notifications" }) => {
                   >
                     {/* Unread left accent bar */}
                     {!n.isRead && (
-                      <span className={`absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full ${cfg.dot}`} />
+                      <span
+                        className={`absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full ${cfg.dot}`}
+                      />
                     )}
 
                     {/* Icon badge */}
-                    <div className={`shrink-0 mt-0.5 w-8 h-8 flex items-center justify-center rounded-xl ${cfg.bg} ring-1 ring-inset ring-black/5 dark:ring-white/5`}>
+                    <div
+                      className={`shrink-0 mt-0.5 w-8 h-8 flex items-center justify-center rounded-xl ${cfg.bg} ring-1 ring-inset ring-black/5 dark:ring-white/5`}
+                    >
                       {cfg.icon}
                     </div>
 
@@ -290,14 +318,20 @@ const Notifications = ({ title = "Notifications" }) => {
                     <div className="flex-1 min-w-0 pb-4">
                       {/* Title + unread dot */}
                       <div className="flex items-start gap-1.5">
-                        <p className={clsx(
-                          "text-[13px] leading-snug flex-1 min-w-0",
-                          !n.isRead ? "font-semibold text-foreground" : "font-medium text-foreground/90"
-                        )}>
+                        <p
+                          className={clsx(
+                            "text-[13px] leading-snug flex-1 min-w-0",
+                            !n.isRead
+                              ? "font-semibold text-foreground"
+                              : "font-medium text-foreground/90",
+                          )}
+                        >
                           {n.title}
                         </p>
                         {!n.isRead && (
-                          <span className={`shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+                          <span
+                            className={`shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full ${cfg.dot}`}
+                          />
                         )}
                       </div>
 
@@ -311,7 +345,7 @@ const Notifications = ({ title = "Notifications" }) => {
                         <div className="flex items-center gap-1.5 flex-wrap mt-1.5">
                           {n.metadata?.visitId && (
                             <span className="inline-flex items-center gap-1 text-[9px] font-mono font-medium tracking-wide bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 px-1.5 py-0.5 rounded-md">
-                               {n.metadata.visitId}
+                              {n.metadata.visitId}
                             </span>
                           )}
                           {n.metadata?.grievanceRef && (

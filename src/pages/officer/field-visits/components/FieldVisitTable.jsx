@@ -3,7 +3,7 @@ import { MapPin, Camera, Pencil } from "lucide-react";
 import { FieldVisitId, ComplaintId } from "@/components/ComplaintDetailDialog";
 import { PriorityBadge } from "@/components/Badges";
 import { Badge } from "@/components/ui/badge";
-import { getFieldVisitStatusClass, IMG_BASE_URL } from "@/utils/constants";
+import { getFieldVisitBadgeLabel, getFieldVisitStatusClass, IMG_BASE_URL } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { getEntityLabel } from "@/utils/helpers";
 
@@ -210,7 +210,7 @@ export default function FieldVisitTable({
                     variant="outline"
                     className={`text-xs ${getFieldVisitStatusClass(fv.status)}`}
                   >
-                    {fv.status || "N/A"}
+                    { getFieldVisitBadgeLabel( fv.status || "N/A")}
                   </Badge>
                 </td>
                 {!isHideAction && (

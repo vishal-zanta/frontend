@@ -84,7 +84,7 @@ export const fileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 };
 
-export const getTrendProps = (current, previous, reverseColor = false) => {
+export const getTrendProps = (current, previous, reverseColor = false, t) => {
   if (
     previous === undefined ||
     previous === null ||
@@ -94,16 +94,18 @@ export const getTrendProps = (current, previous, reverseColor = false) => {
     return { trend: undefined, trendValue: undefined };
   }
 
+  const vsLastWeek = t ? t("vs last week", "पिछले सप्ताह की तुलना में") : "vs last week";
+
   if (previous === 0) {
     if (current > 0) {
       // Growth from zero (good if normal, bad if reversed)
       const isUp = !reverseColor;
       return {
         trend: isUp ? "up" : "down",
-        trendValue: `+${current} vs last week`,
+        trendValue: `+${current} ${vsLastWeek}`,
       };
     }
-    return { trend: "neutral", trendValue: "0% vs last week" };
+    return { trend: "neutral", trendValue: `0% ${vsLastWeek}` };
   }
 
   const diff = current - previous;
@@ -114,18 +116,18 @@ export const getTrendProps = (current, previous, reverseColor = false) => {
     const isUp = !reverseColor;
     return {
       trend: isUp ? "up" : "down",
-      trendValue: `+${pct.toFixed(0)} % vs last week`,
+      trendValue: `+${pct.toFixed(0)}% ${vsLastWeek}`,
     };
   } else if (diff < 0) {
     // Decrease: red for normal, green for reversed
     const isDown = !reverseColor;
     return {
       trend: isDown ? "down" : "up",
-      trendValue: `${pct.toFixed(0)} % vs last week`,
+      trendValue: `${pct.toFixed(0)}% ${vsLastWeek}`,
     };
   }
 
-  return { trend: "neutral", trendValue: "0% vs last week" };
+  return { trend: "neutral", trendValue: `0% ${vsLastWeek}` };
 };
 
 

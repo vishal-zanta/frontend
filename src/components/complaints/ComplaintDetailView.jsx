@@ -376,6 +376,8 @@ export default function ComplaintDetailView({
             geotaggedImages={geotaggedImages}
             impact={impact}
             resolvedReason={c.status === "RESOLVED" ? c?.resolvedReason : null}
+            status={c.status}
+            complaintId={selectedId || c._id || c.id}
           />
           {channelText === "Email" && (
             <ComplaintEmailDetails

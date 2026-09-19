@@ -187,7 +187,14 @@ export const FIELD_VISIT_STATUS = [
   { value: "COMPLETED", label: "Completed" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "IN_PROGRESS", label: "In Progress" },
+  { value: "NOT_APPLICABLE", label: "Not Applicable" },
+
 ];
+
+export const getFieldVisitBadgeLabel = (status)=> {
+  if(!status) return null;
+  return FIELD_VISIT_STATUS.find(s=> s.value.toLowerCase() === status.toLowerCase())?.label || status;
+}
 
 export const getFieldVisitStatusClass = (status) => {
   const normStatus = (status || "").toUpperCase();
@@ -198,6 +205,8 @@ export const getFieldVisitStatusClass = (status) => {
   if (normStatus === "SCHEDULED")
     return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20";
   if (normStatus === "CANCELLED")
+    return "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20";
+  if(normStatus === "NOT_APPLICABLE")
     return "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20";
   return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20";
 };
@@ -351,6 +360,7 @@ export const PERMISSIONS = {
   TRACK_COMPLAINTS: ["ALL_GRIEVANCE"],
   FIELD_VISITS: ["FIELD_VISIT"],
   MY_COMPLAINTS: ["MY_COMPLAINT"],
+  UPDATE_GRIEVANCE: ["UPDATE_GRIEVANCE"],
   MIS_REPORTS: ["MIS_REPORT"],
   WORKFLOW_MANAGEMENT: ["WORKFLOW_MANAGEMENT"],
   SLA_CONFIGURATION: ["SLA_CONFIGURATION"],

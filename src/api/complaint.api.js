@@ -24,6 +24,10 @@ export const getComplaintByIdForOfficer = async ({ id, params = {} }) => {
   return instance.get(`/grievances/officer/detail/${id}`, { params }).then((res) => res.data);
 };
 
+export const updateComplaintByOfficer = async ({ id, data }) => {
+  return instance.put(`/grievances/officer/${id}`, data).then((res) => res.data);
+};
+
 export const assignOfficer = async ({ id, assignedOfficer }) => {
   return instance.patch(`/grievances/officer/${id}/transfer`, { assignedOfficer }).then((res) => res.data);
 };
