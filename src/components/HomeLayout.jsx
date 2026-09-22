@@ -94,7 +94,7 @@ const HomeLayout = ({ children }) => {
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
           {/* Dignitary / CM Card */}
-          <div className="flex flex-col items-center text-center p-4 w-full max-w-sm">
+          {/* <div className="flex flex-col items-center text-center p-4 w-full max-w-sm">
             <div className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden bg-white/80 dark:bg-slate-900/80 shadow-md border border-slate-200/80 dark:border-slate-800 mb-4 flex items-center justify-center">
               <img
                 src={cmPhoto}
@@ -112,7 +112,7 @@ const HomeLayout = ({ children }) => {
                {t("Government of Bihar", "बिहार सरकार")}
 
             </p>
-          </div>
+          </div> */}
 
           {/* Right Side - Login */}
           <div className="w-full max-w-md flex flex-col items-center">
