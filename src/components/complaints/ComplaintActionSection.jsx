@@ -112,7 +112,7 @@ export default function ComplaintActionSection({
     <>
 
      {/* Geo-tag upload */}
-      {!isCCE && (
+      {profiledata?.isOfficer && (
         <div className="border-t border-border pt-4 mt-4">
           <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
             {t("Geo-Tag Photo Upload", "जियो-टैग फोटो अपलोड")}
@@ -208,7 +208,7 @@ export default function ComplaintActionSection({
             }
             isMultiple={false}
             nonClearable
-            disabled={updateStatusMutation.isPending}
+            disabled={updateStatusMutation.isPending || profiledata?.isAdmin}
             placeholder={t("Select Status", "स्थिति चुनें")}
             options={STATUS_ACTIONS.map((a) => {
              
@@ -268,6 +268,7 @@ export default function ComplaintActionSection({
           existingRating={existingRating}
           existingFeedback={existingFeedback}
           t={t}
+          disabled={profiledata?.isAdmin}
         />
       )}
 
@@ -282,7 +283,7 @@ export default function ComplaintActionSection({
             onValueChange={(val) => setSelectedPriority(val)}
             isMultiple={false}
             nonClearable
-            disabled={updatePriorityMutation.isPending}
+            disabled={updatePriorityMutation.isPending || profiledata?.isAdmin}
             placeholder={t("Select Priority", "प्राथमिकता चुनें")}
             options={PRIORITY_ACTIONS.map((a) => ({
               label: a.badgeLabel || a.label,

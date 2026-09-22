@@ -96,7 +96,7 @@ export default function MyShiftDetails({ agentViewShift }) {
           </div>
           <div className="bg-muted/50 rounded-lg p-3">
             <div className="text-xs text-muted-foreground">
-              {t("Resolved Today", "आज हल की गई")}
+              {t("Resolved Today", "आज समाधान की गई")}
             </div>
             <div className="font-medium text-emerald-600">{resolvedToday}</div>
           </div>

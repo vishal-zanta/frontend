@@ -172,7 +172,7 @@ export default function ManageAgents() {
                     {t("Avg Talk", "औसत बात समय")}
                   </th>
                   <th className="px-4 py-3 font-medium text-center">
-                    {t("CSAT", "CSAT")}
+                    {t("CSAT", "नागरिक संतुष्टि दर")}
                   </th>
                   <th className="px-4 py-3 font-medium">
                     {t("Status", "स्थिति")}

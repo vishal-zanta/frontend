@@ -47,7 +47,7 @@ const callStatsData = {
     {
       id: "missedCalls",
       label: "Missed Calls",
-      labelHindi: "छूटी हुई कॉल",
+      labelHindi: "मिस्ड कॉल",
     },
     {
       id: "callsAbandoned",

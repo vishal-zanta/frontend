@@ -80,7 +80,7 @@ export default function StatsBoxes({ metrics }) {
         />
         <StatCard
           icon={AlertTriangle}
-          label={t("Escalated", "बढ़ाई गई")}
+          label={t("Escalated", "हस्तांतरित किया गया")}
           value={escalated.toLocaleString("en-IN")}
           color="red"
           {...escalatedTrend}

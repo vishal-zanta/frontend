@@ -34,7 +34,7 @@ const ComplaintEmailDetails = ({ channelText, id }) => {
           </div>
           <div>
             <h4 className="text-xs lg:text-sm font-semibold text-foreground">
-              {t("Source Inmail Communication", "मूल इनमेल संचार")}
+              {t("Source Email Communication", "मूल ईमेल संचार")}
             </h4>
             <p className="text-[10px] text-muted-foreground">
               {t(
@@ -53,7 +53,7 @@ const ComplaintEmailDetails = ({ channelText, id }) => {
             className="h-7 px-2.5 text-xs text-primary hover:text-primary border-primary/30 hover:bg-primary/10 cursor-pointer font-medium"
           >
             <Eye className="w-3.5 h-3.5 mr-1" />
-            {t("View Full Inmail", "पूर्ण इनमेल देखें")}
+            {t("View Full Email", "पूर्ण ईमेल देखें")}
           </Button>
         )}
       </div>
@@ -102,7 +102,7 @@ const ComplaintEmailDetails = ({ channelText, id }) => {
               {emailData.status && (
                 <div>
                   <span className="text-muted-foreground block font-medium">
-                    {t("Inmail Status", "इनमेल स्थिति")}
+                    {t("Email Status", "ईमेल स्थिति")}
                   </span>
                   <Badge
                     variant="outline"

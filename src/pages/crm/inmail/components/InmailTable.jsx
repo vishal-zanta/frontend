@@ -220,8 +220,8 @@ export default function InmailTable({
       tableHeaders={tableHeaders}
       tableBody={tableBody}
       emptyText={t(
-        "No inmails found matching criteria.",
-        "कोई इनमेल नहीं मिला।",
+        "No emails found matching criteria.",
+        "कोई ईमेल नहीं मिला।",
       )}
       pagination={pagination}
     />

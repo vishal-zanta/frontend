@@ -179,7 +179,7 @@ export default function InmailPreviewDialog({
                   className="cursor-pointer text-xs bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                  {t("Close Inmail", "इनमेल बंद करें")}
+                  {t("Close Email", "ईमेल बंद करें")}
                 </Button>
                 <Button
                   variant="destructive"

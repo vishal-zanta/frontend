@@ -180,7 +180,7 @@ export default function HelpdeskAgentStatusBoard({ agents = HELPDESK_AGENTS }) {
                 { key: "calls", label: t("Calls", "कॉल") },
                 { key: "resolved", label: t("Resolved", "निराकृत") },
                 { key: "avgTalk", label: t("Avg Talk", "औसत बात") },
-                { key: "csat", label: t("CSAT", "CSAT") },
+                { key: "csat", label: t("CSAT", "नागरिक संतुष्टि दर") },
                 { key: "shift", label: t("Shift", "शिफ्ट") },
               ]}
               filename="helpdesk_agent_status"

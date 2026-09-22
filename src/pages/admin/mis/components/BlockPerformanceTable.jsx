@@ -18,7 +18,7 @@ export default function BlockPerformanceTable({ reportRows = [] }) {
     { id: "total", label: t("Total", "कुल"), className: "text-right" },
     { id: "resolved", label: t("Resolved", "निराकृत"), className: "text-right" },
     { id: "pending", label: t("Pending", "लंबित"), className: "text-right" },
-    { id: "escalated", label: t("Escalated", "बढ़ाई गई"), className: "text-right" },
+    { id: "escalated", label: t("Escalated", "हस्तांतरित किया गया"), className: "text-right" },
   ];
 
   const tableBody = reportRows.map((row) => ({

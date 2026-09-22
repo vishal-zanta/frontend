@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { isAlpha, isValidNumber } from "@/utils/helpers";
+import Translate from "@/components/Translate";
 
 export default function RhfInput({
   name,
@@ -28,6 +29,8 @@ export default function RhfInput({
   const { control } = useFormContext();
   const [showPassword, setShowPassword] = useState(false);
 
+  const isShowTranslate = type !== "password" && type !=="date" && type!=="email" && !isNumsOnly;
+  
   const inputType = type === "password" ? (showPassword ? "text" : "password") : type;
   return (
     <Controller
@@ -60,7 +63,7 @@ export default function RhfInput({
               disabled={disabled}
               className={cn(
                 error && "border-destructive focus-visible:ring-destructive",
-                type === "password" && "pr-10",
+                (type === "password" || isShowTranslate) && "pr-10",
                 inputClassName,
               )}
               {...field}
@@ -93,6 +96,21 @@ export default function RhfInput({
                   <Eye className="w-4 h-4" />
                 )}
               </button>
+            )}
+            {isShowTranslate && (
+              <div
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
+              >
+                <Translate
+                  name={name}
+                  control={control}
+                  onTranslateDone={(translatedText) => {
+                    if (translatedText) {
+                      field.onChange(translatedText);
+                    }
+                  }}
+                />
+              </div>
             )}
           </div>
           {error && (

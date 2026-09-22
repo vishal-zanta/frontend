@@ -178,7 +178,7 @@ export default function IncomingCall() {
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            {t("Incoming Call - Agent Desktop", "आगमन कॉल - एजेंट डेस्कटॉप")}
+            {t("Incoming Call - Agent Desktop", "प्राप्त कॉल - एजेंट डेस्कटॉप")}
           </h1>
           <p className="text-sm text-muted-foreground">
             {t(
@@ -254,7 +254,7 @@ export default function IncomingCall() {
                       <Phone className="w-10 h-10 animate-bounce" />
                     </div>
                     <div className="text-lg font-semibold">
-                      {t("Incoming Call...", "आगमन कॉल...")}
+                      {t("Incoming Call...", "प्राप्त कॉल...")}
                     </div>
                     <div className="text-sm text-white/70">
                       {t("Call from", "कॉल से")} {repeatCaller.district},{" "}

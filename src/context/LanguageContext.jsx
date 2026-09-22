@@ -11,24 +11,24 @@ const langContext = createContext(null);
 
 const LanguageContextProvider = ({ children }) => {
   const { profile, profiledata } = useAuth();
-  const [lang, setLang] = useState("English");
+  const [lang, setLang] = useState("Hindi");
 
   useEffect(() => {
     if (profile) {
       if (profiledata.isCRM) {
-        const lan = localStorage.getItem("cce-lang");
-        if (lan && lan === "Hindi") {
-          setLang("Hindi");
+        const lan = sessionStorage.getItem("cce-lang");
+        if (lan && lan === "English") {
+          setLang("English");
         }
       } else if (profiledata.isOfficer) {
-        const lan = localStorage.getItem("off-lang");
-        if (lan && lan === "Hindi") {
-          setLang("Hindi");
+        const lan = sessionStorage.getItem("off-lang");
+        if (lan && lan === "English") {
+          setLang("English");
         }
       } else {
-        const lan = localStorage.getItem("admin-lang");
-        if (lan && lan === "Hindi") {
-          setLang("Hindi");
+        const lan = sessionStorage.getItem("admin-lang");
+        if (lan && lan === "English") {
+          setLang("English");
         }
       }
     }
@@ -42,11 +42,11 @@ const LanguageContextProvider = ({ children }) => {
   useEffect(() => {
     if (!!profile) {
       if (profiledata.isCRM) {
-        localStorage.setItem("cce-lang", lang);
+        sessionStorage.setItem("cce-lang", lang);
       } else if (profiledata.isOfficer) {
-        localStorage.setItem("off-lang", lang);
+        sessionStorage.setItem("off-lang", lang);
       } else {
-        localStorage.setItem("admin-lang", lang);
+        sessionStorage.setItem("admin-lang", lang);
       }
     }
   }, [lang, profile, profiledata]);

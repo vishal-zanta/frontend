@@ -263,7 +263,7 @@ export default function Login() {
           </div>
           <div className="min-w-0">
             <div className="text-xs font-bold leading-tight truncate">
-              {t("CCE", "सीसीई")}
+              {t("CCE", "ग्राहक सेवा अधिकारी")}
             </div>
           </div>
         </button>

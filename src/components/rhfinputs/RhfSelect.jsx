@@ -302,7 +302,7 @@ export default function RhfSelect({
           <div
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
-            className={cn("flex flex-col gap-1.5", className)}
+            className={cn("flex flex-col gap-1.5 " , className)}
             data-invalid={!!error}
           >
             {label && (

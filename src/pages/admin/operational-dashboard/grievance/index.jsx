@@ -29,7 +29,7 @@ export default function GrievanceTab({ pd }) {
         />
         <StatCard
           icon={Activity}
-          label={t("Escalated", "बढ़ाई गई")}
+          label={t("Escalated", "हस्तांतरित किया गया")}
           value={pd.escalated.toLocaleString("en-IN")}
           color="red"
         />

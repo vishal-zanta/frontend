@@ -35,7 +35,7 @@ const tabs = [
   {
     id: "cce-performance",
     labelEn: "CCE Performance",
-    labelHi: "CCE प्रदर्शन",
+    labelHi: "ग्राहक सेवा अधिकारी प्रदर्शन",
     icon: Users,
     permissions: PERMISSIONS.OPERATIONAL_CCE_PERFORMANCE,
   },

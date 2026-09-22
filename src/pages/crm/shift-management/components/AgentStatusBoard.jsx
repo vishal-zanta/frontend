@@ -57,9 +57,9 @@ export default function AgentStatusBoard({
     { id: "callsToday", label: t("Calls Today", "आज की कॉल"), className: "whitespace-nowrap" },
     ...(isSupervisor
       ? [
-          { id: "resolvedToday", label: t("Resolved", "हल की गई"), className: "whitespace-nowrap" },
+          { id: "resolvedToday", label: t("Resolved", "समाधान की गई"), className: "whitespace-nowrap" },
           { id: "avgTalkTime", label: t("Avg Talk Time", "औसत बात करने का समय"), className: "whitespace-nowrap" },
-          { id: "csat", label: t("CSAT", "सीएसएटी"), className: "whitespace-nowrap min-w-20" },
+          { id: "csat", label: t("CSAT", "नागरिक संतुष्टि दर"), className: "whitespace-nowrap min-w-20" },
         ]
       : []),
     { id: "status", label: t("Status", "स्थिति"), className: "whitespace-nowrap min-w-24" },

@@ -51,7 +51,7 @@ export default function AgentPerformanceCards({ reportRows = [] }) {
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                  {t("CSAT", "CSAT")}
+                  {t("CSAT", "नागरिक संतुष्टि दर")}
                 </span>
                 <span className="font-semibold text-amber-600 dark:text-amber-400 text-xs block">
                   {row.csat != null ? `★ ${row.csat}/5` : "N/A"}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Filter as FilterIcon } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -11,31 +11,102 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useSearchParams } from "react-router-dom";
 
-export default function Filter({ filters = {}, setFilters, filterOptions = [] }) {
+export default function Filter({
+  filters = {},
+  setFilters,
+  filterOptions = [],
+}) {
   const { t } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const hasActiveFilters = Object.values(filters).some(
-    (val) => val !== undefined && val !== ""
+    (val) => val !== undefined && val !== "",
   );
 
-  const handleSelectFilter = (key, value) => {
-    if (setFilters) {
-      const next = { ...filters };
-        if (value === undefined || value === "") {
-          delete next[key];
-        } else {
-          next[key] = value;
-        }
-      setFilters(next);
-    }
-  };
+const handleSelectFilter = (key, value, isMultiple = false) => {
+  if (!setFilters) return;
 
-  const handleClearAll = () => {
-    if (setFilters) {
-      setFilters({});
+  const nextFilters = { ...filters };
+  const nextSearchParams = new URLSearchParams(searchParams);
+
+  let finalValue = value;
+
+  if (isMultiple && value !== undefined && value !== "") {
+    const currentVals = nextFilters[key]
+      ? String(nextFilters[key]).split(",").filter(Boolean)
+      : [];
+
+    const strValue = String(value);
+
+    const updatedVals = currentVals.includes(strValue)
+      ? currentVals.filter((v) => v !== strValue)
+      : [...currentVals, strValue];
+
+    finalValue = updatedVals.length > 0 ? updatedVals.join(",") : undefined;
+  }
+
+  if (finalValue === undefined || finalValue === "") {
+    delete nextFilters[key];
+    nextSearchParams.delete(`filter.${key}`);
+  } else {
+    nextFilters[key] = finalValue;
+
+    nextSearchParams.set(
+      `filter.${key}`,
+      Array.isArray(finalValue) ? finalValue.join(",") : String(finalValue),
+    );
+  }
+
+  setFilters(nextFilters);
+  setSearchParams(nextSearchParams, { replace: true });
+};
+
+const handleClearAll = () => {
+  if (!setFilters) return;
+
+  const nextSearchParams = new URLSearchParams(searchParams);
+
+  for (const key of nextSearchParams.keys()) {
+    if (key.startsWith("filter.")) {
+      nextSearchParams.delete(key);
     }
-  };
+  }
+
+  setFilters({});
+  setSearchParams(nextSearchParams, { replace: true });
+};
+
+useEffect(() => {
+  if (!setFilters) return;
+
+  const nextFilters = {};
+  const params = new URLSearchParams(searchParams);
+
+  params.forEach((value, key) => {
+    if (!key.startsWith("filter.")) return;
+
+    const actualKey = key.slice("filter.".length);
+
+    nextFilters[actualKey] = value;
+  });
+
+  setFilters((prev) => {
+    const prevKeys = Object.keys(prev);
+    const nextKeys = Object.keys(nextFilters);
+
+    if (
+      prevKeys.length === nextKeys.length &&
+      nextKeys.every((key) => prev[key] === nextFilters[key])
+    ) {
+      return prev;
+    }
+
+    return nextFilters;
+  });
+}, [searchParams, setFilters]);
+  // console.log("RENDER");
 
   return (
     <DropdownMenu>
@@ -54,8 +125,11 @@ export default function Filter({ filters = {}, setFilters, filterOptions = [] })
           )}
         </button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent align="end" className="w-48 bg-card border border-border">
+
+      <DropdownMenuContent
+        align="end"
+        className="w-48 bg-card border border-border"
+      >
         {filterOptions.map((opt) => (
           <DropdownMenuSub key={opt.filterKey}>
             <DropdownMenuSubTrigger className="cursor-pointer flex items-center justify-between text-xs py-1.5">
@@ -68,7 +142,9 @@ export default function Filter({ filters = {}, setFilters, filterOptions = [] })
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="w-44 bg-card border border-border">
               <DropdownMenuItem
-                onClick={() => handleSelectFilter(opt.filterKey, undefined)}
+                onClick={() =>
+                  handleSelectFilter(opt.filterKey, undefined, opt.isMultiple)
+                }
                 className={`cursor-pointer text-xs py-1.5 ${
                   !filters[opt.filterKey]
                     ? "font-semibold bg-accent text-accent-foreground"
@@ -79,11 +155,24 @@ export default function Filter({ filters = {}, setFilters, filterOptions = [] })
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {opt.options.map((subOpt) => {
-                const isSelected = filters[opt.filterKey] === subOpt.value;
+                const currentValues =
+                  opt.isMultiple && filters[opt.filterKey]
+                    ? String(filters[opt.filterKey]).split(",").filter(Boolean)
+                    : [];
+                const isSelected = opt.isMultiple
+                  ? currentValues.includes(String(subOpt.value))
+                  : filters[opt.filterKey] === subOpt.value;
+
                 return (
                   <DropdownMenuItem
                     key={subOpt.value}
-                    onClick={() => handleSelectFilter(opt.filterKey, subOpt.value)}
+                    onClick={() =>
+                      handleSelectFilter(
+                        opt.filterKey,
+                        subOpt.value,
+                        opt.isMultiple,
+                      )
+                    }
                     className={`cursor-pointer text-xs py-1.5 ${
                       isSelected
                         ? "font-semibold bg-accent text-accent-foreground"

@@ -135,7 +135,7 @@ export default function Inmail() {
       <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Title and Header */}
         <SectionTitle
-          title={t("InMail", "इनमेल")}
+          title={t("Email Complaint", "ईमेल")}
           subtitle={t(
             "Review incoming grievance emails, raise complaints, close inquiries, or reject spam mails.",
             "आने वाले ईमेल की समीक्षा करें, शिकायत दर्ज करें, पूछताछ बंद करें या स्पैम अस्वीकार करें।",

@@ -27,8 +27,8 @@ export default function InmailCloseDialog({
     onSuccess: () => {
       getSuccessToast(
         t(
-          `Inmail ${mail?.emailId || mail?.id || mail?._id} marked as closed`,
-          `इनमेल ${mail?.emailId || mail?.id || mail?._id} बंद कर दिया गया`,
+          `Email ${mail?.emailId || mail?.id || mail?._id} marked as closed`,
+          `ईमेल ${mail?.emailId || mail?.id || mail?._id} बंद कर दिया गया`,
         ),
       );
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INMAILS] });
@@ -60,7 +60,7 @@ export default function InmailCloseDialog({
 
   return (
     <EditDialog
-      title={t("Close Inmail Communication", "इनमेल संचार बंद करें")}
+      title={t("Close Email Communication", "ईमेल संचार बंद करें")}
       onClose={onClose}
       onSave={handleConfirm}
       isPending={patchMutation.isPending}

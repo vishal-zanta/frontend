@@ -48,7 +48,7 @@ export default function CRMSettings() {
             {[
               {
                 key: "callAlerts",
-                label: t("Incoming Call Alerts", "आगमन कॉल अलर्ट"),
+                label: t("Incoming Call Alerts", "प्राप्त कॉल अलर्ट"),
                 desc: t(
                   "Screen popup when a new call arrives",
                   "नई कॉल आने पर स्क्रीन पॉपअप",

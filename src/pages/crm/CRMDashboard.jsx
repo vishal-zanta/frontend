@@ -202,7 +202,7 @@ export default function CRMDashboard() {
   //                   color: "#22c55e",
   //                 },
   //                 {
-  //                   name: t("Missed", "छूटी हुई"),
+  //                   name: t("Missed", "मिस्ड कॉल"),
   //                   value: IVR_STATS.callsMissed,
   //                   color: "#ef4444",
   //                 },
@@ -241,13 +241,13 @@ export default function CRMDashboard() {
   //                     {t("Calls Today", "आज की कॉल")}
   //                   </th>
   //                   <th className="px-4 py-2 font-medium text-center">
-  //                     {t("Resolved", "हल की गई")}
+  //                     {t("Resolved", "समाधान की गई")}
   //                   </th>
   //                   <th className="px-4 py-2 font-medium">
   //                     {t("Avg Talk", "औसत बात")}
   //                   </th>
   //                   <th className="px-4 py-2 font-medium text-center">
-  //                     {t("CSAT", "सीएसएटी")}
+  //                     {t("CSAT", "नागरिक संतुष्टि दर")}
   //                   </th>
   //                   <th className="px-4 py-2 font-medium">
   //                     {t("Status", "स्थिति")}
@@ -395,7 +395,7 @@ export default function CRMDashboard() {
               <Link to="/crm/incoming-call" className="flex-1 sm:flex-none">
                 <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
                   <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                  {t("Incoming Call", "आगमन कॉल")}
+                  {t("Incoming Call", "प्राप्त कॉल")}
                 </Button>
               </Link>
             <Link to="/crm/raise" className="flex-1 sm:flex-none">
@@ -441,7 +441,7 @@ export default function CRMDashboard() {
           />
           <StatCard
             icon={PhoneMissed}
-            label={t("Missed", "छूटी हुई")}
+            label={t("Missed", "मिस्ड कॉल")}
             value={sc.missed}
             color="red"
           />
@@ -453,7 +453,7 @@ export default function CRMDashboard() {
           />
           <StatCard
             icon={Ticket}
-            label={t("Tickets Raised", "टिकट उठाए गए")}
+            label={t("Complaint Raised", "शिकायत दर्ज की गई")}
             value={sc.ticketsRaised}
             color="purple"
             trend="up"
@@ -467,7 +467,7 @@ export default function CRMDashboard() {
           />
           <StatCard
             icon={Star}
-            label={t("CSAT", "सीएसएटी")}
+            label={t("CSAT", "नागरिक संतुष्टि दर")}
             value={`${sc.csat}/5`}
             color="green"
             sublabel={`SLA: ${sc.sla}%`}
@@ -497,7 +497,7 @@ export default function CRMDashboard() {
                 {sc.ticketsRaised}
               </div>
               <div className="text-xs text-muted-foreground">
-                {t("Tickets Raised", "टिकट उठाए गए")}
+                {t("Complaint Raised", "शिकायत दर्ज की गई")}
               </div>
             </div>
             <div className="text-center p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg">
@@ -505,7 +505,7 @@ export default function CRMDashboard() {
                 {sc.resolved}
               </div>
               <div className="text-xs text-muted-foreground">
-                {t("Resolved", "हल की गई")}
+                {t("Resolved", "समाधान की गई")}
               </div>
             </div>
             <div className="text-center p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg">
@@ -513,7 +513,7 @@ export default function CRMDashboard() {
                 {sc.csat}/5
               </div>
               <div className="text-xs text-muted-foreground">
-                {t("CSAT Rating", "सीएसएटी रेटिंग")}
+                {t("CSAT", "नागरिक संतुष्टि दर")}
               </div>
             </div>
           </div>

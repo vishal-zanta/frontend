@@ -16,7 +16,7 @@ const RATING_LABELS = {
   5: ["Excellent", "उत्कृष्ट"],
 };
 
-function StarRating({ rating, onRatingChange, editable = true }) {
+function StarRating({ rating, onRatingChange, editable = true, t }) {
   const [hovered, setHovered] = useState(0);
 
   return (
@@ -45,7 +45,9 @@ function StarRating({ rating, onRatingChange, editable = true }) {
       })}
       {(hovered || rating) > 0 && (
         <span className="ml-2 text-sm font-semibold text-amber-600">
-          {RATING_LABELS[hovered || rating]?.[0] || ""}
+          {t && RATING_LABELS[hovered || rating]
+            ? t(RATING_LABELS[hovered || rating][0], RATING_LABELS[hovered || rating][1])
+            : RATING_LABELS[hovered || rating]?.[0] || ""}
         </span>
       )}
     </div>
@@ -57,6 +59,7 @@ export default function OfficerComplaintFeedback({
   existingRating,
   existingFeedback,
   t,
+  disabled = false,
 }) {
   const qc = useQueryClient();
   const [rating, setRating] = useState(existingRating || 0);
@@ -84,17 +87,18 @@ export default function OfficerComplaintFeedback({
       getErrorToast(err);
     },
   });
-  useEffect(()=> {
-    if(rating!== existingRating){
+  useEffect(() => {
+    if (rating !== existingRating) {
       setRating(existingRating || 0);
     }
-    if(feedback !== existingFeedback){
+    if (feedback !== existingFeedback) {
       setFeedback(existingFeedback || "");
     }
-  },[existingRating,existingFeedback])
+  }, [existingRating, existingFeedback]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (disabled) return;
     if (rating === 0) {
       getErrorToast({
         message: t(
@@ -128,7 +132,7 @@ export default function OfficerComplaintFeedback({
             <span className="text-xs font-medium text-muted-foreground">
               {t("Rating:", "रेटिंग:")}
             </span>
-            <StarRating rating={existingRating} editable={false} />
+            <StarRating rating={existingRating} editable={false} t={t} />
           </div>
           {existingFeedback && (
             <p className="text-xs text-muted-foreground bg-card rounded-lg border border-emerald-100 dark:border-emerald-900 px-3 py-2 italic">
@@ -159,7 +163,7 @@ export default function OfficerComplaintFeedback({
                 "आप समाधान से कितने संतुष्ट हैं? *",
               )}
             </Label>
-            <StarRating rating={rating} onRatingChange={setRating} />
+            <StarRating rating={rating} onRatingChange={setRating} editable={!disabled} t={t} />
           </div>
 
           <div className="space-y-1.5">
@@ -178,15 +182,16 @@ export default function OfficerComplaintFeedback({
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               rows={3}
-              className="resize-none text-sm"
+              disabled={disabled}
+              className="resize-none text-sm disabled:opacity-75 disabled:cursor-not-allowed"
             />
           </div>
 
           <Button
             type="submit"
             size="sm"
-            disabled={rating === 0 || !feedback.trim() || mutation.isPending}
-            className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer"
+            disabled={disabled || rating === 0 || !feedback.trim() || mutation.isPending}
+            className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer disabled:cursor-not-allowed"
           >
             {mutation.isPending ? (
               <span className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-primary-foreground border-t-transparent" />

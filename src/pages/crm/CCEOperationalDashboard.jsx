@@ -122,7 +122,7 @@ export default function CCEOperationalDashboard() {
     <PortalLayout role="cce">
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
-          title={`${t("CCE Operational Dashboard", "सीसीई परिचालन डैशबोर्ड")} - ${t("CCE Performance", "सीसीई प्रदर्शन")}`}
+          title={`${t("CCE Operational Dashboard", "ग्राहक सेवा अधिकारी परिचालन डैशबोर्ड")} - ${t("CCE Performance", "ग्राहक सेवा अधिकारी प्रदर्शन")}`}
           subtitle=""
         >
           <TimeRangeFilter

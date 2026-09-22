@@ -191,11 +191,11 @@ export default function CallHistoryLog() {
           }`}
         >
           {c.status === "Resolved"
-            ? t("Resolved", "हल की गई")
+            ? t("Resolved", "समाधान की गई")
             : c.status === "Missed"
-              ? t("Missed", "छूटी हुई")
+              ? t("Missed", "मिस्ड कॉल")
               : c.status === "Escalated"
-                ? t("Escalated", "बढ़ाया गया")
+                ? t("Escalated", "हस्तांतरित किया गया")
                 : c.status || "N/A"}
         </Badge>
       ),
@@ -255,7 +255,7 @@ export default function CallHistoryLog() {
           />
           <StatCard
             icon={PhoneMissed}
-            label={t("Missed / Dropped", "छूटी हुई / गिरी हुई")}
+            label={t("Missed / Dropped", "मिस्ड कॉल / कटी कॉलें")}
             value={callHistoryLog.filter((c) => c.status === "Missed").length}
             color="red"
           />
@@ -303,11 +303,11 @@ export default function CallHistoryLog() {
                 {t("All Status", "सभी स्थिति")}
               </SelectItem>
               <SelectItem value="resolved">
-                {t("Resolved", "हल की गई")}
+                {t("Resolved", "समाधान की गई")}
               </SelectItem>
-              <SelectItem value="missed">{t("Missed", "छूटी हुई")}</SelectItem>
+              <SelectItem value="missed">{t("Missed", "मिस्ड कॉल")}</SelectItem>
               <SelectItem value="escalated">
-                {t("Escalated", "बढ़ाया गया")}
+                {t("Escalated", "हस्तांतरित किया गया")}
               </SelectItem>
             </SelectContent>
           </Select>

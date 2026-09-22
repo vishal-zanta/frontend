@@ -59,7 +59,7 @@ export default function DistrictSummaryCards({ reportRows = [] }) {
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                  {t("Escalated", "बढ़ाई गई")}
+                  {t("Escalated", "हस्तांतरित किया गया")}
                 </span>
                 <span className="font-semibold text-red-600 dark:text-red-400 text-xs block">
                   {row.escalated != null ? row.escalated.toLocaleString("en-IN") : "N/A"}

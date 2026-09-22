@@ -36,7 +36,7 @@ export default function CcePerformanceTab({ pd }) {
                 />
         <StatCard
           icon={TrendingUp}
-          label={t("Avg CSAT", "औसत संतुष्टि (CSAT)")}
+          label={t("Avg CSAT", "औसत नागरिक संतुष्टि दर")}
           value="4.3/5"
           color="green"
           sublabel={t("Target: 4.5", "लक्ष्य: 4.5")}

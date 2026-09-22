@@ -27,8 +27,8 @@ export default function InmailRejectDialog({
     onSuccess: () => {
       getWarningToast(
         t(
-          `Inmail ${mail?.emailId || mail?.id || mail?._id} rejected`,
-          `इनमेल ${mail?.emailId || mail?.id || mail?._id} अस्वीकार कर दिया गया`,
+          `Email ${mail?.emailId || mail?.id || mail?._id} rejected`,
+          `ईमेल ${mail?.emailId || mail?.id || mail?._id} अस्वीकार कर दिया गया`,
         ),
       );
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INMAILS] });
@@ -60,7 +60,7 @@ export default function InmailRejectDialog({
 
   return (
     <EditDialog
-      title={t("Reject Inmail Communication", "इनमेल संचार अस्वीकार करें")}
+      title={t("Reject Email Communication", "ईमेल संचार अस्वीकार करें")}
       onClose={onClose}
       onSave={handleConfirm}
       isPending={patchMutation.isPending}

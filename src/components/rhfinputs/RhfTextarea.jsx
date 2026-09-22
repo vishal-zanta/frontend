@@ -3,6 +3,7 @@ import { useFormContext, Controller } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import Translate from "@/components/Translate";
 
 export default function RhfTextarea({
   name,
@@ -14,6 +15,7 @@ export default function RhfTextarea({
   required = false,
   disabled = false,
   rows = 4,
+  isShowTranslate = true,
   ...props
 }) {
   const { control } = useFormContext();
@@ -28,7 +30,7 @@ export default function RhfTextarea({
             <Label
               htmlFor={name}
               className={cn(
-                "font-normal text-sm md:text-sm text-foreground mb-0.5",
+                "font-normal text-sm md:text-sm text-foreground mb-0.5 w-fit",
                 labelClassName,
               )}
             >
@@ -36,18 +38,34 @@ export default function RhfTextarea({
               {required && <span className="text-destructive"> *</span>}
             </Label>
           )}
-          <Textarea
-            id={name}
-            placeholder={placeholder}
-            disabled={disabled}
-            rows={rows}
-            className={cn(
-              error && "border-destructive focus-visible:ring-destructive",
-              inputClassName,
+          <div className="relative">
+            <Textarea
+              id={name}
+              placeholder={placeholder}
+              disabled={disabled}
+              rows={rows}
+              className={cn(
+                error && "border-destructive focus-visible:ring-destructive",
+                isShowTranslate && "pr-10",
+                inputClassName,
+              )}
+              {...field}
+              {...props}
+            />
+            {isShowTranslate && (
+              <div className="absolute top-2.5 right-3 flex items-center text-muted-foreground hover:text-foreground">
+                <Translate
+                  name={name}
+                  control={control}
+                  onTranslateDone={(translatedText) => {
+                    if (translatedText) {
+                      field.onChange(translatedText);
+                    }
+                  }}
+                />
+              </div>
             )}
-            {...field}
-            {...props}
-          />
+          </div>
           {error && (
             <span className="text-destructive text-xs font-medium">
               {error.message}
@@ -58,3 +76,4 @@ export default function RhfTextarea({
     />
   );
 }
+

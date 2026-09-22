@@ -179,7 +179,7 @@ export default function AdminCallHistory() {
           />
           <StatCard
             icon={PhoneMissed}
-            label={t("Missed / Dropped", "छूटी हुई / कटी कॉलें")}
+            label={t("Missed / Dropped", "मिस्ड कॉल / कटी कॉलें")}
             value={callHistoryLog.filter((c) => c.status === "Missed").length}
             color="red"
           />
@@ -229,9 +229,9 @@ export default function AdminCallHistory() {
               <SelectItem value="resolved">
                 {t("Resolved", "निराकृत")}
               </SelectItem>
-              <SelectItem value="missed">{t("Missed", "छूटी हुई")}</SelectItem>
+              <SelectItem value="missed">{t("Missed", "मिस्ड कॉल")}</SelectItem>
               <SelectItem value="escalated">
-                {t("Escalated", "बढ़ाई गई")}
+                {t("Escalated", "हस्तांतरित किया गया")}
               </SelectItem>
             </SelectContent>
           </Select>

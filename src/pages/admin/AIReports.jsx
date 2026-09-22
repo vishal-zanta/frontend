@@ -363,7 +363,7 @@ export default function AIReports() {
                 name: d.district,
               }))}
               xLabel={t("Total Complaints", "कुल शिकायतें")}
-              yLabel={t("Escalated", "बढ़ाई गई")}
+              yLabel={t("Escalated", "हस्तांतरित किया गया")}
             />
           </ChartCard> */}
 

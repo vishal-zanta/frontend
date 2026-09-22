@@ -53,7 +53,7 @@ export default function MapAndDistrictSection({ districtData }) {
                 <th className="px-3 py-2 font-medium text-right">{t("Resolved", "निराकृत")}</th>
                 <th className="px-3 py-2 font-medium text-right">{t("Pending", "लंबित")}</th>
                 <th className="px-3 py-2 font-medium text-right">{t("In Progress", "प्रगति पर")}</th>
-                <th className="px-3 py-2 font-medium text-right">{t("Escalated", "बढ़ाई गई")}</th>
+                <th className="px-3 py-2 font-medium text-right">{t("Escalated", "हस्तांतरित किया गया")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

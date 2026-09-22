@@ -1,20 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Filter, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/Badges";
 import { SLATimer } from "./ComplaintDetailHeader";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import SearchDebounced from "../debounced/SearchDebounced";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import Filter from "@/components/Filter";
 import { STATUS_ACTIONS, PRIORITY_ACTIONS, MAX_LIMIT } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { useLocation, useSearchParams } from "react-router-dom";
@@ -40,10 +31,7 @@ export default function ComplaintList({
   const [search, setSearch] = useState(complaintId);
   // console.log({complaintId, search})
   const isChangedOnce = useRef(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedFeedback, setSelectedFeedback] = useState("");
-  const [selectedPriority, setSelectedPriority] = useState("");
-  const [selectedChannel, setSelectedChannel] = useState("");
+  const [filters, setFilters] = useState({});
 
   const API_PARAMS = useMemo(
     () => ({
@@ -64,6 +52,48 @@ export default function ComplaintList({
     }));
   }, [complaintSourcesData, lang]);
 
+  const filterOptions = useMemo(
+    () => [
+      {
+        label: t("Status", "स्थिति"),
+        filterKey: "status",
+        options: STATUS_ACTIONS.map((action) => ({
+          label: action.badgeLabel || action.label,
+          value: action.value,
+        })),
+        isMultiple : true
+      },
+      {
+        label: t("Feedback", "प्रतिक्रिया"),
+        filterKey: "feedback",
+        options: [
+          { label: t("Feedback Done", "प्रतिक्रिया समाप्त"), value: "true" },
+          { label: t("Feedback Left", "प्रतिक्रिया शेष"), value: "false" },
+        ],
+        isMultiple : true
+
+      },
+      {
+        label: t("Priority", "प्राथमिकता"),
+        filterKey: "priority",
+        options: PRIORITY_ACTIONS.map((action) => ({
+          label: action.badgeLabel || action.label,
+          value: action.value,
+        })),
+        isMultiple : true
+
+      },
+      {
+        label: t("Mode of Complaint", "शिकायत का माध्यम"),
+        filterKey: "channel",
+        options: channelOptions,
+        isMultiple : true
+
+      },
+    ],
+    [t, channelOptions],
+  );
+
   const { dept, setDept, selectedDept, departmentsList, isExternalDepartment } =
     externalDeptProps || {};
   // console.log({dept, isExternalDepartment});
@@ -79,10 +109,13 @@ export default function ComplaintList({
     {
       limit: 10,
       search,
-      status: selectedStatus || undefined,
-      feedback: selectedFeedback !== "" ? selectedFeedback : undefined,
-      priority: selectedPriority || undefined,
-      channel: selectedChannel || undefined,
+      status: filters.status || undefined,
+      feedback:
+        filters.feedback !== undefined && filters.feedback !== ""
+          ? filters.feedback
+          : undefined,
+      priority: filters.priority || undefined,
+      channel: filters.channel || undefined,
     },
     {
       enabled: !isExternalDepartment,
@@ -163,159 +196,14 @@ export default function ComplaintList({
             {t("My Complaints", "मेरी शिकायतें")} ({complaints.length})
           </h3>
           {!isExternalDepartment && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="relative h-8 w-8 p-0 cursor-pointer"
-                >
-                  <Filter className="w-4 h-4" />
-                  {(selectedStatus ||
-                    selectedFeedback !== "" ||
-                    selectedPriority ||
-                    selectedChannel) && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" />
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-card">
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="cursor-pointer">
-                    <span>{t("Status", "स्थिति")}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent className="w-40 bg-card">
-                    <DropdownMenuItem
-                      onClick={() => setSelectedStatus("")}
-                      className={`cursor-pointer ${!selectedStatus ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                    >
-                      {t("All Statuses", "सभी स्थितियाँ")}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {STATUS_ACTIONS.map((action) => {
-                      const isSelected = selectedStatus === action.value;
-                      return (
-                        <DropdownMenuItem
-                          key={action.value}
-                          onClick={() => setSelectedStatus(action.value)}
-                          className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                        >
-                          {action.badgeLabel || action.label}
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="cursor-pointer">
-                    <span>{t("Feedback", "प्रतिक्रिया")}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent className="w-44 bg-card">
-                    <DropdownMenuItem
-                      onClick={() => setSelectedFeedback("")}
-                      className={`cursor-pointer ${selectedFeedback === "" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                    >
-                      {t("All", "सभी")}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => setSelectedFeedback("true")}
-                      className={`cursor-pointer ${selectedFeedback === "true" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                    >
-                      {t("Feedback Done", "प्रतिक्रिया समाप्त")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setSelectedFeedback("false")}
-                      className={`cursor-pointer ${selectedFeedback === "false" ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                    >
-                      {t("Feedback Left", "प्रतिक्रिया शेष")}
-                    </DropdownMenuItem>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="cursor-pointer">
-                    <span>{t("Priority", "प्राथमिकता")}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent className="w-40 bg-card">
-                    <DropdownMenuItem
-                      onClick={() => setSelectedPriority("")}
-                      className={`cursor-pointer ${!selectedPriority ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                    >
-                      {t("All Priorities", "सभी प्राथमिकताएं")}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {PRIORITY_ACTIONS.map((action) => {
-                      const isSelected = selectedPriority === action.value;
-                      return (
-                        <DropdownMenuItem
-                          key={action.value}
-                          onClick={() => setSelectedPriority(action.value)}
-                          className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                        >
-                          {action.badgeLabel || action.label}
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="cursor-pointer">
-                    <span>{t("Mode of Complaint", "शिकायत का माध्यम")}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent className="w-48 bg-card max-h-60 overflow-y-auto">
-                    <DropdownMenuItem
-                      onClick={() => setSelectedChannel("")}
-                      className={`cursor-pointer ${!selectedChannel ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                    >
-                      {t("All Modes", "सभी माध्यम")}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {complaintSourcesLoading ? (
-                      <DropdownMenuItem
-                        disabled
-                        className="text-muted-foreground text-xs"
-                      >
-                        {t("Loading...", "लोड हो रहा है...")}
-                      </DropdownMenuItem>
-                    ) : (
-                      channelOptions.map((channel) => {
-                        const isSelected = selectedChannel === channel.value;
-                        return (
-                          <DropdownMenuItem
-                            key={channel.value}
-                            onClick={() => setSelectedChannel(channel.value)}
-                            className={`cursor-pointer ${isSelected ? "font-semibold bg-accent text-accent-foreground" : ""}`}
-                          >
-                            {channel.label}
-                          </DropdownMenuItem>
-                        );
-                      })
-                    )}
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                {(selectedStatus ||
-                  selectedFeedback !== "" ||
-                  selectedPriority ||
-                  selectedChannel) && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setSelectedStatus("");
-                        setSelectedFeedback("");
-                        setSelectedPriority("");
-                        setSelectedChannel("");
-                      }}
-                      className="text-destructive focus:text-destructive cursor-pointer"
-                    >
-                      {t("Clear Filters", "फ़िल्टर हटाएं")}
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Filter
+              filters={filters}
+              setFilters={setFilters}
+              filterOptions={filterOptions}
+            />
           )}
         </div>
+
         {isCCE && (
           <div className="mt-2 flex items-center gap-2 ">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">

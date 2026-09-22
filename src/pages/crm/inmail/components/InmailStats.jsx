@@ -10,7 +10,7 @@ export default function InmailStats({ stats, activeTab, onTabChange }) {
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
       <StatCard
         icon={Inbox}
-        label={t("Total Inmails", "कुल इनमेल")}
+        label={t("Total Emails", "कुल ईमेल")}
         value={stats.total}
         color="blue"
         isClicked={activeTab === "all"}

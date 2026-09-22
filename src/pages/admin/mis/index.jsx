@@ -159,14 +159,14 @@ function getReportColumns(reportId, t) {
         { key: "total", label: t("Total", "कुल") },
         { key: "resolved", label: t("Resolved", "निराकृत") },
         { key: "pending", label: t("Pending", "लंबित") },
-        { key: "escalated", label: t("Escalated", "बढ़ाई गई") },
+        { key: "escalated", label: t("Escalated", "हस्तांतरित किया गया") },
       ];
     case "agent":
       return [
         { key: "agent", label: t("Agent", "एजेंट") },
         { key: "calls", label: t("Calls", "कॉल") },
         { key: "resolved", label: t("Resolved", "निराकृत") },
-        { key: "csat", label: t("CSAT", "CSAT") },
+        { key: "csat", label: t("CSAT", "नागरिक संतुष्टि दर") },
         { key: "slaCompliance", label: t("SLA %", "SLA %") },
       ];
     case "ivr":
@@ -180,7 +180,7 @@ function getReportColumns(reportId, t) {
         { key: "total", label: t("Total", "कुल") },
         { key: "resolved", label: t("Resolved", "निराकृत") },
         { key: "pending", label: t("Pending", "लंबित") },
-        { key: "escalated", label: t("Escalated", "बढ़ाई गई") },
+        { key: "escalated", label: t("Escalated", "हस्तांतरित किया गया") },
       ];
   }
 }
@@ -350,7 +350,7 @@ export default function MISReports() {
       name: t("Agent Performance Report", "एजेंट प्रदर्शन रिपोर्ट"),
       desc: t(
         "Individual agent stats - calls, resolution, CSAT, SLA",
-        "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, CSAT, SLA",
+        "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, नागरिक संतुष्टि दर, SLA",
       ),
       icon: FileText,
       permissions: PERMISSIONS.MIS_REPORTS,

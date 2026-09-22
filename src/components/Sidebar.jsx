@@ -55,14 +55,14 @@ export const sidebarSections = [
       },
       {
         label: "CCE Dashboard",
-        labelHindi: "सीसीई डैशबोर्ड",
+        labelHindi: "ग्राहक सेवा अधिकारी डैशबोर्ड",
         path: "/crm",
         icon: LayoutDashboard,
         permissions: PERMISSIONS.CCE_DASHBOARD,
         rolePermissions: { exclude: [...ADMIN_ROLES] },
         updateLabel: (obj, t) => {
           if (obj?.isCCE) {
-            return t("CCE Dashboard", "सीसीई डैशबोर्ड");
+            return t("CCE Dashboard", "ग्राहक सेवा अधिकारी डैशबोर्ड");
           } else {
             return t("Supervisor Dashboard", "पर्यवेक्षक डैशबोर्ड");
           }
@@ -89,7 +89,7 @@ export const sidebarSections = [
           },
           {
             label: "CCE Performance",
-            labelHindi: "सीसीई प्रदर्शन",
+            labelHindi: "ग्राहक सेवा अधिकारी प्रदर्शन",
             path: "/admin/operational?tab=cce-performance",
             permissions: PERMISSIONS.OPERATIONAL_CCE_PERFORMANCE,
           },
@@ -121,7 +121,7 @@ export const sidebarSections = [
       },
       {
         label: "CCE Operational Dashboard",
-        labelHindi: "सीसीई परिचालन डैशबोर्ड",
+        labelHindi: "ग्राहक सेवा अधिकारी परिचालन डैशबोर्ड",
         path: "/crm/operational",
         icon: Activity,
         rolePermissions: { include: [...CCS_ONLY_ROLES] },
@@ -176,8 +176,8 @@ export const sidebarSections = [
         permissions: PERMISSIONS.TRACK_COMPLAINTS,
       },
       {
-        label: "InMail",
-        labelHindi: "इनमेल",
+        label: "Email Complaint",
+        labelHindi: "ईमेल",
         path: "/crm/inmail",
         icon: MessageSquare,
         rolePermissions: { include: [...CCE_ONLY_ROLES] },
@@ -192,7 +192,7 @@ export const sidebarSections = [
     items: [
       {
         label: "Incoming Call",
-        labelHindi: "आने वाली कॉल",
+        labelHindi: "प्राप्त कॉल",
         path: "/crm/incoming-call",
         icon: Phone,
         // permissions: PERMISSIONS.INCOMING_CALL,

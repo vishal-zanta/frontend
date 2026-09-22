@@ -37,11 +37,11 @@ export default function CallTrackerCards({ calls = [] }) {
               }`}
             >
               {c.status === "Resolved"
-                ? t("Resolved", "हल की गई")
+                ? t("Resolved", "समाधान की गई")
                 : c.status === "Missed"
-                  ? t("Missed", "छूटी हुई")
+                  ? t("Missed", "मिस्ड कॉल")
                   : c.status === "Escalated"
-                    ? t("Escalated", "बढ़ाया गया")
+                    ? t("Escalated", "हस्तांतरित किया गया")
                     : c.status || "N/A"}
             </Badge>
           </div>

@@ -116,7 +116,7 @@ export default function AgentStatusBoardCards({
                   <>
                     <div>
                       <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                        {t("Resolved", "हल की गई")}
+                        {t("Resolved", "समाधान की गई")}
                       </span>
                       <span className="font-semibold text-emerald-600 dark:text-emerald-400 text-xs block mt-0.5">
                         {a?.resolvedToday != null ? a.resolvedToday : "N/A"}
@@ -134,7 +134,7 @@ export default function AgentStatusBoardCards({
 
                     <div>
                       <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                        {t("CSAT", "सीएसएटी")}
+                        {t("CSAT", "नागरिक संतुष्टि दर")}
                       </span>
                       <span className="font-semibold text-amber-600 dark:text-amber-400 text-xs block mt-0.5">
                         {a?.csat && a.csat !== "-" ? `★ ${a.csat}` : "N/A"}
