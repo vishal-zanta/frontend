@@ -6,13 +6,24 @@ import { useLanguage } from "@/context/LanguageContext";
 import { postTranslate } from "@/api/translation.api";
 import { getErrorToast } from "@/utils/helpers";
 
+const DEVANAGARI_REGEX = /[\u0900-\u097F]/;
+const LATIN_REGEX = /[A-Za-z]/;
+
+function detectScript(text) {
+  const hasDevanagari = DEVANAGARI_REGEX.test(text);
+  const hasLatin = LATIN_REGEX.test(text);
+
+  if (hasDevanagari && !hasLatin) return "Hindi";
+  if (hasLatin && !hasDevanagari) return "English";
+  if (hasDevanagari && hasLatin) return "Mixed";
+  return "Unknown"; // numbers/emoji/punctuation only, no letters at all
+}
+
 const Translate = ({ name, control, onTranslateDone }) => {
   const formContext = useFormContext();
   const effectiveControl = control || formContext?.control;
   const currValue = useWatch({ name, control: effectiveControl });
   const { lang } = useLanguage();
-
-  const targetLanguage = lang?.toLowerCase()?.startsWith("hi") ? "hi" : "en";
 
   const translateMutation = useMutation({
     mutationFn: async ({ text, targetLanguage }) => {
@@ -39,10 +50,23 @@ const Translate = ({ name, control, onTranslateDone }) => {
     e?.stopPropagation?.();
     if (!currValue || translateMutation.isPending) return;
 
-    translateMutation.mutate({
-      text: currValue,
-      targetLanguage,
-    });
+    const script = detectScript(currValue);
+
+    if (script === "Unknown" || script === "Mixed") {
+      const targetLanguage = lang?.toLowerCase()?.startsWith("hi")
+        ? "hi"
+        : "en";
+
+      translateMutation.mutate({
+        text: currValue,
+        targetLanguage,
+      });
+    } else {
+      translateMutation.mutate({
+        text: currValue,
+        targetLanguage: script === "English" ? "hi" : "en",
+      });
+    }
   };
 
   return translateMutation.isPending ? (
