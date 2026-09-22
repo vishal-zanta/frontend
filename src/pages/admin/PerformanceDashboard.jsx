@@ -18,14 +18,16 @@ import { MAX_LIMIT } from "@/utils/constants";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
 import { useLanguage } from "@/context/LanguageContext"; 
+import { useAuth } from "@/context/AuthContext";
 
 export default function PerformanceDashboard() {
   const { t } = useLanguage();
+  const {profiledata} = useAuth();
   const [period, setPeriod] = useState("daily");
   const [dateRange, setDateRange] = useState({});
   const [filters, setFilters] = useState({});
 
-  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT });
+  const { data: rolesApiData } = useGetRoles([], { page: 1, limit: MAX_LIMIT }, profiledata?.isAdmin);
   // const rolesList = ;
   const roleOptions = (rolesApiData?.data?.docs || [])
     .filter(
@@ -45,7 +47,7 @@ export default function PerformanceDashboard() {
       limit: MAX_LIMIT,
       role: roleIds,
     },
-    !!roleIds,
+    !!roleIds && profiledata?.isAdmin,
   );
 
   const usersList =
@@ -91,7 +93,7 @@ export default function PerformanceDashboard() {
             setDateRange={setDateRange}
             filters={filters}
             setFilters={setFilters}
-            filterOptions={filterOptions}
+            filterOptions={profiledata?.isAdmin? filterOptions : null}
             boxClassName={"flex-wrap sm:flex-nowrap"}
           />
           </SectionTitle>
