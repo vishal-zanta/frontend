@@ -25,87 +25,84 @@ export default function Filter({
     (val) => val !== undefined && val !== "",
   );
 
-const handleSelectFilter = (key, value, isMultiple = false) => {
-  if (!setFilters) return;
+  const handleSelectFilter = (key, value, isMultiple = false) => {
+    if (setFilters) {
+      const next = { ...filters };
+      let finalValue = value;
 
-  const nextFilters = { ...filters };
-  const nextSearchParams = new URLSearchParams(searchParams);
+      if (isMultiple && value !== undefined && value !== "") {
+        const currentVals = next[key]
+          ? String(next[key]).split(",").filter(Boolean)
+          : [];
+        const strVal = String(value);
+        let updatedVals;
+        if (currentVals.includes(strVal)) {
+          updatedVals = currentVals.filter((v) => v !== strVal);
+        } else {
+          updatedVals = [...currentVals, strVal];
+        }
+        finalValue = updatedVals.length > 0 ? updatedVals.join(",") : undefined;
+      }
 
-  let finalValue = value;
+      if (finalValue === undefined || finalValue === "") {
+        delete next[key];
+        searchParams.delete(`filter.${key}`);
+        setSearchParams(searchParams, { replace: true });
+      } else {
+        next[key] = finalValue;
+        searchParams.set(
+          `filter.${key}`,
+          Array.isArray(finalValue) ? finalValue.join(",") : finalValue,
+        );
+        setSearchParams(searchParams, { replace: true });
+      }
 
-  if (isMultiple && value !== undefined && value !== "") {
-    const currentVals = nextFilters[key]
-      ? String(nextFilters[key]).split(",").filter(Boolean)
-      : [];
-
-    const strValue = String(value);
-
-    const updatedVals = currentVals.includes(strValue)
-      ? currentVals.filter((v) => v !== strValue)
-      : [...currentVals, strValue];
-
-    finalValue = updatedVals.length > 0 ? updatedVals.join(",") : undefined;
-  }
-
-  if (finalValue === undefined || finalValue === "") {
-    delete nextFilters[key];
-    nextSearchParams.delete(`filter.${key}`);
-  } else {
-    nextFilters[key] = finalValue;
-
-    nextSearchParams.set(
-      `filter.${key}`,
-      Array.isArray(finalValue) ? finalValue.join(",") : String(finalValue),
-    );
-  }
-
-  setFilters(nextFilters);
-  setSearchParams(nextSearchParams, { replace: true });
-};
-
-const handleClearAll = () => {
-  if (!setFilters) return;
-
-  const nextSearchParams = new URLSearchParams(searchParams);
-
-  for (const key of nextSearchParams.keys()) {
-    if (key.startsWith("filter.")) {
-      nextSearchParams.delete(key);
+      setFilters(next);
     }
-  }
+  };
 
-  setFilters({});
-  setSearchParams(nextSearchParams, { replace: true });
-};
+  const handleClearAll = () => {
+    if (setFilters) {
+      setFilters({});
 
-useEffect(() => {
-  if (!setFilters) return;
-
-  const nextFilters = {};
-  const params = new URLSearchParams(searchParams);
-
-  params.forEach((value, key) => {
-    if (!key.startsWith("filter.")) return;
-
-    const actualKey = key.slice("filter.".length);
-
-    nextFilters[actualKey] = value;
-  });
-
-  setFilters((prev) => {
-    const prevKeys = Object.keys(prev);
-    const nextKeys = Object.keys(nextFilters);
-
-    if (
-      prevKeys.length === nextKeys.length &&
-      nextKeys.every((key) => prev[key] === nextFilters[key])
-    ) {
-      return prev;
+      const allSearchParams = new URLSearchParams(searchParams);
+      allSearchParams.forEach((val, key) => {
+        if (key.startsWith("filter.")) {
+          searchParams.delete(key);
+        }
+      });
+      setSearchParams(searchParams, { replace: true });
     }
+  };
 
-    return nextFilters;
-  });
-}, [searchParams, setFilters]);
+  useEffect(() => {
+    if (!setFilters) return;
+
+    const nextFilters = {};
+    const params = new URLSearchParams(searchParams);
+
+    params.forEach((value, key) => {
+      if (!key.startsWith("filter.")) return;
+
+      const actualKey = key.slice("filter.".length);
+
+      nextFilters[actualKey] = value;
+    });
+
+    setFilters((prev) => {
+      const prevKeys = Object.keys(prev);
+      const nextKeys = Object.keys(nextFilters);
+
+      if (
+        prevKeys.length === nextKeys.length &&
+        nextKeys.every((key) => prev[key] === nextFilters[key])
+      ) {
+        return prev;
+      }
+
+      return nextFilters;
+    });
+  }, [searchParams, setFilters]);
   // console.log("RENDER");
 
   return (
