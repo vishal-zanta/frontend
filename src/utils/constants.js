@@ -88,7 +88,7 @@ export const STATUS_ACTIONS = [
     disabled: ["RESOLVED", "IN_PROGRESS", "OPEN", "REOPENED"],
     roleHidden: null,
     roleAllowed: CCE_ROLES,
-    requireFieldVisit: true,
+    // requireFieldVisit: true,
     requireFeedback : true,
   },
   {
@@ -101,6 +101,8 @@ export const STATUS_ACTIONS = [
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
     roleHidden: CCE_ROLES,
+    requireFieldVisit: true,
+
   },
   {
     label: "In Progress",
