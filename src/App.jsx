@@ -28,6 +28,7 @@ import IncomingCall from "./pages/crm/IncomingCall";
 import CallHistoryLog from "./pages/crm/CallHistoryLog";
 import TrackCCMComplaint from "./pages/crm/track-ccm-complaint";
 import Inmail from "./pages/crm/inmail";
+import MyBreaks from "./pages/crm/my-breaks";
 import AdminDashboard from "./pages/admin/dashboard";
 import OperationalDashboards from "./pages/admin/operational-dashboard";
 import AIReports from "./pages/admin/AIReports";
@@ -248,6 +249,16 @@ const router = createBrowserRouter([
                   >
                     {" "}
                     <Inmail />
+                  </PermissionChecker>
+                ),
+              },
+              {
+                path: "my-breaks",
+                element: (
+                  <PermissionChecker
+                    rolePermission={{ include: [...CCE_ONLY_ROLES] }}
+                  >
+                    <MyBreaks />
                   </PermissionChecker>
                 ),
               },

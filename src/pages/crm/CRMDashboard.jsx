@@ -35,10 +35,10 @@ import { useGetCCEDashboardData } from "./query";
 
 const CCE_SCORECARD = {
   daily: {
-    calls: 42,
+    calls: 44,
     answered: 40,
     missed: 2,
-    rejected : 2,
+    rejected: 2,
     ticketsRaised: 38,
     resolved: 38,
     avgTalk: "4m 12s",
@@ -49,10 +49,10 @@ const CCE_SCORECARD = {
     sub: "vs yesterday",
   },
   weekly: {
-    calls: 298,
+    calls: 306,
     answered: 282,
     missed: 16,
-    rejected : 8,
+    rejected: 8,
     ticketsRaised: 265,
     resolved: 260,
     avgTalk: "4m 18s",
@@ -63,10 +63,10 @@ const CCE_SCORECARD = {
     sub: "vs last week",
   },
   monthly: {
-    calls: 1240,
+    calls: 1260,
     answered: 1180,
     missed: 60,
-    rejected : 20,
+    rejected: 20,
     ticketsRaised: 1120,
     resolved: 1090,
     avgTalk: "4m 22s",
@@ -88,8 +88,6 @@ export default function CRMDashboard() {
   const { data: dashboardApiData } = useGetCCEDashboardData({
     period: scorecardPeriod,
   });
-
-
 
   const modeData =
     dashboardApiData?.data?.data?.sourceWiseComplaints ||
@@ -373,7 +371,11 @@ export default function CRMDashboard() {
   // }
 
   // ── CCE Agent personal scorecard ──
-  const sc = CCE_SCORECARD[scorecardPeriod];
+  const rawSc = CCE_SCORECARD[scorecardPeriod] || {};
+  const sc = {
+    ...rawSc,
+    calls: (rawSc.answered || 0) + (rawSc.missed || 0) + (rawSc.rejected || 0),
+  };
   const myCalls = CALL_TRACKER.filter((c) => c.agent === agentName);
 
   return (
@@ -384,27 +386,35 @@ export default function CRMDashboard() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
             <div className="space-y-1">
               <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
-                {t(isSupervisor? "Team Scorecard" : "My Scorecard", isSupervisor? "टीम स्कोरकार्ड" :  "मेरा स्कोरकार्ड")}
+                {t(
+                  isSupervisor ? "Team Scorecard" : "My Scorecard",
+                  isSupervisor ? "टीम स्कोरकार्ड" : "मेरा स्कोरकार्ड",
+                )}
               </h1>
               <p className="text-xs xs:text-sm md:text-base capitalize text-white/80">
-                {profile?.name} • {profile?.role?.designationEnglish || "CCE Agent"} • {t("Agent ID:", "एजेंट आईडी:")}{" "}
-                {profile?.userCode || "-"}
+                {profile?.name} •{" "}
+                {profile?.role?.designationEnglish || "CCE Agent"} •{" "}
+                {t("Agent ID:", "एजेंट आईडी:")} {profile?.userCode || "-"}
+                {profile?.shift?.time &&
+                  ` • ${t("Shift:", "शिफ्ट:")} ${profile.shift.time}`}
               </p>
             </div>
-         { profiledata?.isCCE  &&   <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
-              <Link to="/crm/incoming-call" className="flex-1 sm:flex-none">
-                <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
-                  <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                  {t("Incoming Call", "प्राप्त कॉल")}
-                </Button>
-              </Link>
-            <Link to="/crm/raise" className="flex-1 sm:flex-none">
-                <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
-                  <Headphones className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                  {t("Register Complaint", "शिकायत दर्ज करें")}
-                </Button>
-              </Link>
-            </div>}
+            {profiledata?.isCCE && (
+              <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
+                <Link to="/crm/incoming-call" className="flex-1 sm:flex-none">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                    <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
+                    {t("Incoming Call", "प्राप्त कॉल")}
+                  </Button>
+                </Link>
+                <Link to="/crm/raise" className="flex-1 sm:flex-none">
+                  <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                    <Headphones className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
+                    {t("Register Complaint", "शिकायत दर्ज करें")}
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
@@ -425,7 +435,7 @@ export default function CRMDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <StatCard
             icon={Phone}
-            label={`${t("Calls", "कॉल")} (${t(sc.label, sc.labelHindi)})`}
+            label={`${t("Total Calls", "कुल कॉल")} `}
             value={sc.calls}
             color="blue"
             trend="up"
@@ -445,7 +455,7 @@ export default function CRMDashboard() {
             value={sc.missed}
             color="red"
           />
-            <StatCard
+          <StatCard
             icon={PhoneOff}
             label={t("Rejected", "अस्वीकृत")}
             value={sc.rejected}
@@ -478,7 +488,7 @@ export default function CRMDashboard() {
         <ModeWiseComplaintsChart mainData={modeData} />
 
         {/* Performance summary card */}
-        <div className="bg-card rounded-xl border border-border p-5">
+        {/* <div className="bg-card rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-4">
             {t("Performance Summary", "प्रदर्शन सारांश")} (
             {t(sc.label, sc.labelHindi)})
@@ -517,7 +527,7 @@ export default function CRMDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* My recent calls */}
         <div className="bg-card rounded-xl border border-border">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,8 +11,6 @@ import {
   Eye,
   EyeOff,
   User,
-  Shield,
-  Headphones,
 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { postLogin, getProfile } from "@/api/auth.api";
@@ -25,10 +23,18 @@ import { RolesList } from "./RoleSelect";
 export default function Login() {
   const { state } = useLocation();
   const { t } = useLanguage();
+  const [searchParams] = useSearchParams();
+
+  const roleParam = searchParams.get("role") || searchParams.get("mode") || "";
+  const loginMode =
+    roleParam.toLowerCase() === "cce" ||
+    roleParam.toLowerCase() === "loginid" ||
+    roleParam.toLowerCase() === "agent"
+      ? "loginId"
+      : "email";
 
   // const {executeRecaptcha} = useGoogleReCaptcha();
   const navigate = useNavigate();
-  const [loginMode, setLoginMode] = useState("email"); // "email" or "loginId"
   const [email, setEmail] = useState("");
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
@@ -37,14 +43,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [fullScreenLoader, setFullScreenLoader] = useState(false);
   const [roles, setRoles] = useState(null);
-
-  const handleModeChange = (mode) => {
-    setLoginMode(mode);
-    setEmail("");
-    setLoginId("");
-    setPassword("");
-    setError("");
-  };
 
   const getRouteAfterLogin = (permission) => {
     const allPaths = sidebarSections.map((s) => s.items).flat();
@@ -78,13 +76,17 @@ export default function Login() {
           setRoles(res.data?.data?.roles);
           return;
         }
-        const path = getRouteAfterLogin(res?.data?.data?.roles?.[0]?.permissions || []
+        const path = getRouteAfterLogin(
+          res?.data?.data?.roles?.[0]?.permissions || [],
         );
         // sessionStorage.setItem("usertoken", token);
         console.log("After login path : ", path, {
           permission: res?.data?.data?.roles?.[0]?.permissions || [],
         });
-        localStorage.setItem("role",JSON.stringify(res?.data?.data?.roles?.[0] || null))
+        localStorage.setItem(
+          "role",
+          JSON.stringify(res?.data?.data?.roles?.[0] || null),
+        );
         if (!path) {
           throw new Error(
             t(
@@ -178,27 +180,25 @@ export default function Login() {
         title={t("Sahyog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
         subtitle={t("Log in to your account", "अपने खाते में लॉग इन करें")}
         footer={null}
-
       >
         <div className="w-full">
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
+              {error}
+            </div>
+          )}
 
-        {error && (
-          <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
-            {error}
-          </div>
-        )}
-
-        <RolesList roles={roles} onSelectRole={handleSelectRole} />
-        <Button
-          onClick={() => {
-            setRoles(null);
-            setError("");
-          }}
-          className={"w-full mt-4"}
+          <RolesList roles={roles} onSelectRole={handleSelectRole} />
+          <Button
+            onClick={() => {
+              setRoles(null);
+              setError("");
+            }}
+            className={"w-full mt-4"}
           >
-          Back to login
-        </Button>
-          </div>
+            Back to login
+          </Button>
+        </div>
       </AuthLayout>
     );
   }
@@ -207,7 +207,11 @@ export default function Login() {
     <AuthLayout
       icon={LogIn}
       title={t("Sahyog Helpline Portal", "सहयोग हेल्पलाइन पोर्टल")}
-      subtitle={t("Enter your user id to login", "अपने यूजर आईडी डालें")}
+      subtitle={
+        loginMode === "email"
+          ? t("Enter your user id to login", "अपना यूजर पता दर्ज करें")
+          : t("Enter your user id to login", "अपने यूजर आईडी डालें")
+      }
       footer={null}
     >
       {error && (
@@ -215,59 +219,6 @@ export default function Login() {
           {error}
         </div>
       )}
-
-      {/* Mode Selection Boxes */}
-      <div className="grid grid-cols-2 gap-3 mb-5">
-        <button
-          type="button"
-          onClick={() => handleModeChange("email")}
-          className={`flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer ${
-            loginMode === "email"
-              ? "border-primary bg-primary/5 text-primary ring-2 ring-primary/20 shadow-sm"
-              : "border-border bg-muted/30 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-          }`}
-        >
-          <div
-            className={`p-2 rounded-lg shrink-0 ${
-              loginMode === "email"
-                ? "bg-primary/10 text-primary"
-                : "bg-muted text-muted-foreground"
-            }`}
-          >
-            <Shield className="w-4 h-4" />
-          </div>
-          <div className="min-w-0">
-            <div className="text-xs font-bold leading-tight truncate">
-              {t("Admin / Officer", "प्रशासक / अधिकारी")}
-            </div>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleModeChange("loginId")}
-          className={`flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer ${
-            loginMode === "loginId"
-              ? "border-primary bg-primary/5 text-primary ring-2 ring-primary/20 shadow-sm"
-              : "border-border bg-muted/30 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-          }`}
-        >
-          <div
-            className={`p-2 rounded-lg shrink-0 ${
-              loginMode === "loginId"
-                ? "bg-primary/10 text-primary"
-                : "bg-muted text-muted-foreground"
-            }`}
-          >
-            <Headphones className="w-4 h-4" />
-          </div>
-          <div className="min-w-0">
-            <div className="text-xs font-bold leading-tight truncate">
-              {t("CCE", "ग्राहक सेवा अधिकारी")}
-            </div>
-          </div>
-        </button>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {loginMode === "email" ? (

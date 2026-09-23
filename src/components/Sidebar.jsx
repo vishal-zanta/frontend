@@ -21,6 +21,7 @@ import {
   History,
   ClipboardList,
   MessageSquare,
+  Coffee,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
 import {
@@ -225,6 +226,13 @@ export const sidebarSections = [
         path: "/crm/call-stats",
         icon: Users,
         permissions: PERMISSIONS.CALL_STATS,
+      },
+      {
+        label: "My Breaks",
+        labelHindi: "मेरे ब्रेक",
+        path: "/crm/my-breaks",
+        icon: Coffee,
+        rolePermissions: { include: [...CCE_ONLY_ROLES] },
       },
     ],
   },
