@@ -1,6 +1,7 @@
 import React from "react";
 import { StatusBadge, TypeBadge, SourceBadge } from "@/components/Badges";
 import ComplaintTimeline from "@/components/ComplaintTimeline";
+import CallCitizenButton from "@/components/complaints/CallCitizenButton";
 import {
   MapPin,
   Phone,
@@ -160,7 +161,7 @@ const EducationDepartmentDetailView = ({ data }) => {
             <StatusBadge status={data?.status} />
           </div>
 
-          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
             {registeredAtFormatted && (
               <span className="flex items-center gap-1">
                 <CalendarDays className="w-3.5 h-3.5" />
@@ -168,10 +169,13 @@ const EducationDepartmentDetailView = ({ data }) => {
               </span>
             )}
             {(data?.mobile || complainant?.mobile) && (
-              <span className="flex items-center gap-1 font-mono">
-                <Phone className="w-3.5 h-3.5" />
-                {data?.mobile || complainant?.mobile}
-              </span>
+              <div className="flex items-center gap-2 font-mono">
+                <span className="flex items-center gap-1">
+                  <Phone className="w-3.5 h-3.5" />
+                  {data?.mobile || complainant?.mobile}
+                </span>
+                <CallCitizenButton mobileNumber={data?.mobile || complainant?.mobile} />
+              </div>
             )}
           </div>
         </div>
