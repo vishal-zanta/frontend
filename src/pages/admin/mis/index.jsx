@@ -135,13 +135,13 @@ function getReportColumns(reportId, t) {
         { key: "name", label: t("Officer", "अधिकारी") },
         { key: "district", label: t("District", "जिला") },
         { key: "resolved", label: t("Resolved", "निराकृत") },
-        { key: "slaCompliance", label: t("SLA %", "SLA %") },
+        { key: "slaCompliance", label: t("SLA %", "एसएलए %") },
       ];
     case "service":
       return [
         { key: "service", label: t("Service", "सेवा") },
-        { key: "withinSLA", label: t("Within SLA", "SLA के भीतर") },
-        { key: "beyondSLA", label: t("Beyond SLA", "SLA से बाहर") },
+        { key: "withinSLA", label: t("Within SLA", "एसएलए के भीतर") },
+        { key: "beyondSLA", label: t("Beyond SLA", "एसएलए से बाहर") },
         { key: "compliance", label: t("Compliance %", "अनुपालन %") },
       ];
     case "ulb":
@@ -149,7 +149,7 @@ function getReportColumns(reportId, t) {
       return [
         { key: "ulb", label: t("ULB", "ULB") },
         { key: "complaints", label: t("Complaints", "शिकायतें") },
-        { key: "slaCompliance", label: t("SLA %", "SLA %") },
+        { key: "slaCompliance", label: t("SLA %", "एसएलए %") },
         { key: "rating", label: t("Rating", "रेटिंग") },
       ];
     case "rural":
@@ -167,7 +167,7 @@ function getReportColumns(reportId, t) {
         { key: "calls", label: t("Calls", "कॉल") },
         { key: "resolved", label: t("Resolved", "निराकृत") },
         { key: "csat", label: t("CSAT", "नागरिक संतुष्टि दर") },
-        { key: "slaCompliance", label: t("SLA %", "SLA %") },
+        { key: "slaCompliance", label: t("SLA %", "एसएलए %") },
       ];
     case "ivr":
       return [
@@ -300,7 +300,7 @@ export default function MISReports() {
       name: t("Service Performance Report", "सेवा प्रदर्शन रिपोर्ट"),
       desc: t(
         "SLA compliance, breach rate, resolution time by service",
-        "सेवा द्वारा SLA अनुपालन, उल्लंघन दर, निस्तारण समय",
+        "सेवा द्वारा एसएलए अनुपालन, उल्लंघन दर, निस्तारण समय",
       ),
       icon: FileBarChart,
       permissions: PERMISSIONS.MIS_REPORTS,
@@ -350,7 +350,7 @@ export default function MISReports() {
       name: t("Agent Performance Report", "एजेंट प्रदर्शन रिपोर्ट"),
       desc: t(
         "Individual agent stats - calls, resolution, CSAT, SLA",
-        "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, नागरिक संतुष्टि दर, SLA",
+        "व्यक्तिगत एजेंट आंकड़े - कॉल, निस्तारण, नागरिक संतुष्टि दर, एसएलए",
       ),
       icon: FileText,
       permissions: PERMISSIONS.MIS_REPORTS,

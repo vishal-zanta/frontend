@@ -636,21 +636,23 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                   {officer.resolved}
                 </div>
                 <div className="text-[10px] text-muted-foreground">
-                  Resolved
+                  {t("Resolved", "निराकृत")}
                 </div>
               </div>
               <div className="bg-amber-500/10 rounded-lg p-2 text-center">
                 <div className="text-lg font-bold text-amber-600">
                   {officer.pending}
                 </div>
-                <div className="text-[10px] text-muted-foreground">Pending</div>
+                <div className="text-[10px] text-muted-foreground">
+                  {t("Pending", "लंबित")}
+                </div>
               </div>
               <div className="bg-red-500/10 rounded-lg p-2 text-center">
                 <div className="text-lg font-bold text-red-600">
                   {officer.slaBreached}
                 </div>
                 <div className="text-[10px] text-muted-foreground">
-                  SLA Breach
+                  {t("SLA Breach", "एसएलए उल्लंघन")}
                 </div>
               </div>
               <div className="bg-primary/10 rounded-lg p-2 text-center">
@@ -658,7 +660,7 @@ export function OfficerDetailDialog({ officerId, open, onClose }) {
                   {officer.avgResolutionHrs}h
                 </div>
                 <div className="text-[10px] text-muted-foreground">
-                  Avg Resolve
+                  {t("Avg Resolve", "औसत निस्तारण")}
                 </div>
               </div>
             </div>

@@ -36,7 +36,7 @@ const ServiceTable = ({
     { id: "title", label: t("Service (English)", "सेवा (अंग्रेज़ी)") },
     { id: "titleHindi", label: t("Service (Hindi)", "सेवा (हिंदी)") },
     { id: "department", label: t("Department", "विभाग") },
-    { id: "sla", label: t("SLA", "SLA"), className: "text-center" },
+    { id: "sla", label: t("SLA", "एसएलए"), className: "text-center" },
     {
       id: "geoTagged",
       label: t("Geo-Tagged", "भू-टैग किया गया"),

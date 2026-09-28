@@ -6,13 +6,18 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export default function GrievanceTab({ pd }) {
   const { t } = useLanguage();
+  const total =
+    (pd.pendingAssignment || 0) +
+    (pd.resolvedToday || 0) +
+    (pd.escalated || 0);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={Activity}
-          label={t("Active Tickets", "सक्रिय टिकट")}
-          value={pd.activeTickets.toLocaleString("en-IN")}
+          label={t("Total Tickets", "कुल टिकट")}
+          value={(pd.totalTickets ?? total).toLocaleString("en-IN")}
           color="blue"
         />
         <StatCard

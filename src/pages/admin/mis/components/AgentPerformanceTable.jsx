@@ -17,7 +17,7 @@ export default function AgentPerformanceTable({ reportRows = [] }) {
     { id: "calls", label: t("Calls", "कॉल"), className: "text-right" },
     { id: "resolved", label: t("Resolved", "निराकृत"), className: "text-right" },
     { id: "csat", label: t("CSAT", "नागरिक संतुष्टि दर"), className: "text-right" },
-    { id: "slaCompliance", label: t("SLA %", "SLA %"), className: "text-right" },
+    { id: "slaCompliance", label: t("SLA %", "एसएलए %"), className: "text-right" },
   ];
 
   const tableBody = reportRows.map((row) => ({

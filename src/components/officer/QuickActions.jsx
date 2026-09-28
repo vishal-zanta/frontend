@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useLanguage } from "@/context/LanguageContext";
 
 const STATUS_OPTIONS = [
   "Pending",
@@ -63,6 +64,7 @@ function ActionDialog({ title, onClose, children, footer }) {
 }
 
 export default function QuickActions({ officer }) {
+  const { t } = useLanguage();
   const [activeAction, setActiveAction] = useState(null);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [newStatus, setNewStatus] = useState("");
@@ -519,7 +521,7 @@ export default function QuickActions({ officer }) {
                 />
               </div>
               <div className="text-muted-foreground">
-                SLA:{" "}
+                {t("SLA:", "एसएलए:")}{" "}
                 {myComplaints.find((c) => c.id === selectedComplaint)?.slaHours}
                 h
               </div>

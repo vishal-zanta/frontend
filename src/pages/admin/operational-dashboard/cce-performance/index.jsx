@@ -43,7 +43,7 @@ export default function CcePerformanceTab({ pd }) {
         />
         <StatCard
           icon={Activity}
-          label={t("SLA Compliance", "SLA अनुपालन")}
+          label={t("SLA Compliance", "एसएलए अनुपालन")}
           value="95.1%"
           color="purple"
           trend="up"

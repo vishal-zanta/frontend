@@ -20,13 +20,13 @@ export default function SlaPerformanceTab() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           icon={Clock}
-          label={t("Within SLA", "SLA के भीतर")}
+          label={t("Within SLA", "एसएलए के भीतर")}
           value="38,290"
           color="green"
         />
         <StatCard
           icon={Activity}
-          label={t("Beyond SLA", "SLA से बाहर")}
+          label={t("Beyond SLA", "एसएलए से बाहर")}
           value="1,953"
           color="red"
         />
@@ -48,7 +48,7 @@ export default function SlaPerformanceTab() {
       <SlaComplianceChart data={SLA_PERFORMANCE} xKey="service" />
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-          <h3 className="font-bold text-foreground">{t("SLA Performance Detail", "SLA प्रदर्शन विवरण")}</h3>
+          <h3 className="font-bold text-foreground">{t("SLA Performance Detail", "एसएलए प्रदर्शन विवरण")}</h3>
           <ExportButton
             data={SLA_PERFORMANCE}
             columns={slaExportColumns}
@@ -59,8 +59,8 @@ export default function SlaPerformanceTab() {
           <thead className="bg-muted/50">
             <tr className="text-left text-xs text-muted-foreground">
               <th className="px-4 py-2 font-medium">{t("Service", "सेवा")}</th>
-              <th className="px-4 py-2 font-medium text-right">{t("Within SLA", "SLA के भीतर")}</th>
-              <th className="px-4 py-2 font-medium text-right">{t("Beyond SLA", "SLA से बाहर")}</th>
+              <th className="px-4 py-2 font-medium text-right">{t("Within SLA", "एसएलए के भीतर")}</th>
+              <th className="px-4 py-2 font-medium text-right">{t("Beyond SLA", "एसएलए से बाहर")}</th>
               <th className="px-4 py-2 font-medium text-right">{t("Compliance %", "अनुपालन %")}</th>
               <th className="px-4 py-2 font-medium text-right">{t("Benchmark", "मानक")}</th>
             </tr>

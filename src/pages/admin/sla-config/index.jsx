@@ -251,10 +251,10 @@ export default function SLAConfig() {
     <PortalLayout role="superadmin">
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <SectionTitle
-          title={t("SLA Configuration", "SLA कॉन्फ़िगरेशन")}
+          title={t("SLA Configuration", "एसएलए कॉन्फ़िगरेशन")}
           subtitle={t(
             "Define SLA timeline per level for each service - breach triggers auto-escalation",
-            "प्रत्येक सेवा के लिए स्तर अनुसार SLA समय सीमा परिभाषित करें - उल्लंघन पर स्वतः वृद्धि होती है",
+            "प्रत्येक सेवा के लिए स्तर अनुसार एसएलए समय सीमा परिभाषित करें - उल्लंघन पर स्वतः वृद्धि होती है",
           )}
         />
 
@@ -308,7 +308,7 @@ export default function SLAConfig() {
             }}
           >
             <Plus className="w-4 h-4 mr-1" />{" "}
-            {t("Add SLA Config", "SLA कॉन्फ़िगरेशन जोड़ें")}
+            {t("Add SLA Config", "एसएलए कॉन्फ़िगरेशन जोड़ें")}
           </Button>
         </div>
 
@@ -364,8 +364,8 @@ export default function SLAConfig() {
               <div className="flex items-center justify-between px-5 py-3 border-b border-border">
                 <h3 className="font-bold text-foreground">
                   {editItem
-                    ? t("Edit SLA Config", "SLA कॉन्फ़िगरेशन संपादित करें")
-                    : t("Add SLA Config", "SLA कॉन्फ़िगरेशन जोड़ें")}
+                    ? t("Edit SLA Config", "एसएलए कॉन्फ़िगरेशन संपादित करें")
+                    : t("Add SLA Config", "एसएलए कॉन्फ़िगरेशन जोड़ें")}
                 </h3>
                 <button
                   onClick={() => setDialog(null)}

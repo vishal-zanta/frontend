@@ -113,7 +113,7 @@ export default function ManageOfficers() {
               {officers.filter((o) => o.slaBreached > 0).length}
             </div>
             <div className="text-sm text-muted-foreground">
-              {t("SLA Breach Risk", "SLA उल्लंघन जोखिम")}
+              {t("SLA Breach Risk", "एसएलए उल्लंघन जोखिम")}
             </div>
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function ManageOfficers() {
                     {t("Pending", "लंबित")}
                   </th>
                   <th className="px-4 py-3 font-medium text-center">
-                    {t("SLA Breached", "SLA उल्लंघन")}
+                    {t("SLA Breached", "एसएलए उल्लंघन")}
                   </th>
                   <th className="px-4 py-3 font-medium">
                     {t("Status", "स्थिति")}
@@ -429,7 +429,9 @@ export default function ManageOfficers() {
                     />
                   </div>
                   <div>
-                    <Label className="mb-1.5 block">SLA Breached</Label>
+                    <Label className="mb-1.5 block">
+                      {t("SLA Breached", "एसएलए उल्लंघन")}
+                    </Label>
                     <Input
                       type="number"
                       value={dialog.slaBreached || 0}

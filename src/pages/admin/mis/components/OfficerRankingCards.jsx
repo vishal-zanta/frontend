@@ -55,7 +55,7 @@ export default function OfficerRankingCards({ reportRows = [] }) {
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                  {t("SLA %", "SLA %")}
+                  {t("SLA %", "एसएलए %")}
                 </span>
                 <span className="font-semibold text-primary text-xs block">
                   {row.slaCompliance != null ? `${row.slaCompliance}%` : "N/A"}

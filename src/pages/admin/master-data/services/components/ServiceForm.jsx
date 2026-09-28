@@ -49,7 +49,7 @@ const ServiceFormFields = ({ updatedDeptOptions, onClose, saving }) => {
         render={({ field, fieldState: { error } }) => (
           <div>
             <Label className="mb-1.5 block">
-              {t("SLA Duration", "SLA अवधि")} <span className="text-red-500">*</span>
+              {t("SLA Duration", "एसएलए अवधि")} <span className="text-red-500">*</span>
             </Label>
             <div className="relative flex items-center">
               <Input

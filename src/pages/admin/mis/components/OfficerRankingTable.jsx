@@ -17,7 +17,7 @@ export default function OfficerRankingTable({ reportRows = [] }) {
     { id: "name", label: t("Officer", "अधिकारी") },
     { id: "district", label: t("District", "जिला") },
     { id: "resolved", label: t("Resolved", "निराकृत"), className: "text-right" },
-    { id: "slaCompliance", label: t("SLA %", "SLA %"), className: "text-right" },
+    { id: "slaCompliance", label: t("SLA %", "एसएलए %"), className: "text-right" },
   ];
 
   const tableBody = reportRows.map((row, i) => ({

@@ -54,7 +54,7 @@ export default function Form({
 
       <div className="space-y-3">
         <Label className="block font-medium">
-          {t("Escalation Levels (SLA Hours)", "वृद्धि स्तर (SLA घंटे)")}
+          {t("Escalation Levels (SLA Hours)", "वृद्धि स्तर (एसएलए घंटे)")}
         </Label>
         {!roles || !roles.length ? (
           <div className="flex flex-col items-center justify-center border rounded-xl bg-muted/20 dark:bg-muted/10 py-7 px-4 text-center">
@@ -67,7 +67,7 @@ export default function Form({
             <p className="text-xs text-muted-foreground mt-0.5 max-w-[250px]">
               {t(
                 "There are no escalation designations available to set SLA hours.",
-                "SLA घंटे सेट करने के लिए कोई वृद्धि पदनाम उपलब्ध नहीं हैं।",
+                "एसएलए घंटे सेट करने के लिए कोई वृद्धि पदनाम उपलब्ध नहीं हैं।",
               )}
             </p>
           </div>

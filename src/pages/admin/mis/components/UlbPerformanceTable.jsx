@@ -15,7 +15,7 @@ export default function UlbPerformanceTable({ reportRows = [] }) {
   const tableHeaders = [
     { id: "ulb", label: t("ULB", "ULB") },
     { id: "complaints", label: t("Complaints", "शिकायतें"), className: "text-right" },
-    { id: "slaCompliance", label: t("SLA %", "SLA %"), className: "text-right" },
+    { id: "slaCompliance", label: t("SLA %", "एसएलए %"), className: "text-right" },
     { id: "rating", label: t("Rating", "रेटिंग"), className: "text-right" },
   ];
 

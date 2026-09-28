@@ -10,7 +10,7 @@ export default function SlaCards({ docs = [], roles = [], onEdit, onDelete }) {
   if (!docs || docs.length === 0) {
     return (
       <div className="p-6 text-center text-xs xs:text-sm text-muted-foreground">
-        {t("No SLA configurations found.", "कोई SLA कॉन्फ़िगरेशन नहीं मिला।")}
+        {t("No SLA configurations found.", "कोई एसएलए कॉन्फ़िगरेशन नहीं मिला।")}
       </div>
     );
   }
@@ -54,7 +54,7 @@ function Card({ item, roles, onEdit, onDelete, t }) {
               {serviceTitle}
             </div>
             <div className="text-[11px] text-muted-foreground">
-              {t("Service SLA Escalations", "सेवा SLA एस्केलेशन")}
+              {t("Service SLA Escalations", "सेवा एसएलए एस्केलेशन")}
             </div>
           </div>
         </div>

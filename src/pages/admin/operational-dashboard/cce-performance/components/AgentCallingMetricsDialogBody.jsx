@@ -11,8 +11,10 @@ import {
   User,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AgentCallingMetricsDialogBody({ agent }) {
+  const { t } = useLanguage();
   if (!agent) return null;
 
   const totalCalls = agent.calls ?? 42;
@@ -21,44 +23,44 @@ export default function AgentCallingMetricsDialogBody({ agent }) {
 
   const metrics = [
     {
-      label: "Total Calls Handled",
+      label: t("Total Calls Handled", "कुल संभाली गई कॉल"),
       value: totalCalls,
-      subtext: "Today's shift",
+      subtext: t("Today's shift", "आज की शिफ्ट"),
       icon: PhoneCall,
       color: "text-blue-600 bg-blue-500/10 border-blue-500/20",
     },
     {
-      label: "Calls Resolved (FCR)",
+      label: t("Calls Resolved (FCR)", "निस्तारित कॉल (FCR)"),
       value: resolvedCalls,
-      subtext: `${resolutionPercentage}% Resolution Rate`,
+      subtext: `${resolutionPercentage}% ${t("Resolution Rate", "निस्तारण दर")}`,
       icon: CheckCircle2,
       color: "text-emerald-600 bg-emerald-500/10 border-emerald-500/20",
     },
     {
-      label: "Avg Talk Time (AHT)",
+      label: t("Avg Talk Time (AHT)", "औसत बात का समय (AHT)"),
       value: agent.avgTalk || agent.avgTalkTime || "4m 12s",
-      subtext: "Target < 4m 30s",
+      subtext: t("Target < 4m 30s", "लक्ष्य < 4m 30s"),
       icon: Clock,
       color: "text-amber-600 bg-amber-500/10 border-amber-500/20",
     },
     {
-      label: "Avg Hold Time",
+      label: t("Avg Hold Time", "औसत होल्ड समय"),
       value: "35s",
-      subtext: "Within 45s threshold",
+      subtext: t("Within 45s threshold", "45s सीमा के भीतर"),
       icon: Timer,
       color: "text-purple-600 bg-purple-500/10 border-purple-500/20",
     },
     {
-      label: "CSAT Rating",
+      label: t("CSAT Rating", "नागरिक संतुष्टि रेटिंग"),
       value: `★ ${agent.csat || "4.5"}/5`,
-      subtext: "Based on 34 reviews",
+      subtext: t("Based on reviews", "समीक्षाओं के आधार पर"),
       icon: Star,
       color: "text-amber-500 bg-amber-500/10 border-amber-500/20",
     },
     {
-      label: "SLA Compliance",
+      label: t("SLA Compliance", "एसएलए अनुपालन"),
       value: `${agent.slaCompliance || "96.2"}%`,
-      subtext: "Target: 95%",
+      subtext: t("Target: 95%", "लक्ष्य: 95%"),
       icon: ShieldCheck,
       color: "text-indigo-600 bg-indigo-500/10 border-indigo-500/20",
     },

@@ -89,7 +89,7 @@ export default function StatsBoxes({ metrics }) {
         />
         <StatCard
           icon={Clock}
-          label={t("SLA Compliance", "SLA अनुपालन")}
+          label={t("SLA Compliance", "एसएलए अनुपालन")}
           value={`${slaCompliance}%`}
           color="purple"
           sublabel={t("Target: 95%", "लक्ष्य: 95%")}

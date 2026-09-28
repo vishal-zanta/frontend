@@ -441,7 +441,7 @@ export default function OfficerTagging() {
               • {t("A single officer can be tagged to multiple services and multiple locations", "एक अधिकारी को कई सेवाओं और कई स्थानों से मैप किया जा सकता है")}
             </li>
             <li>
-              • {t("Every SLA must have at least 1 officer - or the ticket will not be visible", "प्रत्येक SLA में कम से कम 1 अधिकारी होना चाहिए - अन्यथा शिकायत दिखाई नहीं देगी")}
+              • {t("Every SLA must have at least 1 officer - or the ticket will not be visible", "प्रत्येक एसएलए में कम से कम 1 अधिकारी होना चाहिए - अन्यथा शिकायत दिखाई नहीं देगी")}
             </li>
             <li>
               • {t("Officers can only be added manually due to location restriction", "स्थान प्रतिबंध के कारण अधिकारियों को केवल मैन्युअल रूप से जोड़ा जा सकता है")}

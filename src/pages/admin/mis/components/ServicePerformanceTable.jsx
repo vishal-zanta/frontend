@@ -14,8 +14,8 @@ export default function ServicePerformanceTable({ reportRows = [] }) {
 
   const tableHeaders = [
     { id: "service", label: t("Service", "सेवा") },
-    { id: "withinSLA", label: t("Within SLA", "SLA के भीतर"), className: "text-right" },
-    { id: "beyondSLA", label: t("Beyond SLA", "SLA से बाहर"), className: "text-right" },
+    { id: "withinSLA", label: t("Within SLA", "एसएलए के भीतर"), className: "text-right" },
+    { id: "beyondSLA", label: t("Beyond SLA", "एसएलए से बाहर"), className: "text-right" },
     { id: "compliance", label: t("Compliance %", "अनुपालन %"), className: "text-right" },
   ];
 

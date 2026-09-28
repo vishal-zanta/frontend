@@ -35,7 +35,7 @@ export default function ServicePerformanceCards({ reportRows = [] }) {
             <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 p-2.5 rounded-lg border border-border/50">
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                  {t("Within SLA", "SLA के भीतर")}
+                  {t("Within SLA", "एसएलए के भीतर")}
                 </span>
                 <span className="font-semibold text-emerald-600 dark:text-emerald-400 text-xs block">
                   {row.withinSLA != null ? row.withinSLA.toLocaleString("en-IN") : "N/A"}
@@ -43,7 +43,7 @@ export default function ServicePerformanceCards({ reportRows = [] }) {
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                  {t("Beyond SLA", "SLA से बाहर")}
+                  {t("Beyond SLA", "एसएलए से बाहर")}
                 </span>
                 <span className="font-semibold text-red-600 dark:text-red-400 text-xs block">
                   {row.beyondSLA != null ? row.beyondSLA.toLocaleString("en-IN") : "N/A"}

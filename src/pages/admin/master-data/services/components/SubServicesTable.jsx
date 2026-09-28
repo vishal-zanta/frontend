@@ -193,7 +193,7 @@ export default function SubServicesTable({ service, dialog, setDialog }) {
   const tableHeaders = [
     { id: "english", label: t("Sub-Service (English)", "उप-सेवा (अंग्रेज़ी)") },
     { id: "hindi", label: t("Sub-Service (Hindi)", "उप-सेवा (हिंदी)") },
-    { id: "sla", label: t("SLA", "SLA"), className: "text-center" },
+    { id: "sla", label: t("SLA", "एसएलए"), className: "text-center" },
     { id: "geoTagged", label: t("Geo-Tagged", "भू-टैग किया गया"), className: "text-center" },
     { id: "fieldVisit", label: t("Field Visit", "क्षेत्र का दौरा"), className: "text-center" },
     { id: "actions", label: t("Actions", "कार्रवाई"), className: "text-center" },

@@ -43,7 +43,7 @@ export default function UlbPerformanceCards({ reportRows = [] }) {
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">
-                  {t("SLA %", "SLA %")}
+                  {t("SLA %", "एसएलए %")}
                 </span>
                 <span className="font-semibold text-emerald-600 dark:text-emerald-400 text-xs block">
                   {row.slaCompliance != null ? `${row.slaCompliance}%` : "N/A"}

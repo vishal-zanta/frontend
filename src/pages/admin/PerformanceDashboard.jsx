@@ -103,7 +103,7 @@ export default function PerformanceDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             icon={TrendingUp}
-            label={t("Avg SLA Compliance", "औसत SLA अनुपालन")}
+            label={t("Avg SLA Compliance", "औसत एसएलए अनुपालन")}
             value="93.8%"
             color="green"
             trend="up"
@@ -130,7 +130,7 @@ export default function PerformanceDashboard() {
             icon={Award}
             label={t("Top Officer", "शीर्ष अधिकारी")}
             value="Prakash Jha"
-            sublabel="98.5% SLA"
+            sublabel={t("98.5% SLA", "98.5% एसएलए")}
             color="purple"
           />
         </div>
@@ -141,7 +141,7 @@ export default function PerformanceDashboard() {
             title={t("Service-wise Performance", "सेवा-वार प्रदर्शन")}
             subtitle={t(
               "SLA compliance by service category",
-              "सेवा श्रेणी द्वारा SLA अनुपालन",
+              "सेवा श्रेणी द्वारा एसएलए अनुपालन",
             )}
           >
             <BarChartCard
@@ -150,12 +150,12 @@ export default function PerformanceDashboard() {
               bars={[
                 {
                   key: "withinSLA",
-                  label: t("Within SLA", "SLA के भीतर"),
+                  label: t("Within SLA", "एसएलए के भीतर"),
                   color: "#22c55e",
                 },
                 {
                   key: "beyondSLA",
-                  label: t("Beyond SLA", "SLA से बाहर"),
+                  label: t("Beyond SLA", "एसएलए से बाहर"),
                   color: "#ef4444",
                 },
               ]}
@@ -308,7 +308,7 @@ export default function PerformanceDashboard() {
                     {t("Resolved", "निराकृत")}
                   </th>
                   <th className="px-4 py-2 font-medium text-right">
-                    {t("SLA %", "SLA %")}
+                    {t("SLA %", "एसएलए %")}
                   </th>
                   <th className="px-4 py-2 font-medium">
                     {t("Avg Resolution", "औसत निस्तारण")}
@@ -380,7 +380,7 @@ export default function PerformanceDashboard() {
                     {t("Per Capita", "प्रति व्यक्ति")}
                   </th>
                   <th className="px-4 py-2 font-medium text-right">
-                    {t("SLA %", "SLA %")}
+                    {t("SLA %", "एसएलए %")}
                   </th>
                   <th className="px-4 py-2 font-medium">
                     {t("Rating", "रेटिंग")}

@@ -105,7 +105,7 @@ export default function StatsCards({
           icon={AlertTriangle}
           label={t(
             "SLA Breach in Next 48 Hrs",
-            "अगले 48 घंटों में SLA उल्लंघन",
+            "अगले 48 घंटों में एसएलए उल्लंघन",
           )}
           value={slaBreached}
           color="red"
@@ -114,7 +114,7 @@ export default function StatsCards({
         />
         <StatCard
           icon={Percent}
-          label={t("SLA %", "SLA %")}
+          label={t("SLA %", "एसएलए %")}
           value={slaPercentage}
           color="emerald"
         />
