@@ -18,6 +18,8 @@ export default function SlaComplianceChart({ data, xKey }) {
           { key: "beyondSLA", label: t("Beyond SLA", "एसएलए से बाहर"), color: "#ef4444" },
         ]}
         height={320}
+        maxBarSize={24}
+        barSize={18}
       />
     </ChartCard>
   );

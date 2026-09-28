@@ -31,6 +31,8 @@ export function BarChartCard({
   xLabelFontSize = 10,
   minBarWidth = 36,
   minWidth,
+  maxBarSize = 40,
+  barSize,
 }) {
   const calculatedMinWidth =
     minWidth || (data?.length > 5 ? Math.max(data.length * minBarWidth, 320) : "100%");
@@ -66,7 +68,8 @@ export function BarChartCard({
                 name={b.label}
                 fill={b.color}
                 radius={[4, 4, 0, 0]}
-                maxBarSize={40}
+                maxBarSize={b.maxBarSize ?? maxBarSize}
+                {...(b.barSize || barSize ? { barSize: b.barSize || barSize } : {})}
               />
             ))}
           </BarChart>

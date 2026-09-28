@@ -23,6 +23,7 @@ import TimeRangeFilter from "@/components/TimeRangeFilter";
 
 import { SectionTitle } from "@/components/ChartCard";
 import { useGetUsers } from "../user-management/hooks";
+import { useGetDepartments } from "../master-data/hooks";
 
 const tabs = [
   {
@@ -76,7 +77,8 @@ export default function OperationalDashboard() {
   const [period, setPeriod] = useState("daily");
   const [dateRange, setDateRange] = useState({});
   const [filters, setFilters] = useState({
-    users: "",
+    user: "",
+    department: "",
   });
 
   const cceRoleIds = CCE_ROLES.map((r) => rolesMap?.get(r)).filter(Boolean);
@@ -93,6 +95,15 @@ export default function OperationalDashboard() {
   const usersData = (userDataApi?.data?.data?.docs || []).map((v) => ({
     label: v.name,
     value: v._id,
+  }));
+
+  const { data: departmentApiData } = useGetDepartments([], {
+    page: 1,
+    limit: MAX_LIMIT,
+  });
+  const departmentData = (departmentApiData?.data?.data?.docs || []).map((d) => ({
+    label: d.title || d.name || "",
+    value: d._id,
   }));
   // console.log({usersData})
   const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
@@ -187,7 +198,8 @@ export default function OperationalDashboard() {
 
   useEffect(() => {
     setFilters({
-      users: "",
+      user: "",
+      department: "",
     });
   }, [activeTab?.id]);
 
@@ -210,8 +222,16 @@ export default function OperationalDashboard() {
                 ? [
                     {
                       filterKey: "user",
-                      label: t("By Users", "पदनाम के अनुसार"),
+                      label: t("By Users", "उपयोगकर्ता के अनुसार"),
                       options: usersData,
+                    },
+                  ]
+                : tab === "sla-performance"
+                ? [
+                    {
+                      filterKey: "department",
+                      label: t("By Department", "विभाग के अनुसार"),
+                      options: departmentData,
                     },
                   ]
                 : []
@@ -223,7 +243,7 @@ export default function OperationalDashboard() {
 
         {tab === "call-volume" && <CallVolumeTab pd={pd} />}
         {tab === "cce-performance" && <CcePerformanceTab pd={pd} />}
-        {tab === "sla-performance" && <SlaPerformanceTab />}
+        {tab === "sla-performance" && <SlaPerformanceTab filters={filters} pd={pd} />}
         {tab === "grievance" && <GrievanceTab pd={pd} />}
         {tab === "citizen-interaction" && <CitizenInteractionTab />}
         {tab === "system" && <SystemTab />}

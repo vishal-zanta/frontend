@@ -1439,6 +1439,30 @@ export const SLA_PERFORMANCE = [
     beyondSLA: 53,
     compliance: 97.5,
   },
+  {
+    service: "Public Health & Hygiene",
+    withinSLA: 4320,
+    beyondSLA: 180,
+    compliance: 96.0,
+  },
+  {
+    service: "Parks & Horticulture",
+    withinSLA: 1840,
+    beyondSLA: 95,
+    compliance: 95.1,
+  },
+  {
+    service: "Property Tax & Mutation",
+    withinSLA: 3450,
+    beyondSLA: 160,
+    compliance: 95.6,
+  },
+  {
+    service: "Encroachment Removal",
+    withinSLA: 1620,
+    beyondSLA: 142,
+    compliance: 91.9,
+  },
 ];
 
 // ── Aging Analysis ──
