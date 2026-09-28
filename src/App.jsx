@@ -42,6 +42,7 @@ import UserManagement from "./pages/admin/user-management";
 import ManageLinks from "./pages/admin/ManageLinks";
 import AuditTrail from "./pages/admin/AuditTrail";
 import AdminCallHistory from "./pages/admin/AdminCallHistory";
+import ChatHistory from "./pages/admin/chat-history";
 import ManageOfficers from "./pages/admin/ManageOfficers";
 import ManageAgents from "./pages/admin/ManageAgents";
 import AdminSettings from "./pages/admin/settings";
@@ -374,6 +375,16 @@ const router = createBrowserRouter([
                 element: (
                   <PermissionChecker permission={PERMISSIONS.CALL_HISTORY}>
                     <AdminCallHistory />
+                  </PermissionChecker>
+                ),
+              },
+              {
+                path: "chat-history",
+                element: (
+                  <PermissionChecker
+                    rolePermission={{ include: [...ADMIN_ROLES] }}
+                  >
+                    <ChatHistory />
                   </PermissionChecker>
                 ),
               },

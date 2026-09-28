@@ -5,6 +5,7 @@ import {
   getUserOnlineStatus,
   putMarkMessagesAsRead,
   getConversationMessages,
+  getChats,
 } from "../../api/chats.api";
 
 export const useGetChatsInfinte = (keys = [], param = {}, options = {}) => {
@@ -90,6 +91,15 @@ export const useGetChatsMessagesInfinite = (
     initialPageParam: 1,
 
     enabled: !!conversationId,
+    ...options,
+  });
+};
+
+export const useGetChats = (keys = [], params = {}, enabled = true, options = {}) => {
+  return useQuery({
+    queryKey: ["admin-chats", ...keys, params],
+    queryFn: () => getChats(params),
+    enabled: enabled,
     ...options,
   });
 };

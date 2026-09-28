@@ -25,3 +25,7 @@ export const postConversation = async ({id}) => {
 export const postChatMessage = async (body) => {
   return instance.post(`/chat/message`, body);
 };
+
+export const getChats = async (params) => {
+  return instance.get("/chat/admin/messages", { params });
+};

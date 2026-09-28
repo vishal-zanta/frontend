@@ -254,6 +254,13 @@ export const sidebarSections = [
         icon: History,
         permissions: PERMISSIONS.CALL_HISTORY,
       },
+      {
+        label: "Chat History",
+        labelHindi: "चैट इतिहास",
+        path: "/admin/chat-history",
+        icon: MessageSquare,
+        rolePermissions: { include: [...ADMIN_ROLES] },
+      },
     ],
   },
   {

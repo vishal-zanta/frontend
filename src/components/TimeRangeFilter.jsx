@@ -16,11 +16,11 @@ export default function TimeRangeFilter({
   setPeriod,
   dateRange,
   setDateRange,
-  filters, 
+  filters,
   setFilters,
   filterOptions,
-  boxClassName= "",
-  hidePreSetOptions= false
+  boxClassName = "",
+  hidePreSetOptions = false,
 }) {
   const { t } = useLanguage();
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -58,22 +58,29 @@ export default function TimeRangeFilter({
 
   return (
     <div className="flex items-center gap-2 text-nowrap">
-      <div className={clsx("flex items-center gap-1 bg-white dark:bg-card border border-border rounded-lg p-0.5", boxClassName)}>
-       {!hidePreSetOptions && <>
-        {options.map((opt) => (
-          <button
-            key={opt.id}
-            onClick={() => {
-              setPeriod(opt.id);
-              if (setDateRange) setDateRange(undefined);
-            }}
-            className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${period === opt.id ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:bg-muted dark:hover:bg-muted/50"}`}
-            title={`Trends compared ${opt.sub}`}
-          >
-            {opt.label}
-          </button>
-        ))}
-        </>}
+      <div
+        className={clsx(
+          "flex items-center gap-1 bg-white dark:bg-card border border-border rounded-lg p-0.5",
+          boxClassName,
+        )}
+      >
+        {!hidePreSetOptions && (
+          <>
+            {options.map((opt) => (
+              <button
+                key={opt.id}
+                onClick={() => {
+                  setPeriod(opt.id);
+                  if (setDateRange) setDateRange(undefined);
+                }}
+                className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${period === opt.id ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:bg-muted dark:hover:bg-muted/50"}`}
+                title={`Trends compared ${opt.sub}`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </>
+        )}
 
         {canSelectCustom && (
           <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -89,7 +96,10 @@ export default function TimeRangeFilter({
                 <span>{t("Custom", "कस्टम")}</span>
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-3 flex flex-col gap-3" align="end">
+            <PopoverContent
+              className="w-auto p-3 flex flex-col gap-3"
+              align="end"
+            >
               <Calendar
                 mode="range"
                 defaultMonth={tempRange?.from || dateRange?.from || new Date()}

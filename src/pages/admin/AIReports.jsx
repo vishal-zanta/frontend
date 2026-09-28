@@ -33,7 +33,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export default function AIReports() {
   const { t } = useLanguage();
-  const [period, setPeriod] = useState("weekly");
+const [period, setPeriod] = useState("weekly");
   const [dateRange, setDateRange] = useState({});
   const [showInsights, setShowInsights] = useState(false);
   const [generating, setGenerating] = useState(false);
