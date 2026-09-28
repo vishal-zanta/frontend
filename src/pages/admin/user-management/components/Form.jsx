@@ -2,6 +2,8 @@ import React from "react";
 import RhfInput from "@/components/rhfinputs/RhfInput";
 import RhfSelect from "@/components/rhfinputs/RhfSelect";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetDistricts } from "../../master-data/hooks";
 import { useGetUsers } from "../hooks";
@@ -165,6 +167,13 @@ export default function Form({
         required={!isEdit}
         placeholder="Confirm password"
       />
+
+      <div className="flex flex-col gap-1.5">
+        <Label className="font-normal text-sm md:text-sm text-foreground mb-0.5 w-fit">
+          State
+        </Label>
+        <Input value="Bihar" disabled />
+      </div>
 
       <RhfSelect
         name="district"

@@ -13,6 +13,8 @@ import {
   Ticket,
   PhoneMissed,
   PhoneOff,
+  PhoneIncoming,
+  PhoneForwarded,
 } from "lucide-react";
 import {
   IVR_STATS,
@@ -35,10 +37,12 @@ import { useGetCCEDashboardData } from "./query";
 
 const CCE_SCORECARD = {
   daily: {
-    calls: 44,
     answered: 40,
     missed: 2,
     rejected: 2,
+    dropped: 1,
+    transferred: 3,
+    received: 48, // 40 + 2 + 2 + 1 + 3
     ticketsRaised: 38,
     resolved: 38,
     avgTalk: "4m 12s",
@@ -49,10 +53,12 @@ const CCE_SCORECARD = {
     sub: "vs yesterday",
   },
   weekly: {
-    calls: 306,
     answered: 282,
     missed: 16,
     rejected: 8,
+    dropped: 5,
+    transferred: 18,
+    received: 329, // 282 + 16 + 8 + 5 + 18
     ticketsRaised: 265,
     resolved: 260,
     avgTalk: "4m 18s",
@@ -63,10 +69,12 @@ const CCE_SCORECARD = {
     sub: "vs last week",
   },
   monthly: {
-    calls: 1260,
     answered: 1180,
     missed: 60,
     rejected: 20,
+    dropped: 15,
+    transferred: 65,
+    received: 1340, // 1180 + 60 + 20 + 15 + 65
     ticketsRaised: 1120,
     resolved: 1090,
     avgTalk: "4m 22s",
@@ -372,9 +380,17 @@ export default function CRMDashboard() {
 
   // ── CCE Agent personal scorecard ──
   const rawSc = CCE_SCORECARD[scorecardPeriod] || {};
+  const totalReceivedCalls =
+    (rawSc.answered || 0) +
+    (rawSc.missed || 0) +
+    (rawSc.rejected || 0) +
+    (rawSc.dropped || 0) +
+    (rawSc.transferred || 0);
+
   const sc = {
     ...rawSc,
-    calls: (rawSc.answered || 0) + (rawSc.missed || 0) + (rawSc.rejected || 0),
+    received: rawSc.received || totalReceivedCalls,
+    calls: totalReceivedCalls,
   };
   const myCalls = CALL_TRACKER.filter((c) => c.agent === agentName);
 
@@ -432,11 +448,11 @@ export default function CRMDashboard() {
         </div>
 
         {/* Personal stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <StatCard
-            icon={Phone}
-            label={`${t("Total Calls", "कुल कॉल")} `}
-            value={sc.calls}
+            icon={PhoneIncoming}
+            label={t("Received Calls", "प्राप्त कॉल")}
+            value={sc.received || sc.calls}
             color="blue"
             trend="up"
             trendValue={`+8% (${sc.sub})`}
@@ -460,6 +476,18 @@ export default function CRMDashboard() {
             label={t("Rejected", "अस्वीकृत")}
             value={sc.rejected}
             color="red"
+          />
+          <StatCard
+            icon={PhoneOff}
+            label={t("Dropped Calls", "ड्रॉप की गई कॉल")}
+            value={sc.dropped}
+            color="red"
+          />
+          <StatCard
+            icon={PhoneForwarded}
+            label={t("Transferred Calls", "स्थानांतरित कॉल")}
+            value={sc.transferred}
+            color="purple"
           />
           <StatCard
             icon={Ticket}

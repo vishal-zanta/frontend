@@ -1,6 +1,7 @@
 import React from "react";
 import { StatusBadge } from "@/components/Badges";
 import ComplaintTimeline from "@/components/ComplaintTimeline";
+import CallCitizenButton from "@/components/complaints/CallCitizenButton";
 import {
   MapPin,
   Phone,
@@ -79,29 +80,22 @@ const HealthDepartmentDetailView = ({ data }) => {
             <StatusBadge status={data?.status} />
           </div>
 
-          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
             {createdAt && (
               <span className="flex items-center gap-1">
                 <CalendarDays className="w-3 h-3" />
                 {createdAt}
               </span>
             )}
-            {data?.mobile && (
-              <span className="flex items-center gap-1">
-                <Phone className="w-3 h-3" />
-                {data.mobile}
-              </span>
+            {(data?.mobile || citizen?.mobileNumber) && (
+              <div className="flex items-center gap-2 font-mono">
+                <span className="flex items-center gap-1">
+                  <Phone className="w-3 h-3" />
+                  {data?.mobile || citizen?.mobileNumber}
+                </span>
+                <CallCitizenButton mobileNumber={data?.mobile || citizen?.mobileNumber} />
+              </div>
             )}
-            {/* {data?.apiSyncStatus && (
-              <span className="flex items-center gap-1">
-                {data.apiSyncStatus === "SUCCESS" ? (
-                  <CheckCircle2 className="w-3 h-3 text-green-500" />
-                ) : (
-                  <AlertCircle className="w-3 h-3 text-yellow-500" />
-                )}
-                Sync: {data.apiSyncStatus}
-              </span>
-            )} */}
           </div>
         </div>
 
