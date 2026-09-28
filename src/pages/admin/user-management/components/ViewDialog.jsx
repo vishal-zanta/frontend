@@ -81,21 +81,28 @@ const ViewDialog = ({viewUser, setViewUser}) => {
 
           <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5" /> Phone Number
+              <Phone className="w-3.5 h-3.5" /> {t("Phone Number", "फ़ोन नंबर")}
             </span>
             <span className="font-medium text-foreground block">{viewUser?.apiData?.phone || "N/A"}</span>
           </div>
 
           <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5" /> Assigned District
+              <MapPin className="w-3.5 h-3.5 text-red-500" /> {t("State", "राज्य")}
+            </span>
+            <span className="font-medium text-foreground block">{t("Bihar", "बिहार")}</span>
+          </div>
+
+          <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-emerald-500" /> {t("Assigned District", "आवंटित ज़िला")}
             </span>
             <span className="font-medium text-foreground block">{viewUser?.district || "N/A"}</span>
           </div>
 
           <div className="space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-blue-500" /> Last Login
+              <Calendar className="w-3.5 h-3.5 text-blue-500" /> {t("Last Login", "अंतिम लॉगिन")}
             </span>
             <span className="font-medium text-foreground block">{viewUser?.lastLogin || "N/A"}</span>
           </div>
@@ -115,7 +122,7 @@ const ViewDialog = ({viewUser, setViewUser}) => {
 
           <div className="md:col-span-2 space-y-1.5 p-3 rounded-lg border border-border/60 bg-muted/20">
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Key className="w-3.5 h-3.5 text-emerald-500" /> Permissions ({viewUser?.permissions?.length || 0})
+              <Key className="w-3.5 h-3.5 text-emerald-500" /> {t("Permissions", "अनुमतियाँ")} ({viewUser?.permissions?.length || 0})
             </span>
             <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
               {viewUser?.permissions && viewUser.permissions.length > 0 ? (
@@ -132,7 +139,9 @@ const ViewDialog = ({viewUser, setViewUser}) => {
                   );
                 })
               ) : (
-                <span className="text-xs text-muted-foreground">No Permissions Assigned</span>
+                <span className="text-xs text-muted-foreground">
+                  {t("No Permissions Assigned", "कोई अनुमति आवंटित नहीं")}
+                </span>
               )}
             </div>
           </div>
@@ -157,7 +166,7 @@ const ViewDialog = ({viewUser, setViewUser}) => {
             onClick={() => setViewUser(null)}
             className="bg-primary hover:bg-primary/90 text-white font-medium px-6"
           >
-            Close
+            {t("Close", "बंद करें")}
           </Button>
         </div>
       </div>

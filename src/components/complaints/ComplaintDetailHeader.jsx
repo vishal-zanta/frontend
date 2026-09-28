@@ -154,7 +154,7 @@ export default function ComplaintDetailHeader({
           <PriorityBadge priority={displayPriority} />
         </div>
         <p className="text-xs lg:text-sm font-semibold text-foreground">
-          {serviceText}{" "}
+        Service :  {serviceText}{" "}
           {subServiceText &&
           subServiceText !== "N/A" &&
           subServiceText !== serviceText

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import PortalLayout from "@/components/PortalLayout";
 import { SectionTitle } from "@/components/ChartCard";
 import { useLanguage } from "@/context/LanguageContext";
@@ -21,19 +21,68 @@ export default function Inmail() {
 
   const { page, limit, setPage, setLimit, limitOptions } = usePagination();
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
   const [activeTab, setActiveTab] = useState("all");
+  const [period, setPeriod] = useState("monthly");
+  const [dateRange, setDateRange] = useState({});
+  const [filters, setFilters] = useState({});
+
+  const filterOptions = useMemo(
+    () => [
+      {
+        filterKey: "status",
+        label: t("Status", "स्थिति"),
+        options: [
+          { label: t("Pending", "लंबित"), value: "PENDING" },
+          { label: t("Converted", "शिकायत में परिवर्तित"), value: "CONVERTED" },
+          { label: t("Rejected", "अस्वीकृत"), value: "REJECTED" },
+          { label: t("Closed", "बंद"), value: "CLOSED" },
+        ],
+      },
+    ],
+    [t],
+  );
 
   const queryParams = useMemo(() => {
     const params = { page, limit };
     if (search.trim()) params.search = search.trim();
-    if (statusFilter !== "all") {
-      params.status = statusFilter;
-    } else if (activeTab !== "all") {
-      params.status = activeTab.toUpperCase();
+
+    const statusVal =
+      filters.status ||
+      (activeTab !== "all" ? activeTab.toUpperCase() : undefined);
+    if (statusVal) {
+      params.status = statusVal;
+    }
+
+    if (period && period !== "custom") {
+      params.period = period;
+    }
+    if (dateRange?.from) {
+      params.fromDate = dateRange.from;
+      params.startDate = dateRange.from;
+    }
+    if (dateRange?.to) {
+      params.toDate = dateRange.to;
+      params.endDate = dateRange.to;
+    }
+
+    return params;
+  }, [page, limit, search, filters.status, activeTab, period, dateRange]);
+
+  const statsParams = useMemo(() => {
+    const params = {};
+    if (period && period !== "custom") {
+      params.period = period;
+    }
+    if (dateRange?.from) {
+      params.fromDate = dateRange.from;
+      params.startDate = dateRange.from;
+    }
+    if (dateRange?.to) {
+      params.toDate = dateRange.to;
+      params.endDate = dateRange.to;
     }
     return params;
-  }, [page, limit, search, statusFilter, activeTab]);
+  }, [period, dateRange]);
 
   // Fetch inmails data from API
   const {
@@ -43,7 +92,7 @@ export default function Inmail() {
   } = useGetInmails([queryParams], queryParams);
 
   // Fetch stats from API
-  const { data: statsApiData } = useGetInmailStats();
+  const { data: statsApiData } = useGetInmailStats([statsParams], statsParams);
 
   const inmailDocs = inmailsApiData?.data?.data?.docs || [];
   const inmailPagination = inmailsApiData?.data?.data?.pagination || {};
@@ -70,6 +119,15 @@ export default function Inmail() {
     };
   }, [statsApiData, inmailPagination.totalCount, inmailDocs.length]);
 
+  // Sync filters.status with activeTab
+  useEffect(() => {
+    if (filters.status) {
+      setActiveTab(filters.status.toLowerCase());
+    } else {
+      setActiveTab("all");
+    }
+  }, [filters.status]);
+
   // Filtered inmails
   const filteredInmails = useMemo(() => {
     return inmailDocs.filter((mail) => {
@@ -80,8 +138,8 @@ export default function Inmail() {
       if (activeTab === "rejected" && mail.status !== "REJECTED") return false;
       if (activeTab === "closed" && mail.status !== "CLOSED") return false;
 
-      // Status dropdown
-      if (statusFilter !== "all" && mail.status !== statusFilter) return false;
+      // Status filter
+      if (filters.status && mail.status !== filters.status) return false;
 
       // Search query
       if (search.trim()) {
@@ -96,7 +154,7 @@ export default function Inmail() {
       }
       return true;
     });
-  }, [inmailDocs, activeTab, statusFilter, search]);
+  }, [inmailDocs, activeTab, filters.status, search]);
 
   // Handlers
   const handleRaiseComplaint = (mail) => {
@@ -109,7 +167,7 @@ export default function Inmail() {
           fromEmail: mail.fromEmail,
           fromName: mail.fromName,
           body: mail.body,
-          emailId : mail?.emailId
+          emailId: mail?.emailId,
         },
       },
     });
@@ -123,10 +181,29 @@ export default function Inmail() {
     setCloseMail(mail);
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === "all") {
+      setFilters((prev) => {
+        const next = { ...prev };
+        delete next.status;
+        return next;
+      });
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        status: tab.toUpperCase(),
+      }));
+    }
+    setPage(1);
+  };
+
   const handleResetFilters = () => {
     setSearch("");
-    setStatusFilter("all");
+    setFilters({});
     setActiveTab("all");
+    setPeriod("monthly");
+    setDateRange({});
     setPage(1);
   };
 
@@ -147,10 +224,7 @@ export default function Inmail() {
         <InmailStats
           stats={stats}
           activeTab={activeTab}
-          onTabChange={(tab) => {
-            setActiveTab(tab);
-            setPage(1);
-          }}
+          onTabChange={handleTabChange}
         />
 
         {/* Table Container */}
@@ -162,11 +236,22 @@ export default function Inmail() {
               setSearch(val);
               setPage(1);
             }}
-            statusFilter={statusFilter}
-            onStatusFilterChange={(val) => {
-              setStatusFilter(val);
+            period={period}
+            setPeriod={(val) => {
+              setPeriod(val);
               setPage(1);
             }}
+            dateRange={dateRange}
+            setDateRange={(val) => {
+              setDateRange(val);
+              setPage(1);
+            }}
+            filters={filters}
+            setFilters={(val) => {
+              setFilters(val);
+              setPage(1);
+            }}
+            filterOptions={filterOptions}
             activeTab={activeTab}
             onReset={handleResetFilters}
           />
