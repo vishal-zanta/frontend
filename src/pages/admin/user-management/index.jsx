@@ -15,10 +15,16 @@ import EditDialog from "@/components/EditDialog";
 import DeleteDialog from "@/components/DeleteDialog";
 import RhfWrapper from "@/components/RhfWrapper";
 import Form from "./components/Form";
-import { getAddSchema, getEditSchema } from "./schema";
+import AgentConfigForm from "./components/AgentConfigForm";
+import { getAddSchema, getEditSchema, agentConfigSchema } from "./schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postUser, putUser, deleteUser } from "./users.api";
-import { ADMIN_ROLES, CCE_ROLES, MAX_LIMIT, QUERY_KEYS } from "@/utils/constants";
+import { postUser, putUser, deleteUser, putCCEConfig } from "./users.api";
+import {
+  ADMIN_ROLES,
+  CCE_ROLES,
+  MAX_LIMIT,
+  QUERY_KEYS,
+} from "@/utils/constants";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 import ViewDialog from "./components/ViewDialog";
 import { postAdminLogout } from "@/api/auth.api";
@@ -59,6 +65,7 @@ export default function UserManagement() {
   const totalPages = data?.data?.data?.pagination?.totalPages || 1;
   console.log({ usersData, totalPages });
   const [editUser, setEditUser] = useState(null);
+  const [agentConfigUser, setAgentConfigUser] = useState(null);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [deleteUserRecord, setDeleteUserRecord] = useState(null);
   const [viewUser, setViewUser] = useState(null);
@@ -100,6 +107,23 @@ export default function UserManagement() {
       getSuccessToast("User updated successfully");
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
       setEditUser(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const cceConfigMutation = useMutation({
+    mutationFn: putCCEConfig,
+    onSuccess: () => {
+      getSuccessToast(
+        t(
+          "Agent configuration updated successfully",
+          "एजेंट कॉन्फ़िगरेशन सफलतापूर्वक अपडेट किया गया",
+        ),
+      );
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
+      setAgentConfigUser(null);
     },
     onError: (err) => {
       getErrorToast(err);
@@ -229,7 +253,7 @@ export default function UserManagement() {
     };
   });
 
-  console.log({ editUser });
+  console.log({ editUser, agentConfigUser });
   return (
     <PortalLayout role="superadmin">
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
@@ -337,6 +361,7 @@ export default function UserManagement() {
                 handleDelete={handleDelete}
                 handleView={handleView}
                 handleLogoutClick={handleLogoutClick}
+                setAgentConfigUser={setAgentConfigUser}
               />
             ) : (
               <div className="overflow-x-auto">
@@ -347,6 +372,7 @@ export default function UserManagement() {
                   handleDelete={handleDelete}
                   handleView={handleView}
                   handleLogoutClick={handleLogoutClick}
+                  setAgentConfigUser={setAgentConfigUser}
                 />
               </div>
             )}
@@ -414,6 +440,46 @@ export default function UserManagement() {
           </EditDialog>
         )}
 
+        {agentConfigUser && (
+          <EditDialog
+            isHideFooter
+            onClose={() => setAgentConfigUser(null)}
+            title={
+              agentConfigUser?.name
+                ? `${t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")} - ${agentConfigUser.name}`
+                : t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")
+            }
+          >
+            <RhfWrapper
+              initialValues={{
+                agentId: agentConfigUser?.apiData?.cceConfig?.agentId || "",
+                extension: agentConfigUser?.apiData?.cceConfig?.extension || "",
+
+                password: agentConfigUser?.apiData?.cceConfig?.password || "",
+                confirmPassword: "",
+              }}
+              isValidation={true}
+              validationSchema={agentConfigSchema}
+              onSubmit={(formData) => {
+                const { confirmPassword, ...submitData } = formData;
+                const id =
+                  agentConfigUser?.id ||
+                  agentConfigUser?._id ||
+                  agentConfigUser?.apiData?._id;
+                cceConfigMutation.mutate({
+                  id,
+                  body: submitData,
+                });
+              }}
+            >
+              <AgentConfigForm
+                isLoading={cceConfigMutation.isPending}
+                onCancel={() => setAgentConfigUser(null)}
+              />
+            </RhfWrapper>
+          </EditDialog>
+        )}
+
         {addUserOpen && (
           <EditDialog
             isHideFooter
@@ -434,7 +500,9 @@ export default function UserManagement() {
                 isLoading={postMutation.isPending}
                 submitLabel="Add User"
                 disabledKeys={[
-                  ...(addInitialValues.roles?.length > 0 ? ["roles", "role"] : []),
+                  ...(addInitialValues.roles?.length > 0
+                    ? ["roles", "role"]
+                    : []),
                 ].flat()}
                 onCancel={() => setAddUserOpen(false)}
                 skillsOptions={skillsOptions}

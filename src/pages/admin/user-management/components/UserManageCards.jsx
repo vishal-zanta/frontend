@@ -1,8 +1,8 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, Eye, LogOut } from "lucide-react";
-import { CCE_ROLES, PERMISSIONS, ADMIN_ROLES } from "@/utils/constants";
+import { Edit, Trash2, Eye, LogOut, Phone } from "lucide-react";
+import { CCE_ROLES, PERMISSIONS, ADMIN_ROLES, CCE_ONLY_ROLES } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import clsx from "clsx";
@@ -14,6 +14,7 @@ export default function UserManageCards({
   handleDelete,
   handleView,
   handleLogoutClick,
+  setAgentConfigUser,
 }) {
   const { hasPermission } = useAuth();
   const { t } = useLanguage();
@@ -40,6 +41,7 @@ export default function UserManageCards({
             handleDelete={handleDelete}
             handleView={handleView}
             handleLogoutClick={handleLogoutClick}
+            setAgentConfigUser={setAgentConfigUser}
           />
         );
       })}
@@ -55,6 +57,7 @@ function UserCard({
   handleDelete,
   handleView,
   handleLogoutClick,
+  setAgentConfigUser,
 }) {
   const skillsList = Array.isArray(u.skills)
     ? u.skills
@@ -72,6 +75,10 @@ function UserCard({
     (Array.isArray(u.roles)
       ? u.roles.some((r) => CCE_ROLES.includes(r))
       : CCE_ROLES.includes(u.role));
+              const isCCEOnly=  
+            (Array.isArray(u.roles)
+              ? u.roles.some((r) => CCE_ONLY_ROLES.includes(r))
+              : CCE_ONLY_ROLES.includes(u.role));
   const isAdmin =
     u.isAdmin ??
     (Array.isArray(u.roles)
@@ -225,6 +232,18 @@ function UserCard({
             : "grid-cols-3"
         )}
       >
+         {isCCEOnly && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setAgentConfigUser && setAgentConfigUser({ ...u })}
+            className="w-full xs:w-auto h-7 xs:h-8 text-[11px] xs:text-xs px-2 xs:px-2.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 flex items-center justify-center"
+            title={t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")}
+          >
+            <Phone className="w-3 h-3 xs:w-3.5 xs:h-3.5 mr-1" />
+            {t("Agent Config", "एजेंट कॉन्फिग")}
+          </Button>
+        )}
         <Button
           variant="outline"
           size="sm"
@@ -235,6 +254,8 @@ function UserCard({
           <Eye className="w-3 h-3 xs:w-3.5 xs:h-3.5 mr-1" />
           {t("View", "देखें")}
         </Button>
+
+       
 
         <Button
           variant="outline"

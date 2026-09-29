@@ -1,3 +1,4 @@
+import { getTokenFromStorage } from "@/utils/helpers";
 import React, { createContext, useContext, useEffect, useRef, useCallback } from "react";
 import socketIOClient from "socket.io-client";
 
@@ -13,8 +14,8 @@ export function SocketProvider({ children, url }) {
   const socketRef = useRef(null);
   const listenersRef = useRef(new Map()); // eventType -> Set<callback>
 
-  const getToken = () =>
-    localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
+  const getToken = () => getTokenFromStorage();
+    // localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
 
   const initSocket = useCallback(
     (overrideUrl) => {

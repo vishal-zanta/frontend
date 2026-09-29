@@ -2,11 +2,15 @@ import React from "react";
 import MyTable from "@/components/MyTable";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, Eye, LogOut } from "lucide-react";
-import { CCE_ROLES, PERMISSIONS, ADMIN_ROLES } from "@/utils/constants";
+import { Edit, Trash2, Eye, LogOut, Phone } from "lucide-react";
+import {
+  CCE_ROLES,
+  PERMISSIONS,
+  ADMIN_ROLES,
+  CCE_ONLY_ROLES,
+} from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import useIsMobile from "@/hooks/useIsMobile";
 
 export default function UserManageTable({
   users = [],
@@ -15,6 +19,7 @@ export default function UserManageTable({
   handleDelete,
   handleView,
   handleLogoutClick,
+  setAgentConfigUser,
 }) {
   const { hasPermission } = useAuth();
   const { t } = useLanguage();
@@ -81,6 +86,9 @@ export default function UserManageTable({
       (Array.isArray(u.roles)
         ? u.roles.some((r) => CCE_ROLES.includes(r))
         : CCE_ROLES.includes(u.role));
+    const isCCEOnly = Array.isArray(u.roles)
+      ? u.roles.some((r) => CCE_ONLY_ROLES.includes(r))
+      : CCE_ONLY_ROLES.includes(u.role);
     const isAdmin =
       u.isAdmin ??
       (Array.isArray(u.roles)
@@ -102,7 +110,9 @@ export default function UserManageTable({
                 .slice(0, 2) || "U"}
             </div>
             <div>
-              <div className="font-medium whitespace-nowrap">{u.name || "N/A"}</div>
+              <div className="font-medium whitespace-nowrap">
+                {u.name || "N/A"}
+              </div>
               {!isCCE && (
                 <div className="text-xs text-muted-foreground whitespace-nowrap">
                   {u.email || "N/A"}
@@ -184,7 +194,8 @@ export default function UserManageTable({
         ),
       },
       lastLogin: {
-        className: "text-xs text-muted-foreground whitespace-nowrap min-w-[140px]",
+        className:
+          "text-xs text-muted-foreground whitespace-nowrap min-w-[140px]",
         value: u.lastLogin || "N/A",
       },
       status: {
@@ -211,6 +222,18 @@ export default function UserManageTable({
           "text-center bg-white dark:bg-[#0f1729] sticky right-0 z-10 whitespace-nowrap",
         value: (
           <div className="flex gap-1 justify-end">
+            {isCCEOnly && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  setAgentConfigUser && setAgentConfigUser({ ...u })
+                }
+                title={t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")}
+              >
+                <Phone className="w-4 h-4 text-emerald-600 hover:text-emerald-700" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -219,6 +242,7 @@ export default function UserManageTable({
             >
               <Eye className="w-4 h-4" />
             </Button>
+
             <Button
               variant="ghost"
               size="sm"

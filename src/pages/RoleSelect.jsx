@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Shield, ChevronRight, LogOut, User, CheckCircle2 } from "lucide-react";
+import { deleteTokenFromStorage } from "@/utils/helpers";
 
 const RoleSelect = ({ handleSetRole }) => {
   const { profile, setProfile } = useAuth();
@@ -19,8 +20,8 @@ const RoleSelect = ({ handleSetRole }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("usertoken");
-    sessionStorage.removeItem("usertoken");
+       deleteTokenFromStorage();
+ 
     localStorage.removeItem("role");
     window.location.href = "/";
   };

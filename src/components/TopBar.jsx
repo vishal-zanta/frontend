@@ -16,7 +16,7 @@ import {
 import { PORTAL_META } from "@/lib/biharData";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getBreakStatus, postToggleBreak, postPulse } from "@/api/breaks.api";
-import { getErrorToast } from "@/utils/helpers";
+import { deleteTokenFromStorage, getErrorToast } from "@/utils/helpers";
 import BreakOverlay from "./break-timer/BreakOverlay";
 import { postLogout } from "@/api/auth.api";
 import { useAuth } from "@/context/AuthContext";
@@ -149,8 +149,9 @@ export default function TopBar({
   const logoutMutation = useMutation({
     mutationFn: postLogout,
     onSuccess: () => {
-      localStorage.removeItem("usertoken");
-      sessionStorage.removeItem("usertoken");
+      // localStorage.removeItem("usertoken");
+      // sessionStorage.removeItem("usertoken");
+      deleteTokenFromStorage();
       localStorage.removeItem("role");
 
       // localStorage.removeItem("off-lang");
@@ -164,8 +165,10 @@ export default function TopBar({
     onError: (err) => {
       console.error("Logout API failed:", err);
       // Revert/proceed on failure to avoid blocking users
-      localStorage.removeItem("usertoken");
-      sessionStorage.removeItem("usertoken");
+      // localStorage.removeItem("usertoken");
+      // sessionStorage.removeItem("usertoken");
+      deleteTokenFromStorage();
+
       localStorage.removeItem("role");
 
       //     localStorage.removeItem("off-lang");

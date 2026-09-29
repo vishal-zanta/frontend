@@ -9,6 +9,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
+import { setTokenToStorage } from "@/utils/helpers";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -44,7 +45,8 @@ export default function Register() {
       const response = await instance.post("/auth/verify-otp", { email, otpCode });
       const token = response.data?.token || response.data?.access_token;
       if (token) {
-        localStorage.setItem("usertoken", token);
+        // localStorage.setItem("usertoken", token);
+        setTokenToStorage(token);
       }
       window.location.href = "/";
     } catch (err) {

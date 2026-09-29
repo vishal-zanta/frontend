@@ -1,3 +1,4 @@
+import { deleteTokenFromStorage, getTokenFromStorage } from "@/utils/helpers";
 import axios from "axios";
 
 const instance = axios.create({
@@ -6,8 +7,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    const token =
-      localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
+    const token = getTokenFromStorage();
     config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
@@ -22,8 +22,8 @@ instance.interceptors.response.use(
   },
   (err) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem("usertoken");
-      sessionStorage.removeItem("usertoken");
+      deleteTokenFromStorage();
+
       localStorage.removeItem("role");
 
       window.location.href = "/";

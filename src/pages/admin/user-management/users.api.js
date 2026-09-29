@@ -12,6 +12,10 @@ export const putUser = async ({ userId, user }) => {
   return instance.put(`/users/${userId}`, user);
 };
 
+export const putCCEConfig = async ({ id, body, ...rest }) => {
+  return instance.put(`/users/${id}/cce-config`, body !== undefined ? body : rest);
+};
+
 export const deleteUser = async (id) => {
   return instance.delete(`/users/${id}`);
 };

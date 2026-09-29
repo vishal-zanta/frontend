@@ -5,6 +5,7 @@ import { getProfile } from "../api/auth.api";
 import FullScreenLoader from "./FullScreenLoader";
 import { useEffect, useState } from "react";
 import RoleSelect from "../pages/RoleSelect";
+import {deleteTokenFromStorage, getTokenFromStorage} from "../utils/helpers";
 const getLatestRole = () => {
   const roleValue = localStorage.getItem("role");
   if (!roleValue) return null;
@@ -22,8 +23,8 @@ const role = getLatestRole();
 
   //   const path = window.location;
   //   console.log({path});
-  const token =
-    localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
+  const token = getTokenFromStorage();
+    // localStorage.getItem("usertoken") || sessionStorage.getItem("usertoken");
 
   if (!token) {
     return <Navigate to="/" replace />;
@@ -61,8 +62,9 @@ const role = getLatestRole();
   }
 
   if (error || !data) {
-    localStorage.removeItem("usertoken");
-    sessionStorage.removeItem("usertoken");
+    // localStorage.removeItem("usertoken");
+    // sessionStorage.removeItem("usertoken");
+    deleteTokenFromStorage();
 
     return <Navigate to="/" replace state={{ redirect: false }} />;
   }

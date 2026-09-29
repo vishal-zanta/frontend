@@ -201,3 +201,32 @@ export const getEditSchema = (rolesList = []) => {
       }
     });
 };
+
+export const agentConfigSchema = z
+  .object({
+    agentId: z
+      .string({ required_error: "Agent ID is required" })
+      .trim()
+      .min(1, "Agent ID is required")
+      .regex(/^\d+$/, "Agent ID must contain numbers only"),
+    extension: z
+      .string({ required_error: "Extension is required" })
+      .trim()
+      .min(1, "Extension is required")
+      .regex(/^\d+$/, "Extension must contain numbers only"),
+    password: z
+      .string({ required_error: "Password is required" })
+      .min(4, "Password must be at least 4 characters"),
+    confirmPassword: z
+      .string({ required_error: "Confirm Password is required" })
+      .min(1, "Confirm Password is required"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+      });
+    }
+  });

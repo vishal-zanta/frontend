@@ -17,6 +17,7 @@ import {
   FileText,
   Circle,
   PhoneCall,
+  Loader2,
 } from "lucide-react";
 import { CRM_AGENTS } from "@/lib/biharData";
 import PortalLayout from "@/components/PortalLayout";
@@ -29,6 +30,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import MyTable from "@/components/MyTable";
 import useIsMobile from "@/hooks/useIsMobile";
 import PreviousCallCards from "./components/PreviousCallCards";
+import { useMutation } from "@tanstack/react-query";
+import { postAnswerCall } from "@/api/calling.api";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 
 export default function IncomingCall() {
   const { t } = useLanguage();
@@ -155,7 +159,22 @@ export default function IncomingCall() {
   const formatDuration = (s) =>
     `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
 
-  const acceptCall = () => setCallState("connected");
+  const answerCallMutation = useMutation({
+    mutationFn: postAnswerCall,
+    onSuccess: (res) => {
+      getSuccessToast(
+        res?.data?.message || t("Call connected", "कॉल कनेक्ट हो गई"),
+      );
+      setCallState("connected");
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const acceptCall = () => {
+    answerCallMutation.mutate({});
+  };
   const endCall = () => {
     setCallState("ended");
     setCallDuration(0);
@@ -318,9 +337,14 @@ export default function IncomingCall() {
                 {callState === "ringing" && (
                   <Button
                     onClick={acceptCall}
+                    disabled={answerCallMutation.isPending}
                     className="bg-card text-emerald-600 hover:bg-white/90"
                   >
-                    <Phone className="w-4 h-4 mr-1" />{" "}
+                    {answerCallMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                    ) : (
+                      <Phone className="w-4 h-4 mr-1" />
+                    )}
                     {t("Accept", "स्वीकार करें")}
                   </Button>
                 )}

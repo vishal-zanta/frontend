@@ -131,18 +131,18 @@ export const getTrendProps = (current, previous, reverseColor = false, t) => {
 };
 
 
-export const checkPermissionManual = (validPermissions , permission)=> {
-  const IGNORE_ALL  = ["MY_COMPLAINT", "FIELD_VISIT", "OFFICER_DASHBOARD"];
+export const checkPermissionManual = (validPermissions, permission) => {
+  const IGNORE_ALL = ["MY_COMPLAINT", "FIELD_VISIT", "OFFICER_DASHBOARD"];
   const isIgnoreAll = [...(permission || [])].some((p) => IGNORE_ALL.includes(p));
   // console.log({validPermissions, IGNORE_ALL, isIgnoreAll});
 
-   if (  validPermissions.includes("ALL") && !isIgnoreAll )
-      return true;
-    if (!permission) return false;
-    if (Array.isArray(permission)) {
-      return permission.some((p) => validPermissions.includes(p));
-    }
-    return validPermissions.includes(permission);
+  if (validPermissions.includes("ALL") && !isIgnoreAll)
+    return true;
+  if (!permission) return false;
+  if (Array.isArray(permission)) {
+    return permission.some((p) => validPermissions.includes(p));
+  }
+  return validPermissions.includes(permission);
 }
 
 
@@ -160,7 +160,7 @@ export const checkPermissionManual = (validPermissions , permission)=> {
  * @returns {{ el: Element|null, path: string|null }}
  */
 export const getFirstErrorEl = (errors, prefix = "") => {
-   
+
   if (!errors || typeof errors !== "object") return { el: null, path: null };
 
   for (const key of Object.keys(errors)) {
@@ -189,20 +189,20 @@ export const getFirstErrorEl = (errors, prefix = "") => {
   return { el: null, path: null };
 };
 
-export const focusErrorElement = (methods, err=null)=> {
-  let errors = err? err : methods.formState.errors;
-      if (!Object.keys(errors).length) return;
-    
- const { el, path } = getFirstErrorEl(errors);
-    // console.log({el, path, errors});
-    if (el ) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-     
-    }
-    if (path) {
-      // setFocus expects the registered field name (dot-path for nested fields)
-      try { methods.setFocus(path); } catch (_) {}
-    }
+export const focusErrorElement = (methods, err = null) => {
+  let errors = err ? err : methods.formState.errors;
+  if (!Object.keys(errors).length) return;
+
+  const { el, path } = getFirstErrorEl(errors);
+  // console.log({el, path, errors});
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  }
+  if (path) {
+    // setFocus expects the registered field name (dot-path for nested fields)
+    try { methods.setFocus(path); } catch (_) { }
+  }
 }
 
 /**
@@ -264,3 +264,43 @@ export const getRouteAfterLogin = (permissions = []) => {
 };
 
 
+
+
+export const setTokenToStorage = (token) => {
+  // let uuid = sessionStorage.getItem("uuid") ;
+  // if(!uuid){
+  //   uuid= crypto.randomUUID();
+  //   sessionStorage.setItem("uuid", uuid);
+  // }
+  // if(token){
+  //   localStorage.setItem(`usertoken-${uuid}`, token);
+  // }
+  sessionStorage.setItem("usertoken", token);
+  // localStorage.setItem("usertoken-latest", token);
+
+}
+
+export const getTokenFromStorage = () => {
+  // let uuid = sessionStorage.getItem("uuid") ;
+
+  // if(!uuid) return null;
+
+  // return localStorage.getItem(`usertoken-${uuid}`);
+  return sessionStorage.getItem("usertoken") 
+  // || localStorage.getItem("usertoken-latest");
+}
+
+export const deleteTokenFromStorage = () => {
+  // let uuid = sessionStorage.getItem("uuid") ;
+
+  // if(!uuid) return;
+
+  // localStorage.removeItem(`usertoken-${uuid}`);
+  // const token = sessionStorage.getItem("usertoken");
+  // const recentToken = localStorage.setItem("usertoken-latest");
+
+
+  sessionStorage.removeItem("usertoken");
+
+  // token === recentToken && localStorage.setItem("usertoken-latest");
+}

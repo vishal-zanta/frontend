@@ -15,7 +15,7 @@ import {
 import AuthLayout from "@/components/AuthLayout";
 import { postLogin, getProfile } from "@/api/auth.api";
 import { sidebarSections } from "@/components/Sidebar";
-import { checkPermissionManual } from "@/utils/helpers";
+import { checkPermissionManual, getTokenFromStorage, setTokenToStorage } from "@/utils/helpers";
 import { useLanguage } from "@/context/LanguageContext";
 import { RolesList } from "./RoleSelect";
 // import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
@@ -71,7 +71,8 @@ export default function Login() {
 
       const token = res?.data?.data?.token;
       if (token) {
-        localStorage.setItem("usertoken", token);
+        // localStorage.setItem("usertoken", token);
+        setTokenToStorage(token)
         if (res.data?.data?.roles && res.data?.data?.roles.length > 1) {
           setRoles(res.data?.data?.roles);
           return;
@@ -114,7 +115,7 @@ export default function Login() {
 
   useEffect(() => {
     let timer = null;
-    const token = localStorage.getItem("usertoken");
+    const token =getTokenFromStorage();
     let preSelectedRole = localStorage.getItem("role");
     try {
       if (preSelectedRole) {
