@@ -33,6 +33,8 @@ export function BarChartCard({
   minWidth,
   maxBarSize = 40,
   barSize,
+  margin,
+  xAxisProps = {},
 }) {
   const calculatedMinWidth =
     minWidth || (data?.length > 5 ? Math.max(data.length * minBarWidth, 320) : "100%");
@@ -50,13 +52,14 @@ export function BarChartCard({
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+          <BarChart data={data} margin={margin || { top: 10, right: 10, left: -15, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
             <XAxis
               dataKey={xKey}
               tick={{ fontSize: xLabelFontSize }}
               stroke="#94a3b8"
               interval={0}
+              {...xAxisProps}
             />
             <YAxis tick={{ fontSize: yLabelFontSize }} stroke="#94a3b8" />
             {legend && <Legend wrapperStyle={legendStyle} />}

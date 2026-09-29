@@ -23,9 +23,19 @@ export default function SlaComplianceChart({ data, xKey, title, subtitle }) {
           { key: "withinSLA", label: t("Within SLA", "एसएलए के भीतर"), color: "#22c55e" },
           { key: "beyondSLA", label: t("Beyond SLA", "एसएलए से बाहर"), color: "#ef4444" },
         ]}
-        height={320}
+        height={340}
         maxBarSize={24}
         barSize={18}
+        minBarWidth={64}
+        margin={{ top: 10, right: 15, left: -10, bottom: 25 }}
+        xAxisProps={{
+          angle: -30,
+          textAnchor: "end",
+          height: 60,
+          dx: -4,
+          dy: 4,
+          tick: { fontSize: 11, angle: -30, textAnchor: "end", fill: "#64748b" },
+        }}
       />
     </ChartCard>
   );
