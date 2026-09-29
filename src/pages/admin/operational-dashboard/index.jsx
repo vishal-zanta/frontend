@@ -243,7 +243,14 @@ export default function OperationalDashboard() {
 
         {tab === "call-volume" && <CallVolumeTab pd={pd} />}
         {tab === "cce-performance" && <CcePerformanceTab pd={pd} />}
-        {tab === "sla-performance" && <SlaPerformanceTab filters={filters} pd={pd} />}
+        {tab === "sla-performance" && (
+          <SlaPerformanceTab
+            filters={filters}
+            pd={pd}
+            departmentData={departmentData}
+            dateRange={dateRange}
+          />
+        )}
         {tab === "grievance" && <GrievanceTab pd={pd} />}
         {tab === "citizen-interaction" && <CitizenInteractionTab />}
         {tab === "system" && <SystemTab />}

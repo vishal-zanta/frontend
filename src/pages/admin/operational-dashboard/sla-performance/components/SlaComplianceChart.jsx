@@ -3,12 +3,18 @@ import { ChartCard } from "@/components/ChartCard";
 import { BarChartCard } from "@/components/Charts";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function SlaComplianceChart({ data, xKey }) {
+export default function SlaComplianceChart({ data, xKey, title, subtitle }) {
   const { t } = useLanguage();
   return (
     <ChartCard
-      title={t("SLA Compliance by Service", "सेवा द्वारा एसएलए अनुपालन")}
-      subtitle={t("Within vs beyond SLA per service category", "प्रत्येक सेवा श्रेणी में एसएलए के भीतर बनाम बाहर")}
+      title={title || t("SLA Compliance by Service", "सेवा द्वारा एसएलए अनुपालन")}
+      subtitle={
+        subtitle ||
+        t(
+          "Within vs beyond SLA per service category",
+          "प्रत्येक सेवा श्रेणी में एसएलए के भीतर बनाम बाहर",
+        )
+      }
     >
       <BarChartCard
         data={data}

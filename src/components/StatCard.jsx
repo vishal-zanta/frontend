@@ -11,7 +11,7 @@ export default function StatCard({
   color = "blue",
   trendValue,
   onClick,
-  isClicked = false
+  isClicked = false,
 }) {
   const colorMap = {
     blue: {
@@ -81,7 +81,7 @@ export default function StatCard({
       className={clsx(
         "rounded-lg xs:rounded-xl border p-2.5 xs:p-3 sm:p-4 md:p-5 transition-all relative flex flex-col items-center justify-between",
         c.card,
-        onClick && "cursor-pointer"
+        onClick && "cursor-pointer",
       )}
     >
       {Icon && (
