@@ -5,6 +5,7 @@ import {
   getComplaintsForCCEandAdmin,
   getComplaintByIdForOfficer,
   getComplaintAnalyticsSummary,
+  getComplaintCommunications,
 } from "@/api/complaint.api";
 import { QUERY_KEYS } from "@/utils/constants";
 
@@ -78,6 +79,15 @@ export const useGetComplaintAnalyticsSummary = (params = {}, options = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.COMPLAINT_ANALYTICS_SUMMARY, params],
     queryFn: () => getComplaintAnalyticsSummary(params),
+    ...options,
+  });
+};
+
+export const useGetComplaintCommunications = (id, options = {}) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.COMPLAINT_COMMUNICATIONS, id],
+    queryFn: () => getComplaintCommunications({ id }),
+    enabled: !!id,
     ...options,
   });
 };

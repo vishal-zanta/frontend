@@ -31,6 +31,7 @@ import ComplaintEvidenceSection from "./ComplaintEvidenceSection";
 import ComplaintActionSection from "./ComplaintActionSection";
 import ComplaintEmailDetails from "./ComplaintEmailDetails";
 import useGetFileSize from "@/hooks/query/useGetFileSize";
+import ComplaintInteractionBtn from "./ComplaintInteractionBtn";
 
 export default function ComplaintDetailView({
   selected,
@@ -359,6 +360,8 @@ export default function ComplaintDetailView({
             mobileNumber={mobileNumber}
             alternateMobile={alternateMobile}
             emailAddress={emailAddress}
+            grievanceId={c?.grievanceId}
+            _id={c?._id}
           />
 
           {/* Location & Addresses: Permanent Address, Correspondence Address, Location Details / Place of occurrence */}
@@ -412,9 +415,16 @@ export default function ComplaintDetailView({
 
         {/* Timeline */}
         <div className="bg-card rounded-xl border border-border p-3 lg:p-5">
-          <h3 className="font-bold text-foreground text-xs lg:text-sm mb-3 lg:mb-4">
+          <div className=" mb-3 lg:mb-4 flex items-center justify-between">
+
+          <h3 className="font-bold text-foreground text-xs lg:text-sm">
             {t("Complaint Timeline", "शिकायत समयसीमा")}
           </h3>
+          
+
+         { <ComplaintInteractionBtn id={c?._id}/>}
+          
+          </div>
           <ComplaintTimeline events={c.timeline || []} />
         </div>
       </LoaderErrWrapper>

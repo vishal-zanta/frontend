@@ -7,6 +7,8 @@ export default function ComplaintComplainantSection({
   mobileNumber,
   alternateMobile,
   emailAddress,
+  grievanceId,
+  _id,
 }) {
   const { t } = useLanguage();
   return (
@@ -16,7 +18,11 @@ export default function ComplaintComplainantSection({
           {t("Complainant Details", "शिकायतकर्ता का विवरण")}
         </h4>
         {mobileNumber && mobileNumber !== "N/A" && mobileNumber !== "-" && (
-          <CallCitizenButton mobileNumber={mobileNumber} />
+          <CallCitizenButton
+            mobileNumber={mobileNumber}
+            grievanceId={grievanceId}
+            _id={_id}
+          />
         )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 lg:gap-3 text-[10px] lg:text-xs">
@@ -59,7 +65,13 @@ export default function ComplaintComplainantSection({
               >
                 {alternateMobile}
               </a>
-              <CallCitizenButton mobileNumber={alternateMobile} size="xs" className="h-6 px-2 text-[10px]">
+              <CallCitizenButton
+                mobileNumber={alternateMobile}
+                grievanceId={grievanceId}
+                _id={_id}
+                size="xs"
+                className="h-6 px-2 text-[10px]"
+              >
                 {t("Call", "कॉल करें")}
               </CallCitizenButton>
             </div>

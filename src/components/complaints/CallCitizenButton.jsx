@@ -3,12 +3,15 @@ import { PhoneCall, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postMakeCall } from "@/api/calling.api";
 import { getErrorToast, getSuccessToast } from "@/utils/helpers";
+import { QUERY_KEYS } from "@/utils/constants";
 
 export default function CallCitizenButton({
   mobileNumber,
+  grievanceId,
+  _id,
   className = "",
   size = "sm",
   variant = "outline",
@@ -18,6 +21,7 @@ export default function CallCitizenButton({
 }) {
   const { t } = useLanguage();
   const { profiledata } = useAuth();
+  const queryClient = useQueryClient();
 
   const makeCallMutation = useMutation({
     mutationFn: postMakeCall,
@@ -26,6 +30,25 @@ export default function CallCitizenButton({
         res?.data?.message ||
           t("Call initiated successfully", "कॉल सफलतापूर्वक शुरू की गई"),
       );
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.COMPLAINT_COMMUNICATIONS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["calls"],
+      });
+      if (_id) {
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEYS.COMPLAINT_COMMUNICATIONS, _id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEYS.COMPLAINT_DETAIL, _id],
+        });
+      }
+      if (grievanceId) {
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEYS.COMPLAINT_COMMUNICATIONS, grievanceId],
+        });
+      }
     },
     onError: (err) => {
       getErrorToast(err);
@@ -52,6 +75,8 @@ export default function CallCitizenButton({
     onClick && onClick(e);
     makeCallMutation.mutate({
       clientNumber: cleanNumber,
+      ...(grievanceId ? { grievanceId } : {}),
+      ...(_id ? { _id } : {}),
     });
   };
 

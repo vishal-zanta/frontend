@@ -78,3 +78,17 @@ export const getVisitStats = async (params) => {
 export const postComplaintFeedback = async ({ id, data }) => {
   return instance.post(`/grievances/officer/${id}/feedback`, data).then((res) => res.data);
 };
+
+export const getComplaintCommunications = async ({ id }) => {
+  return instance.get(`/grievances/officer/${id}/communications`).then((res) => res.data);
+};
+
+export const postComplaintRemark = async ({ id, data }) => {
+  return instance.post(`/grievances/officer/${id}/remark`, data);
+};
+
+export const putComplaintRemark = async ({ timelineId, data }) => {
+  return instance.put(`/grievances/officer/remark/${timelineId}`, data);
+};
+
+

@@ -162,7 +162,11 @@ const EducationDepartmentDetailView = ({ data }) => {
                   <Phone className="w-3.5 h-3.5" />
                   {data?.mobile || complainant?.mobile}
                 </span>
-                <CallCitizenButton mobileNumber={data?.mobile || complainant?.mobile} />
+                <CallCitizenButton
+                  mobileNumber={data?.mobile || complainant?.mobile}
+                  grievanceId={data?.externalComplaintId}
+                  _id={data?._id}
+                />
               </div>
             )}
           </div>

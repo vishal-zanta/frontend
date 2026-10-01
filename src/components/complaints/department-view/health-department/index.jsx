@@ -93,7 +93,11 @@ const HealthDepartmentDetailView = ({ data }) => {
                   <Phone className="w-3 h-3" />
                   {data?.mobile || citizen?.mobileNumber}
                 </span>
-                <CallCitizenButton mobileNumber={data?.mobile || citizen?.mobileNumber} />
+                <CallCitizenButton
+                  mobileNumber={data?.mobile || citizen?.mobileNumber}
+                  grievanceId={data?.externalComplaintId}
+                  _id={data?._id}
+                />
               </div>
             )}
           </div>

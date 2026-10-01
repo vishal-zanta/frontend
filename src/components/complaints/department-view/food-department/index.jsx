@@ -12,7 +12,6 @@ import {
   UserCheck,
   Tag,
   Clock,
-  Activity,
   Layers,
 } from "lucide-react";
 import moment from "moment";
@@ -152,7 +151,11 @@ const FoodDeptView = ({ data }) => {
                   <Phone className="w-3.5 h-3.5" />
                   {data?.mobile || payload?.mobileNo}
                 </span>
-                <CallCitizenButton mobileNumber={data?.mobile || payload?.mobileNo} />
+                <CallCitizenButton
+                  mobileNumber={data?.mobile || payload?.mobileNo}
+                  grievanceId={data?.externalComplaintId}
+                  _id={data?._id}
+                />
               </div>
             )}
             {payload?.assignTo && (
