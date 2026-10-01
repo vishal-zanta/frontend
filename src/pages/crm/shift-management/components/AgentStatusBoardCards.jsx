@@ -1,16 +1,20 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, LogOut } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
+import { PERMISSIONS } from "@/utils/constants";
 
 export default function AgentStatusBoardCards({
   shiftsData = [],
   isSupervisor = false,
   setEditingAgent,
   formatShift,
+  handleLogoutClick,
 }) {
   const { t, lang } = useLanguage();
+  const { hasPermission } = useAuth();
 
   if (!shiftsData || shiftsData.length === 0) {
     return (
@@ -147,7 +151,19 @@ export default function AgentStatusBoardCards({
 
             {/* Footer Actions */}
             {isSupervisor && (
-              <div className="p-3 xs:p-3.5 border-t border-border/60 flex items-center justify-end">
+              <div className="p-3 xs:p-3.5 border-t border-border/60 flex items-center justify-end gap-2">
+                {hasPermission(PERMISSIONS.LOGOUT_USERS) && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleLogoutClick && handleLogoutClick(a)}
+                    className="h-8 text-xs px-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center justify-center"
+                    title={t("Logout", "लॉगआउट")}
+                  >
+                    <LogOut className="w-3.5 h-3.5 mr-1" />
+                    {t("Logout", "लॉगआउट")}
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   size="sm"

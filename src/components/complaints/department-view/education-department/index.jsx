@@ -143,19 +143,7 @@ const EducationDepartmentDetailView = ({ data }) => {
                 <h2 className="text-sm font-bold text-primary font-mono">
                   {externalId}
                 </h2>
-                {payload?.type && (
-                  <TypeBadge
-                    type={payload.type}
-                    className="text-[10px] px-2 py-0.5"
-                  />
-                )}
-                {payload?.source && (
-                  <SourceBadge
-                    source={payload.source}
-                    label={getLabel(fields?.source, payload.source)}
-                    className="text-[10px] px-2 py-0.5"
-                  />
-                )}
+              
               </div>
             </div>
             <StatusBadge status={data?.status} />

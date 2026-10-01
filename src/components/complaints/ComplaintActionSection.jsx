@@ -213,7 +213,10 @@ export default function ComplaintActionSection({
             options={STATUS_ACTIONS.map((a) => {
              
               return {
-                label: a.badgeLabel || a.label,
+                label: t(
+                  a.badgeLabel || a.label,
+                  a.badgeLabelHindi || a.labelHindi || a.badgeLabel || a.label,
+                ),
                 value: a.value,
                 disabled:
                   (a.disabled && a.disabled.includes(currentStatus)) ||
@@ -286,7 +289,10 @@ export default function ComplaintActionSection({
             disabled={updatePriorityMutation.isPending || profiledata?.isAdmin}
             placeholder={t("Select Priority", "प्राथमिकता चुनें")}
             options={PRIORITY_ACTIONS.map((a) => ({
-              label: a.badgeLabel || a.label,
+              label: t(
+                a.badgeLabel || a.label,
+                a.badgeLabelHindi || a.labelHindi || a.badgeLabel || a.label,
+              ),
               value: a.value,
             }))}
             className={"w-full"}

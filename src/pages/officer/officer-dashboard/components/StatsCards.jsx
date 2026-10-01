@@ -120,7 +120,7 @@ export default function StatsCards({
         />
         <StatCard
           icon={Timer}
-          label={t("Avg Resolution", "औसत समाधान समय")}
+          label={t("Avg Resolution Time", "औसत समाधान समय")}
           value={avgResolution}
           color="purple"
         />

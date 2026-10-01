@@ -181,7 +181,7 @@ export const sidebarSections = [
         labelHindi: "ईमेल",
         path: "/crm/inmail",
         icon: MessageSquare,
-        rolePermissions: { include: [...CCE_ONLY_ROLES] },
+        rolePermissions: { include: [...CCE_ROLES] },
 
         // permissions: PERMISSIONS.TRACK_COMPLAINTS,
       },

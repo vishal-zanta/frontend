@@ -246,7 +246,7 @@ const router = createBrowserRouter([
                 path: "inmail",
                 element: (
                   <PermissionChecker
-                    rolePermission={{ include: [...CCE_ONLY_ROLES] }}
+                    rolePermission={{ include: [...CCE_ROLES] }}
                   >
                     {" "}
                     <Inmail />

@@ -5,17 +5,27 @@ import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import Pagination from "@/components/Pagination";
 import usePagination from "@/hooks/usePagination";
 import { useLanguage } from "@/context/LanguageContext";
-import { Pencil } from "lucide-react";
+import { Pencil, LogOut } from "lucide-react";
 import EditShiftDialog from "./EditShiftDialog";
 import MyTable from "@/components/MyTable";
 import useIsMobile from "@/hooks/useIsMobile";
 import AgentStatusBoardCards from "./AgentStatusBoardCards";
+import { useAuth } from "@/context/AuthContext";
+import { PERMISSIONS, QUERY_KEYS } from "@/utils/constants";
+import { Button } from "@/components/ui/button";
+import EditDialog from "@/components/EditDialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postAdminLogout } from "@/api/auth.api";
+import { getErrorToast, getSuccessToast } from "@/utils/helpers";
 
 export default function AgentStatusBoard({
   isSupervisor = false,
   setAgentView = () => {},
 }) {
   const { t, lang } = useLanguage();
+  const { hasPermission } = useAuth();
+  const queryClient = useQueryClient();
+
   const isMobile = useIsMobile();
   const pageProps = usePagination();
   const { data, isLoading, error } = useGetShifts({
@@ -24,6 +34,33 @@ export default function AgentStatusBoard({
   });
 
   const [editingAgent, setEditingAgent] = useState(null);
+  const [logoutUser, setLogoutUser] = useState(null);
+
+  const logoutMutation = useMutation({
+    mutationFn: postAdminLogout,
+    onSuccess: () => {
+      getSuccessToast(
+        t("User logged out successfully", "उपयोगकर्ता को सफलतापूर्वक लॉगआउट कर दिया गया"),
+      );
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SHIFTS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
+      setLogoutUser(null);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
+
+  const confirmLogout = () => {
+    if (logoutUser) {
+      const userId = logoutUser._id || logoutUser.id;
+      logoutMutation.mutate(userId);
+    }
+  };
+
+  const handleLogoutClick = (user) => {
+    setLogoutUser(user);
+  };
 
   const shiftsData = data?.data?.data?.docs || [];
   const totalPages = data?.data?.data?.pagination?.totalPages;
@@ -165,13 +202,26 @@ export default function AgentStatusBoard({
       actions: {
         className: "text-center sticky right-0 bg-white dark:bg-[#0f1729] z-10",
         render: () => (
-          <button
-            onClick={() => setEditingAgent(a)}
-            className="p-1.5 hover:bg-muted rounded text-muted-foreground cursor-pointer"
-            title={t("Edit Shift", "शिफ्ट संपादित करें")}
-          >
-            <Pencil className="w-4 h-4" />
-          </button>
+          <div className="flex items-center justify-center gap-1">
+            {hasPermission(PERMISSIONS.LOGOUT_USERS) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleLogoutClick(a)}
+                title={t("Logout", "लॉगआउट")}
+              >
+                <LogOut className="w-4 h-4 text-red-500" />
+              </Button>
+            )}
+
+            <button
+              onClick={() => setEditingAgent(a)}
+              className="p-1.5 hover:bg-muted rounded text-muted-foreground cursor-pointer"
+              title={t("Edit Shift", "शिफ्ट संपादित करें")}
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          </div>
         ),
       },
     };
@@ -196,6 +246,7 @@ export default function AgentStatusBoard({
             isSupervisor={isSupervisor}
             setEditingAgent={setEditingAgent}
             formatShift={formatShift}
+            handleLogoutClick={handleLogoutClick}
           />
         ) : (
           <MyTable
@@ -212,6 +263,27 @@ export default function AgentStatusBoard({
           onClose={() => setEditingAgent(null)}
           t={t}
         />
+      )}
+
+      {logoutUser && (
+        <EditDialog
+          title={t("Confirm Logout", "लॉगआउट की पुष्टि करें")}
+          onClose={() => setLogoutUser(null)}
+          onSave={confirmLogout}
+          saving={logoutMutation.isPending}
+        >
+          <div className="text-sm text-muted-foreground py-2">
+            {t(
+              "Are you sure you want to force logout",
+              "क्या आप वाकई बाध्यकारी लॉगआउट करना चाहते हैं",
+            )}{" "}
+            <strong>{logoutUser.name}</strong>?{" "}
+            {t(
+              "This will terminate their active session.",
+              "यह उनके सक्रिय सत्र को समाप्त कर देगा।",
+            )}
+          </div>
+        </EditDialog>
       )}
     </div>
   );

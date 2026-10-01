@@ -42,7 +42,7 @@ export default function EditDialog({
       onClick={onClose}
     >
       <div
-        className={clsx("bg-card rounded-2xl shadow-2xl w-full max-w-md", bodyClassname)}
+        className={clsx("bg-card rounded-2xl overflow-y-hidden shadow-2xl w-full max-w-md", bodyClassname)}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
@@ -53,7 +53,7 @@ export default function EditDialog({
         </div>
         <div
           className={clsx(
-            "p-5 space-y-4 max-h-[90svh] overflow-y-auto",
+            "p-5 space-y-4 max-h-[85svh] overflow-y-auto",
             isHideFooter && "pb-0",
           )}
         >

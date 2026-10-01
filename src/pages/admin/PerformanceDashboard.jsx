@@ -121,7 +121,7 @@ export default function PerformanceDashboard() {
           />
           <StatCard
             icon={Clock}
-            label={t("Avg Resolution", "औसत समाधान")}
+            label={t("Avg Resolution Time", "औसत समाधान")}
             value={t("2.4 days", "2.4 दिन")}
             color="blue"
             sublabel={t("Target: <2 days", "लक्ष्य: <2 दिन")}
@@ -311,7 +311,7 @@ export default function PerformanceDashboard() {
                     {t("SLA %", "एसएलए %")}
                   </th>
                   <th className="px-4 py-2 font-medium">
-                    {t("Avg Resolution", "औसत निस्तारण")}
+                    {t("Avg Resolution Time", "औसत निस्तारण")}
                   </th>
                   <th className="px-4 py-2 font-medium">
                     {t("Rating", "रेटिंग")}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Filter as FilterIcon } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -11,100 +11,59 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { useSearchParams } from "react-router-dom";
+import useSyncSearchParams from "@/hooks/useSyncSearchParams";
 
 export default function Filter({
   filters = {},
   setFilters,
   filterOptions = [],
+  onReset,
 }) {
-  console.log({filterOptions});
   const { t } = useLanguage();
-  const [searchParams, setSearchParams] = useSearchParams();
-
+  useSyncSearchParams(filters, setFilters);
   const hasActiveFilters = Object.values(filters).some(
     (val) => val !== undefined && val !== "",
   );
 
   const handleSelectFilter = (key, value, isMultiple = false) => {
     if (setFilters) {
-      const next = { ...filters };
-      let finalValue = value;
+      setFilters((prev) => {
+        const next = { ...prev };
+        let finalValue = value;
 
-      if (isMultiple && value !== undefined && value !== "") {
-        const currentVals = next[key]
-          ? String(next[key]).split(",").filter(Boolean)
-          : [];
-        const strVal = String(value);
-        let updatedVals;
-        if (currentVals.includes(strVal)) {
-          updatedVals = currentVals.filter((v) => v !== strVal);
-        } else {
-          updatedVals = [...currentVals, strVal];
+        if (isMultiple && value !== undefined && value !== "") {
+          const currentVals = next[key]
+            ? String(next[key]).split(",").filter(Boolean)
+            : [];
+          const strVal = String(value);
+          let updatedVals;
+          if (currentVals.includes(strVal)) {
+            updatedVals = currentVals.filter((v) => v !== strVal);
+          } else {
+            updatedVals = [...currentVals, strVal];
+          }
+          finalValue =
+            updatedVals.length > 0 ? updatedVals.join(",") : undefined;
         }
-        finalValue = updatedVals.length > 0 ? updatedVals.join(",") : undefined;
-      }
 
-      if (finalValue === undefined || finalValue === "") {
-        delete next[key];
-        searchParams.delete(`filter.${key}`);
-        setSearchParams(searchParams, { replace: true });
-      } else {
-        next[key] = finalValue;
-        searchParams.set(
-          `filter.${key}`,
-          Array.isArray(finalValue) ? finalValue.join(",") : finalValue,
-        );
-        setSearchParams(searchParams, { replace: true });
-      }
+        if (finalValue === undefined || finalValue === "") {
+          delete next[key];
+        } else {
+          next[key] = finalValue;
+        }
 
-      setFilters(next);
+        return next;
+      });
     }
   };
 
   const handleClearAll = () => {
-    if (setFilters) {
+    if (onReset) {
+      onReset();
+    } else if (setFilters) {
       setFilters({});
-
-      const allSearchParams = new URLSearchParams(searchParams);
-      allSearchParams.forEach((val, key) => {
-        if (key.startsWith("filter.")) {
-          searchParams.delete(key);
-        }
-      });
-      setSearchParams(searchParams, { replace: true });
     }
   };
-
-  useEffect(() => {
-    if (!setFilters) return;
-
-    const nextFilters = {};
-    const params = new URLSearchParams(searchParams);
-
-    params.forEach((value, key) => {
-      if (!key.startsWith("filter.")) return;
-
-      const actualKey = key.slice("filter.".length);
-
-      nextFilters[actualKey] = value;
-    });
-
-    setFilters((prev) => {
-      const prevKeys = Object.keys(prev);
-      const nextKeys = Object.keys(nextFilters);
-
-      if (
-        prevKeys.length === nextKeys.length &&
-        nextKeys.every((key) => prev[key] === nextFilters[key])
-      ) {
-        return prev;
-      }
-
-      return nextFilters;
-    });
-  }, [searchParams, setFilters]);
-  // console.log("RENDER");
 
   const renderOptionItems = (opt) => (
     <>
@@ -136,16 +95,10 @@ export default function Filter({
           <DropdownMenuItem
             key={subOpt.value}
             onClick={() =>
-              handleSelectFilter(
-                opt.filterKey,
-                subOpt.value,
-                opt.isMultiple,
-              )
+              handleSelectFilter(opt.filterKey, subOpt.value, opt.isMultiple)
             }
             className={`cursor-pointer text-xs py-1.5 ${
-              isSelected
-                ? "font-semibold bg-accent text-accent-foreground"
-                : ""
+              isSelected ? "font-semibold bg-accent text-accent-foreground" : ""
             }`}
           >
             {subOpt.label}
@@ -166,7 +119,11 @@ export default function Filter({
           }`}
         >
           <FilterIcon className="w-3.5 h-3.5" />
-          <span>{filterOptions?.length === 1 ? t(filterOptions?.[0]?.label,filterOptions?.[0]?.labelHindi) :  t("Filter", "फ़िल्टर")}</span>
+          <span>
+            {filterOptions?.length === 1
+              ? t(filterOptions?.[0]?.label, filterOptions?.[0]?.labelHindi)
+              : t("Filter", "फ़िल्टर")}
+          </span>
           {hasActiveFilters && (
             <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
           )}
@@ -179,25 +136,23 @@ export default function Filter({
           filterOptions?.length === 1 ? "w-56" : "w-48"
         } max-h-80 overflow-y-auto bg-card border border-border pb-0`}
       >
-        {filterOptions?.length === 1 ? (
-          renderOptionItems(filterOptions[0])
-        ) : (
-          filterOptions?.map((opt) => (
-            <DropdownMenuSub key={opt.filterKey}>
-              <DropdownMenuSubTrigger className="cursor-pointer flex items-center justify-between text-xs py-1.5">
-                <span className="flex items-center gap-1.5">
-                  {t(opt.label, opt.label)}
-                  {filters[opt.filterKey] && (
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full" />
-                  )}
-                </span>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent className="w-56 max-h-80  overflow-y-auto bg-card border border-border">
-                {renderOptionItems(opt)}
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-          ))
-        )}
+        {filterOptions?.length === 1
+          ? renderOptionItems(filterOptions[0])
+          : filterOptions?.map((opt) => (
+              <DropdownMenuSub key={opt.filterKey}>
+                <DropdownMenuSubTrigger className="cursor-pointer flex items-center justify-between text-xs py-1.5">
+                  <span className="flex items-center gap-1.5">
+                    {t(opt.label, opt.label)}
+                    {filters[opt.filterKey] && (
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+                    )}
+                  </span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="w-56 max-h-80  overflow-y-auto bg-card border border-border">
+                  {renderOptionItems(opt)}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            ))}
 
         {hasActiveFilters && (
           <>

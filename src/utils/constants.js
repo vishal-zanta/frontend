@@ -79,10 +79,12 @@ export const IMG_BASE_URL = import.meta.env.VITE_BASE_URL;
 export const STATUS_ACTIONS = [
   {
     label: "Mark Resolved",
+    labelHindi: "समाधान चिह्नित करें",
     value: "RESOLVED",
     icon: CheckCircle2,
     color: "bg-emerald-600 hover:bg-emerald-700",
     badgeLabel: "Resolved",
+    badgeLabelHindi: "समाधान हो गया",
     badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     isRemark: true,
     disabled: ["RESOLVED", "IN_PROGRESS", "OPEN", "REOPENED"],
@@ -93,101 +95,97 @@ export const STATUS_ACTIONS = [
   },
   {
     label: "Closed",
+    labelHindi: "बंद",
     value: "CLOSED",
     icon: XCircle,
     color: "bg-red-600 hover:bg-red-700",
     badgeLabel: "Closed",
+    badgeLabelHindi: "बंद",
     badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
     isRemark: true,
     disabled: ["RESOLVED", "CLOSED"],
     roleHidden: CCE_ROLES,
     requireFieldVisit: true,
-
   },
   {
     label: "In Progress",
+    labelHindi: "प्रगति पर",
     value: "IN_PROGRESS",
     icon: Pause,
     color: "bg-amber-600 hover:bg-amber-700",
     badgeLabel: "In Progress",
+    badgeLabelHindi: "प्रगति पर",
     badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     disabled: ["RESOLVED", "CLOSED"],
     roleHidden: CCE_ROLES,
   },
   {
     label: "Reopen",
+    labelHindi: "पुनः खोलें",
     value: "REOPENED",
     icon: RotateCcw,
     color: "bg-yellow-600 hover:bg-yellow-700",
     badgeLabel: "Reopened",
+    badgeLabelHindi: "पुनः खोला गया",
     badgeClass: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20",
     isRemark: true,
     disabled: ["REOPENED", "OPEN", "ESCALATED", "IN_PROGRESS"],
     roleAllowed: CCE_ROLES,
     requireFeedback : true,
-
-    
   },
   {
     label: "Open",
+    labelHindi: "खुला",
     value: "OPEN",
     icon: Clock,
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Open",
+    badgeLabelHindi: "खुला",
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     disabled: ["RESOLVED", "CLOSED", "IN_PROGRESS", "REOPENED"],
   },
-    {
+  {
     label: "Pending",
+    labelHindi: "लंबित",
     value: "PENDING",
     icon: Clock,
     color: "bg-blue-600 hover:bg-blue-700",
     badgeLabel: "Pending",
+    badgeLabelHindi: "लंबित",
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     disabled: ["RESOLVED", "CLOSED", "IN_PROGRESS", "REOPENED"],
   },
-  // {
-  //   label: "Escalate",
-  //   value: "ESCALATED",
-  //   icon: AlertCircle,
-  //   color: "bg-red-600 hover:bg-red-700",
-  //   badgeLabel: "Escalated",
-  //   badgeClass: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
-  //   disabled: ["RESOLVED", "CLOSED"],
-  // },
 ];
 
 export const PRIORITY_ACTIONS = [
   {
     label: "Normal",
+    labelHindi: "सामान्य",
     value: "NORMAL",
     icon: Check,
     color: "bg-slate-600 hover:bg-slate-700",
     badgeLabel: "Normal",
+    badgeLabelHindi: "सामान्य",
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
   },
-  // {
-  //   label: "Pending",
-  //   value: "PENDING",
-  //   icon: Clock,
-  //   color: "bg-blue-600 hover:bg-blue-700",
-  //   badgeLabel: "Pending",
-  //   badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
-  // },
   {
     label: "Urgent",
+    labelHindi: "जरूरी",
     value: "URGENT",
     icon: AlertTriangle,
     color: "bg-amber-600 hover:bg-amber-700",
     badgeLabel: "Urgent",
+    badgeLabelHindi: "जरूरी",
     badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
   },
   {
     label: "Critical",
+    labelHindi: "गंभीर",
     value: "CRITICAL",
     icon: AlertCircle,
     color: "bg-red-600 hover:bg-red-700",
     badgeLabel: "Critical",
+    badgeLabelHindi: "गंभीर",
     badgeClass: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
   },
 ];
@@ -229,31 +227,36 @@ export const getStatusBadgeMeta = (status) => {
   // Legacy / fallbacks
   if (norm === "OPEN") {
     return {
-      badgeLabel: "Pending",
+      badgeLabel: "Open",
+      badgeLabelHindi: "खुला",
       badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     };
   }
   if (norm === "PENDING") {
     return {
       badgeLabel: "Pending",
+      badgeLabelHindi: "लंबित",
       badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     };
   }
   if (norm === "REJECTED") {
     return {
       badgeLabel: "Rejected",
+      badgeLabelHindi: "अस्वीकृत",
       badgeClass: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
     };
   }
   if (norm === "FIELD_VISIT") {
     return {
       badgeLabel: "Field Visit",
+      badgeLabelHindi: "क्षेत्र दौरा",
       badgeClass: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
     };
   }
   // Default fallback
   return {
     badgeLabel: status || "Pending",
+    badgeLabelHindi: "लंबित",
     badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
   };
 };
@@ -266,18 +269,21 @@ export const getPriorityBadgeMeta = (priority) => {
   if (norm === "LOW") {
     return {
       badgeLabel: "Low",
+      badgeLabelHindi: "निम्न",
       badgeClass: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
     };
   }
   if (norm === "HIGH") {
     return {
       badgeLabel: "High",
+      badgeLabelHindi: "उच्च",
       badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     };
   }
   // Default fallback
   return {
     badgeLabel: priority || "Normal",
+    badgeLabelHindi: "सामान्य",
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
   };
 };

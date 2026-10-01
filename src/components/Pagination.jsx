@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 const Pagination = ({
   page,
@@ -26,6 +27,9 @@ const Pagination = ({
   limitOptions = [10, 20, 50],
   isLoading = false,
 }) => {
+  const languageContext = useLanguage();
+  const t = languageContext?.t || ((en, _hi) => en);
+
   React.useEffect(() => {
     if (!isLoading) {
       if (page > 1 && totalPage > 0 && page > totalPage) {
@@ -73,7 +77,7 @@ const Pagination = ({
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 py-2 px-4 border-t border-border ">
       {/* Rows per page Selector */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <span className="text-xs">Values per page:</span>
+        <span className="text-xs">{t("Values per page:", "प्रति पृष्ठ:")}</span>
         <Select
           value={String(limit)}
           onValueChange={(val) => {
@@ -100,6 +104,7 @@ const Pagination = ({
           <PaginationItem>
             <PaginationPrevious
               onClick={() => page > 1 && setPage(page - 1)}
+              label={t("Previous", "पिछला")}
               className={cn(
                 "cursor-pointer select-none text-xs",
                 page <= 1 && "pointer-events-none opacity-50"
@@ -131,6 +136,7 @@ const Pagination = ({
           <PaginationItem>
             <PaginationNext
               onClick={() => page < totalPage && setPage(page + 1)}
+              label={t("Next", "अगला")}
               className={cn(
                 "cursor-pointer select-none text-xs",
                 page >= totalPage && "pointer-events-none opacity-50"

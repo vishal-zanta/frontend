@@ -58,7 +58,10 @@ export default function ComplaintList({
         label: t("Status", "स्थिति"),
         filterKey: "status",
         options: STATUS_ACTIONS.map((action) => ({
-          label: action.badgeLabel || action.label,
+          label: t(
+            action.badgeLabel || action.label,
+            action.badgeLabelHindi || action.labelHindi || action.badgeLabel || action.label,
+          ),
           value: action.value,
         })),
         isMultiple : true
@@ -77,7 +80,10 @@ export default function ComplaintList({
         label: t("Priority", "प्राथमिकता"),
         filterKey: "priority",
         options: PRIORITY_ACTIONS.map((action) => ({
-          label: action.badgeLabel || action.label,
+          label: t(
+            action.badgeLabel || action.label,
+            action.badgeLabelHindi || action.labelHindi || action.badgeLabel || action.label,
+          ),
           value: action.value,
         })),
         isMultiple : true

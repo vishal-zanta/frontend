@@ -9,6 +9,7 @@ import {
 import EditDialog from "@/components/EditDialog";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 import { useGetInmailById } from "@/hooks/query/useGetInmails";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import { Link } from "react-router-dom";
@@ -20,8 +21,11 @@ export default function InmailPreviewDialog({
   onOpenReject,
   onOpenClose,
   onRaiseComplaint,
+  isCCE: isCCEProp,
 }) {
   const { t } = useLanguage();
+  const { profiledata } = useAuth();
+  const isCCE = isCCEProp ?? profiledata?.isCCE;
   const emailId = mail?._id;
 
   const {
@@ -71,6 +75,16 @@ export default function InmailPreviewDialog({
                   : "N/A"}
               </span>
             </div>
+            {!isCCE && (
+              <div className="flex items-start gap-2">
+                <span className="font-semibold text-muted-foreground shrink-0">
+                  {t("Assigned To:", "सौंपा गया:")}
+                </span>
+                <span className="font-medium text-foreground">
+                  {detail?.assignTo?.name || "-"}
+                </span>
+              </div>
+            )}
             {grievanceId && (
               <div className="flex items-start gap-2">
                 <span className="font-semibold text-muted-foreground w-12 shrink-0">
@@ -151,7 +165,7 @@ export default function InmailPreviewDialog({
             <p className="font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
               {t("Message Body", "संदेश विवरण")}
             </p>
-            <div className="bg-background rounded-lg p-3.5 border border-border whitespace-pre-wrap leading-relaxed">
+            <div className="bg-background rounded-lg p-3.5 border border-border whitespace-pre-wrap break-words leading-relaxed">
               {detail.body}
             </div>
           </div>
@@ -167,7 +181,7 @@ export default function InmailPreviewDialog({
               {t("Close Window", "खिड़की बंद करें")}
             </Button>
 
-            {detail.status === "PENDING" && (
+            {isCCE && detail.status === "PENDING" && (
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"

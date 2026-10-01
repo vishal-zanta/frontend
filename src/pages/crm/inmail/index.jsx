@@ -14,10 +14,12 @@ import InmailTable from "./components/InmailTable";
 import InmailPreviewDialog from "./components/InmailPreviewDialog";
 import InmailRejectDialog from "./components/InmailRejectDialog";
 import InmailCloseDialog from "./components/InmailCloseDialog";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Inmail() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const {profiledata} = useAuth();
 
   const { page, limit, setPage, setLimit, limitOptions } = usePagination();
   const [search, setSearch] = useState("");
@@ -158,6 +160,7 @@ export default function Inmail() {
 
   // Handlers
   const handleRaiseComplaint = (mail) => {
+    if (!profiledata?.isCCE) return;
     const mailId = mail?._id;
     if (!mailId) return;
     navigate(`/crm/raise?inmail=${mailId}`, {
@@ -174,10 +177,12 @@ export default function Inmail() {
   };
 
   const handleOpenReject = (mail) => {
+    if (!profiledata?.isCCE) return;
     setRejectMail(mail);
   };
 
   const handleOpenClose = (mail) => {
+    if (!profiledata?.isCCE) return;
     setCloseMail(mail);
   };
 
@@ -248,9 +253,12 @@ export default function Inmail() {
             }}
             filters={filters}
             setFilters={(val) => {
+              
+              console.log({filters, val})
               setFilters(val);
               setPage(1);
             }}
+            // setFilters={setFilters}
             filterOptions={filterOptions}
             activeTab={activeTab}
             onReset={handleResetFilters}
@@ -264,6 +272,7 @@ export default function Inmail() {
               onRaiseComplaint={handleRaiseComplaint}
               onOpenReject={handleOpenReject}
               onOpenClose={handleOpenClose}
+              isCCE={profiledata?.isCCE}
               pagination={
                 <Pagination
                   page={page}
@@ -287,6 +296,7 @@ export default function Inmail() {
         onOpenReject={handleOpenReject}
         onOpenClose={handleOpenClose}
         onRaiseComplaint={handleRaiseComplaint}
+        isCCE={profiledata?.isCCE}
       />
 
       {/* ── Reject Inmail EditDialog ── */}

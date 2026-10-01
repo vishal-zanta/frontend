@@ -85,7 +85,7 @@ export default function DepartmentSelectionScreen({
                   onClick={() => onSelectDept(dept.key)}
                   className="group relative flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/80 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 shadow-xs hover:shadow-md text-left cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-primary hover:-translate-y-0.5 min-h-[72px]"
                 >
-                  <h3 className="text-sm sm:text-base font-bold text-foreground group-hover:text-primary-foreground transition-colors line-clamp-2 leading-snug">
+                  <h3 className="text-sm sm:text-base font-bold text-foreground group-hover:text-primary-foreground transition-colors line-clamp-2 leading-snug capitalize">
                     {t(label, dept.nameHindi)}
                   </h3>
                 </button>

@@ -1,27 +1,32 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { getStatusBadgeMeta, getPriorityBadgeMeta } from "@/utils/constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function StatusBadge({ status }) {
+  const languageContext = useLanguage();
+  const t = languageContext?.t || ((en, _hi) => en);
   const meta = getStatusBadgeMeta(status);
   return (
     <Badge
       variant="outline"
       className={`text-[10px] font-medium tracking-wide text-nowrap ${meta.badgeClass}`}
     >
-      Status : {meta.badgeLabel}
+      {t("Status", "स्थिति")} : {t(meta.badgeLabel, meta.badgeLabelHindi || meta.badgeLabel)}
     </Badge>
   );
 }
 
 export function PriorityBadge({ priority }) {
+  const languageContext = useLanguage();
+  const t = languageContext?.t || ((en, _hi) => en);
   const meta = getPriorityBadgeMeta(priority);
   return (
     <Badge
       variant="outline"
       className={`text-[10px] font-medium tracking-wide text-nowrap ${meta.badgeClass}`}
     >
-      Priority : {meta.badgeLabel}
+      {t("Priority", "प्राथमिकता")} : {t(meta.badgeLabel, meta.badgeLabelHindi || meta.badgeLabel)}
     </Badge>
   );
 }
