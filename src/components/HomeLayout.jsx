@@ -1,18 +1,15 @@
 import React from "react";
 import { PORTAL_META, DASHBOARD_KPIS } from "@/lib/biharData";
-import biharGovtLogo from "@/assets/bihar_govt.png";
-import cmPhoto from "@/assets/cm_photo.jpg";
-import LangSelector from "@/components/LangSelector";
 import { useLanguage } from "@/context/LanguageContext";
-import { Home, Zap } from "lucide-react";
-import { CITIZEN_URL } from "@/utils/constants";
+import TopBar from "@/pages/sahyog/layouts/TopBar";
+import HeaderBranding from "@/pages/sahyog/layouts/HeaderBranding";
 
-const HomeLayout = ({ children }) => {
+const HomeLayout = ({ children, isHidePhoto = false }) => {
   const { t } = useLanguage();
   return (
-     <div className="min-h-screen relative bg-gradient-to-br from-slate-50 via-blue-50/30 to-sky-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-x-hidden transition-colors">
+    <div className="min-h-screen relative bg-gradient-to-br from-slate-50 via-blue-50/30 to-sky-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-x-hidden transition-colors">
       {/* Header */}
-      <div className="relative z-20 bg-gradient-to-r from-blue-950 via-blue-800 to-blue-600 dark:from-slate-900 dark:via-blue-950 dark:to-blue-900 text-white">
+      {/* <div className="relative z-20 bg-gradient-to-r from-blue-950 via-blue-800 to-blue-600 dark:from-slate-900 dark:via-blue-950 dark:to-blue-900 text-white">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-sm">
@@ -42,59 +39,32 @@ const HomeLayout = ({ children }) => {
             <span>{t("Home Page", "मुख्य पृष्ठ")}</span>
           </a>
 
-          {/* <div className="hidden md:flex items-center gap-6 text-sm">
-            <div className="text-center">
-              <div className="text-2xl font-bold">
-                {DASHBOARD_KPIS.totalComplaints.toLocaleString("en-IN")}
-              </div>
-              <div className="text-[11px] text-white/60">
-                {t("Total Complaints", "कुल शिकायतें")}
-              </div>
-            </div>
-            <div className="w-px h-10 bg-white/20"></div>
-            <div className="text-center">
-              <div className="text-2xl font-bold">
-                {DASHBOARD_KPIS.resolved.toLocaleString("en-IN")}
-              </div>
-              <div className="text-[11px] text-white/60">
-                {t("Resolved", "निस्तारित")}
-              </div>
-            </div>
-            <div className="w-px h-10 bg-white/20"></div>
-            <div className="text-center">
-              <div className="text-2xl font-bold">
-                {DASHBOARD_KPIS.citizenSatisfaction}/5
-              </div>
-              <div className="text-[11px] text-white/60">
-                {t("Satisfaction", "संतुष्टि")}
-              </div>
-            </div>
-          </div> */}
+        
         </div>
-      </div>
+      </div> */}
 
       {/* Tagline banner */}
-      <div className="relative z-20 bg-blue-50 dark:bg-slate-900/80 border-b border-blue-100 dark:border-slate-800">
+      {/* <div className="relative z-20 bg-blue-50 dark:bg-slate-900/80 border-b border-blue-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between text-sm">
           <span className="text-blue-800 dark:text-blue-300 font-medium">
             {t(PORTAL_META.tagline, "सुशासन ही जनसेवा - बिहार सरकार")}
           </span>
           <div className="flex items-center gap-3 text-xs text-blue-600 dark:text-blue-400">
-            {/* <span className="flex items-center gap-1">
-              <Zap className="w-3 h-3 text-green-600 dark:text-green-400" /> {t("All systems operational", "सभी प्रणालियाँ चालू हैं")}
-            </span> */}
-            {/* <span>-</span>
-            <span>Last synced: {(new Date()).toISOString().split("T")?.[0]}</span> */}
+         
           <LangSelector />
           </div>
         </div>
-      </div>
+      </div> */}
+
+      <TopBar />
+      <HeaderBranding />
 
       {/* Main content - CM card on left, Login form on right */}
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div
+        className={`relative ${isHidePhoto ? "max-w-full" : "max-w-6xl"} mx-auto px-4 sm:px-6 py-8 sm:py-12`}
+      >
         <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
-          {/* Dignitary / CM Card */}
-          {/* <div className="flex flex-col items-center text-center p-4 w-full max-w-sm">
+            {/* <div className="flex flex-col items-center text-center p-4 w-full max-w-sm">
             <div className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden bg-white/80 dark:bg-slate-900/80 shadow-md border border-slate-200/80 dark:border-slate-800 mb-4 flex items-center justify-center">
               <img
                 src={cmPhoto}
@@ -110,13 +80,13 @@ const HomeLayout = ({ children }) => {
             </p>
             <p className="text-sm text-muted-foreground mt-0.5 font-medium">
                {t("Government of Bihar", "बिहार सरकार")}
-
             </p>
           </div> */}
-
           {/* Right Side - Login */}
-          <div className="w-full max-w-md flex flex-col items-center">
-          {children}
+          <div
+            className={`w-full ${isHidePhoto ? "max-w-7xl" : "max-w-md"} flex flex-col items-center`}
+          >
+            {children}
           </div>
         </div>
 
@@ -128,7 +98,7 @@ const HomeLayout = ({ children }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HomeLayout
+export default HomeLayout;

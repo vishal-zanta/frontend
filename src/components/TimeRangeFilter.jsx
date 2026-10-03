@@ -21,6 +21,12 @@ export default function TimeRangeFilter({
   filterOptions,
   boxClassName = "",
   hidePreSetOptions = false,
+  optionsView= {
+    daily : true,
+    weekly: true,
+    monthly: true,
+    yearly : false
+  }
 }) {
   const { t } = useLanguage();
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -31,9 +37,10 @@ export default function TimeRangeFilter({
   }, [dateRange, popoverOpen]);
 
   const options = [
-    { id: "daily", label: t("Today", "आज"), sub: "vs yesterday" },
-    { id: "weekly", label: t("This Week", "इस सप्ताह"), sub: "vs last week" },
-    { id: "monthly", label: t("This Month", "इस महीने"), sub: "vs last month" },
+    { id: "daily", label: t("Today", "आज"), sub: "vs yesterday", view: optionsView.daily },
+    { id: "weekly", label: t("This Week", "इस सप्ताह"), sub: "vs last week", view: optionsView.weekly },
+    { id: "monthly", label: t("This Month", "इस महीने"), sub: "vs last month", view: optionsView.monthly },
+    { id: "yearly", label: t("This Year", "इस साल"), sub: "vs last year", view: optionsView.yearly }
   ];
 
   const canSelectCustom = typeof setDateRange === "function";
@@ -66,7 +73,7 @@ export default function TimeRangeFilter({
       >
         {!hidePreSetOptions && (
           <>
-            {options.map((opt) => (
+            {options.filter((opt) => opt.view).map((opt) => (
               <button
                 key={opt.id}
                 onClick={() => {

@@ -105,6 +105,10 @@ const router = createBrowserRouter([
         element: <Navigate to={"/"} replace />,
       },
       {
+        path: "sahyog",
+        element: <Navigate to={"/"} replace />,
+      },
+      {
         path: "unauthorized",
         element: <NotAuthorized />,
       },

@@ -10,7 +10,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export const CITIZEN_URL = "https://citizen.lumirex.tech/"
+export const CITIZEN_URL = import.meta.env.VITE_CITIZEN_URL;
+// export const OFFICER_URL = "https://portal.lumirex.tech/";
 
 
 export const ADMIN_ROLES = ["Admin"];

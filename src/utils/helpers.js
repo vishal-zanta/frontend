@@ -84,7 +84,7 @@ export const fileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 };
 
-export const getTrendProps = (current, previous, reverseColor = false, t) => {
+export const getTrendProps = (current, previous, reverseColor = false, t, period = "weekly") => {
   if (
     previous === undefined ||
     previous === null ||
@@ -94,7 +94,19 @@ export const getTrendProps = (current, previous, reverseColor = false, t) => {
     return { trend: undefined, trendValue: undefined };
   }
 
-  const vsLastWeek = t ? t("vs last week", "पिछले सप्ताह की तुलना में") : "vs last week";
+  const periodMap = {
+    daily: { en: "vs yesterday", hi: "कल की तुलना में" },
+    day: { en: "vs yesterday", hi: "कल की तुलना में" },
+    weekly: { en: "vs last week", hi: "पिछले सप्ताह की तुलना में" },
+    week: { en: "vs last week", hi: "पिछले सप्ताह की तुलना में" },
+    monthly: { en: "vs last month", hi: "पिछले महीने की तुलना में" },
+    month: { en: "vs last month", hi: "पिछले महीने की तुलना में" },
+    yearly: { en: "vs last year", hi: "पिछले वर्ष की तुलना में" },
+    year: { en: "vs last year", hi: "पिछले वर्ष की तुलना में" },
+  };
+
+  const periodConfig = periodMap[period] || periodMap.weekly;
+  const vsText = t ? t(periodConfig.en, periodConfig.hi) : periodConfig.en;
 
   if (previous === 0) {
     if (current > 0) {
@@ -102,10 +114,10 @@ export const getTrendProps = (current, previous, reverseColor = false, t) => {
       const isUp = !reverseColor;
       return {
         trend: isUp ? "up" : "down",
-        trendValue: `+${current} ${vsLastWeek}`,
+        trendValue: `+${current} ${vsText}`,
       };
     }
-    return { trend: "neutral", trendValue: `0% ${vsLastWeek}` };
+    return { trend: "neutral", trendValue: `0% ${vsText}` };
   }
 
   const diff = current - previous;
@@ -116,18 +128,18 @@ export const getTrendProps = (current, previous, reverseColor = false, t) => {
     const isUp = !reverseColor;
     return {
       trend: isUp ? "up" : "down",
-      trendValue: `+${pct.toFixed(0)}% ${vsLastWeek}`,
+      trendValue: `+${pct.toFixed(0)}% ${vsText}`,
     };
   } else if (diff < 0) {
     // Decrease: red for normal, green for reversed
     const isDown = !reverseColor;
     return {
       trend: isDown ? "down" : "up",
-      trendValue: `${pct.toFixed(0)}% ${vsLastWeek}`,
+      trendValue: `${pct.toFixed(0)}% ${vsText}`,
     };
   }
 
-  return { trend: "neutral", trendValue: `0% ${vsLastWeek}` };
+  return { trend: "neutral", trendValue: `0% ${vsText}` };
 };
 
 

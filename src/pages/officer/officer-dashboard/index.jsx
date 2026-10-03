@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Navigation } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
@@ -17,10 +17,21 @@ import { useGetDashboardData } from "./query";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { getEntityLabel } from "@/utils/helpers";
+import TimeRangeFilter from "@/components/TimeRangeFilter";
+
+const PERIOD_TO_FILTER = {
+  weekly: "week",
+  monthly: "month",
+  yearly: "year",
+};
 
 export default function OfficerDashboard() {
   const { t } = useLanguage();
   const { profile } = useAuth();
+  const [period, setPeriod] = useState("weekly");
+
+  const filter = PERIOD_TO_FILTER[period] || "week";
+
   const assignedServices =
     profile?.officerTagging?.services ||
     profile?.services ||
@@ -30,7 +41,7 @@ export default function OfficerDashboard() {
     data: analyticsData,
     isLoading: statsLoading,
     error: statsError,
-  } = useGetDashboardData();
+  } = useGetDashboardData({ filter });
 
   const {
     page: visitPage,
@@ -54,12 +65,26 @@ export default function OfficerDashboard() {
   return (
     <PortalLayout role="officer">
       <div className="p-3 lg:p-6 space-y-4 lg:space-y-6">
+        <div className="flex items-center justify-end">
+          <TimeRangeFilter
+            period={period}
+            setPeriod={setPeriod}
+            optionsView={{
+              daily: false,
+              monthly: true,
+              weekly: true,
+              yearly: true,
+            }}
+          />
+        </div>
         <WelcomeComponent analyticsData={analyticsData} />
 
         <StatsCards
           analyticsData={analyticsData}
           isLoading={statsLoading}
           error={statsError}
+          period={period}
+          
         />
 
         {/* Department / Services */}

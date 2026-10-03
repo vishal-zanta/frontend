@@ -76,6 +76,7 @@ export default function TopBar({
   const notifRef = useRef(null);
   const profileRef = useRef(null);
   const switcherRef = useRef(null);
+  const isCRMRef = useRef(isCRM ? true : false );
 
   const notifications = STAFF_NOTIFICATIONS;
 
@@ -159,8 +160,8 @@ export default function TopBar({
 
 
       setProfileData(null);
+      navigate(isCRMRef.current ? "/?role=cce" :  "/");
       qc.removeQueries();
-      navigate("/");
     },
     onError: (err) => {
       console.error("Logout API failed:", err);
@@ -174,12 +175,14 @@ export default function TopBar({
       //     localStorage.removeItem("off-lang");
       // localStorage.removeItem("cce-lang");
       setProfileData(null);
+      navigate(isCRMRef.current ? "/?role=cce" :  "/");
       qc.removeQueries();
-      navigate("/");
+
     },
   });
 
   const handleLogout = () => {
+    isCRMRef.current = isCRM
     setProfileData(null);
     logoutMutation.mutate();
   };

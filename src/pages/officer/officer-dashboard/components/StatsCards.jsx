@@ -19,6 +19,7 @@ export default function StatsCards({
   analyticsData,
   isLoading,
   error,
+  period = "weekly"
 }) {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -45,18 +46,21 @@ export default function StatsCards({
     previous.totalAssigned,
     false,
     t,
+    period
   );
   const pendingTrend = getTrendProps(
     current.pending,
     previous.pending,
     false,
     t,
+    period
   );
   const resolvedTrend = getTrendProps(
     current.resolved,
     previous.resolved,
     false,
     t,
+    period
   );
   const previousSlaBreached =
     previous.slaBreachIn48Hours ??
@@ -64,7 +68,7 @@ export default function StatsCards({
     previous.slaBreachedIn48Hours ??
     previous.slaBreached ??
     0;
-  const slaTrend = getTrendProps(slaBreached, previousSlaBreached, true, t);
+  const slaTrend = getTrendProps(slaBreached, previousSlaBreached, true, t, period);
 
   return (
     <LoaderErrWrapper isLoading={isLoading} error={error}>
@@ -114,7 +118,7 @@ export default function StatsCards({
         />
         <StatCard
           icon={Percent}
-          label={t("SLA %", "एसएलए %")}
+          label={t("Within SLA %", "एस.एल.ए. प्रतिशत (%)")}
           value={slaPercentage}
           color="emerald"
         />
