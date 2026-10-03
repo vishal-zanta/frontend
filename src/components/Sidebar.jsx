@@ -22,6 +22,7 @@ import {
   ClipboardList,
   MessageSquare,
   Coffee,
+  UserCheck,
 } from "lucide-react";
 import { PORTAL_META } from "@/lib/biharData";
 import {
@@ -212,6 +213,13 @@ export const sidebarSections = [
         path: "/crm/history",
         icon: History,
         permissions: PERMISSIONS.CALL_HISTORY_LOG,
+      },
+      {
+        label: "Track Agent",
+        labelHindi: "एजेंट ट्रैक करें",
+        path: "/crm/track-agent",
+        icon: UserCheck,
+        permissions: PERMISSIONS.TRACK_AGENT,
       },
       {
         label: "Shift Management",

@@ -15,6 +15,8 @@ import TimeRangeFilter from "@/components/TimeRangeFilter";
 import { MAX_LIMIT } from "@/utils/constants";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useGetUsers } from "@/pages/admin/user-management/hooks";
+import BlockWiseSection from "./components/BlockWiseSection.jsx";
+import FieldVisitChartSection from "./components/FieldVisitChartSection.jsx";
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
@@ -138,6 +140,7 @@ export default function AdminDashboard() {
           <MapAndDistrictSection
             districtData={dashboardData?.charts?.byDistrict}
           />
+          <BlockWiseSection/>
 
           {/* Channel Modes & Seasonal Complaints */}
           <ModesAndSocialSection
@@ -148,6 +151,8 @@ export default function AdminDashboard() {
           {/* Grievance Nature & Location Distribution Section */}
           <NatureAndLocationSection />
         </LoaderErrWrapper>
+
+        {/* <FieldVisitChartSection/> */}
 
         {/* Recent Complaints Table */}
         <RecentComplaintsSection />

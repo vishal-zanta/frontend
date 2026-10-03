@@ -66,7 +66,7 @@ export const useRaiseComplaintData = (lang) => {
     label: v.title,
     value: v?._id,
   }));
-  
+
   return {
     departmentOptions,
     departmentsLoading,
@@ -304,6 +304,7 @@ export const useClearAddressFields = ({
   control,
   prefix,
   setValue,
+  enabled= true
 }) => {
   const isUrban = useWatch({
     control,
@@ -336,12 +337,16 @@ export const useClearAddressFields = ({
   const prevPanchayatRef = useRef(panchayat);
   const prevUrbanPanchayatRef = useRef(urbanPanchayat);
 
+  // console.log({ prevIsUrbanRef: prevIsUrbanRef.current, isUrban: isUrban, prevDistrictRef: prevDistrictRef.current, district: district, prevBlockRef: prevBlockRef.current, block: block, prevPanchayatRef: prevPanchayatRef.current, panchayat: panchayat, prevUrbanPanchayatRef: prevUrbanPanchayatRef.current, urbanPanchayat: urbanPanchayat });
+
   // When isUrban changes, clear corresponding fields
   useEffect(() => {
+    if(!enabled) return;
     if (
       prevIsUrbanRef.current !== undefined &&
       prevIsUrbanRef.current !== isUrban
     ) {
+      // console.log("IS Urban changed");
       if (isUrban) {
         setValue(`${prefix}.panchayat`, "");
         setValue(`${prefix}.village`, "");
@@ -351,14 +356,18 @@ export const useClearAddressFields = ({
       }
     }
     prevIsUrbanRef.current = isUrban;
-  }, [isUrban, prefix, setValue]);
+  }, [isUrban, prefix, setValue, enabled]);
 
   // When district changes, clear block, panchayat, thana, village, urbanPanchayat, and ward
   useEffect(() => {
+    if(!enabled) return;
+
     if (
-      prevDistrictRef.current !== undefined &&
+      (prevDistrictRef.current !== undefined) &&
       prevDistrictRef.current !== district
     ) {
+      // console.log("District changed", prevDistrictRef.current, district);
+
       setValue(`${prefix}.block`, "");
       setValue(`${prefix}.panchayat`, "");
       setValue(`${prefix}.thana`, "");
@@ -367,50 +376,65 @@ export const useClearAddressFields = ({
       setValue(`${prefix}.ward`, "");
     }
     prevDistrictRef.current = district;
-  }, [district, prefix, setValue]);
+  }, [district, prefix, setValue, enabled]);
 
   // When block changes, clear panchayat and village
   useEffect(() => {
+    if(!enabled) return;
+
     if (
+
       prevBlockRef.current !== undefined &&
       prevBlockRef.current !== block
     ) {
+      // console.log("Block changed");
+
       setValue(`${prefix}.panchayat`, "");
       setValue(`${prefix}.village`, "");
     }
     prevBlockRef.current = block;
-  }, [block, prefix, setValue]);
+  }, [block, prefix, setValue, enabled]);
 
   // When panchayat changes, clear village
   useEffect(() => {
+    if(!enabled) return;
+
     if (
       prevPanchayatRef.current !== undefined &&
       prevPanchayatRef.current !== panchayat
     ) {
+      // console.log("Panchayt changed");
+
       setValue(`${prefix}.village`, "");
     }
     prevPanchayatRef.current = panchayat;
-  }, [panchayat, prefix, setValue]);
+  }, [panchayat, prefix, setValue , enabled]);
 
   // When urbanPanchayat changes, clear ward
   useEffect(() => {
+    if(!enabled) return;
+
     if (
       prevUrbanPanchayatRef.current !== undefined &&
       prevUrbanPanchayatRef.current !== urbanPanchayat
     ) {
+      // console.log("UrbanPanchayt changed");
+
       setValue(`${prefix}.ward`, "");
     }
     prevUrbanPanchayatRef.current = urbanPanchayat;
-  }, [urbanPanchayat, prefix, setValue]);
+  }, [urbanPanchayat, prefix, setValue, enabled]);
 };
 
 export const useClearLocationFields = ({
   control,
   setValue,
+  enabled = true
 }) => {
   return useClearAddressFields({
     control,
     prefix: "location",
     setValue,
+    enabled
   });
 };

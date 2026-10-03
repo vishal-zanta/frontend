@@ -29,6 +29,7 @@ import CallHistoryLog from "./pages/crm/call-history-log";
 import TrackCCMComplaint from "./pages/crm/track-ccm-complaint";
 import Inmail from "./pages/crm/inmail";
 import MyBreaks from "./pages/crm/my-breaks";
+import TrackAgent from "./pages/crm/track-agent";
 import AdminDashboard from "./pages/admin/dashboard";
 import OperationalDashboards from "./pages/admin/operational-dashboard";
 import AIReports from "./pages/admin/AIReports";
@@ -264,6 +265,14 @@ const router = createBrowserRouter([
                     rolePermission={{ include: [...CCE_ONLY_ROLES] }}
                   >
                     <MyBreaks />
+                  </PermissionChecker>
+                ),
+              },
+              {
+                path: "track-agent",
+                element: (
+                  <PermissionChecker permission={PERMISSIONS.TRACK_AGENT}>
+                    <TrackAgent />
                   </PermissionChecker>
                 ),
               },

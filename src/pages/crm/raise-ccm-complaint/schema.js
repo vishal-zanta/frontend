@@ -298,6 +298,8 @@ export const grievanceSchema = z.object({
     feedbackConsent: z.boolean().optional(),
   }),
   isCrpEqualPerAdd: z.boolean().optional(),
+  isLocationEqualPerAdd: z.boolean().optional(),
+
   address: correspondenceAddressSchema,
   location: addressSchema,
 });
@@ -345,6 +347,7 @@ export const defaultValues = {
     feedbackConsent: false,
   },
   isCrpEqualPerAdd: false,
+  isLocationEqualPerAdd: false,
   address: {
     isUrban: false,
     state: "Bihar",

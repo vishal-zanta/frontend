@@ -369,7 +369,8 @@ export const apiPermissionOptions = [
 
   { label: "Call statistics", value: "CALL_STATS" },
   { label: "Department Management", value: "DEPARTMENT_MANAGEMENT" },
-  { label: "File Size Management", value: "FILE_MANAGEMENT" }
+  { label: "File Size Management", value: "FILE_MANAGEMENT" },
+  { label : "Track Agent", value : "TRACK_AGENT"},
   // {label : "Skill Management",value : "SKILL_SET_MANAGEMENT"}
 ];
 
@@ -446,5 +447,6 @@ export const PERMISSIONS = {
   CALL_STATS: ["CALL_STATS"],
   DEPARTMENT_MANAGEMENT: ["DEPARTMENT_MANAGEMENT"],
   FILE_MANAGEMENT: ["FILE_MANAGEMENT"],
+  TRACK_AGENT: ["TRACK_AGENT"],
   // SKILL_SET_MANAGEMENT: ["SKILL_SET_MANAGEMENT"]
 };
