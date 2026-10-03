@@ -18,6 +18,8 @@ export default function HeaderBranding() {
         {/* Left Branding Group */}
         <a
           href={CITIZEN_URL || "/"}
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex flex-col sm:flex-row items-center gap-3.5 text-center sm:text-left group"
         >
           {/* Bihar Govt Official Logo */}
