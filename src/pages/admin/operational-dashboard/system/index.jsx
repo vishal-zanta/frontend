@@ -4,6 +4,7 @@ import {
   Cpu,
   HardDrive,
   Database,
+  Globe,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
@@ -11,88 +12,7 @@ import { SYSTEM_HEALTH } from "@/lib/biharData";
 import { useGetSystemHealth } from "../hooks";
 import { useLanguage } from "@/context/LanguageContext";
 
-const API_ENDPOINTS = [
-  {
-    name: "Complaint Service API",
-    endpoint: "/api/v1/complaints",
-    status: "Operational",
-    responseTime: "142ms",
-    uptime: "99.97%",
-    lastError: "None",
-  },
-  {
-    name: "User Auth Service API",
-    endpoint: "/api/v1/auth",
-    status: "Operational",
-    responseTime: "89ms",
-    uptime: "99.99%",
-    lastError: "None",
-  },
-  {
-    name: "SMS Gateway API",
-    endpoint: "/api/v1/sms/send",
-    status: "Operational",
-    responseTime: "320ms",
-    uptime: "99.85%",
-    lastError: "03 Jul, 14:22",
-  },
-  {
-    name: "Email Service API",
-    endpoint: "/api/v1/email/send",
-    status: "Degraded",
-    responseTime: "2,140ms",
-    uptime: "98.20%",
-    lastError: "06 Jul, 09:15",
-  },
-  {
-    name: "IVR Service API",
-    endpoint: "/api/v1/ivr/call",
-    status: "Operational",
-    responseTime: "210ms",
-    uptime: "99.92%",
-    lastError: "None",
-  },
-  {
-    name: "File Upload API",
-    endpoint: "/api/v1/upload",
-    status: "Operational",
-    responseTime: "450ms",
-    uptime: "99.80%",
-    lastError: "05 Jul, 18:30",
-  },
-  {
-    name: "Geo-Tag Service API",
-    endpoint: "/api/v1/geo/tag",
-    status: "Down",
-    responseTime: "-",
-    uptime: "97.50%",
-    lastError: "07 Jul, 08:42 (Ongoing)",
-  },
-  {
-    name: "Notification Service API",
-    endpoint: "/api/v1/notify",
-    status: "Operational",
-    responseTime: "180ms",
-    uptime: "99.90%",
-    lastError: "None",
-  },
-  {
-    name: "Analytics API",
-    endpoint: "/api/v1/analytics",
-    status: "Degraded",
-    responseTime: "1,820ms",
-    uptime: "98.50%",
-    lastError: "06 Jul, 22:10",
-  },
-  {
-    name: "AI Chatbot API",
-    endpoint: "/api/v1/ai/chat",
-    status: "Operational",
-    responseTime: "1,200ms",
-    uptime: "99.70%",
-    lastError: "04 Jul, 11:05",
-  },
-];
+
 
 const statusBadge = (status) => {
   if (status === "Operational")
@@ -305,7 +225,83 @@ export default function SystemTab() {
           )} */}
         </div>
         <LoaderErrWrapper isLoading={isLoading} error={error}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+            {/* Portal Uptime Card */}
+            <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
+                    <Globe className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-muted-foreground">
+                      {t("Portal Uptime", "पोर्टल अपटाइम")}
+                    </h4>
+                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 bg-emerald-500/10 px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      {t("Operational", "सक्रिय")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-3xl font-extrabold text-foreground tracking-tight">
+                    {systemStats?.portalUptime ?? "100%"}
+                  </span>
+                  {/* <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                    ● {t("Operational", "सक्रिय")}
+                  </span> */}
+                </div>
+                <div className="w-full bg-muted rounded-full h-2">
+                  <div
+                    className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: "100%",
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Server Uptime Card */}
+            <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-lg">
+                    <Server className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-muted-foreground">
+                      {t("Server Uptime", "सर्वर अपटाइम")}
+                    </h4>
+                    <p className="text-[10px] text-sky-600 dark:text-sky-400 font-mono mt-0.5 bg-sky-500/10 px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
+                      {t("Operational", "सक्रिय")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-3xl font-extrabold text-foreground tracking-tight">
+                    {systemStats?.serverUptime ?? "100%"}
+                  </span>
+                  {/* <span className="text-xs text-sky-600 dark:text-sky-400 font-medium flex items-center gap-1">
+                    ● {t("Operational", "सक्रिय")}
+                  </span> */}
+                </div>
+                <div className="w-full bg-muted rounded-full h-2">
+                  <div
+                    className="bg-sky-500 h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: "100%",
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+
             {/* CPU Card */}
             <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
               <div className="flex justify-between items-start">

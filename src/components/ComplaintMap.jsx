@@ -284,7 +284,7 @@ export default function ComplaintMap({
             : "#0284c7"
           : isDark
             ? "#1e293b"
-            : "#f8fafc",
+            : "#f1f5f9",
         fillOpacity: isHovered ? 0.25 : 0.06,
         color: isHovered
           ? isDark

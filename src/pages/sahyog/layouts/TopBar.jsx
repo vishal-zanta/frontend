@@ -36,7 +36,7 @@ export default function TopBar() {
       </div>
 
       {/* Main TopBar */}
-      <div className="bg-[#f8fafc] text-slate-700 text-xs py-2 px-4 sm:px-8 border-b border-slate-200">
+      <div className="bg-[#f1f5f9] text-slate-700 text-xs py-2 px-4 sm:px-8 border-b border-slate-200">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           {/* Left Side: Helpline Details */}
           <div className="flex flex-wrap items-center gap-3 font-medium">
