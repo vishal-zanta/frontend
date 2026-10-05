@@ -14,6 +14,7 @@ export default function FieldVisitTable({
   isHideAction = false,
   onVisitClick,
   onComplaintClick,
+  isShowAssignedOfficer = false
 }) {
   const { t, lang } = useLanguage();
 
@@ -25,12 +26,19 @@ export default function FieldVisitTable({
             <th className="px-4 py-3 font-medium">
               {t("Visit ID", "विजिट आईडी")}
             </th>
+          
             <th className="px-4 py-3 font-medium">
               {t("Complaint ID", "शिकायत आईडी")}
             </th>
+            
             <th className="px-4 py-3 font-medium text-nowrap">
               {t("Date of Complaint", "शिकायत की तारीख")}
             </th>
+              {isShowAssignedOfficer && (
+              <th className="px-4 py-3 font-medium text-nowrap">
+                {t("Assigned Officer", "नियुक्त अधिकारी")}
+              </th>
+            )}
             <th className="px-4 py-3 font-medium text-nowrap">
               {t("Scheduled Visit", "निर्धारित विजिट")}
             </th>
@@ -69,6 +77,7 @@ export default function FieldVisitTable({
                     <FieldVisitId id={fv.visitId || fv._id || "N/A"} visit={fv} />
                   )}
                 </td>
+               
                 <td className="px-4 py-3 text-nowrap">
                   {fv.grievance?._id ? (
                     onComplaintClick ? (
@@ -98,6 +107,17 @@ export default function FieldVisitTable({
                     },
                   )}
                 </td>
+                 {isShowAssignedOfficer && (
+                  <td className="px-4 py-3 text-nowrap text-xs">
+                    {fv?.assignedOfficer?.name
+                      ? `${fv.assignedOfficer.name}${
+                          fv.assignedOfficer.userCode
+                            ? ` (${fv.assignedOfficer.userCode})`
+                            : ""
+                        }`
+                      : "N/A"}
+                  </td>
+                )}
                 <td className="px-4 py-3 text-nowrap">
                   {fv?.schedule ? (
                     <>
@@ -113,7 +133,7 @@ export default function FieldVisitTable({
                 </td>
                 <td className="px-4 py-3 text-nowrap text-muted-foreground text-xs">
                   {getEntityLabel(
-                    fv.serviceDetails || fv.grievance?.classification?.service,
+                    fv.serviceDetails || fv.grievance?.classification?.service || fv.grievance?.service,
                     t,
                   ) || "N/A"}
                 </td>

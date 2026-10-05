@@ -77,6 +77,9 @@ export default function AdminDashboard() {
 
   const { data, error, isLoading } = useGetDashboardData(params);
   const dashboardData = data?.data?.data;
+
+  console.log({period, dateRange});
+
   // console.log({ dashboardData });
 
   return (
@@ -140,7 +143,7 @@ export default function AdminDashboard() {
           <MapAndDistrictSection
             districtData={dashboardData?.charts?.byDistrict}
           />
-          <BlockWiseSection/>
+          <BlockWiseSection blockData={dashboardData?.charts?.byBlock}/>
 
           {/* Channel Modes & Seasonal Complaints */}
           <ModesAndSocialSection
@@ -152,10 +155,10 @@ export default function AdminDashboard() {
           <NatureAndLocationSection />
         </LoaderErrWrapper>
 
-        {/* <FieldVisitChartSection/> */}
 
         {/* Recent Complaints Table */}
         <RecentComplaintsSection />
+        <FieldVisitChartSection period={period} dateRange={dateRange}/>
 
         {/* Quick Links Menu */}
         <QuickLinksSection />

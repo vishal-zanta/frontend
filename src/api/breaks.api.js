@@ -16,6 +16,6 @@ export const getUserBreaks = async (id, params = {}) => {
   return instance.get(`/breaks/user/${id}`, { params });
 };
 
-export const postPulse = async () => {
-  return instance.post("/activity/pulse");
+export const postPulse = async (body) => {
+  return instance.post("/activity/pulse", body);
 };

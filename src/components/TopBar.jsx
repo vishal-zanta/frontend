@@ -49,26 +49,19 @@ const STAFF_NOTIFICATIONS = [
   },
 ];
 
-export default function TopBar({
- 
- 
-
-  onToggleSidebar,
-  sidebarOpen,
-}) {
+ function TopBar({ onToggleSidebar, sidebarOpen }) {
   const {
     profile: profileData,
     setProfile: setProfileData,
     profiledata: profileMetaData,
   } = useAuth();
 
- 
   const { t } = useLanguage();
   const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const isSuperAdmin = profileMetaData?.isAdmin;
   const isCRM = profileMetaData?.isCRM;
-  const isCCE = profileMetaData?.isCCE
+  const isCCE = profileMetaData?.isCCE;
   const isOfficer = profileMetaData?.isOfficer;
   const [showNotifs, setShowNotifs] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -76,7 +69,7 @@ export default function TopBar({
   const notifRef = useRef(null);
   const profileRef = useRef(null);
   const switcherRef = useRef(null);
-  const isCRMRef = useRef(isCRM ? true : false );
+  const isCRMRef = useRef(isCRM ? true : false);
 
   const notifications = STAFF_NOTIFICATIONS;
 
@@ -105,16 +98,34 @@ export default function TopBar({
 
   useEffect(() => {
     let timer = null;
-    if (breakStatus && breakStatus.isBreak === false) {
+    // if (breakStatus && breakStatus.isBreak === false) {
       if (document.visibilityState === "visible") {
-        pulseMutation.mutate();
+        pulseMutation.mutate({
+          isActiveOnScreen: true,
+          screenState: "ACTIVE",
+        });
+      }else{
+        pulseMutation.mutate({
+          isActiveOnScreen: false,
+          screenState: "BACKGROUND",
+        });
       }
       timer = setInterval(() => {
+        // console.log({visible : document.visibilityState});
         if (document.visibilityState === "visible") {
-          pulseMutation.mutate();
+          pulseMutation.mutate({
+            isActiveOnScreen: true,
+            screenState: "ACTIVE",
+          });
+        }
+        else{
+          pulseMutation.mutate({
+            isActiveOnScreen: false,
+            screenState: "BACKGROUND",
+          });
         }
       }, 50000);
-    }
+    // }
     return () => clearInterval(timer);
   }, [breakStatus?.isBreak]);
 
@@ -127,11 +138,11 @@ export default function TopBar({
   const settingsPath = profileMetaData?.isAdmin
     ? "/admin/settings"
     : profileMetaData?.isCRM
-      // ? "/crm/settings"
-      ? null
+      ? // ? "/crm/settings"
+        null
       : null;
 
-      // : "/officer/settings";
+  // : "/officer/settings";
 
   useEffect(() => {
     const handler = (e) => {
@@ -158,9 +169,8 @@ export default function TopBar({
       // localStorage.removeItem("off-lang");
       // localStorage.removeItem("cce-lang");
 
-
       setProfileData(null);
-      navigate(isCRMRef.current ? "/?role=cce" :  "/");
+      navigate(isCRMRef.current ? "/?role=cce" : "/");
       qc.removeQueries();
     },
     onError: (err) => {
@@ -175,18 +185,16 @@ export default function TopBar({
       //     localStorage.removeItem("off-lang");
       // localStorage.removeItem("cce-lang");
       setProfileData(null);
-      navigate(isCRMRef.current ? "/?role=cce" :  "/");
+      navigate(isCRMRef.current ? "/?role=cce" : "/");
       qc.removeQueries();
-
     },
   });
 
   const handleLogout = () => {
-    isCRMRef.current = isCRM
+    isCRMRef.current = isCRM;
     setProfileData(null);
     logoutMutation.mutate();
   };
-
 
   const notifIcon = (type) => {
     if (type === "success")
@@ -195,7 +203,6 @@ export default function TopBar({
       return <AlertCircle className="w-4 h-4 text-amber-500" />;
     return <Info className="w-4 h-4 text-blue-500" />;
   };
- 
 
   return (
     <header className="h-14 bg-background border-b border-border flex items-center justify-between px-4 sticky top-0 z-30 shadow-sm">
@@ -215,14 +222,19 @@ export default function TopBar({
           <div className="text-[11px] text-muted-foreground font-medium hidden sm:block">
             {portalLabel}
           </div>
-          <div className={clsx("text-xs lg:text-sm font-bold text-foreground  hidden sm:block lg:hidden xl:block", t("-mt-0.5", "mt-0"))}>
+          <div
+            className={clsx(
+              "text-xs lg:text-sm font-bold text-foreground  hidden sm:block lg:hidden xl:block",
+              t("-mt-0.5", "mt-0"),
+            )}
+          >
             {t(PORTAL_META.nameEasy, "बिहार ई-शिकायत")}
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-      <SearchComplaints/>
+        <SearchComplaints />
 
         {/* Profile switcher for officer and CRM */}
         {/* {profiles && (
@@ -268,23 +280,21 @@ export default function TopBar({
         )} */}
 
         {/* Language Selector */}
-      {  <LangSelectorSmall className="shrink-0" />}
+        {<LangSelectorSmall className="shrink-0" />}
 
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
           className="min-w-4 w-4 sm:min-w-4 sm:w-4 lg:w-5 lg:min-w-5 aspect-square flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground transition-colors"
-          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          title={
+            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+          }
         >
-          {theme === "dark" ? (
-            <Sun className="" />
-          ) : (
-            <Moon className="" />
-          )}
+          {theme === "dark" ? <Sun className="" /> : <Moon className="" />}
         </button>
 
-      <Notifications/>
-      <RoleSwitchPopover />
+        <Notifications />
+        <RoleSwitchPopover />
 
         {isCCE && (
           <button
@@ -298,7 +308,6 @@ export default function TopBar({
             {t("Start Break", "ब्रेक शुरू करें")}
           </button>
         )}
-
 
         {/* <Link
           to="/"
@@ -346,9 +355,7 @@ export default function TopBar({
                 onClick={() => setShowProfile(false)}
                 className="block px-4 py-3 border-b border-border hover:bg-muted/60 transition-colors"
               >
-                <div className="font-semibold text-sm">
-                  {profileData?.name}
-                </div>
+                <div className="font-semibold text-sm">{profileData?.name}</div>
                 <div className="text-xs text-muted-foreground">
                   {t(
                     profileData?.role?.designationEnglish ?? profileData?.role,
@@ -399,3 +406,5 @@ export default function TopBar({
     </header>
   );
 }
+
+export default React.memo(TopBar);

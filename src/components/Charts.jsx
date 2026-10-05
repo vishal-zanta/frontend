@@ -1,9 +1,28 @@
 import React from "react";
 import {
-  BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, ResponsiveContainer, RadarChart, PolarGrid,
-  PolarAngleAxis, PolarRadiusAxis, Radar, ScatterChart, Scatter, ZAxis,
-  Tooltip, Legend,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  ScatterChart,
+  Scatter,
+  ZAxis,
+  Tooltip,
+  Legend,
 } from "recharts";
 
 const tooltipStyle = {
@@ -37,7 +56,8 @@ export function BarChartCard({
   xAxisProps = {},
 }) {
   const calculatedMinWidth =
-    minWidth || (data?.length > 5 ? Math.max(data.length * minBarWidth, 320) : "100%");
+    minWidth ||
+    (data?.length > 5 ? Math.max(data.length * minBarWidth, 320) : "100%");
 
   return (
     <div className="w-full overflow-x-auto scrollbar-thin">
@@ -52,8 +72,15 @@ export function BarChartCard({
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={margin || { top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+          <BarChart
+            data={data}
+            margin={margin || { top: 10, right: 10, left: -15, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#e2e8f0"
+              vertical={false}
+            />
             <XAxis
               dataKey={xKey}
               tick={{ fontSize: xLabelFontSize }}
@@ -72,7 +99,9 @@ export function BarChartCard({
                 fill={b.color}
                 radius={[4, 4, 0, 0]}
                 maxBarSize={b.maxBarSize ?? maxBarSize}
-                {...(b.barSize || barSize ? { barSize: b.barSize || barSize } : {})}
+                {...(b.barSize || barSize
+                  ? { barSize: b.barSize || barSize }
+                  : {})}
               />
             ))}
           </BarChart>
@@ -92,7 +121,8 @@ export function StackedBarChartCard({
   minWidth,
 }) {
   const calculatedMinWidth =
-    minWidth || (data?.length > 5 ? Math.max(data.length * minBarWidth, 320) : "100%");
+    minWidth ||
+    (data?.length > 5 ? Math.max(data.length * minBarWidth, 320) : "100%");
 
   return (
     <div className="w-full overflow-x-auto scrollbar-thin">
@@ -107,9 +137,21 @@ export function StackedBarChartCard({
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-            <XAxis dataKey={xKey} tick={{ fontSize: 10 }} stroke="#94a3b8" interval={0} />
+          <BarChart
+            data={data}
+            margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#e2e8f0"
+              vertical={false}
+            />
+            <XAxis
+              dataKey={xKey}
+              tick={{ fontSize: 10 }}
+              stroke="#94a3b8"
+              interval={0}
+            />
             <YAxis tick={{ fontSize: 10 }} stroke="#94a3b8" />
             {legend && <Legend wrapperStyle={legendStyle} />}
             <Tooltip {...tooltipStyle} />
@@ -131,7 +173,15 @@ export function StackedBarChartCard({
   );
 }
 
-export function LineChartCard({ data = [], xKey, lines = [], height = 280, legend = true, minWidth }) {
+export function LineChartCard({
+  data = [],
+  xKey,
+  lines = [],
+  height = 280,
+  legend = true,
+  minWidth,
+  onLineClick = null,
+}) {
   const calculatedMinWidth =
     minWidth || (data?.length > 8 ? Math.max(data.length * 30, 320) : "100%");
 
@@ -148,8 +198,22 @@ export function LineChartCard({ data = [], xKey, lines = [], height = 280, legen
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+          <LineChart
+            data={data}
+            margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+            onClick={(state) => {
+              // console.log("chart click:", state);
+              // // state.activeLabel   -> x-axis value (e.g. "2026-10-01")
+              // // state.activePayload -> array of values at that x position
+              // console.log(state?.activePayload?.[0]?.payload); // full data row
+              onLineClick && onLineClick(state?.activePayload?.[0]?.payload)
+            }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#e2e8f0"
+              vertical={false}
+            />
             <XAxis dataKey={xKey} tick={{ fontSize: 10 }} stroke="#94a3b8" />
             <YAxis tick={{ fontSize: 10 }} stroke="#94a3b8" />
             {legend && <Legend wrapperStyle={legendStyle} />}
@@ -164,6 +228,7 @@ export function LineChartCard({ data = [], xKey, lines = [], height = 280, legen
                 strokeWidth={2}
                 dot={{ r: 3 }}
                 activeDot={{ r: 5 }}
+                // onClick={(entry, index) => onLineClick && onLineClick({entry, index})}
               />
             ))}
           </LineChart>
@@ -173,7 +238,14 @@ export function LineChartCard({ data = [], xKey, lines = [], height = 280, legen
   );
 }
 
-export function AreaChartCard({ data = [], xKey, areas = [], height = 280, legend = true, minWidth }) {
+export function AreaChartCard({
+  data = [],
+  xKey,
+  areas = [],
+  height = 280,
+  legend = true,
+  minWidth,
+}) {
   const calculatedMinWidth =
     minWidth || (data?.length > 8 ? Math.max(data.length * 30, 320) : "100%");
 
@@ -190,16 +262,30 @@ export function AreaChartCard({ data = [], xKey, areas = [], height = 280, legen
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+          <AreaChart
+            data={data}
+            margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+          >
             <defs>
               {areas.map((a) => (
-                <linearGradient key={a.key} id={`grad-${a.key}`} x1="0" y1="0" x2="0" y2="1">
+                <linearGradient
+                  key={a.key}
+                  id={`grad-${a.key}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
                   <stop offset="5%" stopColor={a.color} stopOpacity={0.3} />
                   <stop offset="95%" stopColor={a.color} stopOpacity={0.05} />
                 </linearGradient>
               ))}
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#e2e8f0"
+              vertical={false}
+            />
             <XAxis dataKey={xKey} tick={{ fontSize: 10 }} stroke="#94a3b8" />
             <YAxis tick={{ fontSize: 10 }} stroke="#94a3b8" />
             {legend && <Legend wrapperStyle={legendStyle} />}
@@ -222,7 +308,13 @@ export function AreaChartCard({ data = [], xKey, areas = [], height = 280, legen
   );
 }
 
-export function PieChartCard({ data = [], height = 280, innerRadius = 45, outerRadius = 80, legend = true }) {
+export function PieChartCard({
+  data = [],
+  height = 280,
+  innerRadius = 45,
+  outerRadius = 80,
+  legend = true,
+}) {
   return (
     <div className="w-full overflow-x-auto scrollbar-thin">
       <div style={{ width: "100%", minWidth: "260px", height }}>
@@ -251,14 +343,27 @@ export function PieChartCard({ data = [], height = 280, innerRadius = 45, outerR
   );
 }
 
-export function RadarChartCard({ data = [], xKey, series = [], height = 280, legend = true }) {
+export function RadarChartCard({
+  data = [],
+  xKey,
+  series = [],
+  height = 280,
+  legend = true,
+}) {
   return (
     <div className="w-full overflow-x-auto scrollbar-thin">
       <div style={{ width: "100%", minWidth: "280px", height }}>
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={data} margin={{ top: 10, right: 20, left: 20, bottom: 10 }}>
+          <RadarChart
+            data={data}
+            margin={{ top: 10, right: 20, left: 20, bottom: 10 }}
+          >
             <PolarGrid stroke="#e2e8f0" />
-            <PolarAngleAxis dataKey={xKey} tick={{ fontSize: 10 }} stroke="#64748b" />
+            <PolarAngleAxis
+              dataKey={xKey}
+              tick={{ fontSize: 10 }}
+              stroke="#64748b"
+            />
             <PolarRadiusAxis tick={{ fontSize: 9 }} stroke="#94a3b8" />
             {legend && <Legend wrapperStyle={legendStyle} />}
             <Tooltip {...tooltipStyle} />
@@ -280,7 +385,13 @@ export function RadarChartCard({ data = [], xKey, series = [], height = 280, leg
   );
 }
 
-export function ScatterChartCard({ data = [], height = 280, xLabel, yLabel, legend = true }) {
+export function ScatterChartCard({
+  data = [],
+  height = 280,
+  xLabel,
+  yLabel,
+  legend = true,
+}) {
   return (
     <div className="w-full overflow-x-auto scrollbar-thin">
       <div style={{ width: "100%", minWidth: "300px", height }}>
@@ -293,7 +404,12 @@ export function ScatterChartCard({ data = [], height = 280, xLabel, yLabel, lege
               name={xLabel}
               tick={{ fontSize: 10 }}
               stroke="#94a3b8"
-              label={{ value: xLabel, position: "bottom", fontSize: 11, fill: "#64748b" }}
+              label={{
+                value: xLabel,
+                position: "bottom",
+                fontSize: 11,
+                fill: "#64748b",
+              }}
             />
             <YAxis
               type="number"
@@ -301,7 +417,13 @@ export function ScatterChartCard({ data = [], height = 280, xLabel, yLabel, lege
               name={yLabel}
               tick={{ fontSize: 10 }}
               stroke="#94a3b8"
-              label={{ value: yLabel, angle: -90, position: "insideLeft", fontSize: 11, fill: "#64748b" }}
+              label={{
+                value: yLabel,
+                angle: -90,
+                position: "insideLeft",
+                fontSize: 11,
+                fill: "#64748b",
+              }}
             />
             <ZAxis type="number" dataKey="z" range={[60, 400]} />
             {legend && <Legend wrapperStyle={legendStyle} />}

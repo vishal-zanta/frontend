@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [newPath, setNewPath] = useState(null);
   const nav = useNavigate();
   const timerRef = useRef();
-  console.log({ profile });
+  // console.log({ profile });
 
   const hasPermission = (permission) => {
     // console.log("CHECKING PERMISSION", {permission, profile})

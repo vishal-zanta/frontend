@@ -1,4 +1,5 @@
 import { sidebarSections } from "@/components/Sidebar";
+import moment from "moment";
 import { toast } from "sonner";
 
 export const getSuccessToast = (description) => {
@@ -315,4 +316,53 @@ export const deleteTokenFromStorage = () => {
   sessionStorage.removeItem("usertoken");
 
   // token === recentToken && localStorage.setItem("usertoken-latest");
+}
+
+
+
+export function getDateInfo({ period, dateRange } = {}) {
+  let start;
+  let end;
+
+  switch (period) {
+    case "custom": {
+      if (!dateRange?.from || !dateRange?.to) {
+        throw new Error("dateRange.from and dateRange.to are required for custom period");
+      }
+      // moment() accepts both Date objects and ISO strings
+      start = moment(dateRange.from).startOf("day");
+      end = moment(dateRange.to).endOf("day");
+      break;
+    }
+
+    case "daily":
+      start = moment().startOf("day");
+      end = moment().endOf("day");
+      break;
+
+    case "weekly":
+      // isoWeek = Monday to Sunday (use "week" for Sunday to Saturday)
+      start = moment().startOf("isoWeek");
+      end = moment().endOf("isoWeek");
+      break;
+
+    case "monthly":
+      start = moment().startOf("month");
+      end = moment().endOf("month");
+      break;
+
+    default:
+      throw new Error(`Unknown period: ${period}`);
+  }
+
+  return {
+    period,
+    startDate: start.toDate(),         // Date
+    endDate: end.toDate(),             // Date
+    fromDate: start.toISOString(),     // ISO (UTC) string
+    toDate: end.toISOString(),         // ISO (UTC) string
+    fromDateStr: start.format("YYYY-MM-DD"),
+    toDateStr: end.format("YYYY-MM-DD"),
+    totalDays: end.diff(start, "days") + 1,
+  };
 }

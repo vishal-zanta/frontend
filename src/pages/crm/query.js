@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCCEDashboardAnalytics } from "./api";
+import { getCCEDashboardAnalytics, getCCETracking } from "./api";
 
 export const useGetCCEDashboardData = (params = {}, options = {}) => {
   return useQuery({
@@ -8,3 +8,13 @@ export const useGetCCEDashboardData = (params = {}, options = {}) => {
     ...options,
   });
 };
+
+export const useGetCCETracking = (params = {}, options = {}) => {
+  return useQuery({
+    queryKey: ["cce-tracking", params],
+    queryFn: () => getCCETracking(params),
+   refetchInterval: 10 *1000,
+    ...options,
+  });
+};
+

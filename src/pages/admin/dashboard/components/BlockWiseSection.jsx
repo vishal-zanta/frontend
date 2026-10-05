@@ -2,25 +2,31 @@ import React from "react";
 import { ChartCard } from "@/components/ChartCard";
 import { BarChartCard } from "@/components/Charts";
 import { useLanguage } from "@/context/LanguageContext";
+import { getEntityLabel } from "@/utils/helpers";
 
 const DUMMY_BLOCKS_DATA = [
-  { block: "Patna Sadar", complaints: 1420 },
-  { block: "Danapur", complaints: 1180 },
-  { block: "Phulwari Sharif", complaints: 960 },
-  { block: "Musahri", complaints: 890 },
-  { block: "Barauni", complaints: 820 },
-  { block: "Gaya Sadar", complaints: 790 },
-  { block: "Bodhgaya", complaints: 740 },
-  { block: "Bihar Sharif", complaints: 710 },
-  { block: "Hajipur", complaints: 680 },
-  { block: "Bihta", complaints: 640 },
-  { block: "Kanti", complaints: 590 },
-  { block: "Jagdishpur", complaints: 550 },
+  { block: "Patna Sadar", count: 1420 },
+  { block: "Danapur", count: 1180 },
+  { block: "Phulwari Sharif", count: 960 },
+  { block: "Musahri", count: 890 },
+  { block: "Barauni", count: 820 },
+  { block: "Gaya Sadar", count: 790 },
+  { block: "Bodhgaya", count: 740 },
+  { block: "Bihar Sharif", count: 710 },
+  { block: "Hajipur", count: 680 },
+  { block: "Bihta", count: 640 },
+  { block: "Kanti", count: 590 },
+  { block: "Jagdishpur", count: 550 },
 ];
 
 export default function BlockWiseSection({ blockData }) {
   const { t } = useLanguage();
-  const chartData = blockData && blockData.length > 0 ? blockData : DUMMY_BLOCKS_DATA;
+  const chartData = (blockData || []).map((block)=> {
+    return {
+      block: getEntityLabel(block, t),
+      count:block?.count
+    }
+  })
 
   return (
     <ChartCard
@@ -35,7 +41,7 @@ export default function BlockWiseSection({ blockData }) {
         xKey="block"
         bars={[
           {
-            key: "complaints",
+            key: "count",
             label: t("Number of Complaints", "शिकायतों की संख्या"),
             color: "#1d4ed8",
           },
