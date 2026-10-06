@@ -11,6 +11,7 @@ const MyTable = ({
   customTbody: CustomTbody = null,
   customTbodyProps = {},
   emptyText = "No data available",
+  onRowClick= null
 }) => {
   const TBody = CustomTbody || "tbody";
 
@@ -38,7 +39,10 @@ const MyTable = ({
             ) : (
               tableBody.map((tb, bIdex) => {
                 return (
-                  <tr key={bIdex} className="hover:bg-muted/30">
+                  <tr key={bIdex} className={clsx("hover:bg-muted/30", onRowClick && "cursor-pointer")} onClick={(e)=> {
+                    e.stopPropagation();
+                    onRowClick && onRowClick(bIdex);
+                  }}>
                     {tableHeaders.map((h, hIdex) => {
                       const currCell = tb[h.id];
                       return (

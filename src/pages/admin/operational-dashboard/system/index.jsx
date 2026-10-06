@@ -1,18 +1,13 @@
 import React from "react";
-import {
-  Server,
-  Cpu,
-  HardDrive,
-  Database,
-  Globe,
-} from "lucide-react";
+import { Server, Cpu, HardDrive, Database, Globe, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import LoaderErrWrapper from "@/components/LoaderErrWrapper";
 import { SYSTEM_HEALTH } from "@/lib/biharData";
-import { useGetSystemHealth } from "../hooks";
+import { useGetMonitoringChecks, useGetSystemHealth } from "../hooks";
 import { useLanguage } from "@/context/LanguageContext";
-
-
+import MonitoringStatus from "./components/MonitoringStatus";
+import { formatUnderscoreText } from "@/utils/helpers";
+import moment from "moment";
 
 const statusBadge = (status) => {
   if (status === "Operational")
@@ -26,12 +21,18 @@ const statusBadge = (status) => {
     );
   if (status === "Degraded")
     return (
-      <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400">
+      <Badge
+        variant="outline"
+        className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400"
+      >
         {"● " + status}
       </Badge>
     );
   return (
-    <Badge variant="outline" className="text-xs bg-destructive/10 text-destructive">
+    <Badge
+      variant="outline"
+      className="text-xs bg-destructive/10 text-destructive"
+    >
       {"● " + status}
     </Badge>
   );
@@ -56,6 +57,35 @@ export default function SystemTab() {
     {},
     { refetchInterval: 60 * 1000 },
   );
+
+  const {
+    data: monitorApiData,
+    isLoading: monitorLoading,
+    error: monitorError,
+  } = useGetMonitoringChecks();
+  const monitorData = monitorApiData?.data?.data;
+
+  const formatTimeAgo = (timestamp) => {
+    if (!timestamp) return "";
+    const time = moment(timestamp);
+    if (!time.isValid()) return "";
+    const now = moment();
+    const diffInSeconds = now.diff(time, "seconds");
+
+    if (diffInSeconds < 60) {
+      return t("Just now", "अभी");
+    }
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
+    }
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours}h ago`;
+    }
+    return time.format("DD/MM");
+  };
+
   const systemStats = data?.data?.data;
   return (
     <div className="space-y-6">
@@ -216,7 +246,8 @@ export default function SystemTab() {
       <div className="bg-card rounded-xl border border-border p-5">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="font-bold text-foreground flex items-center gap-2">
-            <Server className="w-5 h-5 text-blue-500" /> {t("Infrastructure Details", "अवसंरचना विवरण")}
+            <Server className="w-5 h-5 text-blue-500" />{" "}
+            {t("Infrastructure Details", "अवसंरचना विवरण")}
           </h3>
           {/* {systemStats?.time && (
             <span className="text-xs text-muted-foreground font-mono">
@@ -235,29 +266,43 @@ export default function SystemTab() {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-muted-foreground">
-                      {t("Portal Uptime", "पोर्टल अपटाइम")}
+                      {t("Portal Monitoring", "पोर्टल अपटाइम")}
                     </h4>
-                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 bg-emerald-500/10 px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 bg-emerald-500/10 px-1.5 py-0.5 rounded inline-flex items-center gap-1 capitalize">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                      {t("Operational", "सक्रिय")}
+                      {t(
+                        formatUnderscoreText(monitorData?.overallStatus),
+                        formatUnderscoreText(monitorData?.overallStatus),
+                      )}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="mt-4 space-y-2">
-                <div className="flex items-baseline justify-between">
+                <div className="flex items-baseline justify-between gap-2">
                   <span className="text-3xl font-extrabold text-foreground tracking-tight">
-                    {systemStats?.portalUptime ?? "100%"}
+                    {Math.round(
+                      ((monitorData?.upTargets || 0) /
+                        (monitorData?.totalTargets || 1)) *
+                        100,
+                    )}
+                    %
                   </span>
-                  {/* <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
-                    ● {t("Operational", "सक्रिय")}
-                  </span> */}
+                  {monitorData?.checkedAt && (
+                    <span
+                      title={`${t("Last checked", "अंतिम जांच")}: ${moment(monitorData.checkedAt).format("DD MMM YYYY, hh:mm A")}`}
+                      className="text-xs text-muted-foreground font-medium flex items-center gap-1 shrink-0"
+                    >
+                      <Clock className="w-3.5 h-3.5 text-muted-foreground/70" />
+                      <span>{formatTimeAgo(monitorData.checkedAt)}</span>
+                    </span>
+                  )}
                 </div>
                 <div className="w-full bg-muted rounded-full h-2">
                   <div
                     className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
                     style={{
-                      width: "100%",
+                      width: `${(monitorData?.upTargets || 0) / (monitorData?.totalTargets || 1) * 100}%`,
                     }}
                   ></div>
                 </div>
@@ -265,42 +310,7 @@ export default function SystemTab() {
             </div>
 
             {/* Server Uptime Card */}
-            <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-lg">
-                    <Server className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-muted-foreground">
-                      {t("Server Uptime", "सर्वर अपटाइम")}
-                    </h4>
-                    <p className="text-[10px] text-sky-600 dark:text-sky-400 font-mono mt-0.5 bg-sky-500/10 px-1.5 py-0.5 rounded inline-flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
-                      {t("Operational", "सक्रिय")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-3xl font-extrabold text-foreground tracking-tight">
-                    {systemStats?.serverUptime ?? "100%"}
-                  </span>
-                  {/* <span className="text-xs text-sky-600 dark:text-sky-400 font-medium flex items-center gap-1">
-                    ● {t("Operational", "सक्रिय")}
-                  </span> */}
-                </div>
-                <div className="w-full bg-muted rounded-full h-2">
-                  <div
-                    className="bg-sky-500 h-2 rounded-full transition-all duration-500"
-                    style={{
-                      width: "100%",
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </div>
+       
 
             {/* CPU Card */}
             <div className="p-6 bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between h-full min-h-[160px] relative overflow-hidden">
@@ -315,7 +325,9 @@ export default function SystemTab() {
                     </h4>
                     <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
                       {systemStats?.cpu?.cores}{" "}
-                      {systemStats?.cpu?.cores === 1 ? t("Core", "कोर") : t("Cores", "कोर्स")}
+                      {systemStats?.cpu?.cores === 1
+                        ? t("Core", "कोर")
+                        : t("Cores", "कोर्स")}
                     </p>
                   </div>
                 </div>
@@ -349,7 +361,8 @@ export default function SystemTab() {
                       {t("Memory (RAM)", "मेमोरी (रैम)")}
                     </h4>
                     <p className="text-[10px] text-purple-600 dark:text-purple-400 font-mono mt-0.5 bg-purple-500/10 px-1.5 py-0.5 rounded">
-                      {systemStats?.ram?.free?.toFixed(2) ?? "0.00"} {t("GB free", "जीबी खाली")}
+                      {systemStats?.ram?.free?.toFixed(2) ?? "0.00"}{" "}
+                      {t("GB free", "जीबी खाली")}
                     </p>
                   </div>
                 </div>
@@ -387,7 +400,8 @@ export default function SystemTab() {
                       {t("Disk (Storage)", "डिस्क (स्टोरेज)")}
                     </h4>
                     <p className="text-[10px] text-amber-600 dark:text-amber-400 font-mono mt-0.5 bg-amber-500/10 px-1.5 py-0.5 rounded">
-                      {systemStats?.disk?.free?.toFixed(2) ?? "0.00"} {t("GB free", "जीबी खाली")}
+                      {systemStats?.disk?.free?.toFixed(2) ?? "0.00"}{" "}
+                      {t("GB free", "जीबी खाली")}
                     </p>
                   </div>
                 </div>
@@ -487,6 +501,9 @@ export default function SystemTab() {
           ))}
         </div>
       </div> */}
+      <LoaderErrWrapper isLoading={monitorLoading} error={monitorError}>
+        <MonitoringStatus services={monitorData?.services || []} />
+      </LoaderErrWrapper>
     </div>
   );
 }

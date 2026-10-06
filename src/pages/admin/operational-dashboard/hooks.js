@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getSystemHealth } from "./api";
+import { getSystemHealth, getMonitoringChecks } from "./api";
 import { QUERY_KEYS } from "@/utils/constants";
 
 export const useGetSystemHealth = (params = {}, options = {}) => {
@@ -11,6 +11,10 @@ export const useGetSystemHealth = (params = {}, options = {}) => {
   });
 };
 
-
-
-
+export const useGetMonitoringChecks = (params = {}, options = {}) => {
+  return useQuery({
+    queryKey: ["monitoring-checks", params],
+    queryFn: () => getMonitoringChecks(params),
+    ...options,
+  });
+};

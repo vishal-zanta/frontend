@@ -366,3 +366,10 @@ export function getDateInfo({ period, dateRange } = {}) {
     totalDays: end.diff(start, "days") + 1,
   };
 }
+
+export const formatUnderscoreText = (text = "") =>{
+  if(!text){
+    return "";
+  }
+  return text.replace(/_/g, " ");
+}
