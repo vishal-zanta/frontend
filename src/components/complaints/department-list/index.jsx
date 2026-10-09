@@ -6,7 +6,7 @@ import React, { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 
-const DepartmentList = ({ selectedDept, onSelect, autoSelect, selected, params={} }) => {
+const DepartmentList = ({ selectedDept, onSelect, autoSelect, selected, params={}, setTotalCount }) => {
   const { t } = useLanguage();
 
   const {
@@ -57,6 +57,14 @@ const DepartmentList = ({ selectedDept, onSelect, autoSelect, selected, params={
       }
     }
   }, [docs, selected, autoSelect, onSelect]);
+
+    useEffect(() => {
+      const totalCount = data?.pages?.[0]?.data?.data?.pagination?.total;
+      // console.log({ count: data?.pages });
+      if (!!totalCount) {
+        setTotalCount(totalCount);
+      }
+    }, [data?.pages?.[0]?.data?.data?.pagination, selectedDept]);
 
   return (
     <LoaderErrWrapper isLoading={isLoading} error={error}>

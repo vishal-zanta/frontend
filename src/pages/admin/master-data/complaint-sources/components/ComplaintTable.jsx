@@ -10,7 +10,12 @@ const ComplaintTable = ({ rawSources = [], setDialog }) => {
           className="flex items-center gap-3 p-3 border border-border rounded-lg hover:bg-muted/50 group bg-card transition-all duration-200 shadow-sm"
         >
           <Globe className="w-5 h-5 text-primary shrink-0" />
-          <span className="text-sm font-medium flex-1 truncate">{s.title}</span>
+          <div className="flex-1 min-w-0">
+            <span className="text-sm font-medium block truncate">{s.title}</span>
+            {s.titleHindi && (
+              <span className="text-xs text-muted-foreground block truncate">{s.titleHindi}</span>
+            )}
+          </div>
           <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => setDialog({ type: "edit", item: s })}

@@ -26,15 +26,18 @@ export default function ComplaintSourcesTab() {
   const [dialog, setDialog] = useState(null); // { type: "add"|"edit"|"delete", item? }
   const [formData, setFormData] = useState({
     title: "",
+    titleHindi: "",
   });
   const [errors, setErrors] = useState({
     title: "",
+    titleHindi: "",
   });
 
   useEffect(() => {
     if (dialog && (dialog.type === "add" || dialog.type === "edit")) {
       setFormData({
         title: dialog.item ? dialog.item.title || "" : "",
+        titleHindi: dialog.item ? dialog.item.titleHindi || "" : "",
       });
       setErrors({});
     }
@@ -86,13 +89,16 @@ export default function ComplaintSourcesTab() {
     if (!formData.title.trim()) {
       newErrors.title = "Source name is required";
     }
+    if (!formData.titleHindi.trim()) {
+      newErrors.titleHindi = "Source name (Hindi) is required";
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    setErrors({ title: "" });
+    setErrors({ title: "", titleHindi: "" });
 
     if (dialog.type === "add") {
       postMutation.mutate(formData);

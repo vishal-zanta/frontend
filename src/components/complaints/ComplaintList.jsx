@@ -32,6 +32,8 @@ export default function ComplaintList({
   // console.log({complaintId, search})
   const isChangedOnce = useRef(false);
   const [filters, setFilters] = useState({});
+  const [totalComplaintsCount, setTotalComplaintCount] = useState(0);
+
 
   const API_PARAMS = useMemo(
     () => ({
@@ -60,11 +62,14 @@ export default function ComplaintList({
         options: STATUS_ACTIONS.map((action) => ({
           label: t(
             action.badgeLabel || action.label,
-            action.badgeLabelHindi || action.labelHindi || action.badgeLabel || action.label,
+            action.badgeLabelHindi ||
+              action.labelHindi ||
+              action.badgeLabel ||
+              action.label,
           ),
           value: action.value,
         })),
-        isMultiple : true
+        isMultiple: true,
       },
       {
         label: t("Feedback", "प्रतिक्रिया"),
@@ -73,8 +78,7 @@ export default function ComplaintList({
           { label: t("Feedback Done", "प्रतिक्रिया समाप्त"), value: "true" },
           { label: t("Feedback Left", "प्रतिक्रिया शेष"), value: "false" },
         ],
-        isMultiple : true
-
+        isMultiple: true,
       },
       {
         label: t("Priority", "प्राथमिकता"),
@@ -82,19 +86,20 @@ export default function ComplaintList({
         options: PRIORITY_ACTIONS.map((action) => ({
           label: t(
             action.badgeLabel || action.label,
-            action.badgeLabelHindi || action.labelHindi || action.badgeLabel || action.label,
+            action.badgeLabelHindi ||
+              action.labelHindi ||
+              action.badgeLabel ||
+              action.label,
           ),
           value: action.value,
         })),
-        isMultiple : true
-
+        isMultiple: true,
       },
       {
         label: t("Mode of Complaint", "शिकायत का माध्यम"),
         filterKey: "channel",
         options: channelOptions,
-        isMultiple : true
-
+        isMultiple: true,
       },
     ],
     [t, channelOptions],
@@ -194,12 +199,20 @@ export default function ComplaintList({
   //   }
   // }, [searchParams.get("complaint")]);
 
+  useEffect(() => {
+    const totalCount = data?.pages?.[0]?.data?.pagination?.totalCount;
+    // console.log({ count: data?.pages });
+    if (totalComplaintsCount != totalCount  && dept == "cm-helpline") {
+      setTotalComplaintCount(totalCount); 
+    }
+  }, [data?.pages?.[0]?.data?.pagination, filters, dept]);
+
   return (
     <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
       <div className="px-4 py-3 border-b border-border ">
         <div className="flex items-center justify-between shrink-0 h-8">
           <h3 className="font-bold text-foreground text-sm">
-            {t("My Complaints", "मेरी शिकायतें")} ({complaints.length})
+            {t("Complaints", "शिकायतें")} ({totalComplaintsCount})
           </h3>
           {!isExternalDepartment && (
             <Filter
@@ -279,6 +292,7 @@ export default function ComplaintList({
             params={{
               search,
             }}
+            setTotalCount={setTotalComplaintCount}
           />
         ) : (
           <LoaderErrWrapper
