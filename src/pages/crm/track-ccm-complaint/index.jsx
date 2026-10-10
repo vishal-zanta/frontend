@@ -31,20 +31,24 @@ export default function TrackCCMComplaint() {
 
   const { data: analyticsData } = useGetComplaintAnalyticsSummary();
   const analytics = analyticsData?.data || {};
-  // console.log({selected});
+  // console.log({analytics});
 
   return (
     <PortalLayout role="crm" isHideOverflow={true}>
       <div className="p-3 lg:p-6 space-y-4 lg:space-y-6 relative">
         {/* Stats — desktop only */}
-       {(isMobile ? !selected : true) && <div className="block">
-          <StatsCards
-            totalAssigned={analytics.totalAssigned ?? 0}
-            pendingAction={analytics.pendingCount ?? 0}
-            resolved={analytics.resolvedCount ?? 0}
-            slaBreachRisk={analytics.escalatedCount ?? 0}
-          />
-        </div>}
+        {(isMobile ? !selected : true) && (
+          <div className="block">
+            <StatsCards
+              total={analytics.total ?? 0}
+              totalAssigned={analytics.totalAssigned ?? 0}
+              unassignedCount={analytics.unassignedCount ?? 0}
+              pendingCount={analytics.pendingCount ?? 0}
+              resolvedCount={analytics.resolvedCount ?? 0}
+              escalatedCount={analytics.escalatedCount ?? 0}
+            />
+          </div>
+        )}
 
         {/* Desktop layout */}
         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0 items-start">

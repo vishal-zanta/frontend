@@ -14,6 +14,7 @@ import {
   Send,
   ArrowRight,
   Pencil,
+  PhoneOutgoing,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import ComplaintRemarkDialog from "@/components/complaints/ComplaintRemarkDialog";
@@ -43,6 +44,7 @@ const iconMap = {
   COMMENT_ADDED: MessageSquare,
   REMARK_ADDED: MessageSquare,
   GEOTAGGED_IMAGE_UPLOADED: Camera,
+  CALL_OUTBOUND: PhoneOutgoing,
 };
 
 const eventTranslations = {
@@ -70,6 +72,7 @@ const eventTranslations = {
   COMMENT_ADDED: { en: "Comment Added", hi: "टिप्पणी जोड़ी गई" },
   REMARK_ADDED: { en: "Remark Added", hi: "टिप्पणी जोड़ी गई" },
   GEOTAGGED_IMAGE_UPLOADED: { en: "Geo-tagged Photo Uploaded", hi: "जियो-टैग फोटो अपलोड की गई" },
+  CALL_OUTBOUND: { en: "Outbound Call", hi: "आउटबाउंड कॉल" },
 };
 
 export default function ComplaintTimeline({ events, t }) {

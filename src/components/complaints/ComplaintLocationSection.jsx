@@ -224,13 +224,13 @@ export default function ComplaintLocationSection({
               )}
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-3 text-[10px] lg:text-xs">
-            {(effectiveCorrAddr.addressLine || effectiveCorrAddr.landmark) && (
+            {effectiveCorrAddr.addressLine && (
               <div className="col-span-2 md:col-span-3">
                 <span className="text-muted-foreground block font-medium">
                   {t("Address Line", "पता विवरण")}
                 </span>
                 <span className="font-semibold text-foreground">
-                  {effectiveCorrAddr.addressLine || effectiveCorrAddr.landmark}
+                  {effectiveCorrAddr.addressLine}
                 </span>
               </div>
             )}
@@ -358,7 +358,7 @@ export default function ComplaintLocationSection({
               </div>
             )}
 
-            {effectiveCorrAddr.landmark && !effectiveCorrAddr.addressLine2 && (
+            {effectiveCorrAddr.landmark && (
               <div>
                 <span className="text-muted-foreground block font-medium">
                   {t("Landmark", "लैंडमार्क")}
