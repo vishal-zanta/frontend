@@ -72,9 +72,9 @@ const HealthDepartmentDetailView = ({ data }) => {
         <div className="flex flex-col gap-2 pb-3 border-b border-border">
           <div className="flex items-start justify-between flex-wrap gap-2">
             <div>
-              <p className="text-[11px] text-muted-foreground mb-0.5">External Complaint ID</p>
+              <p className="text-[11px] text-muted-foreground mb-0.5"> Complaint ID</p>
               <h2 className="text-sm font-bold text-primary font-mono">
-                {data?.externalComplaintId || data?._id || "N/A"}
+                {data?.internalId ||  data?.externalComplaintId || data?._id || "N/A"}
               </h2>
             </div>
             <StatusBadge status={data?.status} />
@@ -95,7 +95,7 @@ const HealthDepartmentDetailView = ({ data }) => {
                 </span>
                 <CallCitizenButton
                   mobileNumber={data?.mobile || citizen?.mobileNumber}
-                  grievanceId={data?.externalComplaintId}
+                  grievanceId={data?.internalId || data?.externalComplaintId}
                   _id={data?._id}
                 />
               </div>
@@ -107,6 +107,7 @@ const HealthDepartmentDetailView = ({ data }) => {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {/* Grievance Details */}
           <SectionCard title="Grievance Details" icon={FileText}>
+            <InfoRow icon={Hash} label="External Complaint Id" value={data?.externalComplaintId} />
             <InfoRow icon={Hash} label="Grievance Type" value={payload?.grievanceType} />
             <InfoRow icon={FileText} label="Service Code" value={payload?.serviceCode} />
             <InfoRow icon={User} label="Complainant Type" value={payload?.complainantType} />

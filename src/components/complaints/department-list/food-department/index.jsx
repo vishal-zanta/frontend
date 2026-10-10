@@ -11,7 +11,7 @@ import moment from "moment";
 
 const FoodDeptList = ({ data, onClick, isSelected }) => {
   const payload = data?.departmentPayload;
-  const externalRef =
+  const externalRef =data?.internalId || 
     data?.externalComplaintId ||
     payload?.grievanceID ||
     data?._id ||

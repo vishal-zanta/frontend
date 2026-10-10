@@ -12,7 +12,7 @@ import moment from "moment";
 
 const EducationDepartmentListCard = ({ data, onClick, isSelected }) => {
   const payload = data?.departmentPayload;
-  const externalRef = data?.externalComplaintId || payload?.externalRef || "N/A";
+  const externalRef = data?.internalId ||  data?.externalComplaintId || payload?.externalRef || "N/A";
   const status = data?.status || "PENDING";
   const type = payload?.type;
   const complaintText = payload?.complaint || "";

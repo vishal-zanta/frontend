@@ -3,7 +3,7 @@ import { StatusBadge } from "@/components/Badges";
 import { MapPin, Phone } from "lucide-react";
 
 const HealthDepartmentListCard = ({ data, onClick, isSelected }) => {
-  const externalComplaintId = data?.externalComplaintId || data?._id || "N/A";
+  const externalComplaintId = data?.internalId ||  data?.externalComplaintId || data?._id || "N/A";
   const mobile = data?.mobile || data?.departmentPayload?.citizen?.mobileNumber || "N/A";
   const status = data?.status || "PENDING";
   const address = data?.departmentPayload?.address || {};

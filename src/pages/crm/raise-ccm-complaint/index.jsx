@@ -281,12 +281,12 @@ export default function CRMRaiseComplaint() {
     onSuccess: (data) => {
       getSuccessToast(
         "Complaint registered successfully",
-        data?.data?.data?.externalComplaintId,
+        data?.data?.data?.internalId ||  data?.data?.data?.externalComplaintId,
       );
       qc.invalidateQueries({ queryKey: [QUERY_KEYS.EXTERNAL_COMPLAINTS] });
 
       console.log(data);
-      setExternalComplaintId(data?.data?.data?.externalComplaintId);
+      setExternalComplaintId(data?.data?.data?.internalId ||  data?.data?.data?.externalComplaintId);
       setSubmitted([true, data]);
     },
     onError: (err) => {
