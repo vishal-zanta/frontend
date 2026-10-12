@@ -5,6 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
+import moment from "moment";
 
 const DepartmentList = ({ selectedDept, onSelect, autoSelect, selected, params={}, setTotalCount }) => {
   const { t } = useLanguage();
@@ -39,10 +40,10 @@ const DepartmentList = ({ selectedDept, onSelect, autoSelect, selected, params={
 
   const docs = useMemo(() => {
     return (
-      data?.pages?.flatMap(
+      (data?.pages?.flatMap(
         (page) =>
           page?.data?.data?.docs || page?.data?.docs || page?.docs || [],
-      ) || []
+      ) || []).sort((a,b)=> moment(b?.createdAt).diff(moment(a?.createdAt)))
     );
   }, [data]);
 
@@ -65,6 +66,8 @@ const DepartmentList = ({ selectedDept, onSelect, autoSelect, selected, params={
         setTotalCount(totalCount);
       }
     }, [data?.pages?.[0]?.data?.data?.pagination, selectedDept]);
+
+    console.log({docs})
 
   return (
     <LoaderErrWrapper isLoading={isLoading} error={error}>

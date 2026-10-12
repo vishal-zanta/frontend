@@ -13,6 +13,7 @@ import MySelect from "@/components/inputs/MySelect";
 import ExternalDepartmentList from "./department-list";
 import { useGetComplaintSources } from "@/pages/admin/master-data/hooks";
 import { getEntityLabel } from "@/utils/helpers";
+import moment from "moment";
 
 export default function ComplaintList({
   selected,
@@ -33,7 +34,6 @@ export default function ComplaintList({
   const isChangedOnce = useRef(false);
   const [filters, setFilters] = useState({});
   const [totalComplaintsCount, setTotalComplaintCount] = useState(0);
-
 
   const API_PARAMS = useMemo(
     () => ({
@@ -129,15 +129,15 @@ export default function ComplaintList({
       channel: filters.channel || undefined,
     },
     {
-      enabled: !isExternalDepartment,
+      enabled: true,
     },
   );
 
   const complaints = useMemo(() => {
     return (
-      data?.pages?.flatMap(
+     ( data?.pages?.flatMap(
         (page) => page?.data?.docs || page?.data || page?.docs || [],
-      ) || []
+      ) || []).sort((a,b)=> moment(b?.createdAt).diff(moment(a?.createdAt)))
     );
   }, [data]);
 
@@ -202,8 +202,8 @@ export default function ComplaintList({
   useEffect(() => {
     const totalCount = data?.pages?.[0]?.data?.pagination?.totalCount;
     // console.log({ count: data?.pages });
-    if (totalComplaintsCount != totalCount  && dept == "cm-helpline") {
-      setTotalComplaintCount(totalCount); 
+    if (totalComplaintsCount != totalCount) {
+      setTotalComplaintCount(totalCount);
     }
   }, [data?.pages?.[0]?.data?.pagination, filters, dept]);
 
@@ -214,16 +214,16 @@ export default function ComplaintList({
           <h3 className="font-bold text-foreground text-sm">
             {t("Complaints", "शिकायतें")} ({totalComplaintsCount})
           </h3>
-          {!isExternalDepartment && (
-            <Filter
-              filters={filters}
-              setFilters={setFilters}
-              filterOptions={filterOptions}
-            />
-          )}
+          {/* {!isExternalDepartment && ( */}
+          <Filter
+            filters={filters}
+            setFilters={setFilters}
+            filterOptions={filterOptions}
+          />
+          {/* )} */}
         </div>
 
-        {isCCE && (
+        {/* {isCCE && (
           <div className="mt-2 flex items-center gap-2 ">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">
               {t("Ext. Dept", "विभाग")}
@@ -245,7 +245,7 @@ export default function ComplaintList({
               />
             </div>
           </div>
-        )}
+        )} */}
         <div className="mt-2">
           <SearchDebounced
             placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
@@ -283,7 +283,7 @@ export default function ComplaintList({
         }}
         className="flex-1 md:overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
       >
-        {isExternalDepartment ? (
+        {/* {isExternalDepartment ? (
           <ExternalDepartmentList
             selectedDept={selectedDept}
             onSelect={onSelect}
@@ -294,54 +294,67 @@ export default function ComplaintList({
             }}
             setTotalCount={setTotalComplaintCount}
           />
-        ) : (
-          <LoaderErrWrapper
-            isLoading={isLoading}
-            error={error?.message || error}
-          >
-            {complaints.length === 0 ? (
-              <div className="px-4 py-6 text-center text-sm text-muted-foreground">
-                {t(
-                  "No complaints assigned to you.",
-                  "आपको कोई शिकायत नहीं सौंपी गई है।",
-                )}
-              </div>
-            ) : (
-              <>
-                {complaints.map((c, i) => {
-                  const id = c._id || c.id;
-                  const isSelected = selected?._id == id;
-                  return (
-                    <ComplaintListCard
-                      c={c}
-                      onClick={(c) => {
-                        onSelect(c);
-                        setStatusUpdate(null);
-                      }}
-                      isSelected={isSelected}
-                    />
-                  );
-                })}
+        ) : ( */}
+        <LoaderErrWrapper isLoading={isLoading} error={error?.message || error}>
+          {complaints.length === 0 ? (
+            <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+              {t(
+                "No complaints assigned to you.",
+                "आपको कोई शिकायत नहीं सौंपी गई है।",
+              )}
+            </div>
+          ) : (
+            <>
+              {complaints.map((c, i) => {
+                const id = c._id || c.id;
+                const isSelected = selected?._id == id;
+                const externalDept = departmentsList.find(
+                  (d) => d.key === c?.departmentCode,
+                );
+                if (externalDept?.listComponent) {
+                  // console.log({ externalDept });
+                  // return null;
+                  return (  <externalDept.listComponent
+                    key={id}
+                    data={c}
+                    onClick={(c) => {
+                      onSelect(c);
+                      setStatusUpdate(null);
+                    }}
+                    isSelected={isSelected}
+                  />);
+                }
+                return (
+                  <ComplaintListCard
+                    c={c}
+                    onClick={(c) => {
+                      onSelect(c);
+                      setStatusUpdate(null);
+                    }}
+                    isSelected={isSelected}
+                  />
+                );
+              })}
 
-                {hasNextPage && (
-                  <div className="p-3 bg-muted/10 text-center">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => fetchNextPage()}
-                      disabled={isFetchingNextPage}
-                      className="w-full text-xs cursor-pointer"
-                    >
-                      {isFetchingNextPage
-                        ? t("Loading more...", "और लोड हो रहा है...")
-                        : t("Load More", "और लोड करें")}
-                    </Button>
-                  </div>
-                )}
-              </>
-            )}
-          </LoaderErrWrapper>
-        )}
+              {hasNextPage && (
+                <div className="p-3 bg-muted/10 text-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="w-full text-xs cursor-pointer"
+                  >
+                    {isFetchingNextPage
+                      ? t("Loading more...", "और लोड हो रहा है...")
+                      : t("Load More", "और लोड करें")}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </LoaderErrWrapper>
+        {/* )} */}
       </div>
     </div>
   );

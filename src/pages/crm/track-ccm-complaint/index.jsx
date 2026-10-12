@@ -33,6 +33,7 @@ export default function TrackCCMComplaint() {
   const analytics = analyticsData?.data || {};
   // console.log({analytics});
 
+
   return (
     <PortalLayout role="crm" isHideOverflow={true}>
       <div className="p-3 lg:p-6 space-y-4 lg:space-y-6 relative">
@@ -54,7 +55,15 @@ export default function TrackCCMComplaint() {
         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0 items-start">
           <ComplaintList
             selected={selected}
-            onSelect={setSelected}
+            onSelect={(value) => {
+             
+              if (value?.departmentCode) {
+                externalDeptProps.setDept(value?.departmentCode);
+              } else {
+                externalDeptProps?.setDept(null);
+              }
+              setSelected(value);
+            }}
             setStatusUpdate={setStatusUpdate}
             onStatsChange={setStats}
             useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
@@ -107,7 +116,15 @@ export default function TrackCCMComplaint() {
           ) : (
             <ComplaintList
               selected={selected}
-              onSelect={setSelected}
+              onSelect={(value) => {
+              
+                if (value?.departmentCode) {
+                  externalDeptProps.setDept(value?.departmentCode);
+                } else {
+                  externalDeptProps?.setDept(null);
+                }
+                setSelected(value);
+              }}
               setStatusUpdate={setStatusUpdate}
               onStatsChange={setStats}
               useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
