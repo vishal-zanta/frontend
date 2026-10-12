@@ -9,9 +9,11 @@ import Filter from "@/components/Filter";
 import { STATUS_ACTIONS, PRIORITY_ACTIONS, MAX_LIMIT } from "@/utils/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { useLocation, useSearchParams } from "react-router-dom";
-import MySelect from "@/components/inputs/MySelect";
-import ExternalDepartmentList from "./department-list";
-import { useGetComplaintSources } from "@/pages/admin/master-data/hooks";
+import {
+  useGetComplaintSources,
+  useGetDepartments,
+} from "@/pages/admin/master-data/hooks";
+import { departmentsList } from "@/utils/departments";
 import { getEntityLabel } from "@/utils/helpers";
 import moment from "moment";
 
@@ -35,6 +37,15 @@ export default function ComplaintList({
   const [filters, setFilters] = useState({});
   const [totalComplaintsCount, setTotalComplaintCount] = useState(0);
 
+  const {
+    dept,
+    setDept,
+    selectedDept,
+    departmentsList: externalDepartmentsList,
+    isExternalDepartment,
+  } = externalDeptProps || {};
+  const allDepartmentsList = externalDepartmentsList || departmentsList;
+
   const API_PARAMS = useMemo(
     () => ({
       page: 1,
@@ -45,6 +56,7 @@ export default function ComplaintList({
   );
   const { data: complaintSourcesData, isLoading: complaintSourcesLoading } =
     useGetComplaintSources([API_PARAMS], API_PARAMS);
+  const { data: departmentData } = useGetDepartments([API_PARAMS], API_PARAMS);
 
   const channelOptions = useMemo(() => {
     const docs = complaintSourcesData?.data?.data?.docs ?? [];
@@ -53,6 +65,26 @@ export default function ComplaintList({
       value: v?._id,
     }));
   }, [complaintSourcesData, lang]);
+
+  const departmentList = useMemo(() => {
+    const docs = departmentData?.data?.data?.docs ?? [];
+    const apiDepartments = docs.map((v) => ({
+      label:
+        lang === "hi" && (v.titleHindi || v.nameHindi)
+          ? v.titleHindi || v.nameHindi
+          : v.title || v.name,
+      value: v?._id,
+    }));
+
+    const externalDepts = (allDepartmentsList || [])
+      .filter((d) => !d.isHide)
+      .map((d) => ({
+        label: lang === "hi" && d.nameHindi ? d.nameHindi : d.name,
+        value: d.key,
+      }));
+
+    return [...apiDepartments, ...externalDepts];
+  }, [departmentData, allDepartmentsList, lang]);
 
   const filterOptions = useMemo(
     () => [
@@ -69,6 +101,12 @@ export default function ComplaintList({
           ),
           value: action.value,
         })),
+        isMultiple: true,
+      },
+      {
+        label: t("Department", "विभाग"),
+        filterKey: "department",
+        options: departmentList,
         isMultiple: true,
       },
       {
@@ -102,12 +140,8 @@ export default function ComplaintList({
         isMultiple: true,
       },
     ],
-    [t, channelOptions],
+    [t, channelOptions, departmentList],
   );
-
-  const { dept, setDept, selectedDept, departmentsList, isExternalDepartment } =
-    externalDeptProps || {};
-  // console.log({dept, isExternalDepartment});
 
   const {
     data,
@@ -127,6 +161,16 @@ export default function ComplaintList({
           : undefined,
       priority: filters.priority || undefined,
       channel: filters.channel || undefined,
+      ...(filters?.department
+        ? departmentsList.find((v) => v.key === filters.department)
+          ? { departmentCode: filters.department }
+          : { department: filters.department }
+        : {}),
+      // department: filters?.department
+      //   ? departmentList.find((v) => v.key === filters.department)
+      //     ? undefined
+      //     : filters.department
+      //   : undefined,
     },
     {
       enabled: true,
@@ -135,10 +179,10 @@ export default function ComplaintList({
 
   const complaints = useMemo(() => {
     return (
-     ( data?.pages?.flatMap(
+      data?.pages?.flatMap(
         (page) => page?.data?.docs || page?.data || page?.docs || [],
-      ) || []).sort((a,b)=> moment(b?.createdAt).diff(moment(a?.createdAt)))
-    );
+      ) || []
+    ).sort((a, b) => moment(b?.createdAt).diff(moment(a?.createdAt)));
   }, [data]);
 
   const lastStatsRef = useRef(null);
@@ -314,15 +358,17 @@ export default function ComplaintList({
                 if (externalDept?.listComponent) {
                   // console.log({ externalDept });
                   // return null;
-                  return (  <externalDept.listComponent
-                    key={id}
-                    data={c}
-                    onClick={(c) => {
-                      onSelect(c);
-                      setStatusUpdate(null);
-                    }}
-                    isSelected={isSelected}
-                  />);
+                  return (
+                    <externalDept.listComponent
+                      key={id}
+                      data={c}
+                      onClick={(c) => {
+                        onSelect(c);
+                        setStatusUpdate(null);
+                      }}
+                      isSelected={isSelected}
+                    />
+                  );
                 }
                 return (
                   <ComplaintListCard
