@@ -61,7 +61,7 @@ export default function ComplaintList({
   const channelOptions = useMemo(() => {
     const docs = complaintSourcesData?.data?.data?.docs ?? [];
     return docs.map((v) => ({
-      label: lang === "hi" && v.titleHindi ? v.titleHindi : v.title,
+      label: getEntityLabel(v, t),
       value: v?._id,
     }));
   }, [complaintSourcesData, lang]);
@@ -69,22 +69,19 @@ export default function ComplaintList({
   const departmentList = useMemo(() => {
     const docs = departmentData?.data?.data?.docs ?? [];
     const apiDepartments = docs.map((v) => ({
-      label:
-        lang === "hi" && (v.titleHindi || v.nameHindi)
-          ? v.titleHindi || v.nameHindi
-          : v.title || v.name,
+      label: getEntityLabel(v, t),
       value: v?._id,
     }));
 
     const externalDepts = (allDepartmentsList || [])
       .filter((d) => !d.isHide)
       .map((d) => ({
-        label: lang === "hi" && d.nameHindi ? d.nameHindi : d.name,
+        label: getEntityLabel(d, t),
         value: d.key,
       }));
 
     return [...apiDepartments, ...externalDepts];
-  }, [departmentData, allDepartmentsList, lang]);
+  }, [departmentData, allDepartmentsList, t]);
 
   const filterOptions = useMemo(
     () => [
