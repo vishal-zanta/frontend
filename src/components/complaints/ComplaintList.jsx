@@ -64,7 +64,7 @@ export default function ComplaintList({
       label: getEntityLabel(v, t),
       value: v?._id,
     }));
-  }, [complaintSourcesData, lang]);
+  }, [complaintSourcesData, t]);
 
   const departmentList = useMemo(() => {
     const docs = departmentData?.data?.data?.docs ?? [];
