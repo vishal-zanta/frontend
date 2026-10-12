@@ -107,7 +107,7 @@ export default function ComplaintList({
         label: t("Department", "विभाग"),
         filterKey: "department",
         options: departmentList,
-        isMultiple: true,
+        // isMultiple: true,
       },
       {
         label: t("Feedback", "प्रतिक्रिया"),
