@@ -35,7 +35,7 @@ export default function StatsCards({
     escalatedCount ?? slaBreachRisk ?? analytics?.escalatedCount ?? 0;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4">
       <StatCard
         icon={Inbox}
         label={t("Total Complaints", "कुल शिकायतें")}
@@ -54,7 +54,7 @@ export default function StatsCards({
         value={finalUnassigned}
         color="purple"
       />
-      <StatCard
+      {/* <StatCard
         icon={Clock}
         label={t("Pending Action", "लंबित कार्रवाई")}
         value={finalPending}
@@ -70,8 +70,8 @@ export default function StatsCards({
         icon={AlertTriangle}
         label={t("Escalated", "हस्तांतरित किया गया")}
         value={finalEscalated}
-        color="red"
-      />
+        color="red" */}
+      {/* /> */}
     </div>
   );
 }
