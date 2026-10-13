@@ -139,6 +139,7 @@ export default function ComplaintList({
     ],
     [t, channelOptions, departmentList],
   );
+  
 
   const {
     data,
