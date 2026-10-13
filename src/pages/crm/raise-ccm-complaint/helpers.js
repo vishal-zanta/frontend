@@ -185,7 +185,9 @@ export const checkIdbDataExpiry = async (departmentCode) => {
   const isExpired =
     dataFromDb?.cachedAt &&
     moment(dataFromDb.cachedAt).isValid() &&
-    moment().diff(moment(dataFromDb.cachedAt), "hours") >= 24;
+    moment().diff(moment(dataFromDb.cachedAt), "hours") >= 24 *100;
+
+    console.log({dataFromDb});
 
   return { dataFromDb, isExpired };
 };
