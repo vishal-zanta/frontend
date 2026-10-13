@@ -149,7 +149,7 @@ export default function ComplaintList({
     isFetchingNextPage,
   } = useGetComplaintsOfOfiicer(
     {
-      limit: 10,
+      limit: 20,
       search,
       status: filters.status || undefined,
       feedback:
