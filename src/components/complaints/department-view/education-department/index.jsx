@@ -26,8 +26,9 @@ import {
   useGetVillageOptions,
   useGetSchoolOptions,
 } from "@/pages/crm/raise-ccm-complaint/department-forms/education-department/hooks";
+import { useLanguage } from "@/context/LanguageContext";
 
-const getLabel = (options = [], val) => {
+const getLabel = (options = [], val, t) => {
   if (
     val === undefined ||
     val === null ||
@@ -37,7 +38,8 @@ const getLabel = (options = [], val) => {
   )
     return null;
   const match = options?.find((opt) => String(opt.value) === String(val));
-  return match ? match.label : String(val);
+  if (!match) return String(val);
+  return t ? t(match.label, match.labelHindi || match.label) : match.label;
 };
 
 const InfoRow = ({ icon: Icon, label, value }) => {
@@ -79,6 +81,7 @@ const SectionCard = ({ title, icon: Icon, children }) => (
 );
 
 const EducationDepartmentDetailView = ({ data }) => {
+  const { t } = useLanguage();
   const payload = data?.departmentPayload;
   const complainant = payload?.complainant;
   const location = payload?.location;
@@ -116,8 +119,8 @@ const EducationDepartmentDetailView = ({ data }) => {
   const shareNumberText =
     complainant?.shareNumberWithOfficer !== undefined
       ? complainant.shareNumberWithOfficer
-        ? "Yes (Visible to investigating officer)"
-        : "No (Keep private)"
+        ? t("Yes (Visible to investigating officer)", "हाँ (जांच अधिकारी को दिखाई देगा)")
+        : t("No (Keep private)", "नहीं (गोपनीय रखें)")
       : null;
 
   const hasAccused = Boolean(accused?.name || accused?.designation);
@@ -137,7 +140,7 @@ const EducationDepartmentDetailView = ({ data }) => {
           <div className="flex items-start justify-between flex-wrap gap-2">
             <div>
               <p className="text-[11px] text-muted-foreground mb-0.5">
-                 Complaint ID
+                {t("Complaint ID", "शिकायत संख्या")}
               </p>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-sm font-bold text-primary font-mono">
@@ -175,10 +178,10 @@ const EducationDepartmentDetailView = ({ data }) => {
         {/* Grid layout: 1 col default, 2 cols on xl */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {/* Classification & Grievance Details */}
-          <SectionCard title="Complaint Details" icon={FileText}>
+          <SectionCard title={t("Complaint Details", "शिकायत विवरण")} icon={FileText}>
             <InfoRow
               icon={Hash}
-              label="External Complaint Id"
+              label={t("External Complaint Id", "बाहरी शिकायत संख्या")}
               value={data?.externalComplaintId}
             />
             {payload?.type && (
@@ -188,7 +191,7 @@ const EducationDepartmentDetailView = ({ data }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] text-muted-foreground leading-none mb-1">
-                    Complaint Type
+                    {t("Complaint Type", "शिकायत का प्रकार")}
                   </p>
                   <TypeBadge type={payload.type} />
                 </div>
@@ -196,13 +199,13 @@ const EducationDepartmentDetailView = ({ data }) => {
             )}
             <InfoRow
               icon={Hash}
-              label="Category"
-              value={getLabel(fields?.categoryId, payload?.categoryId)}
+              label={t("Category", "श्रेणी")}
+              value={getLabel(fields?.categoryId, payload?.categoryId, t)}
             />
             {payload?.categoryOther && (
               <InfoRow
                 icon={FileText}
-                label="Category (Other)"
+                label={t("Category (Other)", "श्रेणी (अन्य)")}
                 value={payload.categoryOther}
               />
             )}
@@ -213,52 +216,52 @@ const EducationDepartmentDetailView = ({ data }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] text-muted-foreground leading-none mb-1">
-                    Source Channel
+                    {t("Source Channel", "स्रोत चैनल")}
                   </p>
                   <SourceBadge
                     source={payload.source}
-                    label={getLabel(fields?.source, payload.source)}
+                    label={getLabel(fields?.source, payload.source, t)}
                   />
                 </div>
               </div>
             )}
             <InfoRow
               icon={CalendarDays}
-              label="Registered At"
+              label={t("Registered At", "पंजीकृत तिथि")}
               value={registeredAtFormatted}
             />
           </SectionCard>
 
           {/* Complainant Details */}
-          <SectionCard title="Complainant Details" icon={User}>
+          <SectionCard title={t("Complainant Details", "शिकायतकर्ता विवरण")} icon={User}>
             <InfoRow
               icon={User}
-              label="Complainant Name"
+              label={t("Complainant Name", "शिकायतकर्ता का नाम")}
               value={complainant?.name}
             />
             <InfoRow
               icon={Phone}
-              label="Mobile Number"
+              label={t("Mobile Number", "मोबाइल नंबर")}
               value={complainant?.mobile}
             />
             <InfoRow
               icon={Shield}
-              label="Share Number with Officer"
+              label={t("Share Number with Officer", "अधिकारी के साथ नंबर साझा करें")}
               value={shareNumberText}
             />
           </SectionCard>
 
           {/* Accused Details (if present) */}
           {hasAccused && (
-            <SectionCard title="Accused Person Details" icon={UserX}>
+            <SectionCard title={t("Accused Person Details", "आरोपी व्यक्ति का विवरण")} icon={UserX}>
               <InfoRow
                 icon={UserX}
-                label="Accused Person Name"
+                label={t("Accused Person Name", "आरोपी व्यक्ति का नाम")}
                 value={accused?.name}
               />
               <InfoRow
                 icon={FileText}
-                label="Designation / Role"
+                label={t("Designation / Role", "पद / भूमिका")}
                 value={accused?.designation}
               />
             </SectionCard>
@@ -266,21 +269,21 @@ const EducationDepartmentDetailView = ({ data }) => {
 
           {/* Location / Hierarchy Codes */}
           {hasLocation && (
-            <SectionCard title="Location Details" icon={MapPin}>
+            <SectionCard title={t("Location Details", "स्थान विवरण")} icon={MapPin}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3">
                 <InfoRow
                   icon={MapPin}
-                  label="District"
-                  value={getLabel(fields?.districtCode, location?.districtCode)}
+                  label={t("District", "जिला")}
+                  value={getLabel(fields?.districtCode, location?.districtCode, t)}
                 />
                 <InfoRow
                   icon={MapPin}
-                  label="Block"
-                  value={getLabel(blockOptions, location?.blockCode)}
+                  label={t("Block", "प्रखंड")}
+                  value={getLabel(blockOptions, location?.blockCode, t)}
                 />
                 <InfoRow
                   icon={Layers}
-                  label="Cluster Code"
+                  label={t("Cluster Code", "क्लस्टर कोड")}
                   value={
                     location?.clusterCode && location?.clusterCode !== 0
                       ? String(location.clusterCode)
@@ -289,22 +292,22 @@ const EducationDepartmentDetailView = ({ data }) => {
                 />
                 <InfoRow
                   icon={MapPin}
-                  label="Panchayat"
-                  value={getLabel(panchayatOptions, location?.panchayatCode)}
+                  label={t("Panchayat", "पंचायत")}
+                  value={getLabel(panchayatOptions, location?.panchayatCode, t)}
                 />
                 <InfoRow
                   icon={MapPin}
-                  label="Village"
-                  value={getLabel(villageOptions, location?.villageCode)}
+                  label={t("Village", "गाँव")}
+                  value={getLabel(villageOptions, location?.villageCode, t)}
                 />
                 <InfoRow
                   icon={School}
-                  label="School"
-                  value={getLabel(schoolOptions, location?.schoolCode)}
+                  label={t("School", "विद्यालय")}
+                  value={getLabel(schoolOptions, location?.schoolCode, t)}
                 />
                 <InfoRow
                   icon={GraduationCap}
-                  label="Teacher Code"
+                  label={t("Teacher Code", "शिक्षक कोड")}
                   value={
                     location?.teacherCode && location?.teacherCode !== 0
                       ? String(location.teacherCode)
@@ -318,7 +321,7 @@ const EducationDepartmentDetailView = ({ data }) => {
           {/* Description — spans full width on xl */}
           {payload?.complaint && (
             <div className="xl:col-span-2">
-              <SectionCard title="Complaint Description" icon={FileText}>
+              <SectionCard title={t("Complaint Description", "शिकायत का विवरण")} icon={FileText}>
                 <p className="text-sm text-foreground leading-relaxed pt-1 whitespace-pre-wrap">
                   {payload.complaint}
                 </p>
@@ -329,7 +332,7 @@ const EducationDepartmentDetailView = ({ data }) => {
           {/* Timeline / Activity Log — spans 2 cols on xl */}
           {Array.isArray(data?.timeline) && data.timeline.length > 0 && (
             <div className="xl:col-span-2">
-              <SectionCard title="Status & Activity Timeline" icon={Clock}>
+              <SectionCard title={t("Status & Activity Timeline", "स्थिति और गतिविधि समयरेखा")} icon={Clock}>
                 <div className="pt-2">
                   <ComplaintTimeline events={data.timeline} />
                 </div>

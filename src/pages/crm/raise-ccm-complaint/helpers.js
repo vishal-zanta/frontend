@@ -1,4 +1,4 @@
-import { getFormsFields } from "@/lib/idb";
+import { getFormsFields, IDB_VERSION } from "@/lib/idb";
 import moment from "moment";
 
 export const getFormData = (data, attachments = [], extraObj = {}) => {
@@ -183,11 +183,10 @@ export const convertJSONToFormdata = (data = {}) => {
 export const checkIdbDataExpiry = async (departmentCode) => {
   const dataFromDb = await getFormsFields(departmentCode);
   const isExpired =
-    dataFromDb?.cachedAt &&
-    moment(dataFromDb.cachedAt).isValid() &&
-    moment().diff(moment(dataFromDb.cachedAt), "hours") >= 24 *100;
-
-    // console.log({dataFromDb});
+    (dataFromDb?.cachedAt &&
+      moment(dataFromDb.cachedAt).isValid() &&
+      moment().diff(moment(dataFromDb.cachedAt), "hours") >= 24 * 100) ||
+    dataFromDb?.__version !== IDB_VERSION;
 
   return { dataFromDb, isExpired };
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -6,6 +6,7 @@ import AsyncSelect from "react-select/async";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Loader2 } from "lucide-react";
 import { MAX_LIMIT } from "@/utils/constants";
 
@@ -182,6 +183,15 @@ export default function RhfSelect({
 
   // isCreatable always implies multiple
   const isMulti = !!isMultiple;
+  const { t } = useLanguage();
+  const multiLingoOptions = useMemo(
+    () =>
+      (options || []).map((o) => ({
+        ...o,
+        label: t(o.label, o?.labelHindi || o?.label),
+      })),
+    [options, t],
+  );
 
   const {
     useApiQuery,
@@ -221,15 +231,15 @@ export default function RhfSelect({
         const styles = buildStyles(!!error, disabled, colors, isMulti);
 
         const selectOptions =
-          isMulti && options.length > 0
-            ? [{ label: "Select All", value: "SELECT_ALL" }, ...options]
-            : options;
+          isMulti && multiLingoOptions.length > 0
+            ? [{ label: t("Select All", "सभी चुनें"), value: "SELECT_ALL" }, ...multiLingoOptions]
+            : multiLingoOptions;
 
         const toOption = (val) => {
           if (!val) return null;
           if (typeof val === "object" && val.value !== undefined) return val;
           return (
-            options.find((o) => o.value === val) ?? { label: val, value: val }
+            multiLingoOptions.find((o) => o.value === val) ?? { label: val, value: val }
           );
         };
 
@@ -246,7 +256,7 @@ export default function RhfSelect({
             const arr = selected ?? [];
             const selectedValues = arr.map((o) => o.value);
             if (selectedValues.includes("SELECT_ALL")) {
-              const allValues = options.map((o) => o.value);
+              const allValues = multiLingoOptions.map((o) => o.value);
               const previouslySelectedCount = (field.value ?? []).length;
               if (previouslySelectedCount === allValues.length) {
                 // field.onChange([]);

@@ -1,5 +1,7 @@
 import { openDB } from "idb";
 
+export const IDB_VERSION = 2;
+
 export const dbPromise = openDB("AppDB", 1, {
   upgrade(db) {
     if (!db.objectStoreNames.contains("forms")) {
@@ -16,6 +18,7 @@ export const postFormFields = async (id, fields = {}) => {
     id,
     fields,
     cachedAt: Date.now(),
+    __version: IDB_VERSION,
   });
 };
 

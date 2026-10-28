@@ -1,16 +1,41 @@
 import React from "react";
 import { StatusBadge } from "@/components/Badges";
 import { MapPin, Phone } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { usePostPreCall } from "@/pages/crm/raise-ccm-complaint/department-forms/health-department/hooks";
+
+const getLabel = (options = [], val, t) => {
+  if (
+    val === undefined ||
+    val === null ||
+    val === "" ||
+    val === 0 ||
+    val === "0"
+  )
+    return null;
+  const valStr = String(val).toLowerCase().trim();
+  const match = options?.find(
+    (opt) =>
+      String(opt.value).toLowerCase().trim() === valStr ||
+      String(opt.label).toLowerCase().trim() === valStr ||
+      (opt.code && String(opt.code).toLowerCase().trim() === valStr) ||
+      (opt.subType && String(opt.subType).toLowerCase().trim() === valStr),
+  );
+  if (!match) return String(val);
+  return t ? t(match.label, match.labelHindi || match.label) : match.label;
+};
 
 const HealthDepartmentListCard = ({ data, onClick, isSelected }) => {
+  const { t } = useLanguage();
+  const { fields } = usePostPreCall("HEALTH");
   const externalComplaintId = data?.internalId ||  data?.externalComplaintId || data?._id || "N/A";
   const mobile = data?.mobile || data?.departmentPayload?.citizen?.mobileNumber || "N/A";
   const status = data?.status || "PENDING";
   const address = data?.departmentPayload?.address || {};
-  const division = address?.division || "";
-  const district = address?.district || "";
-  const block = address?.block || "";
-  const village = address?.village || "";
+  const division = getLabel(fields?.division, address?.division, t) || address?.division || "";
+  const district = getLabel(fields?.district, address?.district, t) || address?.district || "";
+  const block = getLabel(fields?.block, address?.block, t) || address?.block || "";
+  const village = getLabel(fields?.village, address?.village, t) || address?.village || "";
 
   const locationParts = [village, block, district, division].filter(Boolean);
   const locationString = locationParts.length > 0 ? locationParts.join(", ") : "N/A";

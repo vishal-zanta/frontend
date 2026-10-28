@@ -4,19 +4,40 @@ export const getMappedMasterData = (res) => {
   let obj = {
     institutionName: (res?.["common-masters"]?.["InstitutionName"] || [])
       .filter((v) => v.active == true)
-      .map((v) => ({ label: v.name, value: v.name })),
+      .map((v) => ({
+        label: v.name,
+        value: v.name,
+        labelHindi: v?.nameHindi || v.name,
+      })),
     institutionType: (res?.["common-masters"]?.["InstitutionType"] || [])
       .filter((v) => v.active == true)
-      .map((v) => ({ label: v.name, value: v.name })),
+      .map((v) => ({
+        label: v.name,
+        value: v.name,
+        labelHindi: v?.nameHindi || v.name,
+      })),
     gender: (res?.["common-masters"]?.["GenderType"] || [])
       .filter((v) => v.active == true)
-      .map((v) => ({ label: v.name, value: v.code })),
+      .map((v) => ({
+        label: v.name,
+        value: v.code,
+        labelHindi: v?.nameHindi || v.name,
+      })),
     complainantType: (res?.["common-masters"]?.["ComplainantType"] || [])
       .filter((v) => v.active == true)
-      .map((v) => ({ label: v.name, value: v.name })),
+      .map((v) => ({
+        label: v.name,
+        value: v.name,
+        labelHindi: v?.nameHindi || v.name,
+      })),
     grievanceType: (res?.["RAINMAKER-PGR"]?.["ServiceDefs"] || [])
       .filter((v) => v.active == true)
-      .map((v) => ({ label: v.name, value: v.name, subType: v.serviceCode })),
+      .map((v) => ({
+        label: v.name,
+        value: v.name,
+        subType: v.serviceCode,
+        labelHindi: v?.nameHindi || v.name,
+      })),
   };
 
   return obj;
@@ -31,6 +52,7 @@ export const getDistrictMappedData = (res) => {
       label: v.name,
       value: v.name,
       code: v.code,
+      labelHindi: v?.nameHindi || v.name,
     })),
     district: nested
       .map((division) => {
@@ -38,6 +60,7 @@ export const getDistrictMappedData = (res) => {
           label: district.name,
           value: district.name,
           division: division.name,
+          labelHindi: district?.nameHindi || district.name,
         }));
       })
       .flat(4),
@@ -49,6 +72,7 @@ export const getDistrictMappedData = (res) => {
             value: block.name,
             district: district.name,
             division: division.name,
+            labelHindi: block?.nameHindi || block.name,
           }));
         });
       })
@@ -63,6 +87,7 @@ export const getDistrictMappedData = (res) => {
               block: block.name,
               district: district.name,
               division: division.name,
+              labelHindi: village?.nameHindi || village.name,
             }));
           });
         });

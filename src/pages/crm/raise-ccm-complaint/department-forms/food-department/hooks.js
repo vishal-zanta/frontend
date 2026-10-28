@@ -58,9 +58,21 @@ export const useGetFoodOptions = (deptOrConfig = "FOOD") => {
                     : [];
 
                 const mappedData = {
-                    type: res?.[0].map(v => ({ label: v.typeName, value: v.typeId })),
-                    category: res?.[1].map(v => ({ label: v.categoryName, value: v.categoryId })),
-                    state: stateList.map(v => ({ label: v.name, value: v.id })),
+                    type: (res?.[0] || []).map((v) => ({
+                        label: v.typeName,
+                        value: v.typeId,
+                        labelHindi: v?.nameHindi,
+                    })),
+                    category: (res?.[1]?.categories || res?.[1] || []).map((v) => ({
+                        label: v.categoryName,
+                        value: v.categoryId,
+                        labelHindi: v?.nameHindi,
+                    })),
+                    state: (stateList || []).map((v) => ({
+                        label: v.name,
+                        value: v.id,
+                        labelHindi: v?.nameHindi,
+                    })),
                 };
                 setOptions(mappedData);
                 await postFormFields(departmentCode, mappedData);
@@ -115,6 +127,7 @@ export const useGetFoodDistrictOptions = (stateId = 10, departmentCode = "FOOD")
             return list.map((v) => ({
                 label: v.name || v.districtName || v.label,
                 value: v.id ?? v.districtId ?? v.districtCode ?? v.value,
+                labelHindi: v?.nameHindi || v?.name,
             }));
         },
         enabled: Boolean(stateId && departmentCode),
@@ -155,6 +168,7 @@ export const useGetFoodBlockOptions = (districtId, departmentCode = "FOOD") => {
             return list.map((v) => ({
                 label: v.name || v.blockName || v.label,
                 value: v.id ?? v.blockId ?? v.blockCode ?? v.value,
+                labelHindi: v?.nameHindi || v?.name,
             }));
         },
         enabled: Boolean(districtId && departmentCode),
@@ -195,6 +209,7 @@ export const useGetFoodPanchayatOptions = (blockId, departmentCode = "FOOD") => 
             return list.map((v) => ({
                 label: v.name || v.panchayatName || v.label,
                 value: v.id ?? v.panchayatId ?? v.panchayatCode ?? v.value,
+                labelHindi: v?.nameHindi || v?.name,
             }));
         },
         enabled: Boolean(blockId && departmentCode),
@@ -235,6 +250,7 @@ export const useGetFoodVillageOptions = (panchayatId, departmentCode = "FOOD") =
             return list.map((v) => ({
                 label: v.name || v.villageName || v.label,
                 value: v.id ?? v.villageId ?? v.villageCode ?? v.value,
+                labelHindi: v?.nameHindi || v?.name,
             }));
         },
         enabled: Boolean(panchayatId && departmentCode),
