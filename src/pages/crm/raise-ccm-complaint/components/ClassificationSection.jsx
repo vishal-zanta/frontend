@@ -52,7 +52,10 @@ export default function ClassificationSection({
         ? s.titleHindi || s.nameHindi
         : s.title || s.name,
     value: s._id,
+    labelHindi : (s?.titleHindi || s?.nameHindi || s?.title || s?.name)
   }));
+
+ 
 
   // const SUBSERVICES_PARAMS = {
   //   page: 1,
