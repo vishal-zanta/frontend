@@ -146,8 +146,10 @@ const EducationDepartmentDetailView = ({ data }) => {
                 <h2 className="text-sm font-bold text-primary font-mono">
                   {externalId}
                 </h2>
-              
               </div>
+              <p className="text-xs font-semibold text-foreground mt-0.5">
+                {t("Department", "विभाग")}: {t("Education Department", "शिक्षा विभाग")}
+              </p>
             </div>
             <StatusBadge status={data?.status} />
           </div>

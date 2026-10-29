@@ -135,8 +135,10 @@ const FoodDeptView = ({ data }) => {
                 <h2 className="text-sm font-bold text-primary font-mono">
                   {externalId}
                 </h2>
-              
               </div>
+              <p className="text-xs font-semibold text-foreground mt-0.5">
+                {t("Department", "विभाग")}: {t("Food & Consumer Protection Department", "खाद्य एवं उपभोक्ता संरक्षण विभाग")}
+              </p>
             </div>
             <StatusBadge status={data?.status || payload?.status} />
           </div>
