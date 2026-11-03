@@ -24,7 +24,7 @@ import CRMDashboard from "./pages/crm/CRMDashboard";
 import CRMRaiseComplaint from "./pages/crm/raise-ccm-complaint";
 import CallTracker from "./pages/crm/CallTracker";
 import ShiftManagement from "./pages/crm/shift-management";
-import IncomingCall from "./pages/crm/IncomingCall";
+import IncomingCall from "./pages/crm/incoming-calls";
 import CallHistoryLog from "./pages/crm/call-history-log";
 import TrackCCMComplaint from "./pages/crm/track-ccm-complaint";
 import Inmail from "./pages/crm/inmail";

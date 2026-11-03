@@ -27,6 +27,7 @@ import { LangSelectorSmall } from "@/components/LangSelector";
 import Notifications from "@/components/Notifications";
 import RoleSwitchPopover from "@/components/RoleSwitchPopover";
 import clsx from "clsx";
+import TopCallStatusIcon from "@/pages/crm/incoming-calls/TopCallStatusIcon";
 
 const STAFF_NOTIFICATIONS = [
   {
@@ -307,6 +308,9 @@ const STAFF_NOTIFICATIONS = [
             )}
             {t("Start Break", "ब्रेक शुरू करें")}
           </button>
+        )}
+        {isCCE && (
+          <TopCallStatusIcon/>
         )}
 
         {/* <Link

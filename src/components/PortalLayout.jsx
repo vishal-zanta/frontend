@@ -3,8 +3,10 @@ import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import Chatbot from "@/components/Chatbot";
 import ChatWidget from "@/components/chats";
+import CallPill from "@/pages/crm/incoming-calls/CallPill";
 import clsx from "clsx";
 import { SocketProvider } from "@/context/SocketContext";
+import { CallProvider } from "@/context/CallContext";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/utils/constants";
 
@@ -35,9 +37,10 @@ export default function PortalLayout({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const { hasPermission } = useAuth();
+  const { hasPermission, profiledata } = useAuth();
+  const shouldEnableSockets = hasPermission(PERMISSIONS.CHAT) || profiledata?.isCCE;
 
-  return (
+  const layoutContent = (
     <div className="flex min-h-screen bg-background">
       <Sidebar
         role={role}
@@ -59,13 +62,18 @@ export default function PortalLayout({
         </main>
       </div>
       {role === "citizen" && <Chatbot role={role} />}
-      {hasPermission(PERMISSIONS.CHAT) && (
-        <SocketProvider>
-          <ChatWidget />
-        </SocketProvider>
-      )}
+      {hasPermission(PERMISSIONS.CHAT) && <ChatWidget />}
+      {profiledata?.isCCE && <CallPill sidebarOpen={sidebarOpen} />}
     </div>
   );
+
+  if (shouldEnableSockets) {
+    return (
+      <SocketProvider>
+        <CallProvider>{layoutContent}</CallProvider>
+      </SocketProvider>
+    );
+  }
+
+  return layoutContent;
 }
-
-

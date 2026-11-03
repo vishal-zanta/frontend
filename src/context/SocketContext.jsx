@@ -32,6 +32,7 @@ export function SocketProvider({ children, url }) {
         overrideUrl ?? url ?? `${import.meta.env.VITE_BASE_URL}?token=${token}`;
 
       const socket = socketIOClient(link, {
+        auth: { token },
         autoConnect: true,
         reconnection: true,
         reconnectionAttempts: Infinity,

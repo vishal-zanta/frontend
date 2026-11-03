@@ -1,0 +1,135 @@
+
+summary for intergration =>   ### 1. Socket Connection & Rooms
+  
+  When an agent logs in and connects their socket (const socket = io(BACKEND_URL, { auth: { token } })):
+  
+  • The agent automatically joins two rooms:
+      1. userId (e.g. "672b12345...")       
+      2. extension:56001 (e.g. "extension:56001")
+      
+      
+  You don't need to manually join rooms; it is handled on connect.
+  ──────
+  ### 2. Socket Events & Flow
+  
+       CITIZEN CALLS                 AGENT ANSWERS                  CALL ENDS
+            │                              │                            │
+       [PBX Webhook]                 [PBX Webhook OR                [PBX Webhook]
+         "RINGING"                  POST /call/pickup]                "DROPPED"
+            │                              │                            │ 
+            ▼                              ▼                            ▼
+    Socket: `call:ringing`        Socket: `call:answered`       Socket: `call:dropped`
+            │                              │                            │
+     ┌──────────────┐              ┌──────────────┐             ┌──────────────┐
+     │ SCREEN POP   │              │ START TIMER  │             │ STOP TIMER   │
+     │ Caller info, │              │ Status:      │             │ Status:      │ 
+     │ Grievances,  │              │ "In Call"    │             │ "Available"  │
+     │ Pickup btn   │              │              │             │ Wrap-up Form │ 
+     └──────────────┘              └──────────────┘             └──────────────┘
+  ──────
+  ### 3. Detailed Events
+  
+  #### Event 1: call:ringing
+  
+  • When received: Immediately when a citizen dials in and the phone starts ringing. 
+  • Socket Event Name: call:ringing
+  • Data Payload:
+    { 
+      "event": "RINGING",
+      "callId": "CALL-2026-12345",
+      "extension": "56001",
+      "callerId": "08307753758",
+      "calledId": "56001", 
+      "timestamp": "2026-11-03T10:24:15.123Z",
+      "screenPop": {
+        "callerMobile": "08307753758",
+        "isRegisteredCitizen": true,
+        "citizen": {
+          "_id": "672c...",
+          "fullName": "Rahul Kumar",
+          "mobile": "08307753758"
+        },
+        "recentGrievances": [
+          {
+            "grievanceId": "BR-2026-0001",
+            "status": "OPEN",
+            "priority": "HIGH"
+          }
+        ]
+      } 
+    } 
+  
+  • Frontend Action: Pop up the incoming call modal (Screen Pop) with citizen details, grievance history, and an "Answer" button. 
+  ──────
+  #### Event 2: call:answered
+  
+  • When received: When the agent picks up the call (either by clicking "Answer" in the UI which calls POST /api/v1/telephony/call/pickup, or answering the
+  physical phone). 
+  • Socket Event Name: call:answered
+  • Data Payload: 
+    { 
+      "event": "ANSWERED",
+      "callId": "CALL-2026-12345",
+      "extension": "56001",
+      "callerId": "08307753758",
+      "calledId": "56001",
+      "timestamp": "2026-11-03T10:24:20.456Z",
+      "agentStatus": "In Call"
+    } 
+  
+  • Frontend Action: 
+      1. Close the ringing popup.
+      2. Change agent status badge to "In Call". 
+      3. Start the UI call duration timer (00:01, 00:02...) from timestamp.
+  
+  ──────
+  #### Event 3: call:dropped
+  
+  • When received: When either the citizen or the agent hangs up the phone.
+  • Socket Event Name: call:dropped 
+  • Data Payload:
+    { 
+      "event": "DROPPED",
+      "callId": "CALL-2026-12345",
+      "extension": "56001", 
+      "callerId": "08307753758",
+      "calledId": "56001",
+      "durationSeconds": 65,
+      "timestamp": "2026-11-03T10:25:25.789Z",
+      "agentStatus": "Available"
+    } 
+      
+  • Frontend Action:                                                                                                                                             
+      1. Stop the call duration timer.
+      2. Change agent status badge back to "Available".
+      3. Show the call summary / wrap-up dialog (e.g., register new grievance or tag call disposition).
+  
+  ──────                                                                                                                                                         
+  ### Frontend Example Listener                                                                                                                                  
+                                                                                                                                                                 
+    // Connect                                                                                                                                                   
+    const socket = io("http://localhost:5000", {                                                                                                                 
+      auth: { token: agentJwtToken }                                                                                                                             
+    });                                                                                                                                                          
+                                                                                                                                                                 
+    // 1. Ringing -> Screen Pop                                                                                                                                  
+    socket.on("call:ringing", (data) => {                                                                                                                        
+      console.log("Incoming call from:", data.callerId);                                                                                                         
+      showScreenPopModal(data.screenPop);                                                                                                                        
+    });
+  
+    // 2. Answered -> Start Timer
+    socket.on("call:answered", (data) => {
+      console.log("Call connected:", data.callId);
+      closeScreenPopModal();
+      startCallTimer(data.timestamp);
+      setAgentStatus("In Call");
+    });
+  
+    // 3. Dropped -> Stop Timer
+    socket.on("call:dropped", (data) => {
+      console.log("Call ended, duration:", data.durationSeconds);
+      stopCallTimer();
+      setAgentStatus("Available");
+      showWrapUpModal(data);
+    });

@@ -34,6 +34,8 @@ import {
 } from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useCall } from "@/context/CallContext";
+import CallCardWrapper from "@/pages/crm/incoming-calls/components/CallCardWrapper";
 import biharGovtLogo from "@/assets/bihar_govt.png";
 
 export const sidebarSections = [
@@ -474,6 +476,13 @@ export default function Sidebar({
   const overrides = profileLabelOverrides[role]?.[profile] || {};
   const { hasPermission, profiledata, hasRolePermission } = useAuth();
   const { t } = useLanguage();
+  const location = useLocation();
+  const { hasActiveCall } = useCall();
+
+  const isOnIncomingPage = location.pathname === "/crm/incoming-call";
+  const shouldShowSidebarCard = Boolean(
+    profiledata?.isCCE && hasActiveCall && !isOnIncomingPage
+  );
 
   const navRef = useRef(null);
 
@@ -581,6 +590,12 @@ export default function Sidebar({
               );
             })}
           </nav>
+
+          {shouldShowSidebarCard && (
+            <div className="p-3 border-t border-sidebar-border bg-sidebar-accent/20 shrink-0">
+              <CallCardWrapper variant="sidebar" />
+            </div>
+          )}
 
           {profiledata?.isAdmin && (
             <div className="px-4 py-3 border-t border-sidebar-border text-[10px] text-sidebar-foreground/50">

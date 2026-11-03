@@ -1,0 +1,32 @@
+"avayaStatus": {
+            "isLoggedIn": false,
+            "state": "UNKNOWN",
+            "error": "Request failed with status code 502"
+        },  => avaya not connected prpoerly 
+        
+        
+        
+        "avayaStatus": {
+            "isLoggedIn": false,
+            "state": "UNKNOWN",
+            "error": "Request failed with status code 502"
+        }, => agent not login and not connected with a softfone
+        
+        
+          "avayaStatus": {
+            "agentId": "66001",
+            "extension": "56002",
+            "isLoggedIn": true,
+            "state": "READY_FREE"
+        }, => avaya ok with fully connected 
+        
+        
+         "avayaStatus": {
+            "agentId": "66001",
+            "extension": "56002",
+            "isLoggedIn": true,
+            "state": "LOGGED_OUT"
+        },=> avaya softfone not connected
+        
+        
+        01244846242
