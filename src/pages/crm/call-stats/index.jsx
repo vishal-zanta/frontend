@@ -178,43 +178,42 @@ const CallStats = () => {
   }));
 
   return (
-    <PortalLayout>
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle title={t("Call Statistics", "कॉल सांख्यिकी")} />
-        {isMobile ? (
-          <div className="rounded-xl border border-border bg-white dark:bg-card">
-            <CallStatsCards
-              headers={callStatsHeaders}
-              body={callStatsData.tableBody}
-            />
-          </div>
-        ) : (
-          <MyTable
-            tableHeaders={callStatsHeaders}
-            tableBody={callStatsData.tableBody}
-            tableClassName="rounded-xl border border-border bg-white dark:bg-card"
+    // <PortalLayout>
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle title={t("Call Statistics", "कॉल सांख्यिकी")} />
+      {isMobile ? (
+        <div className="rounded-xl border border-border bg-white dark:bg-card">
+          <CallStatsCards
+            headers={callStatsHeaders}
+            body={callStatsData.tableBody}
           />
-        )}
-
-        <SectionTitle
-          title={t("Agent Live Statistics", "एजेंट लाइव सांख्यिकी")}
+        </div>
+      ) : (
+        <MyTable
+          tableHeaders={callStatsHeaders}
+          tableBody={callStatsData.tableBody}
+          tableClassName="rounded-xl border border-border bg-white dark:bg-card"
         />
-        {isMobile ? (
-          <div className="rounded-xl border border-border bg-white dark:bg-card">
-            <AgentLiveCards
-              headers={agentLiveHeaders}
-              body={agentLiveData.tableBody}
-            />
-          </div>
-        ) : (
-          <MyTable
-            tableHeaders={agentLiveHeaders}
-            tableBody={agentLiveData.tableBody}
-            tableClassName="rounded-xl border border-border bg-white dark:bg-card"
+      )}
+
+      <SectionTitle
+        title={t("Agent Live Statistics", "एजेंट लाइव सांख्यिकी")}
+      />
+      {isMobile ? (
+        <div className="rounded-xl border border-border bg-white dark:bg-card">
+          <AgentLiveCards
+            headers={agentLiveHeaders}
+            body={agentLiveData.tableBody}
           />
-        )}
-      </div>
-    </PortalLayout>
+        </div>
+      ) : (
+        <MyTable
+          tableHeaders={agentLiveHeaders}
+          tableBody={agentLiveData.tableBody}
+          tableClassName="rounded-xl border border-border bg-white dark:bg-card"
+        />
+      )}
+    </div>
   );
 };
 

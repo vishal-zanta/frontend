@@ -23,7 +23,6 @@ import {
   HOURLY_DISPOSITION,
   CRM_AGENTS,
 } from "@/lib/biharData";
-import PortalLayout from "@/components/PortalLayout";
 import StatCard from "@/components/StatCard";
 import { ChartCard } from "@/components/ChartCard";
 import { BarChartCard, PieChartCard } from "@/components/Charts";
@@ -105,7 +104,7 @@ export default function CRMDashboard() {
 
   // if (isSupervisor) {
   //   return (
-  //     <PortalLayout role="crm">
+  //      // <PortalLayout role="crm">
   //       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
   //         <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
   //           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
@@ -374,7 +373,7 @@ export default function CRMDashboard() {
   //           </div>
   //         </div>
   //       </div>
-  //     </PortalLayout>
+  //
   //   );
   // }
 
@@ -395,128 +394,127 @@ export default function CRMDashboard() {
   const myCalls = CALL_TRACKER.filter((c) => c.agent === agentName);
 
   return (
-    <PortalLayout role="crm">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
-            <div className="space-y-1">
-              <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
-                {t(
-                  isSupervisor ? "Team Scorecard" : "My Scorecard",
-                  isSupervisor ? "टीम स्कोरकार्ड" : "मेरा स्कोरकार्ड",
-                )}
-              </h1>
-              <p className="text-xs xs:text-sm md:text-base capitalize text-white/80">
-                {profile?.name} •{" "}
-                {profile?.role?.designationEnglish || "CCE Agent"} •{" "}
-                {t("Agent ID:", "एजेंट आईडी:")} {profile?.userCode || "-"}
-                {profile?.shift?.time &&
-                  ` • ${t("Shift:", "शिफ्ट:")} ${profile.shift.time}`}
-              </p>
-            </div>
-            {profiledata?.isCCE && (
-              <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
-                <Link to="/crm/incoming-call" className="flex-1 sm:flex-none">
-                  <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
-                    <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                    {t("Incoming Call", "प्राप्त कॉल")}
-                  </Button>
-                </Link>
-                <Link to="/crm/raise" className="flex-1 sm:flex-none">
-                  <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
-                    <Headphones className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
-                    {t("Register Complaint", "शिकायत दर्ज करें")}
-                  </Button>
-                </Link>
-              </div>
-            )}
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6">
+          <div className="space-y-1">
+            <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold leading-tight">
+              {t(
+                isSupervisor ? "Team Scorecard" : "My Scorecard",
+                isSupervisor ? "टीम स्कोरकार्ड" : "मेरा स्कोरकार्ड",
+              )}
+            </h1>
+            <p className="text-xs xs:text-sm md:text-base capitalize text-white/80">
+              {profile?.name} •{" "}
+              {profile?.role?.designationEnglish || "CCE Agent"} •{" "}
+              {t("Agent ID:", "एजेंट आईडी:")} {profile?.userCode || "-"}
+              {profile?.shift?.time &&
+                ` • ${t("Shift:", "शिफ्ट:")} ${profile.shift.time}`}
+            </p>
           </div>
+          {profiledata?.isCCE && (
+            <div className="flex items-center gap-2 xs:gap-3 w-full sm:w-auto">
+              <Link to="/crm/incoming-call" className="flex-1 sm:flex-none">
+                <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                  <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
+                  {t("Incoming Call", "प्राप्त कॉल")}
+                </Button>
+              </Link>
+              <Link to="/crm/raise" className="flex-1 sm:flex-none">
+                <Button className="w-full bg-card text-primary hover:bg-white/90 text-xs xs:text-sm px-2.5 py-1.5 xs:px-3 xs:py-2 sm:px-4">
+                  <Headphones className="w-3.5 h-3.5 xs:w-4 xs:h-4 mr-1 xs:mr-1.5" />{" "}
+                  {t("Register Complaint", "शिकायत दर्ज करें")}
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
+      </div>
 
-        {/* Period selector */}
-        <div className="flex items-center gap-1 bg-card border border-border rounded-lg p-0.5 w-fit">
-          {Object.entries(CCE_SCORECARD).map(([key, val]) => (
-            <button
-              key={key}
-              onClick={() => setScorecardPeriod(key)}
-              className={`px-4 py-1.5 rounded-md text-xs font-medium transition-all ${scorecardPeriod === key ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:bg-muted"}`}
-            >
-              {t(val.label, val.labelHindi)}
-            </button>
-          ))}
-        </div>
+      {/* Period selector */}
+      <div className="flex items-center gap-1 bg-card border border-border rounded-lg p-0.5 w-fit">
+        {Object.entries(CCE_SCORECARD).map(([key, val]) => (
+          <button
+            key={key}
+            onClick={() => setScorecardPeriod(key)}
+            className={`px-4 py-1.5 rounded-md text-xs font-medium transition-all ${scorecardPeriod === key ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:bg-muted"}`}
+          >
+            {t(val.label, val.labelHindi)}
+          </button>
+        ))}
+      </div>
 
-        {/* Personal stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <StatCard
-            icon={PhoneIncoming}
-            label={t("Received Calls", "प्राप्त कॉल")}
-            value={sc.received || sc.calls}
-            color="blue"
-            trend="up"
-            trendValue={`+8% (${sc.sub})`}
-          />
-          <StatCard
-            icon={CheckCircle2}
-            label={t("Answered", "उत्तरित")}
-            value={sc.answered}
-            color="green"
-            trend="up"
-            trendValue={`+5% (${sc.sub})`}
-          />
-          <StatCard
-            icon={PhoneMissed}
-            label={t("Missed", "मिस्ड कॉल")}
-            value={sc.missed}
-            color="red"
-          />
-          <StatCard
-            icon={PhoneOff}
-            label={t("Rejected", "अस्वीकृत")}
-            value={sc.rejected}
-            color="red"
-          />
-          <StatCard
-            icon={PhoneOff}
-            label={t("Dropped Calls", "ड्रॉप की गई कॉल")}
-            value={sc.dropped}
-            color="red"
-          />
-          <StatCard
-            icon={PhoneForwarded}
-            label={t("Transferred Calls", "स्थानांतरित कॉल")}
-            value={sc.transferred}
-            color="purple"
-          />
-          <StatCard
-            icon={Ticket}
-            label={t("Complaint Raised", "शिकायत दर्ज की गई")}
-            value={sc.ticketsRaised}
-            color="purple"
-            trend="up"
-            trendValue={`+3% (${sc.sub})`}
-          />
-          <StatCard
-            icon={Clock}
-            label={t("Avg Talk Time", "औसत बात करने का समय")}
-            value={sc.avgTalk}
-            color="amber"
-          />
-          <StatCard
-            icon={Star}
-            label={t("CSAT", "नागरिक संतुष्टि दर")}
-            value={`${sc.csat}/5`}
-            color="green"
-            sublabel={`SLA: ${sc.sla}%`}
-          />
-        </div>
+      {/* Personal stats */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <StatCard
+          icon={PhoneIncoming}
+          label={t("Received Calls", "प्राप्त कॉल")}
+          value={sc.received || sc.calls}
+          color="blue"
+          trend="up"
+          trendValue={`+8% (${sc.sub})`}
+        />
+        <StatCard
+          icon={CheckCircle2}
+          label={t("Answered", "उत्तरित")}
+          value={sc.answered}
+          color="green"
+          trend="up"
+          trendValue={`+5% (${sc.sub})`}
+        />
+        <StatCard
+          icon={PhoneMissed}
+          label={t("Missed", "मिस्ड कॉल")}
+          value={sc.missed}
+          color="red"
+        />
+        <StatCard
+          icon={PhoneOff}
+          label={t("Rejected", "अस्वीकृत")}
+          value={sc.rejected}
+          color="red"
+        />
+        <StatCard
+          icon={PhoneOff}
+          label={t("Dropped Calls", "ड्रॉप की गई कॉल")}
+          value={sc.dropped}
+          color="red"
+        />
+        <StatCard
+          icon={PhoneForwarded}
+          label={t("Transferred Calls", "स्थानांतरित कॉल")}
+          value={sc.transferred}
+          color="purple"
+        />
+        <StatCard
+          icon={Ticket}
+          label={t("Complaint Raised", "शिकायत दर्ज की गई")}
+          value={sc.ticketsRaised}
+          color="purple"
+          trend="up"
+          trendValue={`+3% (${sc.sub})`}
+        />
+        <StatCard
+          icon={Clock}
+          label={t("Avg Talk Time", "औसत बात करने का समय")}
+          value={sc.avgTalk}
+          color="amber"
+        />
+        <StatCard
+          icon={Star}
+          label={t("CSAT", "नागरिक संतुष्टि दर")}
+          value={`${sc.csat}/5`}
+          color="green"
+          sublabel={`SLA: ${sc.sla}%`}
+        />
+      </div>
 
-        {/* Source-wise Complaints Chart */}
-        <ModeWiseComplaintsChart mainData={modeData} />
+      {/* Source-wise Complaints Chart */}
+      <ModeWiseComplaintsChart mainData={modeData} />
 
-        {/* Performance summary card */}
-        {/* <div className="bg-card rounded-xl border border-border p-5">
+      {/* Performance summary card */}
+      {/* <div className="bg-card rounded-xl border border-border p-5">
           <h3 className="font-bold text-foreground mb-4">
             {t("Performance Summary", "प्रदर्शन सारांश")} (
             {t(sc.label, sc.labelHindi)})
@@ -557,71 +555,70 @@ export default function CRMDashboard() {
           </div>
         </div> */}
 
-        {/* My recent calls */}
-        <div className="bg-card rounded-xl border border-border">
-          <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground">
-              {t("My Recent Calls", "मेरी हाल की कॉल")}
-            </h3>
-            {/* <Link
+      {/* My recent calls */}
+      <div className="bg-card rounded-xl border border-border">
+        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+          <h3 className="font-bold text-foreground">
+            {t("My Recent Calls", "मेरी हाल की कॉल")}
+          </h3>
+          {/* <Link
               to="/crm/history"
               className="text-sm text-blue-600 hover:underline"
             >
               {t("View All →", "सभी देखें →")}
             </Link> */}
-          </div>
-          {myCalls.length === 0 ? (
-            <div className="px-5 py-8 text-center text-sm text-muted-foreground">
-              {t("No recent calls found.", "कोई हाल की कॉल नहीं मिली।")}
-            </div>
-          ) : (
-            <div className="divide-y divide-border max-h-[400px] overflow-y-auto scrollbar-thin">
-              {myCalls.map((c, i) => (
-                <div
-                  key={i}
-                  className="px-5 py-3 flex items-center justify-between"
-                >
-                  <div>
-                    <div className="text-xs">
-                      <CallId id={c.id} />
-                    </div>
-                    <div className="text-sm">
-                      {c.time} • {c.duration} • {c.disposition}
-                    </div>
-                    {c.complaintId && (
-                      <div className="text-xs mt-0.5">
-                        Ticket: <ComplaintId id={c.complaintId} />
-                      </div>
-                    )}
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className={`text-xs ${c.status === "Missed" ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"}`}
-                  >
-                    {c.status}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
-
-        {/* Read-only notice */}
-        <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/30 rounded-xl p-4 flex items-center gap-3">
-          <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-          <div>
-            <div className="font-medium text-sm text-blue-900 dark:text-blue-100">
-              {t("Agent View - Read Only", "एजेंट दृश्य - केवल पठन")}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {t(
-                "You are viewing your personal scorecard. Shift management and agent administration are available to supervisors only.",
-                "आप अपना व्यक्तिगत स्कोरकार्ड देख रहे हैं। शिफ्ट प्रबंधन और एजेंट प्रशासन केवल पर्यवेक्षकों के लिए उपलब्ध हैं।",
-              )}
-            </p>
+        {myCalls.length === 0 ? (
+          <div className="px-5 py-8 text-center text-sm text-muted-foreground">
+            {t("No recent calls found.", "कोई हाल की कॉल नहीं मिली।")}
           </div>
+        ) : (
+          <div className="divide-y divide-border max-h-[400px] overflow-y-auto scrollbar-thin">
+            {myCalls.map((c, i) => (
+              <div
+                key={i}
+                className="px-5 py-3 flex items-center justify-between"
+              >
+                <div>
+                  <div className="text-xs">
+                    <CallId id={c.id} />
+                  </div>
+                  <div className="text-sm">
+                    {c.time} • {c.duration} • {c.disposition}
+                  </div>
+                  {c.complaintId && (
+                    <div className="text-xs mt-0.5">
+                      Ticket: <ComplaintId id={c.complaintId} />
+                    </div>
+                  )}
+                </div>
+                <Badge
+                  variant="outline"
+                  className={`text-xs ${c.status === "Missed" ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"}`}
+                >
+                  {c.status}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Read-only notice */}
+      <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/30 rounded-xl p-4 flex items-center gap-3">
+        <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+        <div>
+          <div className="font-medium text-sm text-blue-900 dark:text-blue-100">
+            {t("Agent View - Read Only", "एजेंट दृश्य - केवल पठन")}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {t(
+              "You are viewing your personal scorecard. Shift management and agent administration are available to supervisors only.",
+              "आप अपना व्यक्तिगत स्कोरकार्ड देख रहे हैं। शिफ्ट प्रबंधन और एजेंट प्रशासन केवल पर्यवेक्षकों के लिए उपलब्ध हैं।",
+            )}
+          </p>
         </div>
       </div>
-    </PortalLayout>
+    </div>
   );
 }

@@ -9,7 +9,6 @@ import { ArrowLeft, Building2, Search } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 
-import PortalLayout from "@/components/PortalLayout";
 import RhfWrapper from "@/components/RhfWrapper";
 import { Input } from "@/components/ui/input";
 
@@ -350,8 +349,7 @@ export default function CRMRaiseComplaint() {
     : selectedDept;
 
   return (
-    <PortalLayout role={role}>
-      <div className="max-w-6xl mx-auto p-4 sm:p-6">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6">
         {/* Page header */}
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -441,7 +439,6 @@ export default function CRMRaiseComplaint() {
           </RhfWrapper>
         )}
       </div>
-    </PortalLayout>
   );
 }
 

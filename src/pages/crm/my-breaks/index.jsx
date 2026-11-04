@@ -1,9 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Clock,
-  Calendar,
-  Search,
-} from "lucide-react";
+import { Clock, Calendar, Search } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import { Input } from "@/components/ui/input";
 import {
@@ -60,10 +56,7 @@ export default function MyBreaks() {
     1;
 
   const totalDocs =
-    pagination?.total ??
-    responseData?.totalDocs ??
-    rawBreaks.length ??
-    0;
+    pagination?.total ?? responseData?.totalDocs ?? rawBreaks.length ?? 0;
 
   // Format breaks list with duration calculations
   const formattedBreaks = useMemo(() => {
@@ -75,13 +68,18 @@ export default function MyBreaks() {
         durationSec = Math.max(
           0,
           Math.floor(
-            (new Date(b.endTime).getTime() - new Date(b.startTime).getTime()) / 1000
-          )
+            (new Date(b.endTime).getTime() - new Date(b.startTime).getTime()) /
+              1000,
+          ),
         );
       }
 
       let durationFormatted = b.durationFormatted || b.durationText;
-      if (!durationFormatted && typeof durationSec === "number" && durationSec >= 0) {
+      if (
+        !durationFormatted &&
+        typeof durationSec === "number" &&
+        durationSec >= 0
+      ) {
         const h = Math.floor(durationSec / 3600);
         const m = Math.floor((durationSec % 3600) / 60);
         const s = durationSec % 60;
@@ -187,19 +185,19 @@ export default function MyBreaks() {
   }));
 
   return (
-    <PortalLayout role="crm">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        {/* Page Title */}
-        <SectionTitle
-          title={t("My Breaks", "मेरे ब्रेक")}
-          subtitle={t(
-            "Track your break sessions and duration history.",
-            "अपने ब्रेक सत्र और ब्रेक अवधि का इतिहास देखें।"
-          )}
-        />
+    // <PortalLayout role="crm">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      {/* Page Title */}
+      <SectionTitle
+        title={t("My Breaks", "मेरे ब्रेक")}
+        subtitle={t(
+          "Track your break sessions and duration history.",
+          "अपने ब्रेक सत्र और ब्रेक अवधि का इतिहास देखें।",
+        )}
+      />
 
-        {/* Filter Bar */}
-        {/* <div className="bg-card rounded-xl border border-border p-3 xs:p-4 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center justify-between gap-2.5 sm:gap-3">
+      {/* Filter Bar */}
+      {/* <div className="bg-card rounded-xl border border-border p-3 xs:p-4 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center justify-between gap-2.5 sm:gap-3">
           <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-3 flex-1">
             <div className="relative w-full xs:w-auto flex-1 max-w-full sm:max-w-xs">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -232,31 +230,30 @@ export default function MyBreaks() {
           </div>
         </div> */}
 
-        {/* Table / Mobile Cards */}
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <LoaderErrWrapper isLoading={isLoading} error={error}>
-            {isMobile ? (
-              <MyBreaksCards breaks={filtered} />
-            ) : (
-              <MyTable
-                tableHeaders={tableHeaders}
-                tableBody={tableBody}
-                emptyText={t(
-                  "No break records found.",
-                  "कोई ब्रेक रिकॉर्ड नहीं मिला।"
-                )}
-              />
-            )}
-            <Pagination
-              page={page}
-              limit={limit}
-              totalPage={totalPages}
-              isLoading={isLoading}
-              {...paginationProps}
+      {/* Table / Mobile Cards */}
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
+          {isMobile ? (
+            <MyBreaksCards breaks={filtered} />
+          ) : (
+            <MyTable
+              tableHeaders={tableHeaders}
+              tableBody={tableBody}
+              emptyText={t(
+                "No break records found.",
+                "कोई ब्रेक रिकॉर्ड नहीं मिला।",
+              )}
             />
-          </LoaderErrWrapper>
-        </div>
+          )}
+          <Pagination
+            page={page}
+            limit={limit}
+            totalPage={totalPages}
+            isLoading={isLoading}
+            {...paginationProps}
+          />
+        </LoaderErrWrapper>
       </div>
-    </PortalLayout>
+    </div>
   );
 }

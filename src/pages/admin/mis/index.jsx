@@ -462,282 +462,275 @@ export default function MISReports() {
   };
 
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={t("MIS Reports", "एमआईएस रिपोर्ट")}
-          subtitle={t(
-            "Downloadable reports for senior officials & statutory reporting",
-            "वरिष्ठ अधिकारियों और वैधानिक रिपोर्टिंग के लिए डाउनलोड करने योग्य रिपोर्ट",
-          )}
-        />
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={t("MIS Reports", "एमआईएस रिपोर्ट")}
+        subtitle={t(
+          "Downloadable reports for senior officials & statutory reporting",
+          "वरिष्ठ अधिकारियों और वैधानिक रिपोर्टिंग के लिए डाउनलोड करने योग्य रिपोर्ट",
+        )}
+      />
 
-        <LoaderErrWrapper
-          isLoading={statsLoading}
-          error={statsError?.response?.data?.message || statsError?.message}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {statTiles.map((s, i) => (
-              <StatCard
-                key={i}
-                icon={s.icon}
-                label={s.label}
-                value={Number(s.value).toLocaleString("en-IN")}
-                color={s.color}
-              />
-            ))}
-          </div>
-        </LoaderErrWrapper>
+      <LoaderErrWrapper
+        isLoading={statsLoading}
+        error={statsError?.response?.data?.message || statsError?.message}
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {statTiles.map((s, i) => (
+            <StatCard
+              key={i}
+              icon={s.icon}
+              label={s.label}
+              value={Number(s.value).toLocaleString("en-IN")}
+              color={s.color}
+            />
+          ))}
+        </div>
+      </LoaderErrWrapper>
 
-        <div className="bg-card rounded-xl border border-border p-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              <Filter className="w-4 h-4" />{" "}
-              {t("Select Report:", "रिपोर्ट चुनें:")}
-            </span>
-            <Select
-              value={selectedReport}
-              onValueChange={(v) => setSearchParams({ report: v })}
-            >
-              <SelectTrigger className="w-72 text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {visibleReports.map((r) => (
-                  <SelectItem key={r.id} value={r.id} className="text-sm">
-                    {r.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+      <div className="bg-card rounded-xl border border-border p-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <Filter className="w-4 h-4" />{" "}
+            {t("Select Report:", "रिपोर्ट चुनें:")}
+          </span>
+          <Select
+            value={selectedReport}
+            onValueChange={(v) => setSearchParams({ report: v })}
+          >
+            <SelectTrigger className="w-72 text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {visibleReports.map((r) => (
+                <SelectItem key={r.id} value={r.id} className="text-sm">
+                  {r.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-            <div className="w-px h-8 bg-border mx-1" />
+          <div className="w-px h-8 bg-border mx-1" />
 
-            <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              <Filter className="w-4 h-4" /> {t("District:", "जिला:")}
-            </span>
-            <LoaderErrWrapper
-              isLoading={demographicsLoading}
-              error={demographicsError}
-            >
-              <Select value={district} onValueChange={setDistrict}>
-                <SelectTrigger className="w-44 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all" className="text-sm">
-                    {t("All Districts", "सभी जिले")}
-                  </SelectItem>
-                  {districtOptions.map((d) => (
-                    <SelectItem
-                      key={d.value}
-                      value={d.value}
-                      className="text-sm"
-                    >
-                      {d.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </LoaderErrWrapper>
-
-            <Select value={dateRange} onValueChange={setDateRange}>
+          <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <Filter className="w-4 h-4" /> {t("District:", "जिला:")}
+          </span>
+          <LoaderErrWrapper
+            isLoading={demographicsLoading}
+            error={demographicsError}
+          >
+            <Select value={district} onValueChange={setDistrict}>
               <SelectTrigger className="w-44 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="cy" className="text-sm">
-                  {t("Calendar Year 2026", "कैलेंडर वर्ष 2026")}
+                <SelectItem value="all" className="text-sm">
+                  {t("All Districts", "सभी जिले")}
                 </SelectItem>
-                <SelectItem value="fy" className="text-sm">
-                  {t("FY 2025-26", "वित्तीय वर्ष 2025-26")}
-                </SelectItem>
-                <SelectItem value="custom" className="text-sm">
-                  {t("Custom Date Range", "कस्टम अवधि")}
-                </SelectItem>
+                {districtOptions.map((d) => (
+                  <SelectItem key={d.value} value={d.value} className="text-sm">
+                    {d.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
-            {dateRange === "custom" && (
-              <div className="flex items-center gap-2">
-                <Input
-                  type="date"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
-                  className="px-2 py-1.5 text-sm border border-input rounded-md"
-                />
-                <span className="text-muted-foreground text-sm">
-                  {t("to", "तक")}
-                </span>
-                <Input
-                  type="date"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                  className="px-2 py-1.5 text-sm border border-input rounded-md"
-                />
-              </div>
-            )}
-          </div>
-        </div>
+          </LoaderErrWrapper>
 
-        <div className="bg-card rounded-xl border border-border">
-          <div className="flex items-start gap-4 mb-4  p-4 sm:p-6 pb-0 sm:pb-0">
-            <div className="hidden sm:flex w-11 h-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              {React.createElement(currentReport.icon, {
-                className: "w-5 h-5",
-              })}
-            </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-foreground">
-                {currentReport.name}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {currentReport.desc}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t("Period:", "अवधि:")}{" "}
-                <span className="font-medium text-foreground">
-                  {periodLabels[dateRange]}
-                </span>
-              </p>
-            </div>
-            <ExportButton
-              data={reportRows}
-              columns={reportColumns}
-              filename={`MIS_${currentReport.id}_report`}
-            />
-          </div>
-          <div>
-            <LoaderErrWrapper
-              isLoading={isLoading}
-              error={error?.response?.data?.message || error?.message}
-            >
-              {selectedReport === "officer" && (
-                <OfficerRankingTable reportRows={reportRows} />
-              )}
-              {selectedReport === "service" && (
-                <ServicePerformanceTable reportRows={reportRows} />
-              )}
-              {(selectedReport === "urban" || selectedReport === "ulb") && (
-                <UlbPerformanceTable reportRows={reportRows} />
-              )}
-              {selectedReport === "rural" && (
-                <BlockPerformanceTable reportRows={reportRows} />
-              )}
-              {selectedReport === "agent" && (
-                <AgentPerformanceTable reportRows={reportRows} />
-              )}
-              {selectedReport === "ivr" && (
-                <IvrReportTable reportRows={reportRows} />
-              )}
-              {(selectedReport === "summary" ||
-                ![
-                  "officer",
-                  "service",
-                  "urban",
-                  "ulb",
-                  "rural",
-                  "agent",
-                  "ivr",
-                ].includes(selectedReport)) && (
-                <DistrictSummaryTable reportRows={reportRows} />
-              )}
-            </LoaderErrWrapper>
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6 mb-3">
-            <div className="flex items-center gap-2.5 xs:gap-3">
-              <div className="w-8 h-8 xs:w-10 xs:h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                <Sparkles className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
-              </div>
-              <div>
-                <h3 className="font-bold text-base xs:text-lg sm:text-xl">
-                  {t(
-                    "AI-Generated MIS Cover Note",
-                    "AI द्वारा जनरेट किया गया MIS कवर नोट",
-                  )}
-                </h3>
-                <p className="text-white/70 text-xs xs:text-sm">
-                  {t(
-                    "Auto-generated summary with key insights & recommendations",
-                    "मुख्य अंतर्दृष्टि और सिफारिशों के साथ स्वचालित सारांश",
-                  )}
-                </p>
-              </div>
-            </div>
-            <Button
-              onClick={handleGenerate}
-              disabled={generating}
-              className="w-full sm:w-auto bg-white/20 hover:bg-white/30 text-white text-xs xs:text-sm px-3 py-1.5 xs:px-4 xs:py-2"
-            >
-              {generating ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-1 animate-spin" />{" "}
-                  {t("Generating...", "जनरेट हो रहा है...")}
-                </>
-              ) : showSummary ? (
-                t("Regenerate", "पुनः जनरेट करें")
-              ) : (
-                t("Generate Summary", "सारांश जनरेट करें")
-              )}
-            </Button>
-          </div>
-          {showSummary && (
-            <div className="bg-white/10 rounded-xl p-4 mt-3">
-              <pre className="text-sm text-white/90 whitespace-pre-wrap font-sans leading-relaxed">
-                {aiSummary}
-              </pre>
-              <div className="flex gap-2 mt-4">
-                <Button
-                  className="bg-white text-primary hover:bg-white/90"
-                  onClick={() => {
-                    const doc = new jsPDF();
-                    doc.setFontSize(16);
-                    doc.text(
-                      "Bihar Sahyog Helpline Portal - MIS Cover Note",
-                      14,
-                      20,
-                    );
-                    doc.setFontSize(10);
-                    doc.setTextColor(100);
-                    doc.text(
-                      "Period: " +
-                        periodLabels[dateRange] +
-                        " | Generated: " +
-                        new Date().toLocaleString("en-IN"),
-                      14,
-                      28,
-                    );
-                    doc.setTextColor(0);
-                    const lines = doc.splitTextToSize(aiSummary, 180);
-                    doc.text(lines, 14, 40);
-                    doc.save("MIS_cover_note.pdf");
-                  }}
-                >
-                  <Download className="w-4 h-4 mr-1" />{" "}
-                  {t("Download PDF", "PDF डाउनलोड करें")}
-                </Button>
-                <Button
-                  className="bg-white/20 hover:bg-white/30 text-white"
-                  onClick={() => {
-                    const blob = new Blob([aiSummary], { type: "text/csv" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "MIS_cover_note.csv";
-                    a.click();
-                    URL.revokeObjectURL(url);
-                  }}
-                >
-                  <FileSpreadsheet className="w-4 h-4 mr-1" />{" "}
-                  {t("Download Excel", "एक्सेल डाउनलोड करें")}
-                </Button>
-              </div>
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger className="w-44 text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="cy" className="text-sm">
+                {t("Calendar Year 2026", "कैलेंडर वर्ष 2026")}
+              </SelectItem>
+              <SelectItem value="fy" className="text-sm">
+                {t("FY 2025-26", "वित्तीय वर्ष 2025-26")}
+              </SelectItem>
+              <SelectItem value="custom" className="text-sm">
+                {t("Custom Date Range", "कस्टम अवधि")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          {dateRange === "custom" && (
+            <div className="flex items-center gap-2">
+              <Input
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                className="px-2 py-1.5 text-sm border border-input rounded-md"
+              />
+              <span className="text-muted-foreground text-sm">
+                {t("to", "तक")}
+              </span>
+              <Input
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                className="px-2 py-1.5 text-sm border border-input rounded-md"
+              />
             </div>
           )}
         </div>
       </div>
-    </PortalLayout>
+
+      <div className="bg-card rounded-xl border border-border">
+        <div className="flex items-start gap-4 mb-4  p-4 sm:p-6 pb-0 sm:pb-0">
+          <div className="hidden sm:flex w-11 h-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            {React.createElement(currentReport.icon, {
+              className: "w-5 h-5",
+            })}
+          </div>
+          <div className="flex-1">
+            <h3 className="font-bold text-foreground">{currentReport.name}</h3>
+            <p className="text-sm text-muted-foreground">
+              {currentReport.desc}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {t("Period:", "अवधि:")}{" "}
+              <span className="font-medium text-foreground">
+                {periodLabels[dateRange]}
+              </span>
+            </p>
+          </div>
+          <ExportButton
+            data={reportRows}
+            columns={reportColumns}
+            filename={`MIS_${currentReport.id}_report`}
+          />
+        </div>
+        <div>
+          <LoaderErrWrapper
+            isLoading={isLoading}
+            error={error?.response?.data?.message || error?.message}
+          >
+            {selectedReport === "officer" && (
+              <OfficerRankingTable reportRows={reportRows} />
+            )}
+            {selectedReport === "service" && (
+              <ServicePerformanceTable reportRows={reportRows} />
+            )}
+            {(selectedReport === "urban" || selectedReport === "ulb") && (
+              <UlbPerformanceTable reportRows={reportRows} />
+            )}
+            {selectedReport === "rural" && (
+              <BlockPerformanceTable reportRows={reportRows} />
+            )}
+            {selectedReport === "agent" && (
+              <AgentPerformanceTable reportRows={reportRows} />
+            )}
+            {selectedReport === "ivr" && (
+              <IvrReportTable reportRows={reportRows} />
+            )}
+            {(selectedReport === "summary" ||
+              ![
+                "officer",
+                "service",
+                "urban",
+                "ulb",
+                "rural",
+                "agent",
+                "ivr",
+              ].includes(selectedReport)) && (
+              <DistrictSummaryTable reportRows={reportRows} />
+            )}
+          </LoaderErrWrapper>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-5 md:p-6 text-white">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 xs:gap-4 sm:gap-6 mb-3">
+          <div className="flex items-center gap-2.5 xs:gap-3">
+            <div className="w-8 h-8 xs:w-10 xs:h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+              <Sparkles className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-base xs:text-lg sm:text-xl">
+                {t(
+                  "AI-Generated MIS Cover Note",
+                  "AI द्वारा जनरेट किया गया MIS कवर नोट",
+                )}
+              </h3>
+              <p className="text-white/70 text-xs xs:text-sm">
+                {t(
+                  "Auto-generated summary with key insights & recommendations",
+                  "मुख्य अंतर्दृष्टि और सिफारिशों के साथ स्वचालित सारांश",
+                )}
+              </p>
+            </div>
+          </div>
+          <Button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="w-full sm:w-auto bg-white/20 hover:bg-white/30 text-white text-xs xs:text-sm px-3 py-1.5 xs:px-4 xs:py-2"
+          >
+            {generating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-1 animate-spin" />{" "}
+                {t("Generating...", "जनरेट हो रहा है...")}
+              </>
+            ) : showSummary ? (
+              t("Regenerate", "पुनः जनरेट करें")
+            ) : (
+              t("Generate Summary", "सारांश जनरेट करें")
+            )}
+          </Button>
+        </div>
+        {showSummary && (
+          <div className="bg-white/10 rounded-xl p-4 mt-3">
+            <pre className="text-sm text-white/90 whitespace-pre-wrap font-sans leading-relaxed">
+              {aiSummary}
+            </pre>
+            <div className="flex gap-2 mt-4">
+              <Button
+                className="bg-white text-primary hover:bg-white/90"
+                onClick={() => {
+                  const doc = new jsPDF();
+                  doc.setFontSize(16);
+                  doc.text(
+                    "Bihar Sahyog Helpline Portal - MIS Cover Note",
+                    14,
+                    20,
+                  );
+                  doc.setFontSize(10);
+                  doc.setTextColor(100);
+                  doc.text(
+                    "Period: " +
+                      periodLabels[dateRange] +
+                      " | Generated: " +
+                      new Date().toLocaleString("en-IN"),
+                    14,
+                    28,
+                  );
+                  doc.setTextColor(0);
+                  const lines = doc.splitTextToSize(aiSummary, 180);
+                  doc.text(lines, 14, 40);
+                  doc.save("MIS_cover_note.pdf");
+                }}
+              >
+                <Download className="w-4 h-4 mr-1" />{" "}
+                {t("Download PDF", "PDF डाउनलोड करें")}
+              </Button>
+              <Button
+                className="bg-white/20 hover:bg-white/30 text-white"
+                onClick={() => {
+                  const blob = new Blob([aiSummary], { type: "text/csv" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = "MIS_cover_note.csv";
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+              >
+                <FileSpreadsheet className="w-4 h-4 mr-1" />{" "}
+                {t("Download Excel", "एक्सेल डाउनलोड करें")}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

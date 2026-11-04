@@ -16,6 +16,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useCall } from "@/context/CallContext";
 import { formatDurationMMSS } from "../helpers";
 import CallActiveCard from "./CallActiveCard";
+import CallTimer from "./CallTimer";
 
 export default function CallCardWrapper({
   variant = "full",
@@ -34,13 +35,17 @@ export default function CallCardWrapper({
   const {
     callState,
     caller,
+    activeCall,
+    callDetails,
     callDuration,
     isHold: contextIsHold,
     answerCall,
     holdCall,
+    unholdCall,
     dropCall,
     isAnswering,
     isHolding,
+    isUnholding,
     isDropping,
     hasActiveCall,
     isAvayaReady,
@@ -68,7 +73,11 @@ export default function CallCardWrapper({
     const nextHold = !effectiveHold;
     setIsHold(nextHold);
     try {
-      await holdCall(undefined, nextHold);
+      if (nextHold) {
+        await holdCall();
+      } else {
+        await unholdCall();
+      }
     } catch (e) {
       console.error("Error toggling hold:", e);
     }
@@ -82,12 +91,25 @@ export default function CallCardWrapper({
     }
   };
 
+  // Extract timing details from /telephony/call/details API response or activeCall fallback
+  const actualDetails = callDetails?.data || callDetails;
+  const timerStartTime =
+    actualDetails?.answerTimeISO ||
+    actualDetails?.answerTime ||
+    actualDetails?.ringTimeISO ||
+    actualDetails?.ringTime ||
+    activeCall?.createdAt ||
+    caller?.createdAt;
+
+  const initialDurationSeconds = actualDetails?.currentDurationSeconds;
+  const initialDuration = actualDetails?.currentDuration;
+
   // -------------------------------------------------------------
   // VARIANT 1: SIDEBAR (Compact bottom dock)
   // -------------------------------------------------------------
   if (variant === "sidebar") {
     // Only show sidebar card when there is an active/ringing call
-    if (!hasActiveCall || callState === "idle") {
+    if (!hasActiveCall || callState === "idle" || callState === "ended") {
       return null;
     }
 
@@ -130,9 +152,12 @@ export default function CallCardWrapper({
             ) : (
               <>
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[11px] font-mono text-emerald-300">
-                  {formatDurationMMSS(callDuration)}
-                </span>
+                <CallTimer
+                  startTime={timerStartTime}
+                  initialDurationSeconds={initialDurationSeconds}
+                  fallbackText={initialDuration || "00:00"}
+                  className="text-[11px] font-mono text-emerald-300"
+                />
               </>
             )}
           </div>
@@ -203,7 +228,7 @@ export default function CallCardWrapper({
               <button
                 type="button"
                 onClick={handleToggleHold}
-                disabled={isHolding}
+                disabled={isHolding || isUnholding}
                 className={`flex-1 h-7 px-2 rounded flex items-center justify-center gap-1 text-xs font-medium transition-all ${
                   effectiveHold
                     ? "bg-amber-500 text-white"
@@ -211,7 +236,7 @@ export default function CallCardWrapper({
                 }`}
                 title={effectiveHold ? t("Resume", "पुनः शुरू") : t("Hold", "होल्ड")}
               >
-                {isHolding ? (
+                {isHolding || isUnholding ? (
                   <Loader2 className="w-3 h-3 animate-spin" />
                 ) : effectiveHold ? (
                   <>
@@ -272,7 +297,7 @@ export default function CallCardWrapper({
   // -------------------------------------------------------------
   // VARIANT 2: FULL - IDLE / NO ACTIVE CALL
   // -------------------------------------------------------------
-  if (!hasActiveCall || callState === "idle") {
+  if (!hasActiveCall || callState === "idle" || callState === "ended") {
     return (
       <div
         className={`rounded-2xl p-6 text-white bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/60 shadow-xl ${className}`}
@@ -320,7 +345,7 @@ export default function CallCardWrapper({
         </div>
 
         {/* Footer info (no action buttons) */}
-        <div className="pt-4 mt-2 border-t border-white/10 flex items-center justify-between text-xs text-white/50">
+        {/* <div className="pt-4 mt-2 border-t border-white/10 flex items-center justify-between text-xs text-white/50">
           <span>
             {t("Agent ID", "एजेंट आईडी")}: {agentId || "—"}
           </span>
@@ -329,7 +354,7 @@ export default function CallCardWrapper({
               ? `${t("Status", "स्थिति")}: ${unifiedStatus}`
               : t("Idle", "निष्क्रिय")}
           </span>
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -348,6 +373,9 @@ export default function CallCardWrapper({
     <CallActiveCard
       callState={callState}
       callDuration={callDuration}
+      startTime={timerStartTime}
+      initialDurationSeconds={initialDurationSeconds}
+      initialDuration={initialDuration}
       caller={safeCaller}
       isHold={effectiveHold}
       setIsHold={handleToggleHold}

@@ -213,7 +213,9 @@ export default function Inmail() {
   };
 
   return (
-    <PortalLayout role="crm">
+     // <PortalLayout role="crm">
+     <>
+   
       <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Title and Header */}
         <SectionTitle
@@ -318,6 +320,6 @@ export default function Inmail() {
           setPreviewMail(null);
         }}
       />
-    </PortalLayout>
+      </>
   );
 }

@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from "react";
-import PortalLayout from "@/components/PortalLayout";
 import ExportButton from "@/components/ExportButton";
 import { SectionTitle } from "@/components/ChartCard";
 import { useLanguage } from "@/context/LanguageContext";
@@ -46,9 +45,10 @@ export default function CallHistoryLog() {
   const { t } = useLanguage();
 
   // Pagination hook
-  const { page, limit, setPage, setLimit, limitOptions } = usePagination(1, [
-    10, 20, 50, 100,
-  ]);
+  const { page, limit, setPage, setLimit, limitOptions } = usePagination(
+    1,
+    [10, 20, 50, 100],
+  );
 
   // Filters state
   const [search, setSearch] = useState("");
@@ -209,12 +209,12 @@ export default function CallHistoryLog() {
         label: t("Evidence Tagged", "साक्ष्य चिह्नित"),
       },
     ],
-    [t]
+    [t],
   );
 
   const toggleSelect = (id) => {
     setSelected((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
     );
   };
 
@@ -238,7 +238,7 @@ export default function CallHistoryLog() {
 
   const evidenceCount = useMemo(
     () => calls.filter((c) => c.evidenceTagged).length,
-    [calls]
+    [calls],
   );
 
   const missedCount = useMemo(
@@ -247,9 +247,9 @@ export default function CallHistoryLog() {
         (c) =>
           c.status?.toLowerCase() === "missed" ||
           c.status?.toLowerCase() === "failed" ||
-          c.disposition?.toLowerCase().includes("missed")
+          c.disposition?.toLowerCase().includes("missed"),
       ).length,
-    [calls]
+    [calls],
   );
 
   const avgDuration = useMemo(() => calculateAvgDuration(calls), [calls]);
@@ -261,14 +261,14 @@ export default function CallHistoryLog() {
   }, [selected, filteredCalls]);
 
   return (
-    <PortalLayout role="crm">
+    <>
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <SectionTitle
             title={t("Call History Log", "कॉल इतिहास लॉग")}
             subtitle={t(
               "Complete call archive with recording playback, metadata, bulk export, and evidence tagging.",
-              "रिकॉर्डिंग प्लेबैक, मेटाडेटा, थोक निर्यात और साक्ष्य टैगिंग के साथ पूर्ण कॉल संग्रह।"
+              "रिकॉर्डिंग प्लेबैक, मेटाडेटा, थोक निर्यात और साक्ष्य टैगिंग के साथ पूर्ण कॉल संग्रह।",
             )}
           />
           <ExportButton
@@ -349,30 +349,30 @@ export default function CallHistoryLog() {
           exportData={selectedExportData}
           exportColumns={exportColumns}
         />
+
+        {/* View Call Details & Audio Playback Dialog */}
+        <CallDetailDialog
+          call={viewCall}
+          onClose={() => setViewCall(null)}
+          onOpenEvidenceDialog={setEvidenceDialogCall}
+        />
+
+        {/* Mark Single Call as Evidence Dialog */}
+        <MarkEvidenceDialog
+          call={evidenceDialogCall}
+          onClose={() => setEvidenceDialogCall(null)}
+          onSuccess={({ callId, evidenceReason }) => {
+            setTaggedOverrides((prev) => ({
+              ...prev,
+              [callId]: {
+                evidenceTagged: true,
+                evidenceReason,
+                taggedDate: moment().format("DD MMM YYYY"),
+              },
+            }));
+          }}
+        />
       </div>
-
-      {/* View Call Details & Audio Playback Dialog */}
-      <CallDetailDialog
-        call={viewCall}
-        onClose={() => setViewCall(null)}
-        onOpenEvidenceDialog={setEvidenceDialogCall}
-      />
-
-      {/* Mark Single Call as Evidence Dialog */}
-      <MarkEvidenceDialog
-        call={evidenceDialogCall}
-        onClose={() => setEvidenceDialogCall(null)}
-        onSuccess={({ callId, evidenceReason }) => {
-          setTaggedOverrides((prev) => ({
-            ...prev,
-            [callId]: {
-              evidenceTagged: true,
-              evidenceReason,
-              taggedDate: moment().format("DD MMM YYYY"),
-            },
-          }));
-        }}
-      />
-    </PortalLayout>
+    </>
   );
 }

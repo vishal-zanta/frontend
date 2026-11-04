@@ -239,126 +239,124 @@ export default function WorkflowConfig() {
   };
   // console.log({ editLevel });
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={t("Workflow Configuration", "कार्यप्रवाह कॉन्फ़िगरेशन")}
-          subtitle={t(
-            "Configure department escalation workflow levels and designations",
-            "विभाग वृद्धि कार्यप्रवाह स्तर और पदनाम कॉन्फ़िगर करें",
-          )}
-        />
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={t("Workflow Configuration", "कार्यप्रवाह कॉन्फ़िगरेशन")}
+        subtitle={t(
+          "Configure department escalation workflow levels and designations",
+          "विभाग वृद्धि कार्यप्रवाह स्तर और पदनाम कॉन्फ़िगर करें",
+        )}
+      />
 
-        {/* Visual workflow */}
-        <EscalationFlow levels={workflowList} />
+      {/* Visual workflow */}
+      <EscalationFlow levels={workflowList} />
 
-        {/* Config table */}
-        <div className="bg-card rounded-xl border border-border overflow-hidden mt-6">
-          <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-            <h3 className="font-bold text-foreground">
-              {t("Workflow Levels", "कार्यप्रवाह स्तर")}
-            </h3>
-            <div className="flex items-center gap-2">
-              <LoaderErrWrapper isLoading={deptLoading}>
-                <WorkflowFilter
-                  filterOptions={[
-                    {
-                      label: t("Departments", "विभाग"),
-                      options: depts,
-                      filterKey: "department",
-                    },
-                  ]}
-                  filter={filter}
-                  setFilter={setFilter}
-                />
-              </LoaderErrWrapper>
-              <Button
-                size="sm"
-                className="bg-primary hover:bg-primary/90"
-                onClick={() => {
-                  setEditLevel(null);
-                  setDialog({ type: "add" });
-                }}
-              >
-                <Plus className="w-4 h-4 mr-1" />{" "}
-                {t("Add Level", "स्तर जोड़ें")}
-              </Button>
-            </div>
+      {/* Config table */}
+      <div className="bg-card rounded-xl border border-border overflow-hidden mt-6">
+        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+          <h3 className="font-bold text-foreground">
+            {t("Workflow Levels", "कार्यप्रवाह स्तर")}
+          </h3>
+          <div className="flex items-center gap-2">
+            <LoaderErrWrapper isLoading={deptLoading}>
+              <WorkflowFilter
+                filterOptions={[
+                  {
+                    label: t("Departments", "विभाग"),
+                    options: depts,
+                    filterKey: "department",
+                  },
+                ]}
+                filter={filter}
+                setFilter={setFilter}
+              />
+            </LoaderErrWrapper>
+            <Button
+              size="sm"
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => {
+                setEditLevel(null);
+                setDialog({ type: "add" });
+              }}
+            >
+              <Plus className="w-4 h-4 mr-1" /> {t("Add Level", "स्तर जोड़ें")}
+            </Button>
           </div>
-
-          <LoaderErrWrapper
-            isLoading={isWorkflowLoading || deptLoading}
-            error={workflowError || deptError}
-          >
-            <WorkflowTable
-              docs={workflowList}
-              setDocs={setWorkflowList}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              handleOrderChange={handleOrderChange}
-            />
-          </LoaderErrWrapper>
         </div>
 
-        {/* Rules */}
-        <WorkflowRules />
-
-        {/* Add/Edit Dialog */}
-        {dialog && (
-          <div
-            style={{
-              marginTop: 0,
-            }}
-            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 "
-            onClick={() => setDialog(null)}
-          >
-            <WorkflowForm
-              editLevel={editLevel}
-              roleOptions={roleOptions}
-              initialValues={initialValues}
-              handleSubmit={handleSaveLevel}
-              onClose={() => setDialog(null)}
-              isPending={postMutation.isPending}
-            />
-          </div>
-        )}
-        {reOrderDialog && (
-          <EditDialog
-            onSave={() =>
-              handleOrderChange(
-                reOrderDialog.oldIndex,
-                reOrderDialog.newIndex,
-                true,
-                reOrderDialog.workflowList,
-              )
-            }
-            onClose={() => {
-              reOrderDialog.workflowList &&
-                setWorkflowList(reOrderDialog.workflowList);
-              setReOrderDialog(null);
-            }}
-            title="Reorder Workflow Level"
-            saving={postMutation.isPending}
-          >
-            <div className="space-y-4 text-sm text-muted-foreground">
-              <p className="text-foreground font-medium">
-                Are you sure you want to change the sequence of this escalation
-                level?
-              </p>
-            </div>
-          </EditDialog>
-        )}
-
-        {/* Delete Dialog */}
-        {deleteRecord && (
-          <DeleteDialog
-            onClose={() => setDeleteRecord(null)}
-            onDelete={handleConfirmDelete}
-            title={`Level ${deleteRecord.order}`}
-            deleting={postMutation.isPending}
+        <LoaderErrWrapper
+          isLoading={isWorkflowLoading || deptLoading}
+          error={workflowError || deptError}
+        >
+          <WorkflowTable
+            docs={workflowList}
+            setDocs={setWorkflowList}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            handleOrderChange={handleOrderChange}
           />
-        )}
+        </LoaderErrWrapper>
       </div>
-    </PortalLayout>
+
+      {/* Rules */}
+      <WorkflowRules />
+
+      {/* Add/Edit Dialog */}
+      {dialog && (
+        <div
+          style={{
+            marginTop: 0,
+          }}
+          className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 "
+          onClick={() => setDialog(null)}
+        >
+          <WorkflowForm
+            editLevel={editLevel}
+            roleOptions={roleOptions}
+            initialValues={initialValues}
+            handleSubmit={handleSaveLevel}
+            onClose={() => setDialog(null)}
+            isPending={postMutation.isPending}
+          />
+        </div>
+      )}
+      {reOrderDialog && (
+        <EditDialog
+          onSave={() =>
+            handleOrderChange(
+              reOrderDialog.oldIndex,
+              reOrderDialog.newIndex,
+              true,
+              reOrderDialog.workflowList,
+            )
+          }
+          onClose={() => {
+            reOrderDialog.workflowList &&
+              setWorkflowList(reOrderDialog.workflowList);
+            setReOrderDialog(null);
+          }}
+          title="Reorder Workflow Level"
+          saving={postMutation.isPending}
+        >
+          <div className="space-y-4 text-sm text-muted-foreground">
+            <p className="text-foreground font-medium">
+              Are you sure you want to change the sequence of this escalation
+              level?
+            </p>
+          </div>
+        </EditDialog>
+      )}
+
+      {/* Delete Dialog */}
+      {deleteRecord && (
+        <DeleteDialog
+          onClose={() => setDeleteRecord(null)}
+          onDelete={handleConfirmDelete}
+          title={`Level ${deleteRecord.order}`}
+          deleting={postMutation.isPending}
+        />
+      )}
+    </div>
   );
 }

@@ -13,6 +13,7 @@ import {
   getCallDetails,
   postAnswerCall,
   postHoldCall,
+  postUnholdCall,
   postDropCall,
 } from "@/api/calling.api";
 import { useSockets } from "@/context/SocketContext";
@@ -50,10 +51,14 @@ export function CallProvider({ children }) {
     refetchIntervalInBackground: true,
   });
 
+  
+
   // Map response using standalone helper (logic outside context)
   const mappedState = useMemo(() => {
+
     return mapAgentStatusResponse(responseData);
   }, [responseData]);
+  console.log({mappedState, responseData});
 
   const playRingtone = useCallback(() => {
     try {
@@ -81,21 +86,24 @@ export function CallProvider({ children }) {
     }
   }, []);
 
-  // Effective call state: fallback to mapped state if no local override
+  // Effective call state: if backend status is idle (e.g. READY_FREE / WORKING_AFTER_CALL), force idle
   const effectiveCallState =
-    localCallStateOverride || mappedState.callState || "idle";
+    mappedState.callState === "idle"
+      ? "idle"
+      : localCallStateOverride || mappedState.callState || "idle";
 
   // Manage duration timer when connected
-  useEffect(() => {
-    if (effectiveCallState === "connected") {
-      const interval = setInterval(() => {
-        setCallDuration((prev) => prev + 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    } else {
-      setCallDuration(0);
-    }
-  }, [effectiveCallState]);
+  // TODO : MAke an seprate component that takes ISO string and rerenders for duration .
+  // useEffect(() => {
+  //   if (effectiveCallState === "connected") {
+  //     const interval = setInterval(() => {
+  //       setCallDuration((prev) => prev + 1);
+  //     }, 1000);
+  //     return () => clearInterval(interval);
+  //   } else {
+  //     setCallDuration(0);
+  //   }
+  // }, [effectiveCallState]);
 
   // Handle ringtone based on effective state
   useEffect(() => {
@@ -106,9 +114,12 @@ export function CallProvider({ children }) {
     }
   }, [effectiveCallState, playRingtone, stopRingtone]);
 
-  // Reset local override when mapped state syncs up
+  // Reset local override when mapped state syncs up or becomes idle
   useEffect(() => {
-    if (mappedState.callState && mappedState.callState === localCallStateOverride) {
+    if (
+      mappedState.callState === "idle" ||
+      (mappedState.callState && mappedState.callState === localCallStateOverride)
+    ) {
       setLocalCallStateOverride(null);
     }
   }, [mappedState.callState, localCallStateOverride]);
@@ -119,7 +130,7 @@ export function CallProvider({ children }) {
       return;
     }
 
-    console.log("[CallContext] Agent is CCE. Subscribing to call events...");
+    console.log("[CallContext] Agent is CCE. Subscribing to call events...",);
 
     // 1. Ringing event -> Invalidate/refetch status & ring
     const unsubRinging = subscribe("call:ringing", (data) => {
@@ -134,15 +145,16 @@ export function CallProvider({ children }) {
       console.log("[CallContext] Socket event call:answered received:", data);
       stopRingtone();
       setLocalCallStateOverride("connected");
-      queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+      // queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+      fetchCallDetails();
     });
 
-    // 3. Dropped event -> Stop ringtone, end, invalidate status
+    // 3. Dropped event -> Stop ringtone, reset override to idle, invalidate status
     const unsubDropped = subscribe("call:dropped", (data) => {
       console.log("[CallContext] Socket event call:dropped received:", data);
       stopRingtone();
-      setLocalCallStateOverride("ended");
-      queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+      setLocalCallStateOverride("idle");
+      // queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
     });
 
     return () => {
@@ -173,6 +185,15 @@ export function CallProvider({ children }) {
     }
   }, []);
 
+  // Whenever call enters connected state, fetch call details (for answerTimeISO, duration, etc.)
+  useEffect(() => {
+    if (effectiveCallState === "connected") {
+      fetchCallDetails();
+    } else if (effectiveCallState === "idle" || effectiveCallState === "ended") {
+      setCallDetails(null);
+    }
+  }, [effectiveCallState, fetchCallDetails]);
+
   // Action: Answer Call
   const answerCallMutation = useMutation({
     mutationFn: (payload) => postAnswerCall(payload),
@@ -184,9 +205,17 @@ export function CallProvider({ children }) {
     },
   });
 
-  // Action: Hold / Resume Call
+  // Action: Hold Call
   const holdCallMutation = useMutation({
     mutationFn: (payload) => postHoldCall(payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+    },
+  });
+
+  // Action: Unhold Call
+  const unholdCallMutation = useMutation({
+    mutationFn: (payload) => postUnholdCall(payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
     },
@@ -197,7 +226,7 @@ export function CallProvider({ children }) {
     mutationFn: (payload) => postDropCall(payload),
     onSuccess: async () => {
       stopRingtone();
-      setLocalCallStateOverride("ended");
+      setLocalCallStateOverride("idle");
       await queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
     },
   });
@@ -234,10 +263,13 @@ export function CallProvider({ children }) {
       answerCallMutation.mutateAsync({
         callId: callId || mappedState.caller?.callId,
       }),
-    holdCall: (callId, hold = true) =>
+    holdCall: (callId) =>
       holdCallMutation.mutateAsync({
         callId: callId || mappedState.caller?.callId,
-        hold,
+      }),
+    unholdCall: (callId) =>
+      unholdCallMutation.mutateAsync({
+        callId: callId || mappedState.caller?.callId,
       }),
     dropCall: (callId) =>
       dropCallMutation.mutateAsync({
@@ -246,6 +278,7 @@ export function CallProvider({ children }) {
 
     isAnswering: answerCallMutation.isPending,
     isHolding: holdCallMutation.isPending,
+    isUnholding: unholdCallMutation.isPending,
     isDropping: dropCallMutation.isPending,
 
     // Quick status flags
@@ -254,8 +287,7 @@ export function CallProvider({ children }) {
     isEnded: effectiveCallState === "ended",
     hasActiveCall: Boolean(
       effectiveCallState === "ringing" ||
-        effectiveCallState === "connected" ||
-        effectiveCallState === "ended"
+        effectiveCallState === "connected"
     ),
   };
 
@@ -288,9 +320,11 @@ export function useCall() {
       stopRingtone: () => {},
       answerCall: async () => {},
       holdCall: async () => {},
+      unholdCall: async () => {},
       dropCall: async () => {},
       isAnswering: false,
       isHolding: false,
+      isUnholding: false,
       isDropping: false,
       isRinging: false,
       isConnected: false,

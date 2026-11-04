@@ -25,10 +25,7 @@ import { getSuccessToast } from "@/utils/helpers";
 import { useGetCCETracking } from "@/pages/crm/query";
 import { postAdminLogout } from "@/api/auth.api";
 import ViewTrackAgentDialog from "./components/ViewTrackAgentDialog";
-import {
-  getStatusBadgeConfig,
-  getScreenStateBadgeConfig,
-} from "./helpers";
+import { getStatusBadgeConfig, getScreenStateBadgeConfig } from "./helpers";
 
 const TrackAgent = () => {
   const { t } = useLanguage();
@@ -114,7 +111,8 @@ const TrackAgent = () => {
   const totalPage = useMemo(() => {
     if (pagination?.totalPages) return pagination.totalPages;
     if (pagination?.totalPage) return pagination.totalPage;
-    if (pagination?.totalDocs) return Math.max(1, Math.ceil(pagination.totalDocs / limit));
+    if (pagination?.totalDocs)
+      return Math.max(1, Math.ceil(pagination.totalDocs / limit));
     return 1;
   }, [pagination, limit]);
 
@@ -314,147 +312,147 @@ const TrackAgent = () => {
   });
 
   return (
-    <PortalLayout role="crm">
-      <div className="space-y-4 p-4 sm:p-6 ">
-        {/* Title */}
-        <SectionTitle
-          title={t("Track Agent", "एजेंट ट्रैक करें")}
-          subtitle={t(
-            "Monitor real-time agent presence, active sessions, and perform administrative actions.",
-            "वास्तविक समय एजेंट उपस्थिति, सक्रिय सत्रों की निगरानी करें और प्रशासनिक कार्रवाई करें।",
-          )}
+    // <PortalLayout role="crm">
+    <div className="space-y-4 p-4 sm:p-6 ">
+      {/* Title */}
+      <SectionTitle
+        title={t("Track Agent", "एजेंट ट्रैक करें")}
+        subtitle={t(
+          "Monitor real-time agent presence, active sessions, and perform administrative actions.",
+          "वास्तविक समय एजेंट उपस्थिति, सक्रिय सत्रों की निगरानी करें और प्रशासनिक कार्रवाई करें।",
+        )}
+      />
+
+      {/* Stats summary cards using StatCard */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <StatCard
+          icon={Users}
+          label={t("Total Agents", "कुल एजेंट")}
+          value={statsData?.totalAgents ?? 0}
+          color="blue"
         />
+        <StatCard
+          icon={UserCheck}
+          label={t("Online Agents", "ऑनलाइन एजेंट")}
+          value={statsData?.onlineAgents ?? 0}
+          color="green"
+        />
+        <StatCard
+          icon={Monitor}
+          label={t("Active On Screen", "स्क्रीन पर सक्रिय")}
+          value={statsData?.activeOnScreenAgents ?? 0}
+          color="sky"
+        />
+        <StatCard
+          icon={Clock}
+          label={t("Idle / Background", "निष्क्रिय / बैकग्राउंड")}
+          value={statsData?.idleOrBackgroundAgents ?? 0}
+          color="amber"
+        />
+        <StatCard
+          icon={Coffee}
+          label={t("On Break", "ब्रेक पर")}
+          value={statsData?.onBreakAgents ?? 0}
+          color="purple"
+        />
+        <StatCard
+          icon={UserX}
+          label={t("Offline Agents", "ऑफ़लाइन एजेंट")}
+          value={statsData?.offlineAgents ?? 0}
+          color="red"
+        />
+      </div>
 
-        {/* Stats summary cards using StatCard */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <StatCard
-            icon={Users}
-            label={t("Total Agents", "कुल एजेंट")}
-            value={statsData?.totalAgents ?? 0}
-            color="blue"
-          />
-          <StatCard
-            icon={UserCheck}
-            label={t("Online Agents", "ऑनलाइन एजेंट")}
-            value={statsData?.onlineAgents ?? 0}
-            color="green"
-          />
-          <StatCard
-            icon={Monitor}
-            label={t("Active On Screen", "स्क्रीन पर सक्रिय")}
-            value={statsData?.activeOnScreenAgents ?? 0}
-            color="sky"
-          />
-          <StatCard
-            icon={Clock}
-            label={t("Idle / Background", "निष्क्रिय / बैकग्राउंड")}
-            value={statsData?.idleOrBackgroundAgents ?? 0}
-            color="amber"
-          />
-          <StatCard
-            icon={Coffee}
-            label={t("On Break", "ब्रेक पर")}
-            value={statsData?.onBreakAgents ?? 0}
-            color="purple"
-          />
-          <StatCard
-            icon={UserX}
-            label={t("Offline Agents", "ऑफ़लाइन एजेंट")}
-            value={statsData?.offlineAgents ?? 0}
-            color="red"
-          />
-        </div>
-
-        {/* Filters bar */}
-        <div className="space-y-3">
-          <div className="bg-card rounded-xl border border-border p-4 shadow-sm flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-            <div className="flex-1 max-w-sm">
-              <SearchDebounced
-                initialValue={searchQuery}
-                handleDebouncedChange={(val) => {
-                  setSearchQuery(val);
-                  setPage(1);
-                }}
-                placeholder={t(
-                  "Search agent by name or ID...",
-                  "एजेंट नाम या आईडी से खोजें...",
-                )}
-                delay={300}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Filter
-                filters={filters}
-                setFilters={(val) => {
-                  setFilters(val);
-                  setPage(1);
-                }}
-                filterOptions={filterOptions}
-                onReset={() => {
-                  setFilters({});
-                  setPage(1);
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Table Container */}
-          <div className="border border-border rounded-lg overflow-hidden bg-card ">
-            <MyTable
-              tableHeaders={tableHeaders}
-              tableBody={tableBody}
-              emptyText={
-                isLoading
-                  ? t("Loading agents...", "एजेंट लोड हो रहे हैं...")
-                  : t("No agents found", "कोई एजेंट नहीं मिला")
-              }
+      {/* Filters bar */}
+      <div className="space-y-3">
+        <div className="bg-card rounded-xl border border-border p-4 shadow-sm flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+          <div className="flex-1 max-w-sm">
+            <SearchDebounced
+              initialValue={searchQuery}
+              handleDebouncedChange={(val) => {
+                setSearchQuery(val);
+                setPage(1);
+              }}
+              placeholder={t(
+                "Search agent by name or ID...",
+                "एजेंट नाम या आईडी से खोजें...",
+              )}
+              delay={300}
             />
-            <Pagination
-              page={page}
-              setPage={setPage}
-              limit={limit}
-              setLimit={setLimit}
-              totalPage={totalPage}
-              limitOptions={[10, 20, 50]}
-              isLoading={isLoading}
+          </div>
+          <div className="flex items-center gap-2">
+            <Filter
+              filters={filters}
+              setFilters={(val) => {
+                setFilters(val);
+                setPage(1);
+              }}
+              filterOptions={filterOptions}
+              onReset={() => {
+                setFilters({});
+                setPage(1);
+              }}
             />
           </div>
         </div>
 
-        {/* View Details Dialog */}
-        <ViewTrackAgentDialog
-          agent={viewAgent}
-          onClose={() => setViewAgent(null)}
-        />
+        {/* Table Container */}
+        <div className="border border-border rounded-lg overflow-hidden bg-card ">
+          <MyTable
+            tableHeaders={tableHeaders}
+            tableBody={tableBody}
+            emptyText={
+              isLoading
+                ? t("Loading agents...", "एजेंट लोड हो रहे हैं...")
+                : t("No agents found", "कोई एजेंट नहीं मिला")
+            }
+          />
+          <Pagination
+            page={page}
+            setPage={setPage}
+            limit={limit}
+            setLimit={setLimit}
+            totalPage={totalPage}
+            limitOptions={[10, 20, 50]}
+            isLoading={isLoading}
+          />
+        </div>
+      </div>
 
-        {/* Force Logout Confirmation Dialog */}
-        {logoutUser && (
-          <EditDialog
-            title={t("Confirm Logout", "लॉगआउट की पुष्टि करें")}
-            onClose={() => setLogoutUser(null)}
-            onSave={confirmLogout}
-            saving={isLoggingOut}
-          >
-            <div className="text-sm text-muted-foreground py-2 space-y-2">
-              <p>
-                {t(
-                  "Are you sure you want to force logout",
-                  "क्या आप वाकई फोर्स लॉगआउट करना चाहते हैं",
-                )}{" "}
-                <strong className="text-foreground">{logoutUser.name}</strong> (
-                {logoutUser.userCode || logoutUser._id})?This will terminate their active session.
-              </p>
-              {/* <p className="text-xs text-muted-foreground/80">
+      {/* View Details Dialog */}
+      <ViewTrackAgentDialog
+        agent={viewAgent}
+        onClose={() => setViewAgent(null)}
+      />
+
+      {/* Force Logout Confirmation Dialog */}
+      {logoutUser && (
+        <EditDialog
+          title={t("Confirm Logout", "लॉगआउट की पुष्टि करें")}
+          onClose={() => setLogoutUser(null)}
+          onSave={confirmLogout}
+          saving={isLoggingOut}
+        >
+          <div className="text-sm text-muted-foreground py-2 space-y-2">
+            <p>
+              {t(
+                "Are you sure you want to force logout",
+                "क्या आप वाकई फोर्स लॉगआउट करना चाहते हैं",
+              )}{" "}
+              <strong className="text-foreground">{logoutUser.name}</strong> (
+              {logoutUser.userCode || logoutUser._id})?This will terminate their
+              active session.
+            </p>
+            {/* <p className="text-xs text-muted-foreground/80">
                 {t(
                   "This will immediately terminate their active session and mark their status as inactive.",
                   "यह उनके सक्रिय सत्र को तुरंत समाप्त कर देगा और उनकी स्थिति को निष्क्रिय चिह्नित करेगा।",
                 )}
               </p> */}
-            </div>
-          </EditDialog>
-        )}
-      </div>
-    </PortalLayout>
+          </div>
+        </EditDialog>
+      )}
+    </div>
   );
 };
 

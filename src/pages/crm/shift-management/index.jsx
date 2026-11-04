@@ -10,8 +10,10 @@ export default function ShiftManagement() {
   const isSupervisor = !hasOnlyCCE;
 
   return (
-    <PortalLayout role="crm">
+     // <PortalLayout role="crm">
+     <>
       {isSupervisor ? <SupervisorViewShift /> : <AgentViewShift />}
-    </PortalLayout>
+     </>
+    
   );
 }

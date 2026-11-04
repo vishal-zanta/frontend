@@ -255,106 +255,117 @@ export default function UserManagement() {
 
   console.log({ editUser, agentConfigUser });
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        {/* <div className="flex items-center justify-between"> */}
-        <SectionTitle
-          title={t("User Management & RBAC", "उपयोगकर्ता प्रबंधन और RBAC")}
-          subtitle={t(
-            "Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control",
-            "भूमिका-आधारित पहुँच नियंत्रण के साथ कॉल-सेंटर एजेंटों, पर्यवेक्षकों, निगरानी टीम और सिस्टम व्यवस्थापकों को प्रबंधित करें",
-          )}
-        >
-          <div className="flex gap-2">
-            <Button
-              onClick={() => {
-                setAddInitialValues({
-                  name: "",
-                  email: "",
-                  loginId: "",
-                  phone: "",
-                  password: "",
-                  confirmPassword: "",
-                  roles: [],
-                  supervisor: "",
-                  district: "",
-                });
-                setAddUserOpen(true);
-              }}
-              size={"sm"}
-              className="bg-primary hover:bg-primary/90"
-            >
-              <UserPlus className="w-4 h-4 mr-1" />{" "}
-              {t("Add User", "उपयोगकर्ता जोड़ें")}
-            </Button>
-            <Button
-              onClick={() => {
-                const superAdminRole = (rolesApiData?.data?.docs || []).find(
-                  (r) => r.designationEnglish === "Admin",
-                );
-                const superAdminId = superAdminRole?._id || "";
-                setAddInitialValues({
-                  name: "",
-                  email: "",
-                  loginId: "",
-                  phone: "",
-                  password: "",
-                  confirmPassword: "",
-                  roles: superAdminId ? [superAdminId] : [],
-                  supervisor: "",
-                  district: "",
-                });
-                setAddUserOpen(true);
-              }}
-              size={"sm"}
-              className="bg-amber-600 hover:bg-amber-700 text-white"
-            >
-              <Shield className="w-4 h-4 mr-1" />{" "}
-              {t("Create Admin", "एडमिन बनाएं")}
-            </Button>
-          </div>
-        </SectionTitle>
-        {/* </div> */}
-
-        {/* Filters */}
-        <div className="grid grid-cols-2 sm:flex gap-3">
-          <SearchDebounced
-            handleDebouncedChange={(val) => {
-              setSearchQuery(val);
-              pageProps.setPage(1);
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      {/* <div className="flex items-center justify-between"> */}
+      <SectionTitle
+        title={t("User Management & RBAC", "उपयोगकर्ता प्रबंधन और RBAC")}
+        subtitle={t(
+          "Manage call-centre agents, supervisors, monitoring team & system admins with role-based access control",
+          "भूमिका-आधारित पहुँच नियंत्रण के साथ कॉल-सेंटर एजेंटों, पर्यवेक्षकों, निगरानी टीम और सिस्टम व्यवस्थापकों को प्रबंधित करें",
+        )}
+      >
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              setAddInitialValues({
+                name: "",
+                email: "",
+                loginId: "",
+                phone: "",
+                password: "",
+                confirmPassword: "",
+                roles: [],
+                supervisor: "",
+                district: "",
+              });
+              setAddUserOpen(true);
             }}
-            className="flex-1"
-            delay={500}
-            placeholder={t("Search by name ...", "नाम से खोजें ...")}
-          />
-
-          <SelectDebounced
-            initialValue={filterRole}
-            handleInstantChange={(val) => {
-              setFilterRole(val);
-              pageProps.setPage(1);
+            size={"sm"}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <UserPlus className="w-4 h-4 mr-1" />{" "}
+            {t("Add User", "उपयोगकर्ता जोड़ें")}
+          </Button>
+          <Button
+            onClick={() => {
+              const superAdminRole = (rolesApiData?.data?.docs || []).find(
+                (r) => r.designationEnglish === "Admin",
+              );
+              const superAdminId = superAdminRole?._id || "";
+              setAddInitialValues({
+                name: "",
+                email: "",
+                loginId: "",
+                phone: "",
+                password: "",
+                confirmPassword: "",
+                roles: superAdminId ? [superAdminId] : [],
+                supervisor: "",
+                district: "",
+              });
+              setAddUserOpen(true);
             }}
-            options={(rolesApiData?.data?.docs || []).map((r) => ({
-              label: r.designationEnglish,
-              value: r._id,
-            }))}
-            placeholder={t("Select a designation", "पदनाम चुनें")}
-            isAll={true}
-            allLabel={t("All Designations", "सभी पदनाम")}
-          />
+            size={"sm"}
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+          >
+            <Shield className="w-4 h-4 mr-1" />{" "}
+            {t("Create Admin", "एडमिन बनाएं")}
+          </Button>
         </div>
+      </SectionTitle>
+      {/* </div> */}
 
-        {/* Users table */}
-        <div
-          className={clsx(
-            isMobile
-              ? ""
-              : "bg-card rounded-xl border border-border overflow-hidden",
-          )}
-        >
-          <LoaderErrWrapper isLoading={isLoading} error={error}>
-            {isMobile ? (
-              <UserManageCards
+      {/* Filters */}
+      <div className="grid grid-cols-2 sm:flex gap-3">
+        <SearchDebounced
+          handleDebouncedChange={(val) => {
+            setSearchQuery(val);
+            pageProps.setPage(1);
+          }}
+          className="flex-1"
+          delay={500}
+          placeholder={t("Search by name ...", "नाम से खोजें ...")}
+        />
+
+        <SelectDebounced
+          initialValue={filterRole}
+          handleInstantChange={(val) => {
+            setFilterRole(val);
+            pageProps.setPage(1);
+          }}
+          options={(rolesApiData?.data?.docs || []).map((r) => ({
+            label: r.designationEnglish,
+            value: r._id,
+          }))}
+          placeholder={t("Select a designation", "पदनाम चुनें")}
+          isAll={true}
+          allLabel={t("All Designations", "सभी पदनाम")}
+        />
+      </div>
+
+      {/* Users table */}
+      <div
+        className={clsx(
+          isMobile
+            ? ""
+            : "bg-card rounded-xl border border-border overflow-hidden",
+        )}
+      >
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
+          {isMobile ? (
+            <UserManageCards
+              users={tableData}
+              handleToggleStatus={handleToggleStatus}
+              setEditUser={setEditUser}
+              handleDelete={handleDelete}
+              handleView={handleView}
+              handleLogoutClick={handleLogoutClick}
+              setAgentConfigUser={setAgentConfigUser}
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <UserManageTable
                 users={tableData}
                 handleToggleStatus={handleToggleStatus}
                 setEditUser={setEditUser}
@@ -363,206 +374,192 @@ export default function UserManagement() {
                 handleLogoutClick={handleLogoutClick}
                 setAgentConfigUser={setAgentConfigUser}
               />
-            ) : (
-              <div className="overflow-x-auto">
-                <UserManageTable
-                  users={tableData}
-                  handleToggleStatus={handleToggleStatus}
-                  setEditUser={setEditUser}
-                  handleDelete={handleDelete}
-                  handleView={handleView}
-                  handleLogoutClick={handleLogoutClick}
-                  setAgentConfigUser={setAgentConfigUser}
-                />
-              </div>
-            )}
-          </LoaderErrWrapper>
-          <Pagination
-            page={page}
-            limit={limit}
-            totalPage={totalPages}
-            isLoading={isLoading}
-            {...pageProps}
-          />
-        </div>
-        {editUser && (
-          <EditDialog
-            isHideFooter
-            onClose={() => setEditUser(null)}
-            title={"Edit User"}
-          >
-            <RhfWrapper
-              initialValues={{
-                name: editUser?.apiData?.name || "",
-                email: editUser?.apiData?.email || "",
-                loginId: editUser?.apiData?.loginId || "",
-                phone: editUser?.apiData?.phone || "",
-                password: editUser?.apiData?.password || "",
-                confirmPassword: editUser?.apiData?.password || "",
-                roles: Array.isArray(editUser?.apiData?.roles)
-                  ? editUser.apiData.roles.map((r) => r._id || r)
-                  : editUser?.apiData?.role?._id
-                    ? [editUser.apiData.role._id]
-                    : editUser?.apiData?.role
-                      ? [editUser.apiData.role]
-                      : [],
-                district:
-                  editUser?.apiData?.district?._id ||
-                  editUser?.apiData?.district ||
-                  "",
-                supervisor:
-                  editUser?.apiData?.supervisor?._id ||
-                  editUser?.apiData?.supervisor ||
-                  "",
-                status: editUser?.apiData?.status || "",
-                skills: (editUser?.apiData?.skills || []).map(
-                  (s) => s._id || s,
-                ),
-                preferredLanguages: editUser?.apiData?.preferredLanguages || [],
-              }}
-              isValidation={true}
-              validationSchema={editSchema}
-              onSubmit={(formData) => {
-                const { confirmPassword, ...submitData } = formData;
-                putMutation.mutate({
-                  userId: editUser.id,
-                  user: submitData,
-                });
-              }}
-            >
-              <Form
-                isEdit={true}
-                isLoading={putMutation.isPending}
-                onCancel={() => setEditUser(null)}
-                skillsOptions={skillsOptions}
-              />
-            </RhfWrapper>
-          </EditDialog>
-        )}
-
-        {agentConfigUser && (
-          <EditDialog
-            isHideFooter
-            onClose={() => setAgentConfigUser(null)}
-            title={
-              agentConfigUser?.name
-                ? `${t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")} - ${agentConfigUser.name}`
-                : t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")
-            }
-          >
-            <RhfWrapper
-              initialValues={{
-                agentId: agentConfigUser?.apiData?.cceConfig?.agentId || "",
-                extension: agentConfigUser?.apiData?.cceConfig?.extension || "",
-
-                password: agentConfigUser?.apiData?.cceConfig?.password || "",
-                confirmPassword: "",
-              }}
-              isValidation={true}
-              validationSchema={agentConfigSchema}
-              onSubmit={(formData) => {
-                const { confirmPassword, ...submitData } = formData;
-                const id =
-                  agentConfigUser?.id ||
-                  agentConfigUser?._id ||
-                  agentConfigUser?.apiData?._id;
-                cceConfigMutation.mutate({
-                  id,
-                  body: submitData,
-                });
-              }}
-            >
-              <AgentConfigForm
-                isLoading={cceConfigMutation.isPending}
-                onCancel={() => setAgentConfigUser(null)}
-              />
-            </RhfWrapper>
-          </EditDialog>
-        )}
-
-        {addUserOpen && (
-          <EditDialog
-            isHideFooter
-            onClose={() => setAddUserOpen(false)}
-            title={"Add New User"}
-          >
-            <RhfWrapper
-              initialValues={addInitialValues}
-              isValidation={true}
-              validationSchema={addSchema}
-              onSubmit={(formData) => {
-                const { confirmPassword, ...submitData } = formData;
-                postMutation.mutate(submitData);
-              }}
-            >
-              <Form
-                isEdit={false}
-                isLoading={postMutation.isPending}
-                submitLabel="Add User"
-                disabledKeys={[
-                  ...(addInitialValues.roles?.length > 0
-                    ? ["roles", "role"]
-                    : []),
-                ].flat()}
-                onCancel={() => setAddUserOpen(false)}
-                skillsOptions={skillsOptions}
-              />
-            </RhfWrapper>
-          </EditDialog>
-        )}
-
-        {deleteUserRecord && (
-          <DeleteDialog
-            title={deleteUserRecord.name}
-            onClose={() => setDeleteUserRecord(null)}
-            deleting={deleteMutation.isPending}
-            onDelete={() => {
-              deleteMutation.mutate(deleteUserRecord.id, {
-                onSuccess: () => {
-                  setDeleteUserRecord(null);
-                },
+            </div>
+          )}
+        </LoaderErrWrapper>
+        <Pagination
+          page={page}
+          limit={limit}
+          totalPage={totalPages}
+          isLoading={isLoading}
+          {...pageProps}
+        />
+      </div>
+      {editUser && (
+        <EditDialog
+          isHideFooter
+          onClose={() => setEditUser(null)}
+          title={"Edit User"}
+        >
+          <RhfWrapper
+            initialValues={{
+              name: editUser?.apiData?.name || "",
+              email: editUser?.apiData?.email || "",
+              loginId: editUser?.apiData?.loginId || "",
+              phone: editUser?.apiData?.phone || "",
+              password: editUser?.apiData?.password || "",
+              confirmPassword: editUser?.apiData?.password || "",
+              roles: Array.isArray(editUser?.apiData?.roles)
+                ? editUser.apiData.roles.map((r) => r._id || r)
+                : editUser?.apiData?.role?._id
+                  ? [editUser.apiData.role._id]
+                  : editUser?.apiData?.role
+                    ? [editUser.apiData.role]
+                    : [],
+              district:
+                editUser?.apiData?.district?._id ||
+                editUser?.apiData?.district ||
+                "",
+              supervisor:
+                editUser?.apiData?.supervisor?._id ||
+                editUser?.apiData?.supervisor ||
+                "",
+              status: editUser?.apiData?.status || "",
+              skills: (editUser?.apiData?.skills || []).map((s) => s._id || s),
+              preferredLanguages: editUser?.apiData?.preferredLanguages || [],
+            }}
+            isValidation={true}
+            validationSchema={editSchema}
+            onSubmit={(formData) => {
+              const { confirmPassword, ...submitData } = formData;
+              putMutation.mutate({
+                userId: editUser.id,
+                user: submitData,
               });
             }}
-          />
-        )}
-        {viewUser && (
-          <EditDialog
-            isHideFooter
-            onClose={() => setViewUser(null)}
-            title="User Details"
           >
-            <ViewDialog viewUser={viewUser} setViewUser={setViewUser} />
-          </EditDialog>
-        )}
+            <Form
+              isEdit={true}
+              isLoading={putMutation.isPending}
+              onCancel={() => setEditUser(null)}
+              skillsOptions={skillsOptions}
+            />
+          </RhfWrapper>
+        </EditDialog>
+      )}
 
-        {logoutUser && (
-          <EditDialog
-            title="Confirm Logout"
-            onClose={() => setLogoutUser(null)}
-            onSave={confirmLogout}
-            saving={logoutMutation.isPending}
+      {agentConfigUser && (
+        <EditDialog
+          isHideFooter
+          onClose={() => setAgentConfigUser(null)}
+          title={
+            agentConfigUser?.name
+              ? `${t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")} - ${agentConfigUser.name}`
+              : t("Agent Configuration", "एजेंट कॉन्फ़िगरेशन")
+          }
+        >
+          <RhfWrapper
+            initialValues={{
+              agentId: agentConfigUser?.apiData?.cceConfig?.agentId || "",
+              extension: agentConfigUser?.apiData?.cceConfig?.extension || "",
+
+              password: agentConfigUser?.apiData?.cceConfig?.password || "",
+              confirmPassword: "",
+            }}
+            isValidation={true}
+            validationSchema={agentConfigSchema}
+            onSubmit={(formData) => {
+              const { confirmPassword, ...submitData } = formData;
+              const id =
+                agentConfigUser?.id ||
+                agentConfigUser?._id ||
+                agentConfigUser?.apiData?._id;
+              cceConfigMutation.mutate({
+                id,
+                body: submitData,
+              });
+            }}
           >
-            <div className="text-sm text-muted-foreground py-2">
-              Are you sure you want to force logout{" "}
-              <strong>{logoutUser.name}</strong>? This will terminate their
-              active session.
-            </div>
-          </EditDialog>
-        )}
+            <AgentConfigForm
+              isLoading={cceConfigMutation.isPending}
+              onCancel={() => setAgentConfigUser(null)}
+            />
+          </RhfWrapper>
+        </EditDialog>
+      )}
 
-        {/* RBAC info */}
-        <div className="bg-primary/10 border border-primary/20 rounded-xl p-5">
-          <h4 className="font-bold text-primary mb-2 text-sm flex items-center gap-2">
-            <Shield className="w-4 h-4" /> Role-Based Access Control (RBAC)
-          </h4>
-          <p className="text-sm text-primary">
-            Secure role-based access is enforced for State CC agents, field
-            officers, Nodal Officers, State Monitoring Teams, and System Admins.
-            Each Designation has predefined permissions, which can be customized
-            for individual users through the Manage Links section.
-          </p>
-        </div>
+      {addUserOpen && (
+        <EditDialog
+          isHideFooter
+          onClose={() => setAddUserOpen(false)}
+          title={"Add New User"}
+        >
+          <RhfWrapper
+            initialValues={addInitialValues}
+            isValidation={true}
+            validationSchema={addSchema}
+            onSubmit={(formData) => {
+              const { confirmPassword, ...submitData } = formData;
+              postMutation.mutate(submitData);
+            }}
+          >
+            <Form
+              isEdit={false}
+              isLoading={postMutation.isPending}
+              submitLabel="Add User"
+              disabledKeys={[
+                ...(addInitialValues.roles?.length > 0
+                  ? ["roles", "role"]
+                  : []),
+              ].flat()}
+              onCancel={() => setAddUserOpen(false)}
+              skillsOptions={skillsOptions}
+            />
+          </RhfWrapper>
+        </EditDialog>
+      )}
+
+      {deleteUserRecord && (
+        <DeleteDialog
+          title={deleteUserRecord.name}
+          onClose={() => setDeleteUserRecord(null)}
+          deleting={deleteMutation.isPending}
+          onDelete={() => {
+            deleteMutation.mutate(deleteUserRecord.id, {
+              onSuccess: () => {
+                setDeleteUserRecord(null);
+              },
+            });
+          }}
+        />
+      )}
+      {viewUser && (
+        <EditDialog
+          isHideFooter
+          onClose={() => setViewUser(null)}
+          title="User Details"
+        >
+          <ViewDialog viewUser={viewUser} setViewUser={setViewUser} />
+        </EditDialog>
+      )}
+
+      {logoutUser && (
+        <EditDialog
+          title="Confirm Logout"
+          onClose={() => setLogoutUser(null)}
+          onSave={confirmLogout}
+          saving={logoutMutation.isPending}
+        >
+          <div className="text-sm text-muted-foreground py-2">
+            Are you sure you want to force logout{" "}
+            <strong>{logoutUser.name}</strong>? This will terminate their active
+            session.
+          </div>
+        </EditDialog>
+      )}
+
+      {/* RBAC info */}
+      <div className="bg-primary/10 border border-primary/20 rounded-xl p-5">
+        <h4 className="font-bold text-primary mb-2 text-sm flex items-center gap-2">
+          <Shield className="w-4 h-4" /> Role-Based Access Control (RBAC)
+        </h4>
+        <p className="text-sm text-primary">
+          Secure role-based access is enforced for State CC agents, field
+          officers, Nodal Officers, State Monitoring Teams, and System Admins.
+          Each Designation has predefined permissions, which can be customized
+          for individual users through the Manage Links section.
+        </p>
       </div>
-    </PortalLayout>
+    </div>
   );
 }

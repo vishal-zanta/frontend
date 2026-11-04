@@ -70,133 +70,132 @@ export default function FieldVisits() {
   const totalPages = visitsApiData?.data?.data?.pagination?.totalPages ?? 1;
 
   return (
-    <PortalLayout role="officer">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            {t("Field Visits", "फील्ड विजिट")}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {t(
-              "Track all scheduled, in-progress, and completed field visits with geo-tagged photo evidence.",
-              "भू-टैग की गई फोटो साक्ष्य के साथ सभी निर्धारित, प्रगति-पर और पूर्ण फील्ड विजिट को ट्रैक करें।",
-            )}
-          </p>
-        </div>
+    // <PortalLayout role="officer">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">
+          {t("Field Visits", "फील्ड विजिट")}
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          {t(
+            "Track all scheduled, in-progress, and completed field visits with geo-tagged photo evidence.",
+            "भू-टैग की गई फोटो साक्ष्य के साथ सभी निर्धारित, प्रगति-पर और पूर्ण फील्ड विजिट को ट्रैक करें।",
+          )}
+        </p>
+      </div>
 
-        <FieldVisitCards
-          statusFilter={statusFilter}
-          onStatusChange={(val) => {
+      <FieldVisitCards
+        statusFilter={statusFilter}
+        onStatusChange={(val) => {
+          setStatusFilter(val);
+          pageProps.setPage(1);
+        }}
+      />
+
+      <div className="flex gap-3">
+        <SearchDebounced
+          handleDebouncedChange={(val) => {
+            setSearch(val);
+            setSearchParams(
+              { ...(val ? { visit: val } : {}) },
+              { replace: true },
+            );
+
+            pageProps.setPage(1);
+          }}
+          initialValue={visitInput}
+          delay={500}
+          className="flex-1"
+          placeholder={t(
+            "Search by visit ID ...",
+            "विजिट आईडी द्वारा खोजें ...",
+          )}
+          isClearable
+        />
+
+        <SelectDebounced
+          initialValue={statusFilter}
+          handleInstantChange={(val) => {
             setStatusFilter(val);
             pageProps.setPage(1);
           }}
+          options={FIELD_VISIT_STATUS}
+          placeholder={t("Select Status", "स्थिति चुनें")}
+          isAll={true}
+          allLabel={t("All Status", "सभी स्थिति")}
         />
-
-        <div className="flex gap-3">
-          <SearchDebounced
-            handleDebouncedChange={(val) => {
-              setSearch(val);
-              setSearchParams(
-                { ...(val ? { visit: val } : {}) },
-                { replace: true },
-              );
-
-              pageProps.setPage(1);
-            }}
-            initialValue={visitInput}
-            delay={500}
-            className="flex-1"
-            placeholder={t(
-              "Search by visit ID ...",
-              "विजिट आईडी द्वारा खोजें ...",
-            )}
-            isClearable
-          />
-
-          <SelectDebounced
-            initialValue={statusFilter}
-            handleInstantChange={(val) => {
-              setStatusFilter(val);
-              pageProps.setPage(1);
-            }}
-            options={FIELD_VISIT_STATUS}
-            placeholder={t("Select Status", "स्थिति चुनें")}
-            isAll={true}
-            allLabel={t("All Status", "सभी स्थिति")}
-          />
-        </div>
-
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <LoaderErrWrapper isLoading={isLoading} error={error}>
-            <FieldVisitTable
-              filtered={fieldVisits || []}
-              onEdit={(fv) => setEditVisit(fv)}
-              onView={(fv) => setViewVisit(fv)}
-            />
-          </LoaderErrWrapper>
-          <Pagination
-            page={page}
-            limit={limit}
-            totalPage={totalPages}
-            isLoading={isLoading}
-            {...pageProps}
-          />
-        </div>
-
-        {viewVisit && (
-          <FieldVisitDetailDialog
-            open={!!viewVisit}
-            onClose={() => setViewVisit(null)}
-            visit={viewVisit}
-          />
-        )}
-
-        {/* Edit Visit Dialog */}
-        {editVisit && (
-          <EditDialog
-            isHideFooter
-            title={t("Edit Field Visit", "फील्ड विजिट संपादित करें")}
-            onClose={() => setEditVisit(null)}
-          >
-            <RhfWrapper
-              initialValues={{
-                status: editVisit.status || "PENDING",
-                schedule:
-                  editVisit.schedule || editVisit.scheduledDate
-                    ? new Date(editVisit.schedule || editVisit.scheduledDate)
-                        .toISOString()
-                        .split("T")[0]
-                    : "",
-                remark: editVisit.remark || "",
-              }}
-              isValidation
-              validationSchema={fieldVisitSchema}
-              onSubmit={(formData) => {
-                updateMutation.mutate({
-                  id: editVisit._id,
-                  data: {
-                    status: formData.status,
-                    schedule:
-                      formData.status === "CANCELLED"
-                        ? undefined
-                        : formData.schedule,
-                    remark:
-                      formData.status === "COMPLETED"
-                        ? formData.remark
-                        : undefined,
-                  },
-                });
-              }}
-            >
-              <FieldVisitForm
-                onCancel={() => setEditVisit(null)}
-                isLoading={updateMutation.isPending}
-                fieldVisit={editVisit}
-              />
-            </RhfWrapper>
-          </EditDialog>
-        )}
       </div>
-    </PortalLayout>
+
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
+          <FieldVisitTable
+            filtered={fieldVisits || []}
+            onEdit={(fv) => setEditVisit(fv)}
+            onView={(fv) => setViewVisit(fv)}
+          />
+        </LoaderErrWrapper>
+        <Pagination
+          page={page}
+          limit={limit}
+          totalPage={totalPages}
+          isLoading={isLoading}
+          {...pageProps}
+        />
+      </div>
+
+      {viewVisit && (
+        <FieldVisitDetailDialog
+          open={!!viewVisit}
+          onClose={() => setViewVisit(null)}
+          visit={viewVisit}
+        />
+      )}
+
+      {/* Edit Visit Dialog */}
+      {editVisit && (
+        <EditDialog
+          isHideFooter
+          title={t("Edit Field Visit", "फील्ड विजिट संपादित करें")}
+          onClose={() => setEditVisit(null)}
+        >
+          <RhfWrapper
+            initialValues={{
+              status: editVisit.status || "PENDING",
+              schedule:
+                editVisit.schedule || editVisit.scheduledDate
+                  ? new Date(editVisit.schedule || editVisit.scheduledDate)
+                      .toISOString()
+                      .split("T")[0]
+                  : "",
+              remark: editVisit.remark || "",
+            }}
+            isValidation
+            validationSchema={fieldVisitSchema}
+            onSubmit={(formData) => {
+              updateMutation.mutate({
+                id: editVisit._id,
+                data: {
+                  status: formData.status,
+                  schedule:
+                    formData.status === "CANCELLED"
+                      ? undefined
+                      : formData.schedule,
+                  remark:
+                    formData.status === "COMPLETED"
+                      ? formData.remark
+                      : undefined,
+                },
+              });
+            }}
+          >
+            <FieldVisitForm
+              onCancel={() => setEditVisit(null)}
+              isLoading={updateMutation.isPending}
+              fieldVisit={editVisit}
+            />
+          </RhfWrapper>
+        </EditDialog>
+      )}
+    </div>
   );
 }

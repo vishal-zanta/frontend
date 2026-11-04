@@ -132,116 +132,119 @@ export default function MasterData() {
   };
 
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={translate("Master Data Management", "मास्टर डेटा प्रबंधन")}
-          subtitle={translate(
-            "Manage designations, services, sub-services, complaint sources & demography",
-            "पदनाम, सेवाएं, उप-सेवाएं, शिकायत के स्रोत और जनसांख्यिकी प्रबंधित करें",
-          )}
-        />
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={translate("Master Data Management", "मास्टर डेटा प्रबंधन")}
+        subtitle={translate(
+          "Manage designations, services, sub-services, complaint sources & demography",
+          "पदनाम, सेवाएं, उप-सेवाएं, शिकायत के स्रोत और जनसांख्यिकी प्रबंधित करें",
+        )}
+      />
 
-        <Tabs
-          value={parentTab}
-          onValueChange={handleParentTabChange}
-          className="w-full"
-        >
-          <TabsList className="grid w-full grid-cols-1 xs:grid-cols-2 sm:max-w-[500px] h-auto p-1 gap-1 border border-border/50">
-            <TabsTrigger
-              value="internal"
-              className="px-2 xs:px-3 py-2 sm:py-1.5 text-xs xs:text-xs sm:text-sm font-medium text-center truncate"
-            >
-              {translate("Internal Configuration", "आंतरिक कॉन्फ़िगरेशन")}
-            </TabsTrigger>
-            <TabsTrigger
-              value="external"
-              className="px-2 xs:px-3 py-2 sm:py-1.5 text-xs xs:text-xs sm:text-sm font-medium text-center truncate"
-            >
-              {translate("External Configuration", "बाहरी कॉन्फ़िगरेशन")}
-            </TabsTrigger>
-          </TabsList>
+      <Tabs
+        value={parentTab}
+        onValueChange={handleParentTabChange}
+        className="w-full"
+      >
+        <TabsList className="grid w-full grid-cols-1 xs:grid-cols-2 sm:max-w-[500px] h-auto p-1 gap-1 border border-border/50">
+          <TabsTrigger
+            value="internal"
+            className="px-2 xs:px-3 py-2 sm:py-1.5 text-xs xs:text-xs sm:text-sm font-medium text-center truncate"
+          >
+            {translate("Internal Configuration", "आंतरिक कॉन्फ़िगरेशन")}
+          </TabsTrigger>
+          <TabsTrigger
+            value="external"
+            className="px-2 xs:px-3 py-2 sm:py-1.5 text-xs xs:text-xs sm:text-sm font-medium text-center truncate"
+          >
+            {translate("External Configuration", "बाहरी कॉन्फ़िगरेशन")}
+          </TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="internal" className="mt-4">
-            <Tabs
-              value={tab}
-              onValueChange={(val) => {
-                setTab(val);
-                setSearchParams({ tab: val }, { replace: true });
-              }}
-              className="w-full"
-            >
-              <TabsList className="grid grid-cols-2 xs:flex xs:flex-wrap h-auto p-1 bg-muted rounded-lg w-full sm:w-fit gap-1 border border-border/40">
-                {filteredTabs
-                  .filter((t) => t.group === "internal")
-                  .map((t) => {
-                    const Icon = t.icon;
-                    const labelInfo = tabLabels[t.id] || [t.label, t.label];
-                    return (
-                      <TabsTrigger
-                        key={t.id}
-                        value={t.id}
-                        className="flex items-center justify-center sm:justify-start gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1.5 text-[11px] xs:text-xs lg:text-sm font-medium truncate"
-                      >
-                        <Icon className="w-3.5 h-3.5 xs:w-4 xs:h-4 shrink-0" />
-                        <span className="truncate">{translate(labelInfo[0], labelInfo[1])}</span>
-                      </TabsTrigger>
-                    );
-                  })}
-              </TabsList>
-            </Tabs>
-          </TabsContent>
+        <TabsContent value="internal" className="mt-4">
+          <Tabs
+            value={tab}
+            onValueChange={(val) => {
+              setTab(val);
+              setSearchParams({ tab: val }, { replace: true });
+            }}
+            className="w-full"
+          >
+            <TabsList className="grid grid-cols-2 xs:flex xs:flex-wrap h-auto p-1 bg-muted rounded-lg w-full sm:w-fit gap-1 border border-border/40">
+              {filteredTabs
+                .filter((t) => t.group === "internal")
+                .map((t) => {
+                  const Icon = t.icon;
+                  const labelInfo = tabLabels[t.id] || [t.label, t.label];
+                  return (
+                    <TabsTrigger
+                      key={t.id}
+                      value={t.id}
+                      className="flex items-center justify-center sm:justify-start gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1.5 text-[11px] xs:text-xs lg:text-sm font-medium truncate"
+                    >
+                      <Icon className="w-3.5 h-3.5 xs:w-4 xs:h-4 shrink-0" />
+                      <span className="truncate">
+                        {translate(labelInfo[0], labelInfo[1])}
+                      </span>
+                    </TabsTrigger>
+                  );
+                })}
+            </TabsList>
+          </Tabs>
+        </TabsContent>
 
-          <TabsContent value="external" className="mt-4">
-            <Tabs
-              value={tab}
-              onValueChange={(val) => {
-                setTab(val);
-                setSearchParams({ tab: val }, { replace: true });
-              }}
-              className="w-full"
-            >
-              <TabsList className="grid grid-cols-2 xs:flex xs:flex-wrap h-auto p-1 bg-muted rounded-lg w-full sm:w-fit gap-1 border border-border/40">
-                {filteredTabs
-                  .filter((t) => t.group === "external")
-                  .map((t) => {
-                    const Icon = t.icon;
-                    const labelInfo = tabLabels[t.id] || [t.label, t.label];
-                    return (
-                      <TabsTrigger
-                        key={t.id}
-                        value={t.id}
-                        className="flex items-center justify-center sm:justify-start gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1.5 text-[11px] xs:text-xs lg:text-sm font-medium truncate"
-                      >
-                        <Icon className="w-3.5 h-3.5 xs:w-4 xs:h-4 shrink-0" />
-                        <span className="truncate">{translate(labelInfo[0], labelInfo[1])}</span>
-                      </TabsTrigger>
-                    );
-                  })}
-              </TabsList>
-            </Tabs>
-          </TabsContent>
-        </Tabs>
+        <TabsContent value="external" className="mt-4">
+          <Tabs
+            value={tab}
+            onValueChange={(val) => {
+              setTab(val);
+              setSearchParams({ tab: val }, { replace: true });
+            }}
+            className="w-full"
+          >
+            <TabsList className="grid grid-cols-2 xs:flex xs:flex-wrap h-auto p-1 bg-muted rounded-lg w-full sm:w-fit gap-1 border border-border/40">
+              {filteredTabs
+                .filter((t) => t.group === "external")
+                .map((t) => {
+                  const Icon = t.icon;
+                  const labelInfo = tabLabels[t.id] || [t.label, t.label];
+                  return (
+                    <TabsTrigger
+                      key={t.id}
+                      value={t.id}
+                      className="flex items-center justify-center sm:justify-start gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1.5 text-[11px] xs:text-xs lg:text-sm font-medium truncate"
+                    >
+                      <Icon className="w-3.5 h-3.5 xs:w-4 xs:h-4 shrink-0" />
+                      <span className="truncate">
+                        {translate(labelInfo[0], labelInfo[1])}
+                      </span>
+                    </TabsTrigger>
+                  );
+                })}
+            </TabsList>
+          </Tabs>
+        </TabsContent>
+      </Tabs>
 
-        {/* Designations */}
-        {tab === "designation" && <DesignationsTab />}
+      {/* Designations */}
+      {tab === "designation" && <DesignationsTab />}
 
-        {tab === "departments" && <DepartmentTab />}
-        {tab === "skill-set" && <SkillSetTab />}
-        {tab === "api-keys" && <ApiKeysTab />}
+      {tab === "departments" && <DepartmentTab />}
+      {tab === "skill-set" && <SkillSetTab />}
+      {tab === "api-keys" && <ApiKeysTab />}
 
-        {/* Services */}
-        {tab === "service" && <ServicesTab />}
+      {/* Services */}
+      {tab === "service" && <ServicesTab />}
 
-        {/* Sources */}
-        {tab === "source" && <ComplaintSourcesTab />}
+      {/* Sources */}
+      {tab === "source" && <ComplaintSourcesTab />}
 
-        {/* Demography */}
-        {/* {tab === "demography" && <DemographyTab />} */}
+      {/* Demography */}
+      {/* {tab === "demography" && <DemographyTab />} */}
 
-        {/* Grievance Nature */}
-        {tab === "grievances-nature" && <GrievenceNatureTab />}
-      </div>
-    </PortalLayout>
+      {/* Grievance Nature */}
+      {tab === "grievances-nature" && <GrievenceNatureTab />}
+    </div>
   );
 }

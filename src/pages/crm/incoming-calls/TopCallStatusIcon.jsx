@@ -24,6 +24,7 @@ const TopCallStatusIcon = () => {
 
   // Determine color and status details according to avaya-status rules
   let colorScheme;
+  // console.log({isLoggedIn, avayaStatus})
 
   if (!isLoggedIn) {
     // 1 & 2 -> Red color, isLoggedIn: false, show error on hover tooltip
@@ -91,7 +92,7 @@ const TopCallStatusIcon = () => {
             className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border transition-all cursor-pointer ${colorScheme.bgColor} ${colorScheme.borderColor}`}
             aria-label={colorScheme.tooltipTitle}
           >
-            <span className="relative flex h-2 w-2">
+            {/* <span className="relative flex h-2 w-2">
               {colorScheme.pulse && (
                 <span
                   className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${colorScheme.dotColor}`}
@@ -100,9 +101,9 @@ const TopCallStatusIcon = () => {
               <span
                 className={`relative inline-flex rounded-full h-2 w-2 ${colorScheme.dotColor}`}
               />
-            </span>
+            </span> */}
 
-            <colorScheme.Icon className={`w-3.5 h-3.5 ${colorScheme.iconColor}`} />
+            <colorScheme.Icon className={`w-3.5 h-3.5 ${colorScheme.iconColor} `} />
 
             <span
               className={`hidden sm:inline font-semibold capitalize ${colorScheme.iconColor}`}

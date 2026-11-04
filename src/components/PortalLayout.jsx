@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import Chatbot from "@/components/Chatbot";
@@ -12,7 +13,7 @@ import { PERMISSIONS } from "@/utils/constants";
 
 export default function PortalLayout({
   children,
-  role = "superadmin",
+  role,
   isHideOverflow = false,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(() => {
@@ -40,10 +41,20 @@ export default function PortalLayout({
   const { hasPermission, profiledata } = useAuth();
   const shouldEnableSockets = hasPermission(PERMISSIONS.CHAT) || profiledata?.isCCE;
 
+  // Determine active role for sidebar dynamically from profiledata
+  const activeRole = useMemo(() => {
+    if (role && ["crm", "officer", "superadmin"].includes(role)) {
+      return role;
+    }
+    if (profiledata?.isCRM) return "crm";
+    if (profiledata?.isOfficer) return "officer";
+    return "superadmin";
+  }, [role, profiledata]);
+
   const layoutContent = (
     <div className="flex min-h-screen bg-background">
       <Sidebar
-        role={role}
+        role={activeRole}
         open={sidebarOpen}
         onClose={() => {
           if (typeof window !== "undefined" && window.innerWidth < 1024)
@@ -56,12 +67,12 @@ export default function PortalLayout({
           sidebarOpen={sidebarOpen}
         />
         <main
-          className={clsx("flex-1", !isHideOverflow && "overflow-x-hidden")}
+          className={clsx("flex-1 min-w-0", !isHideOverflow && "overflow-x-hidden")}
         >
-          {children}
+          {children || <Outlet />}
         </main>
       </div>
-      {role === "citizen" && <Chatbot role={role} />}
+  
       {hasPermission(PERMISSIONS.CHAT) && <ChatWidget />}
       {profiledata?.isCCE && <CallPill sidebarOpen={sidebarOpen} />}
     </div>

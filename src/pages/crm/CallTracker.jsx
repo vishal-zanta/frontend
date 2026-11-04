@@ -117,121 +117,116 @@ export default function CallTracker() {
   }));
 
   return (
-    <PortalLayout role="crm">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={t("Call Tracker", "कॉल ट्रैकर")}
-          subtitle={t(
-            "Real-time call tracking with disposition details and agent status.",
-            "कॉल स्थिति और एजेंट स्थिति विवरण के साथ वास्तविक समय कॉल ट्रैकिंग।"
-          )}
-        >
-          <ExportButton
-            data={filtered}
-            columns={exportColumns}
-            filename="call_tracker_report"
-          />
-        </SectionTitle>
+    // <PortalLayout role="crm">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={t("Call Tracker", "कॉल ट्रैकर")}
+        subtitle={t(
+          "Real-time call tracking with disposition details and agent status.",
+          "कॉल स्थिति और एजेंट स्थिति विवरण के साथ वास्तविक समय कॉल ट्रैकिंग।",
+        )}
+      >
+        <ExportButton
+          data={filtered}
+          columns={exportColumns}
+          filename="call_tracker_report"
+        />
+      </SectionTitle>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          <StatCard
-            icon={PhoneCall}
-            label={t("Total Calls Today", "आज की कुल कॉल")}
-            value="3,420"
-            color="blue"
-            trend="up"
-            trendValue="+8% vs yesterday"
-          />
-          <StatCard
-            icon={CheckCircle2}
-            label={t("Answered", "उत्तरित")}
-            value="3,198"
-            color="green"
-            trend="up"
-            trendValue="+5% vs yesterday"
-          />
-          <StatCard
-            icon={PhoneMissed}
-            label={t("Missed", "मिस्ड कॉल")}
-            value="222"
-            color="red"
-            trend="down"
-            trendValue="-3% vs yesterday"
-          />
-          <StatCard
-            icon={Clock}
-            label={t("Avg Talk Time", "औसत बात करने का समय")}
-            value="4m 32s"
-            color="amber"
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <StatCard
+          icon={PhoneCall}
+          label={t("Total Calls Today", "आज की कुल कॉल")}
+          value="3,420"
+          color="blue"
+          trend="up"
+          trendValue="+8% vs yesterday"
+        />
+        <StatCard
+          icon={CheckCircle2}
+          label={t("Answered", "उत्तरित")}
+          value="3,198"
+          color="green"
+          trend="up"
+          trendValue="+5% vs yesterday"
+        />
+        <StatCard
+          icon={PhoneMissed}
+          label={t("Missed", "मिस्ड कॉल")}
+          value="222"
+          color="red"
+          trend="down"
+          trendValue="-3% vs yesterday"
+        />
+        <StatCard
+          icon={Clock}
+          label={t("Avg Talk Time", "औसत बात करने का समय")}
+          value="4m 32s"
+          color="amber"
+        />
+      </div>
+
+      {/* Filters */}
+      <div className="bg-card rounded-xl border border-border p-3 xs:p-4 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-2.5 sm:gap-3">
+        <div className="relative w-full xs:w-auto flex-1 max-w-full sm:max-w-xs">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t(
+              "Search by call ID or complaint...",
+              "कॉल आईडी या शिकायत द्वारा खोजें...",
+            )}
+            className="pl-8 w-full"
           />
         </div>
-
-        {/* Filters */}
-        <div className="bg-card rounded-xl border border-border p-3 xs:p-4 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-2.5 sm:gap-3">
-          <div className="relative w-full xs:w-auto flex-1 max-w-full sm:max-w-xs">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t(
-                "Search by call ID or complaint...",
-                "कॉल आईडी या शिकायत द्वारा खोजें..."
-              )}
-              className="pl-8 w-full"
-            />
-          </div>
-          <Select value={agentFilter} onValueChange={setAgentFilter}>
-            <SelectTrigger className="w-full xs:w-36 sm:w-40 bg-background">
-              <SelectValue placeholder={t("Agent", "एजेंट")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                {t("All Agents", "सभी एजेंट")}
-              </SelectItem>
-              <SelectItem value="priya">Priya Sharma</SelectItem>
-              <SelectItem value="amit">Amit Verma</SelectItem>
-              <SelectItem value="neha">Neha Singh</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full xs:w-32 sm:w-36 bg-background">
-              <SelectValue placeholder={t("Status", "स्थिति")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                {t("All Status", "सभी स्थिति")}
-              </SelectItem>
-              <SelectItem value="resolved">
-                {t("Resolved", "समाधान की गई")}
-              </SelectItem>
-              <SelectItem value="missed">{t("Missed", "मिस्ड कॉल")}</SelectItem>
-              <SelectItem value="escalated">
-                {t("Escalated", "हस्तांतरित किया गया")}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="xs:ml-auto text-xs xs:text-sm text-muted-foreground self-center">
-            {t("Showing", "दिखा रहा है")} {filtered.length} {t("of", "का")}{" "}
-            {CALL_TRACKER.length} {t("calls", "कॉल")}
-          </div>
-        </div>
-
-        {/* Call table / cards */}
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          {isMobile ? (
-            <CallTrackerCards calls={filtered} />
-          ) : (
-            <MyTable
-              tableHeaders={tableHeaders}
-              tableBody={tableBody}
-              emptyText={t(
-                "No calls match your filters.",
-                "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।"
-              )}
-            />
-          )}
+        <Select value={agentFilter} onValueChange={setAgentFilter}>
+          <SelectTrigger className="w-full xs:w-36 sm:w-40 bg-background">
+            <SelectValue placeholder={t("Agent", "एजेंट")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("All Agents", "सभी एजेंट")}</SelectItem>
+            <SelectItem value="priya">Priya Sharma</SelectItem>
+            <SelectItem value="amit">Amit Verma</SelectItem>
+            <SelectItem value="neha">Neha Singh</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-full xs:w-32 sm:w-36 bg-background">
+            <SelectValue placeholder={t("Status", "स्थिति")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("All Status", "सभी स्थिति")}</SelectItem>
+            <SelectItem value="resolved">
+              {t("Resolved", "समाधान की गई")}
+            </SelectItem>
+            <SelectItem value="missed">{t("Missed", "मिस्ड कॉल")}</SelectItem>
+            <SelectItem value="escalated">
+              {t("Escalated", "हस्तांतरित किया गया")}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="xs:ml-auto text-xs xs:text-sm text-muted-foreground self-center">
+          {t("Showing", "दिखा रहा है")} {filtered.length} {t("of", "का")}{" "}
+          {CALL_TRACKER.length} {t("calls", "कॉल")}
         </div>
       </div>
-    </PortalLayout>
+
+      {/* Call table / cards */}
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        {isMobile ? (
+          <CallTrackerCards calls={filtered} />
+        ) : (
+          <MyTable
+            tableHeaders={tableHeaders}
+            tableBody={tableBody}
+            emptyText={t(
+              "No calls match your filters.",
+              "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।",
+            )}
+          />
+        )}
+      </div>
+    </div>
   );
 }

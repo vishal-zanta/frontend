@@ -4,17 +4,17 @@
  */
 
 /**
- * Checks if Avaya telephony is fully connected and ready for calls.
- * Requires isLoggedIn === true and state === "READY_FREE".
+ * Checks if Avaya telephony is operational for this agent.
+ * Valid when logged in and in either READY_FREE (idle) or ON_CALL (active/ringing).
  *
  * @param {Object} avayaStatus
  * @returns {boolean}
  */
 export const checkIsAvayaReady = (avayaStatus) => {
   if (!avayaStatus) return false;
+  const state = String(avayaStatus.state || "").toUpperCase();
   return (
-    avayaStatus.isLoggedIn === true &&
-    String(avayaStatus.state || "").toUpperCase() === "READY_FREE"
+    avayaStatus.isLoggedIn === true
   );
 };
 
@@ -31,37 +31,59 @@ export const mapAgentStatusResponse = (rawResponse) => {
   const isAvayaReady = checkIsAvayaReady(avayaStatus);
 
   const activeCall = data?.activeCall || null;
-  const unifiedStatus = String(data?.unifiedStatus || "").toUpperCase();
-  const rawCallStatus = String(activeCall?.status || unifiedStatus || "").toUpperCase();
+  const unifiedStatus = String(data?.unifiedStatus || "").toUpperCase().trim();
+  const rawAvayaState = String(avayaStatus?.state || avayaStatus?.status || "").toUpperCase().trim();
+  const avayaState = rawAvayaState.replace(/\s+/g, "_");
+
+  const callStatus = String(activeCall?.status || "").toUpperCase().trim();
+  const callDisposition = String(activeCall?.disposition || "").toUpperCase().trim();
 
   let callState = "idle";
   let isHold = false;
 
-  // Only evaluate active call states if Avaya is ready
+  const isReadyOrAfterCall =
+    avayaState === "READY_FREE" ||
+    avayaState === "WORKING_AFTER_CALL" ||
+    avayaState === "WORK_AFTER_CALL" ||
+    avayaState.includes("READY_FREE") ||
+    avayaState.includes("AFTER_CALL") ||
+    rawAvayaState.toLowerCase() === "ready free" ||
+    rawAvayaState.toLowerCase() === "working_after_call" ||
+    rawAvayaState.toLowerCase() === "working after call";
+
   if (isAvayaReady) {
-    if (activeCall) {
-      if (rawCallStatus.includes("RING")) {
-        callState = "ringing";
-      } else if (rawCallStatus.includes("HOLD")) {
+    // 1. If Avaya state is READY_FREE or WORKING_AFTER_CALL -> softphone is idle
+    if (isReadyOrAfterCall) {
+      callState = "idle";
+      isHold = false;
+    }
+    // 2. Ringing state
+    else if (
+      (unifiedStatus === "RINGING" ||
+        callStatus.includes("RING") ||
+        callDisposition.includes("RING")) &&
+      avayaState === "ON_CALL"
+    ) {
+      callState = "ringing";
+    }
+    // 3. On Call state (Avaya state is ON_CALL or active call ongoing)
+    else if (avayaState === "ON_CALL") {
+      // Check for Hold vs Active Call
+      if (callDisposition.includes("HOLD") || callStatus.includes("HOLD")) {
         callState = "connected";
         isHold = true;
-      } else if (
-        rawCallStatus.includes("END") ||
-        rawCallStatus.includes("DROP")
-      ) {
-        callState = "ended";
+      } else if (callStatus.includes("END") || callStatus.includes("DROP")) {
+        callState = "idle";
       } else {
         callState = "connected";
+        isHold = false;
       }
-    } else if (unifiedStatus === "RINGING") {
-      callState = "ringing";
-    } else if (unifiedStatus === "IN_CALL") {
-      callState = "connected";
     }
   }
 
-  const caller = activeCall
-    ? {
+  const caller =
+    activeCall && callState !== "idle"
+      ? {
         name:
           activeCall.citizenName ||
           activeCall.screenPop?.citizen?.fullName ||
@@ -79,14 +101,15 @@ export const mapAgentStatusResponse = (rawResponse) => {
         duration: activeCall.duration || "0s",
         recordingUrl: activeCall.recordingUrl,
         disposition: activeCall.disposition,
+        createdAt: activeCall.createdAt,
       }
-    : null;
+      : null;
 
   return {
     isAvayaReady,
     callState,
     isHold,
-    activeCall,
+    activeCall: callState !== "idle" ? activeCall : null,
     caller,
     avayaStatus,
     unifiedStatus: data?.unifiedStatus,

@@ -72,6 +72,7 @@ import CallStats from "./pages/crm/call-stats";
 import LanguageContextProvider from "./context/LanguageContext";
 import ThemeContextProvider from "./context/ThemeContext";
 import OfficerWrapper from "./pages/officer/OfficerWrapper";
+import PortalLayout from "./components/PortalLayout";
 
 const RootLayout = () => {
   return (
@@ -117,7 +118,7 @@ const router = createBrowserRouter([
       {
         element: (
           <AdminProtectedRoute>
-            <Outlet />
+            <PortalLayout />
           </AdminProtectedRoute>
         ),
         children: [

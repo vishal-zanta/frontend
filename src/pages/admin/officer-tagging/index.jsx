@@ -77,8 +77,6 @@ export default function OfficerTagging() {
   const docs = taggingsApiData?.data?.data?.docs || [];
   const totalPages = taggingsApiData?.data?.data?.pagination?.totalPages || 1;
 
-
-
   const formatUserOptions = (docsList = []) => {
     return (docsList || [])
       .filter((u) => {
@@ -89,9 +87,7 @@ export default function OfficerTagging() {
             : [];
         const roleNames = rolesList.map(
           (r) =>
-            (typeof r === "object"
-              ? r.designationEnglish || r.name
-              : r) || "",
+            (typeof r === "object" ? r.designationEnglish || r.name : r) || "",
         );
         return !roleNames.some((r) => USER_ROLES_EXECULDED.includes(r));
       })
@@ -104,9 +100,8 @@ export default function OfficerTagging() {
         const roleNames = rolesList
           .map(
             (r) =>
-              (typeof r === "object"
-                ? r.designationEnglish || r.name
-                : r) || "",
+              (typeof r === "object" ? r.designationEnglish || r.name : r) ||
+              "",
           )
           .filter(Boolean);
         const roleLabel =
@@ -249,209 +244,226 @@ export default function OfficerTagging() {
   };
 
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={t("Officer Tagging", "अधिकारी मैपिंग")}
-          subtitle={t(
-            "Tag officers to multiple services and locations - manually assigned due to location restriction",
-            "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और स्थानों से मैप करें",
-          )}
-        />
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={t("Officer Tagging", "अधिकारी मैपिंग")}
+        subtitle={t(
+          "Tag officers to multiple services and locations - manually assigned due to location restriction",
+          "स्थान प्रतिबंध के कारण अधिकारियों को कई सेवाओं और स्थानों से मैप करें",
+        )}
+      />
 
-        <OfficerTagAnalytics
-          tagging={docs}
-          officers={userOptions.map((o) => ({
-            designation: o.label.includes("L1") ? "l1-officer" : "l2-officer",
-          }))}
-        />
+      <OfficerTagAnalytics
+        tagging={docs}
+        officers={userOptions.map((o) => ({
+          designation: o.label.includes("L1") ? "l1-officer" : "l2-officer",
+        }))}
+      />
 
-        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 sm:items-center justify-between">
-          <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch xs:items-center flex-1">
-            <SearchDebounced
-              handleDebouncedChange={(val) => {
-                setSearch(val);
-                pageProps.setPage(1);
-              }}
-              delay={500}
-              className="w-full xs:flex-1"
-              placeholder={t(
-                "Search officer by name...",
-                "नाम से अधिकारी खोजें...",
-              )}
-            />
-            <LoaderErrWrapper isLoading={deptLoading}>
-              <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
-                <label className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
-                  {t("Department:", "विभाग:")}
-                </label>
-                <select
-                  value={selectedDept}
-                  onChange={(e) => {
-                    setSelectedDept(e.target.value);
-                    pageProps.setPage(1);
-                  }}
-                  className="text-xs h-8 w-full xs:w-auto rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
-                >
-                  {depts.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </LoaderErrWrapper>
-          </div>
+      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 sm:items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch xs:items-center flex-1">
+          <SearchDebounced
+            handleDebouncedChange={(val) => {
+              setSearch(val);
+              pageProps.setPage(1);
+            }}
+            delay={500}
+            className="w-full xs:flex-1"
+            placeholder={t(
+              "Search officer by name...",
+              "नाम से अधिकारी खोजें...",
+            )}
+          />
+          <LoaderErrWrapper isLoading={deptLoading}>
+            <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
+              <label className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
+                {t("Department:", "विभाग:")}
+              </label>
+              <select
+                value={selectedDept}
+                onChange={(e) => {
+                  setSelectedDept(e.target.value);
+                  pageProps.setPage(1);
+                }}
+                className="text-xs h-8 w-full xs:w-auto rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
+              >
+                {depts.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </LoaderErrWrapper>
+        </div>
 
-          <Button
-            className="bg-primary hover:bg-primary/90 w-full sm:w-auto shrink-0"
-            disabled={!selectedDept}
-            onClick={() => {
-              setEditItem(null);
+        <Button
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto shrink-0"
+          disabled={!selectedDept}
+          onClick={() => {
+            setEditItem(null);
+            setDialogOpen(true);
+          }}
+        >
+          <Plus className="w-4 h-4 mr-1" />{" "}
+          {t("Tag New Officer", "नया अधिकारी मैप करें")}
+        </Button>
+      </div>
+
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <LoaderErrWrapper isLoading={isLoading} error={error}>
+          <OfficerTagTable
+            tagging={filtered}
+            setEditItem={(item) => {
+              setEditItem(item);
               setDialogOpen(true);
             }}
-          >
-            <Plus className="w-4 h-4 mr-1" />{" "}
-            {t("Tag New Officer", "नया अधिकारी मैप करें")}
-          </Button>
-        </div>
-
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <LoaderErrWrapper isLoading={isLoading} error={error}>
-            <OfficerTagTable
-              tagging={filtered}
-              setEditItem={(item) => {
-                setEditItem(item);
-                setDialogOpen(true);
-              }}
-              setDialog={() => {}}
-              handleDelete={handleDelete}
-            />
-          </LoaderErrWrapper>
-          <Pagination
-            page={page}
-            limit={limit}
-            totalPage={totalPages}
-            isLoading={isLoading}
-            {...pageProps}
+            setDialog={() => {}}
+            handleDelete={handleDelete}
           />
-        </div>
-
-        {/* Add tagging form */}
-        <QuickTagOfficer
-          officers={userOptionsUnTagged}
-          handleSaveTagging={handleQuickSave}
-          isLoading={postMutation.isPending}
-          department={selectedDept}
+        </LoaderErrWrapper>
+        <Pagination
+          page={page}
+          limit={limit}
+          totalPage={totalPages}
+          isLoading={isLoading}
+          {...pageProps}
         />
-
-        {/* Add/Edit Dialog */}
-        {dialogOpen && (
-          <EditDialog
-            isHideFooter
-            onClose={() => {
-              setDialogOpen(false);
-              setEditItem(null);
-            }}
-            title={editItem ? t("Edit Tagging", "मैपिंग संपादित करें") : t("Tag New Officer", "नया अधिकारी मैप करें")}
-          >
-            <RhfWrapper
-              isValidation={true}
-              validationSchema={officerTaggingSchema}
-              className={"max-h-[450px] "}
-              initialValues={
-                editItem
-                  ? {
-                      officer:
-                        editItem.officer?._id || editItem.officer || "",
-                      services: (editItem.services || []).map(
-                        (s) => s._id || s,
-                      ),
-                      districts: (
-                        editItem.districts ||
-                        (editItem.district ? [editItem.district] : [])
-                      ).map((d) => d._id || d),
-                      areaType: Array.isArray(editItem.areaType)
-                        ? editItem.areaType
-                        : editItem.areaType
-                          ? [editItem.areaType]
-                          : [],
-                      blocks: (
-                        editItem.blocks ||
-                        (editItem.block ? [editItem.block] : [])
-                      ).map((b) => b._id || b),
-                      panchayats: (
-                        editItem.panchayats ||
-                        (editItem.panchayat ? [editItem.panchayat] : [])
-                      ).map((p) => p._id || p),
-                      urbanPanchayats: (
-                        editItem.urbanPanchayats ||
-                        editItem.ulbs ||
-                        (editItem.urbanPanchayat ? [editItem.urbanPanchayat] : []) ||
-                        (editItem.ulb ? [editItem.ulb] : [])
-                      ).map((u) => u._id || u),
-                      wards: (
-                        editItem.wards ||
-                        (editItem.ward ? [editItem.ward] : [])
-                      ).map((w) => w._id || w),
-                    }
-                  : defaultOfficerTaggingValues
-              }
-              onSubmit={handleFormSubmit}
-            >
-              <Form
-                isEdit={!!editItem}
-                isLoading={postMutation.isPending || putMutation.isPending}
-                userOptions={userOptions}
-                department={
-                  editItem?.department?._id ||
-                  editItem?.department ||
-                  selectedDept
-                }
-                onCancel={() => {
-                  setDialogOpen(false);
-                  setEditItem(null);
-                }}
-              />
-            </RhfWrapper>
-          </EditDialog>
-        )}
-
-        {/* Delete Dialog */}
-        {deleteRecord && (
-          <DeleteDialog
-            onClose={() => setDeleteRecord(null)}
-            onDelete={handleConfirmDelete}
-            title={t("Remove Officer Tagging", "अधिकारी मैपिंग हटाएं")}
-            message={t(
-              `Are you sure you want to remove the tagging for "${deleteRecord.officer?.name || "this officer"}"?`,
-              `क्या आप "${deleteRecord.officer?.name || "इस अधिकारी"}" के लिए मैपिंग हटाना चाहते हैं?`,
-            )}
-            deleting={deleteMutation.isPending}
-          />
-        )}
-
-        {/* Rules */}
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-5">
-          <h4 className="font-bold text-amber-800 mb-2 text-sm">
-            ⚠ {t("Officer Tagging Rules", "अधिकारी मैपिंग नियम")}
-          </h4>
-          <ul className="text-sm text-amber-700 space-y-1">
-            <li>
-              • {t("A single officer can be tagged to multiple services and multiple locations", "एक अधिकारी को कई सेवाओं और कई स्थानों से मैप किया जा सकता है")}
-            </li>
-            <li>
-              • {t("Every SLA must have at least 1 officer - or the ticket will not be visible", "प्रत्येक एसएलए में कम से कम 1 अधिकारी होना चाहिए - अन्यथा शिकायत दिखाई नहीं देगी")}
-            </li>
-            <li>
-              • {t("Officers can only be added manually due to location restriction", "स्थान प्रतिबंध के कारण अधिकारियों को केवल मैन्युअल रूप से जोड़ा जा सकता है")}
-            </li>
-            <li>
-              • {t("If a ticket remains unassigned, it can be reassigned later", "यदि कोई शिकायत आवंटित नहीं रहती है, तो उसे बाद में पुनः आवंटित किया जा सकता है")}
-            </li>
-          </ul>
-        </div>
       </div>
-    </PortalLayout>
+
+      {/* Add tagging form */}
+      <QuickTagOfficer
+        officers={userOptionsUnTagged}
+        handleSaveTagging={handleQuickSave}
+        isLoading={postMutation.isPending}
+        department={selectedDept}
+      />
+
+      {/* Add/Edit Dialog */}
+      {dialogOpen && (
+        <EditDialog
+          isHideFooter
+          onClose={() => {
+            setDialogOpen(false);
+            setEditItem(null);
+          }}
+          title={
+            editItem
+              ? t("Edit Tagging", "मैपिंग संपादित करें")
+              : t("Tag New Officer", "नया अधिकारी मैप करें")
+          }
+        >
+          <RhfWrapper
+            isValidation={true}
+            validationSchema={officerTaggingSchema}
+            className={"max-h-[450px] "}
+            initialValues={
+              editItem
+                ? {
+                    officer: editItem.officer?._id || editItem.officer || "",
+                    services: (editItem.services || []).map((s) => s._id || s),
+                    districts: (
+                      editItem.districts ||
+                      (editItem.district ? [editItem.district] : [])
+                    ).map((d) => d._id || d),
+                    areaType: Array.isArray(editItem.areaType)
+                      ? editItem.areaType
+                      : editItem.areaType
+                        ? [editItem.areaType]
+                        : [],
+                    blocks: (
+                      editItem.blocks ||
+                      (editItem.block ? [editItem.block] : [])
+                    ).map((b) => b._id || b),
+                    panchayats: (
+                      editItem.panchayats ||
+                      (editItem.panchayat ? [editItem.panchayat] : [])
+                    ).map((p) => p._id || p),
+                    urbanPanchayats: (
+                      editItem.urbanPanchayats ||
+                      editItem.ulbs ||
+                      (editItem.urbanPanchayat
+                        ? [editItem.urbanPanchayat]
+                        : []) ||
+                      (editItem.ulb ? [editItem.ulb] : [])
+                    ).map((u) => u._id || u),
+                    wards: (
+                      editItem.wards || (editItem.ward ? [editItem.ward] : [])
+                    ).map((w) => w._id || w),
+                  }
+                : defaultOfficerTaggingValues
+            }
+            onSubmit={handleFormSubmit}
+          >
+            <Form
+              isEdit={!!editItem}
+              isLoading={postMutation.isPending || putMutation.isPending}
+              userOptions={userOptions}
+              department={
+                editItem?.department?._id ||
+                editItem?.department ||
+                selectedDept
+              }
+              onCancel={() => {
+                setDialogOpen(false);
+                setEditItem(null);
+              }}
+            />
+          </RhfWrapper>
+        </EditDialog>
+      )}
+
+      {/* Delete Dialog */}
+      {deleteRecord && (
+        <DeleteDialog
+          onClose={() => setDeleteRecord(null)}
+          onDelete={handleConfirmDelete}
+          title={t("Remove Officer Tagging", "अधिकारी मैपिंग हटाएं")}
+          message={t(
+            `Are you sure you want to remove the tagging for "${deleteRecord.officer?.name || "this officer"}"?`,
+            `क्या आप "${deleteRecord.officer?.name || "इस अधिकारी"}" के लिए मैपिंग हटाना चाहते हैं?`,
+          )}
+          deleting={deleteMutation.isPending}
+        />
+      )}
+
+      {/* Rules */}
+      <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-5">
+        <h4 className="font-bold text-amber-800 mb-2 text-sm">
+          ⚠ {t("Officer Tagging Rules", "अधिकारी मैपिंग नियम")}
+        </h4>
+        <ul className="text-sm text-amber-700 space-y-1">
+          <li>
+            •{" "}
+            {t(
+              "A single officer can be tagged to multiple services and multiple locations",
+              "एक अधिकारी को कई सेवाओं और कई स्थानों से मैप किया जा सकता है",
+            )}
+          </li>
+          <li>
+            •{" "}
+            {t(
+              "Every SLA must have at least 1 officer - or the ticket will not be visible",
+              "प्रत्येक एसएलए में कम से कम 1 अधिकारी होना चाहिए - अन्यथा शिकायत दिखाई नहीं देगी",
+            )}
+          </li>
+          <li>
+            •{" "}
+            {t(
+              "Officers can only be added manually due to location restriction",
+              "स्थान प्रतिबंध के कारण अधिकारियों को केवल मैन्युअल रूप से जोड़ा जा सकता है",
+            )}
+          </li>
+          <li>
+            •{" "}
+            {t(
+              "If a ticket remains unassigned, it can be reassigned later",
+              "यदि कोई शिकायत आवंटित नहीं रहती है, तो उसे बाद में पुनः आवंटित किया जा सकता है",
+            )}
+          </li>
+        </ul>
+      </div>
+    </div>
   );
 }

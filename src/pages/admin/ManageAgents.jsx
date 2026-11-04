@@ -54,355 +54,354 @@ export default function ManageAgents() {
   };
 
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={t("Manage CCE Agents", "CCE एजेंट प्रबंधित करें")}
-          subtitle={t(
-            "CRUD management of all Customer Care Executives and Supervisors",
-            "सभी ग्राहक सेवा अधिकारियों और पर्यवेक्षकों का प्रबंधन",
-          )}
-        />
-
-        {toast && (
-          <div className="fixed top-16 right-6 z-50 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm">
-            <Check className="w-4 h-4" /> {toast}
-          </div>
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={t("Manage CCE Agents", "CCE एजेंट प्रबंधित करें")}
+        subtitle={t(
+          "CRUD management of all Customer Care Executives and Supervisors",
+          "सभी ग्राहक सेवा अधिकारियों और पर्यवेक्षकों का प्रबंधन",
         )}
+      />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-blue-600">
-              {agents.length}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {t("Total Agents", "कुल एजेंट")}
-            </div>
+      {toast && (
+        <div className="fixed top-16 right-6 z-50 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm">
+          <Check className="w-4 h-4" /> {toast}
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl border border-border p-4">
+          <div className="text-2xl font-bold text-blue-600">
+            {agents.length}
           </div>
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-emerald-600">
-              {
-                agents.filter(
-                  (a) => a.status === "Available" || a.status === "On Call",
-                ).length
-              }
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {t("Active Now", "अभी सक्रिय")}
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-purple-600">
-              {agents.filter((a) => a.role === "Supervisor").length}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {t("Supervisors", "पर्यवेक्षक")}
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-border p-4">
-            <div className="text-2xl font-bold text-amber-600">
-              {agents.reduce((sum, a) => sum + a.callsToday, 0)}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {t("Calls Today", "आज की कॉलें")}
-            </div>
+          <div className="text-sm text-muted-foreground">
+            {t("Total Agents", "कुल एजेंट")}
           </div>
         </div>
-
-        <div className="flex gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t(
-                "Search by name or agent ID...",
-                "नाम या एजेंट आईडी से खोजें...",
-              )}
-              className="pl-9"
-            />
+        <div className="bg-white rounded-xl border border-border p-4">
+          <div className="text-2xl font-bold text-emerald-600">
+            {
+              agents.filter(
+                (a) => a.status === "Available" || a.status === "On Call",
+              ).length
+            }
           </div>
-          <Button
-            className="bg-blue-600 hover:bg-blue-700"
-            onClick={() => {
-              setEditAgent(null);
-              setDialog({
-                name: "",
-                role: "CCE",
-                shift: "Morning (06:00–14:00)",
-                status: "Available",
-                callsToday: 0,
-                resolvedToday: 0,
-                avgTalkTime: "-",
-                csat: 4.0,
-              });
-            }}
-          >
-            <Plus className="w-4 h-4 mr-1" /> {t("Add Agent", "एजेंट जोड़ें")}
-          </Button>
-          <ExportButton
-            data={agents}
-            columns={exportColumns}
-            filename="cce_agents_list"
+          <div className="text-sm text-muted-foreground">
+            {t("Active Now", "अभी सक्रिय")}
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-border p-4">
+          <div className="text-2xl font-bold text-purple-600">
+            {agents.filter((a) => a.role === "Supervisor").length}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {t("Supervisors", "पर्यवेक्षक")}
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-border p-4">
+          <div className="text-2xl font-bold text-amber-600">
+            {agents.reduce((sum, a) => sum + a.callsToday, 0)}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {t("Calls Today", "आज की कॉलें")}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t(
+              "Search by name or agent ID...",
+              "नाम या एजेंट आईडी से खोजें...",
+            )}
+            className="pl-9"
           />
         </div>
+        <Button
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => {
+            setEditAgent(null);
+            setDialog({
+              name: "",
+              role: "CCE",
+              shift: "Morning (06:00–14:00)",
+              status: "Available",
+              callsToday: 0,
+              resolvedToday: 0,
+              avgTalkTime: "-",
+              csat: 4.0,
+            });
+          }}
+        >
+          <Plus className="w-4 h-4 mr-1" /> {t("Add Agent", "एजेंट जोड़ें")}
+        </Button>
+        <ExportButton
+          data={agents}
+          columns={exportColumns}
+          filename="cce_agents_list"
+        />
+      </div>
 
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr className="text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">
-                    {t("Agent ID", "एजेंट आईडी")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">{t("Name", "नाम")}</th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Designation", "पदनाम")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Shift", "शिफ्ट")}
-                  </th>
-                  <th className="px-4 py-3 font-medium text-center">
-                    {t("Calls Today", "आज की कॉलें")}
-                  </th>
-                  <th className="px-4 py-3 font-medium text-center">
-                    {t("Resolved", "निराकृत")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Avg Talk", "औसत बात समय")}
-                  </th>
-                  <th className="px-4 py-3 font-medium text-center">
-                    {t("CSAT", "नागरिक संतुष्टि दर")}
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    {t("Status", "स्थिति")}
-                  </th>
-                  <th className="px-4 py-3 font-medium text-center">
-                    {t("Actions", "कार्रवाई")}
-                  </th>
+      <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50">
+              <tr className="text-left text-xs text-muted-foreground">
+                <th className="px-4 py-3 font-medium">
+                  {t("Agent ID", "एजेंट आईडी")}
+                </th>
+                <th className="px-4 py-3 font-medium">{t("Name", "नाम")}</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("Designation", "पदनाम")}
+                </th>
+                <th className="px-4 py-3 font-medium">{t("Shift", "शिफ्ट")}</th>
+                <th className="px-4 py-3 font-medium text-center">
+                  {t("Calls Today", "आज की कॉलें")}
+                </th>
+                <th className="px-4 py-3 font-medium text-center">
+                  {t("Resolved", "निराकृत")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("Avg Talk", "औसत बात समय")}
+                </th>
+                <th className="px-4 py-3 font-medium text-center">
+                  {t("CSAT", "नागरिक संतुष्टि दर")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("Status", "स्थिति")}
+                </th>
+                <th className="px-4 py-3 font-medium text-center">
+                  {t("Actions", "कार्रवाई")}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {filtered.map((a, i) => (
+                <tr key={i} className="hover:bg-muted/30">
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                    {a.id}
+                  </td>
+                  <td className="px-4 py-3 font-medium">{a.name}</td>
+                  <td className="px-4 py-3">
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${a.role === "Supervisor" ? "bg-purple-50 text-purple-700" : "bg-blue-50 text-blue-700"}`}
+                    >
+                      {a.role}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
+                    {a.shift}
+                  </td>
+                  <td className="px-4 py-3 text-center font-semibold">
+                    {a.callsToday}
+                  </td>
+                  <td className="px-4 py-3 text-center text-emerald-600">
+                    {a.resolvedToday}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground text-xs">
+                    {a.avgTalkTime}
+                  </td>
+                  <td className="px-4 py-3 text-center text-amber-600 font-medium">
+                    ★ {a.csat}/5
+                  </td>
+                  <td className="px-4 py-3">
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${a.status === "Available" ? "bg-emerald-50 text-emerald-700" : a.status === "On Call" ? "bg-amber-50 text-amber-700" : a.status === "Break" ? "bg-purple-50 text-purple-700" : "bg-slate-50 text-slate-500"}`}
+                    >
+                      {a.status}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex gap-1 justify-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setEditAgent(a);
+                          setDialog({ ...a });
+                        }}
+                      >
+                        <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-600"
+                        onClick={() => handleDelete(a)}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filtered.map((a, i) => (
-                  <tr key={i} className="hover:bg-muted/30">
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                      {a.id}
-                    </td>
-                    <td className="px-4 py-3 font-medium">{a.name}</td>
-                    <td className="px-4 py-3">
-                      <Badge
-                        variant="outline"
-                        className={`text-xs ${a.role === "Supervisor" ? "bg-purple-50 text-purple-700" : "bg-blue-50 text-blue-700"}`}
-                      >
-                        {a.role}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground">
-                      {a.shift}
-                    </td>
-                    <td className="px-4 py-3 text-center font-semibold">
-                      {a.callsToday}
-                    </td>
-                    <td className="px-4 py-3 text-center text-emerald-600">
-                      {a.resolvedToday}
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground text-xs">
-                      {a.avgTalkTime}
-                    </td>
-                    <td className="px-4 py-3 text-center text-amber-600 font-medium">
-                      ★ {a.csat}/5
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge
-                        variant="outline"
-                        className={`text-xs ${a.status === "Available" ? "bg-emerald-50 text-emerald-700" : a.status === "On Call" ? "bg-amber-50 text-amber-700" : a.status === "Break" ? "bg-purple-50 text-purple-700" : "bg-slate-50 text-slate-500"}`}
-                      >
-                        {a.status}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <div className="flex gap-1 justify-center">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setEditAgent(a);
-                            setDialog({ ...a });
-                          }}
-                        >
-                          <Pencil className="w-3.5 h-3.5 mr-1" /> Edit
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600"
-                          onClick={() => handleDelete(a)}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        {dialog && (
+      {dialog && (
+        <div
+          className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+          onClick={() => setDialog(null)}
+        >
           <div
-            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
-            onClick={() => setDialog(null)}
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-                <h3 className="font-bold text-foreground">
-                  {editAgent ? "Edit Agent" : "Add CCE Agent"}
-                </h3>
-                <button
-                  onClick={() => setDialog(null)}
-                  className="p-1.5 hover:bg-muted rounded-lg"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+            <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+              <h3 className="font-bold text-foreground">
+                {editAgent ? "Edit Agent" : "Add CCE Agent"}
+              </h3>
+              <button
+                onClick={() => setDialog(null)}
+                className="p-1.5 hover:bg-muted rounded-lg"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div>
+                <Label className="mb-1.5 block">
+                  Agent Name <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  value={dialog.name || ""}
+                  onChange={(e) =>
+                    setDialog({ ...dialog, name: e.target.value })
+                  }
+                  placeholder="e.g., Priya Sharma"
+                />
               </div>
-              <div className="p-5 space-y-4">
+              <div>
+                <Label className="mb-1.5 block">
+                  {t("Designation", "पदनाम")}
+                </Label>
+                <select
+                  className="w-full border border-input rounded-md p-2 text-sm"
+                  value={dialog.role || "CCE"}
+                  onChange={(e) =>
+                    setDialog({ ...dialog, role: e.target.value })
+                  }
+                >
+                  <option value="CCE">CCE Agent</option>
+                  <option value="Supervisor">CC Supervisor</option>
+                </select>
+              </div>
+              <div>
+                <Label className="mb-1.5 block">Shift</Label>
+                <select
+                  className="w-full border border-input rounded-md p-2 text-sm"
+                  value={dialog.shift || ""}
+                  onChange={(e) =>
+                    setDialog({ ...dialog, shift: e.target.value })
+                  }
+                >
+                  <option value="Morning (06:00–14:00)">
+                    Morning (06:00–14:00)
+                  </option>
+                  <option value="Afternoon (14:00–22:00)">
+                    Afternoon (14:00–22:00)
+                  </option>
+                  <option value="Night (22:00–06:00)">
+                    Night (22:00–06:00)
+                  </option>
+                  <option value="Full Day (08:00–20:00)">
+                    Full Day (08:00–20:00)
+                  </option>
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="mb-1.5 block">
-                    Agent Name <span className="text-red-500">*</span>
-                  </Label>
+                  <Label className="mb-1.5 block">Calls Today</Label>
                   <Input
-                    value={dialog.name || ""}
+                    type="number"
+                    value={dialog.callsToday || 0}
                     onChange={(e) =>
-                      setDialog({ ...dialog, name: e.target.value })
+                      setDialog({
+                        ...dialog,
+                        callsToday: parseInt(e.target.value) || 0,
+                      })
                     }
-                    placeholder="e.g., Priya Sharma"
                   />
                 </div>
                 <div>
-                  <Label className="mb-1.5 block">{t("Designation", "पदनाम")}</Label>
-                  <select
-                    className="w-full border border-input rounded-md p-2 text-sm"
-                    value={dialog.role || "CCE"}
+                  <Label className="mb-1.5 block">Resolved Today</Label>
+                  <Input
+                    type="number"
+                    value={dialog.resolvedToday || 0}
                     onChange={(e) =>
-                      setDialog({ ...dialog, role: e.target.value })
+                      setDialog({
+                        ...dialog,
+                        resolvedToday: parseInt(e.target.value) || 0,
+                      })
                     }
-                  >
-                    <option value="CCE">CCE Agent</option>
-                    <option value="Supervisor">CC Supervisor</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="mb-1.5 block">Shift</Label>
-                  <select
-                    className="w-full border border-input rounded-md p-2 text-sm"
-                    value={dialog.shift || ""}
-                    onChange={(e) =>
-                      setDialog({ ...dialog, shift: e.target.value })
-                    }
-                  >
-                    <option value="Morning (06:00–14:00)">
-                      Morning (06:00–14:00)
-                    </option>
-                    <option value="Afternoon (14:00–22:00)">
-                      Afternoon (14:00–22:00)
-                    </option>
-                    <option value="Night (22:00–06:00)">
-                      Night (22:00–06:00)
-                    </option>
-                    <option value="Full Day (08:00–20:00)">
-                      Full Day (08:00–20:00)
-                    </option>
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="mb-1.5 block">Calls Today</Label>
-                    <Input
-                      type="number"
-                      value={dialog.callsToday || 0}
-                      onChange={(e) =>
-                        setDialog({
-                          ...dialog,
-                          callsToday: parseInt(e.target.value) || 0,
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Label className="mb-1.5 block">Resolved Today</Label>
-                    <Input
-                      type="number"
-                      value={dialog.resolvedToday || 0}
-                      onChange={(e) =>
-                        setDialog({
-                          ...dialog,
-                          resolvedToday: parseInt(e.target.value) || 0,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="mb-1.5 block">Avg Talk Time</Label>
-                    <Input
-                      value={dialog.avgTalkTime || ""}
-                      onChange={(e) =>
-                        setDialog({ ...dialog, avgTalkTime: e.target.value })
-                      }
-                      placeholder="e.g., 4m 12s"
-                    />
-                  </div>
-                  <div>
-                    <Label className="mb-1.5 block">CSAT (out of 5)</Label>
-                    <Input
-                      type="number"
-                      step="0.1"
-                      value={dialog.csat || 0}
-                      onChange={(e) =>
-                        setDialog({
-                          ...dialog,
-                          csat: parseFloat(e.target.value) || 0,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label className="mb-1.5 block">Status</Label>
-                  <select
-                    className="w-full border border-input rounded-md p-2 text-sm"
-                    value={dialog.status || "Available"}
-                    onChange={(e) =>
-                      setDialog({ ...dialog, status: e.target.value })
-                    }
-                  >
-                    <option value="Available">Available</option>
-                    <option value="On Call">On Call</option>
-                    <option value="Break">Break</option>
-                    <option value="Offline">Offline</option>
-                  </select>
+                  />
                 </div>
               </div>
-              <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setDialog(null)}>
-                  Cancel
-                </Button>
-                <Button
-                  className="bg-primary hover:bg-primary/90"
-                  onClick={handleSave}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="mb-1.5 block">Avg Talk Time</Label>
+                  <Input
+                    value={dialog.avgTalkTime || ""}
+                    onChange={(e) =>
+                      setDialog({ ...dialog, avgTalkTime: e.target.value })
+                    }
+                    placeholder="e.g., 4m 12s"
+                  />
+                </div>
+                <div>
+                  <Label className="mb-1.5 block">CSAT (out of 5)</Label>
+                  <Input
+                    type="number"
+                    step="0.1"
+                    value={dialog.csat || 0}
+                    onChange={(e) =>
+                      setDialog({
+                        ...dialog,
+                        csat: parseFloat(e.target.value) || 0,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+              <div>
+                <Label className="mb-1.5 block">Status</Label>
+                <select
+                  className="w-full border border-input rounded-md p-2 text-sm"
+                  value={dialog.status || "Available"}
+                  onChange={(e) =>
+                    setDialog({ ...dialog, status: e.target.value })
+                  }
                 >
-                  <Check className="w-4 h-4 mr-1" /> Save
-                </Button>
+                  <option value="Available">Available</option>
+                  <option value="On Call">On Call</option>
+                  <option value="Break">Break</option>
+                  <option value="Offline">Offline</option>
+                </select>
               </div>
             </div>
+            <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setDialog(null)}>
+                Cancel
+              </Button>
+              <Button
+                className="bg-primary hover:bg-primary/90"
+                onClick={handleSave}
+              >
+                <Check className="w-4 h-4 mr-1" /> Save
+              </Button>
+            </div>
           </div>
-        )}
-      </div>
-    </PortalLayout>
+        </div>
+      )}
+    </div>
   );
 }

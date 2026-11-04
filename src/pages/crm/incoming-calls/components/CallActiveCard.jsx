@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { formatDuration } from "../constants";
+import CallTimer from "./CallTimer";
 
 const getGradientClass = (callState) => {
   switch (callState) {
@@ -34,6 +35,9 @@ const getGradientClass = (callState) => {
 export default function CallActiveCard({
   callState,
   callDuration,
+  startTime,
+  initialDurationSeconds,
+  initialDuration,
   caller,
   isHold,
   setIsHold,
@@ -86,7 +90,7 @@ export default function CallActiveCard({
       )}
 
       {/* Repeat caller alert */}
-      <div className="bg-white/10 rounded-xl p-3 mb-4 flex items-center gap-2">
+      {/* <div className="bg-white/10 rounded-xl p-3 mb-4 flex items-center gap-2">
         <AlertTriangle className="w-5 h-5 text-amber-300 shrink-0" />
         <div className="text-sm">
           <div className="font-semibold">
@@ -98,7 +102,7 @@ export default function CallActiveCard({
             {t("times about the same issue", "बार इसी मुद्दे पर")}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Call state presentation */}
       <div className="text-center mb-6">
@@ -122,7 +126,11 @@ export default function CallActiveCard({
               <Phone className="w-8 h-8" />
             </div>
             <div className="text-lg font-semibold font-mono">
-              {formatDuration(callDuration)}
+              <CallTimer
+                startTime={startTime || caller?.createdAt}
+                initialDurationSeconds={initialDurationSeconds}
+                fallbackText={initialDuration || "00:00"}
+              />
             </div>
             <div className="text-sm text-white/70">
               {isHold

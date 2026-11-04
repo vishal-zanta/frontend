@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PortalLayout from "@/components/PortalLayout";
 
 // Imported modular components from officer complaints
 import StatsCards from "./components/StatsCards";
@@ -35,8 +34,7 @@ export default function TrackCCMComplaint() {
 
 
   return (
-    <PortalLayout role="crm" isHideOverflow={true}>
-      <div className="p-3 lg:p-6 space-y-4 lg:space-y-6 relative">
+    <div className="p-3 lg:p-6 space-y-4 lg:space-y-6 relative">
         {/* Stats — desktop only */}
         {(isMobile ? !selected : true) && (
           <div className="block">
@@ -135,6 +133,5 @@ export default function TrackCCMComplaint() {
           )}
         </div>
       </div>
-    </PortalLayout>
   );
 }

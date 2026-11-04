@@ -9,10 +9,7 @@ import SlaAnalytics from "./components/SlaAnalytics";
 import SlaTable from "./components/SlaTable";
 import Form from "./components/Form";
 import { useGetSlaconfig } from "./hooks";
-import {
-  useGetDepartments,
-  useGetServices,
-} from "../master-data/hooks";
+import { useGetDepartments, useGetServices } from "../master-data/hooks";
 import useGetRoles from "@/hooks/query/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSlaConfig, putSlaConfig, deleteSlaConfig } from "./api";
@@ -222,10 +219,14 @@ export default function SLAConfig() {
       sum += e.slaHours;
     });
 
-    const selectedServiceObj = allServices.find((s) => s._id === dialog.service);
+    const selectedServiceObj = allServices.find(
+      (s) => s._id === dialog.service,
+    );
     const serviceSla = selectedServiceObj?.sla || 24;
     if (sum > serviceSla) {
-      getErrorToast({ message: `SLA hours sum cannot exceed ${serviceSla} hrs` });
+      getErrorToast({
+        message: `SLA hours sum cannot exceed ${serviceSla} hrs`,
+      });
       return;
     }
 
@@ -248,175 +249,174 @@ export default function SLAConfig() {
   };
 
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={t("SLA Configuration", "एसएलए कॉन्फ़िगरेशन")}
-          subtitle={t(
-            "Define SLA timeline per level for each service - breach triggers auto-escalation",
-            "प्रत्येक सेवा के लिए स्तर अनुसार एसएलए समय सीमा परिभाषित करें - उल्लंघन पर स्वतः वृद्धि होती है",
-          )}
-        />
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={t("SLA Configuration", "एसएलए कॉन्फ़िगरेशन")}
+        subtitle={t(
+          "Define SLA timeline per level for each service - breach triggers auto-escalation",
+          "प्रत्येक सेवा के लिए स्तर अनुसार एसएलए समय सीमा परिभाषित करें - उल्लंघन पर स्वतः वृद्धि होती है",
+        )}
+      />
 
-        {/* Analytics summary */}
-        <SlaAnalytics docs={docs} rolesCount={roles.length} />
+      {/* Analytics summary */}
+      <SlaAnalytics docs={docs} rolesCount={roles.length} />
 
-        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-6 sm:items-center justify-between">
-          <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center flex-1">
-            <SearchDebounced
-              handleDebouncedChange={(val) => {
-                setSearch(val);
-                pageProps.setPage(1);
-              }}
-              delay={500}
-              className="w-full sm:flex-1"
-              placeholder={t("Search service...", "सेवा खोजें...")}
-            />
-            <LoaderErrWrapper isLoading={deptLoading}>
-              <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
-                <label className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
-                  {t("Department:", "विभाग:")}
-                </label>
-                <select
-                  value={selectedDept}
-                  onChange={(e) => {
-                    setSelectedDept(e.target.value);
-                    pageProps.setPage(1);
-                  }}
-                  className="text-xs h-8 w-full sm:w-auto rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
-                >
-                  {depts.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </LoaderErrWrapper>
-          </div>
-          <Button
-            className="bg-primary hover:bg-primary/90 w-full sm:w-auto shrink-0"
-            disabled={!selectedDept}
-            onClick={() => {
-              setEditItem(null);
-              setDialog({
-                service: "",
-                escalations: [],
-                officer: true,
-                active: true,
-              });
+      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-6 sm:items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center flex-1">
+          <SearchDebounced
+            handleDebouncedChange={(val) => {
+              setSearch(val);
+              pageProps.setPage(1);
             }}
-          >
-            <Plus className="w-4 h-4 mr-1" />{" "}
-            {t("Add SLA Config", "एसएलए कॉन्फ़िगरेशन जोड़ें")}
-          </Button>
-        </div>
-
-        {/* SLA Table */}
-        <div
-          className={clsx(
-            "bg-card rounded-xl border border-border overflow-hidden mt-6",
-            deleteMutation.isPending && "opacity-70 pointer-events-none",
-          )}
-        >
-          <LoaderErrWrapper
-            isLoading={isSlaLoading || isRolesLoading || deptLoading}
-            error={slaError || rolesError || deptError?.message}
-          >
-            <SlaTable
-              docs={filtered}
-              roles={roles}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            delay={500}
+            className="w-full sm:flex-1"
+            placeholder={t("Search service...", "सेवा खोजें...")}
+          />
+          <LoaderErrWrapper isLoading={deptLoading}>
+            <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
+              <label className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
+                {t("Department:", "विभाग:")}
+              </label>
+              <select
+                value={selectedDept}
+                onChange={(e) => {
+                  setSelectedDept(e.target.value);
+                  pageProps.setPage(1);
+                }}
+                className="text-xs h-8 w-full sm:w-auto rounded-md border border-input bg-background px-2.5 py-1 font-medium text-foreground outline-none focus:ring-1 focus:ring-primary cursor-pointer hover:bg-muted/50"
+              >
+                {depts.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </LoaderErrWrapper>
-          <Pagination
-            page={page}
-            limit={limit}
-            totalPage={totalPages}
-            isLoading={isSlaLoading}
-            {...pageProps}
+        </div>
+        <Button
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto shrink-0"
+          disabled={!selectedDept}
+          onClick={() => {
+            setEditItem(null);
+            setDialog({
+              service: "",
+              escalations: [],
+              officer: true,
+              active: true,
+            });
+          }}
+        >
+          <Plus className="w-4 h-4 mr-1" />{" "}
+          {t("Add SLA Config", "एसएलए कॉन्फ़िगरेशन जोड़ें")}
+        </Button>
+      </div>
+
+      {/* SLA Table */}
+      <div
+        className={clsx(
+          "bg-card rounded-xl border border-border overflow-hidden mt-6",
+          deleteMutation.isPending && "opacity-70 pointer-events-none",
+        )}
+      >
+        <LoaderErrWrapper
+          isLoading={isSlaLoading || isRolesLoading || deptLoading}
+          error={slaError || rolesError || deptError?.message}
+        >
+          <SlaTable
+            docs={filtered}
+            roles={roles}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
-          <div className="px-5 py-3 border-t border-border flex items-center justify-between">
-            <div className="text-xs text-amber-600 flex items-center gap-1">
-              <AlertTriangle className="w-3.5 h-3.5" />{" "}
-              {t(
-                "Services without an assigned officer will not be visible to citizens",
-                "बिना अधिकारी आवंटित सेवाएं नागरिकों को दिखाई नहीं देंगी",
-              )}
+        </LoaderErrWrapper>
+        <Pagination
+          page={page}
+          limit={limit}
+          totalPage={totalPages}
+          isLoading={isSlaLoading}
+          {...pageProps}
+        />
+        <div className="px-5 py-3 border-t border-border flex items-center justify-between">
+          <div className="text-xs text-amber-600 flex items-center gap-1">
+            <AlertTriangle className="w-3.5 h-3.5" />{" "}
+            {t(
+              "Services without an assigned officer will not be visible to citizens",
+              "बिना अधिकारी आवंटित सेवाएं नागरिकों को दिखाई नहीं देंगी",
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Add/Edit Dialog */}
+      {dialog && (
+        <div
+          style={{
+            margin: 0,
+          }}
+          className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+          onClick={() => setDialog(null)}
+        >
+          <div
+            className="bg-card rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+              <h3 className="font-bold text-foreground">
+                {editItem
+                  ? t("Edit SLA Config", "एसएलए कॉन्फ़िगरेशन संपादित करें")
+                  : t("Add SLA Config", "एसएलए कॉन्फ़िगरेशन जोड़ें")}
+              </h3>
+              <button
+                onClick={() => setDialog(null)}
+                className="p-1.5 hover:bg-muted rounded-lg cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-5">
+              <Form
+                editItem={editItem}
+                dialog={dialog}
+                setDialog={setDialog}
+                roles={roles}
+                serviceOptions={serviceOptions}
+                isServicesPending={isServicesPending || isServicesLoading}
+              />
+            </div>
+            <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setDialog(null)}>
+                {t("Cancel", "रद्द करें")}
+              </Button>
+              <Button
+                className="bg-primary hover:bg-primary/90"
+                onClick={handleSaveItem}
+                disabled={postMutation.isPending || putMutation.isPending}
+              >
+                <Check className="w-4 h-4 mr-1" />{" "}
+                {postMutation.isPending || putMutation.isPending
+                  ? t("Saving...", "सहेज रहा है...")
+                  : t("Save", "सहेजें")}
+              </Button>
             </div>
           </div>
         </div>
+      )}
 
-        {/* Add/Edit Dialog */}
-        {dialog && (
-          <div
-            style={{
-              margin: 0,
-            }}
-            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
-            onClick={() => setDialog(null)}
-          >
-            <div
-              className="bg-card rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-                <h3 className="font-bold text-foreground">
-                  {editItem
-                    ? t("Edit SLA Config", "एसएलए कॉन्फ़िगरेशन संपादित करें")
-                    : t("Add SLA Config", "एसएलए कॉन्फ़िगरेशन जोड़ें")}
-                </h3>
-                <button
-                  onClick={() => setDialog(null)}
-                  className="p-1.5 hover:bg-muted rounded-lg cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="p-5">
-                <Form
-                  editItem={editItem}
-                  dialog={dialog}
-                  setDialog={setDialog}
-                  roles={roles}
-                  serviceOptions={serviceOptions}
-                  isServicesPending={isServicesPending || isServicesLoading}
-                />
-              </div>
-              <div className="px-5 py-3 border-t border-border flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setDialog(null)}>
-                  {t("Cancel", "रद्द करें")}
-                </Button>
-                <Button
-                  className="bg-primary hover:bg-primary/90"
-                  onClick={handleSaveItem}
-                  disabled={postMutation.isPending || putMutation.isPending}
-                >
-                  <Check className="w-4 h-4 mr-1" />{" "}
-                  {postMutation.isPending || putMutation.isPending
-                    ? t("Saving...", "सहेज रहा है...")
-                    : t("Save", "सहेजें")}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Delete Dialog */}
-        {deleteRecord && (
-          <DeleteDialog
-            onClose={() => setDeleteRecord(null)}
-            onDelete={handleConfirmDelete}
-            title={
-              deleteRecord.service?.title ||
-              deleteRecord.subService?.title ||
-              "SLA Config"
-            }
-            deleting={deleteMutation.isPending}
-          />
-        )}
-      </div>
-    </PortalLayout>
+      {/* Delete Dialog */}
+      {deleteRecord && (
+        <DeleteDialog
+          onClose={() => setDeleteRecord(null)}
+          onDelete={handleConfirmDelete}
+          title={
+            deleteRecord.service?.title ||
+            deleteRecord.subService?.title ||
+            "SLA Config"
+          }
+          deleting={deleteMutation.isPending}
+        />
+      )}
+    </div>
   );
 }

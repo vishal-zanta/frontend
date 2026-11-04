@@ -16,6 +16,10 @@ export const postHoldCall = async (data = {}) => {
   return instance.post("/telephony/call/hold", data);
 };
 
+export const postUnholdCall = async (data = {}) => {
+  return instance.post("/telephony/call/unhold", data);
+};
+
 export const getCalls = async (params = {}) => {
   return instance.get("/calls", { params });
 };

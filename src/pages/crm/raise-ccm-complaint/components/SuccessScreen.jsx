@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { CheckCircle2, Copy, Check } from "lucide-react";
-import PortalLayout from "@/components/PortalLayout";
 import { Button } from "@/components/ui/button";
 import { getSuccessToast } from "@/utils/helpers";
 
@@ -56,8 +55,7 @@ export default function SuccessScreen({
   };
 
   return (
-    <PortalLayout role={role}>
-      <div className="p-4 sm:p-6 flex items-center justify-center min-h-[80vh]">
+    <div className="p-4 sm:p-6 flex items-center justify-center min-h-[80vh]">
         <div className="max-w-md w-full bg-card rounded-2xl border border-border shadow-xl p-6 sm:p-8 text-center">
           <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-10 h-10" />
@@ -107,7 +105,6 @@ export default function SuccessScreen({
           </Button> */}
         </div>
       </div>
-    </PortalLayout>
   );
 }
 

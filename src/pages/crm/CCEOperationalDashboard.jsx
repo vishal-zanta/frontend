@@ -122,32 +122,31 @@ export default function CCEOperationalDashboard() {
   };
 
   return (
-    <PortalLayout role="cce">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={`${t("CCE Operational Dashboard", "ग्राहक सेवा अधिकारी परिचालन डैशबोर्ड")} - ${t("CCE Performance", "ग्राहक सेवा अधिकारी प्रदर्शन")}`}
-          subtitle=""
-        >
-          <TimeRangeFilter
-            period={period}
-            setPeriod={setPeriod}
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-            boxClassName={"flex-wrap sm:flex-nowrap"}
-            filterOptions={[
-              {
-                filterKey: "user",
-                label: t("By Users", "उपयोगकर्ता के अनुसार"),
-                options: usersData,
-              },
-            ]}
-            filters={filters}
-            setFilters={setFilters}
-          />
-        </SectionTitle>
+    // <PortalLayout role="cce">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={`${t("CCE Operational Dashboard", "ग्राहक सेवा अधिकारी परिचालन डैशबोर्ड")} - ${t("CCE Performance", "ग्राहक सेवा अधिकारी प्रदर्शन")}`}
+        subtitle=""
+      >
+        <TimeRangeFilter
+          period={period}
+          setPeriod={setPeriod}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          boxClassName={"flex-wrap sm:flex-nowrap"}
+          filterOptions={[
+            {
+              filterKey: "user",
+              label: t("By Users", "उपयोगकर्ता के अनुसार"),
+              options: usersData,
+            },
+          ]}
+          filters={filters}
+          setFilters={setFilters}
+        />
+      </SectionTitle>
 
-        <CcePerformanceTab pd={pd} />
-      </div>
-    </PortalLayout>
+      <CcePerformanceTab pd={pd} />
+    </div>
   );
 }

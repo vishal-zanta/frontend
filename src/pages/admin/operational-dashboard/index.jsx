@@ -101,10 +101,12 @@ export default function OperationalDashboard() {
     page: 1,
     limit: MAX_LIMIT,
   });
-  const departmentData = (departmentApiData?.data?.data?.docs || []).map((d) => ({
-    label: d.title || d.name || "",
-    value: d._id,
-  }));
+  const departmentData = (departmentApiData?.data?.data?.docs || []).map(
+    (d) => ({
+      label: d.title || d.name || "",
+      value: d._id,
+    }),
+  );
   // console.log({usersData})
   const filteredTabs = tabs.filter((t) => hasPermission(t.permissions));
 
@@ -204,29 +206,29 @@ export default function OperationalDashboard() {
   }, [activeTab?.id]);
 
   return (
-    <PortalLayout role="superadmin">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <SectionTitle
-          title={`${t("Operational Dashboard", "परिचालन डैशबोर्ड")} -
+    // <PortalLayout role="superadmin">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <SectionTitle
+        title={`${t("Operational Dashboard", "परिचालन डैशबोर्ड")} -
               ${t(activeTab?.labelEn || "", activeTab?.labelHi || "")}`}
-          subtitle={""}
-        >
-          <TimeRangeFilter
-            period={period}
-            setPeriod={setPeriod}
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-            boxClassName={"flex-wrap sm:flex-nowrap"}
-            filterOptions={
-              tab === "cce-performance"
-                ? [
-                    {
-                      filterKey: "user",
-                      label: t("By Users", "उपयोगकर्ता के अनुसार"),
-                      options: usersData,
-                    },
-                  ]
-                : tab === "sla-performance"
+        subtitle={""}
+      >
+        <TimeRangeFilter
+          period={period}
+          setPeriod={setPeriod}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          boxClassName={"flex-wrap sm:flex-nowrap"}
+          filterOptions={
+            tab === "cce-performance"
+              ? [
+                  {
+                    filterKey: "user",
+                    label: t("By Users", "उपयोगकर्ता के अनुसार"),
+                    options: usersData,
+                  },
+                ]
+              : tab === "sla-performance"
                 ? [
                     {
                       filterKey: "department",
@@ -235,26 +237,25 @@ export default function OperationalDashboard() {
                     },
                   ]
                 : []
-            }
-            filters={filters}
-            setFilters={setFilters}
-          />
-        </SectionTitle>
+          }
+          filters={filters}
+          setFilters={setFilters}
+        />
+      </SectionTitle>
 
-        {tab === "call-volume" && <CallVolumeTab pd={pd} />}
-        {tab === "cce-performance" && <CcePerformanceTab pd={pd} />}
-        {tab === "sla-performance" && (
-          <SlaPerformanceTab
-            filters={filters}
-            pd={pd}
-            departmentData={departmentData}
-            dateRange={dateRange}
-          />
-        )}
-        {tab === "grievance" && <GrievanceTab pd={pd} />}
-        {tab === "citizen-interaction" && <CitizenInteractionTab />}
-        {tab === "system" && <SystemTab />}
-      </div>
-    </PortalLayout>
+      {tab === "call-volume" && <CallVolumeTab pd={pd} />}
+      {tab === "cce-performance" && <CcePerformanceTab pd={pd} />}
+      {tab === "sla-performance" && (
+        <SlaPerformanceTab
+          filters={filters}
+          pd={pd}
+          departmentData={departmentData}
+          dateRange={dateRange}
+        />
+      )}
+      {tab === "grievance" && <GrievanceTab pd={pd} />}
+      {tab === "citizen-interaction" && <CitizenInteractionTab />}
+      {tab === "system" && <SystemTab />}
+    </div>
   );
 }
