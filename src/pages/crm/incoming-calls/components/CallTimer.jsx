@@ -1,50 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 /**
  * Isolated call timer component that uses moment and setTimeout to count call duration.
- * Prevents re-rendering parent components or the CallContext every second.
  *
- * @param {string|number|Date} startTime - ISO string or timestamp of call answer (e.g. answerTimeISO, answerTime, createdAt)
- * @param {number} initialDurationSeconds - Initial duration in seconds from API (e.g. currentDurationSeconds)
+ * @param {string} startTime - ISO string timestamp of call start/answer
  * @param {string} className - Optional Tailwind CSS classes
- * @param {string} fallbackText - Fallback display when duration cannot be calculated (e.g. currentDuration "00:01")
  */
-export default function CallTimer({
-  startTime,
-  initialDurationSeconds,
-  className = "",
-  fallbackText = "00:00",
-}) {
-  const mountTimeRef = useRef(null);
-  const fetchTimeRef = useRef(moment());
-
-  if (!mountTimeRef.current) {
-    mountTimeRef.current = moment();
-  }
-
-  useEffect(() => {
-    fetchTimeRef.current = moment();
-  }, [startTime, initialDurationSeconds]);
-
+export default function CallTimer({ startTime, className = "" }) {
   const calculateDuration = () => {
-    let start;
-    if (startTime && moment(startTime).isValid()) {
-      start = moment(startTime);
-    } else {
-      start = mountTimeRef.current;
+    if (!startTime || !moment(startTime).isValid()) {
+      return "00:00";
     }
 
-    let diffMs = moment().diff(start);
-    if (typeof initialDurationSeconds === "number") {
-      const elapsedSinceFetch = moment().diff(fetchTimeRef.current);
-      const baselineMs = initialDurationSeconds * 1000 + elapsedSinceFetch;
-      if (diffMs < baselineMs) {
-        diffMs = baselineMs;
-      }
-    }
-    diffMs = Math.max(0, diffMs);
-
+    const diffMs = Math.max(0, moment().diff(moment(startTime)));
     const duration = moment.duration(diffMs);
 
     const hours = Math.floor(duration.asHours());
@@ -62,10 +31,7 @@ export default function CallTimer({
     return `${formattedMin}:${formattedSec}`;
   };
 
-  const [durationText, setDurationText] = useState(() => {
-    const calculated = calculateDuration();
-    return calculated !== "00:00" ? calculated : fallbackText || calculated;
-  });
+  const [durationText, setDurationText] = useState(calculateDuration);
 
   useEffect(() => {
     let timerId;
@@ -82,7 +48,7 @@ export default function CallTimer({
         clearTimeout(timerId);
       }
     };
-  }, [startTime, initialDurationSeconds]);
+  }, [startTime]);
 
-  return <span className={className}>{durationText || fallbackText}</span>;
+  return <span className={className}>{durationText}</span>;
 }

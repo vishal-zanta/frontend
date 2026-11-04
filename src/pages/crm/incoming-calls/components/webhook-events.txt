@@ -1,0 +1,156 @@
+
+### Summary Table
+  
+   #                                              │ Event Name                                    │ Triggered When                                │ Purpose
+  ────────────────────────────────────────────────┼───────────────────────────────────────────────┼───────────────────────────────────────────────┼───────────────────────────────────────────────
+   1                                              │ call:ringing                                  │ PBX sends RINGING webhook                     │ Screen Pop with caller & grievance info
+   2                                              │ call:answered                                 │ PBX sends ANSWERED or agent hits /call/pickup │ Start timer & change status to "In Call"
+   3                                              │ call:dropped                                  │ PBX sends DROPPED or agent hits /call/drop    │ Stop timer & change status to "Available"
+   4                                              │ call:hold                                     │ Agent calls POST /call/hold                   │ Indicate call is on hold
+   5                                              │ call:unhold                                   │ Agent calls POST /call/unhold                 │ Indicate call is resumed
+   6                                              │ call:mute                                     │ Agent calls POST /call/mute                   │ Indicate microphone is muted
+   7                                              │ call:unmute                                   │ Agent calls POST /call/unmute                 │ Indicate microphone is unmuted
+   8                                              │ call:transferred                              │ Agent calls POST /call/transfer               │ Confirm call has been transferred
+   9                                              │ call:consulting                               │ Agent calls POST /call/consult                │ Customer on hold; consult line started
+   10                                             │ call:consult_cancelled                        │ Agent calls POST /call/consult/cancel         │ Consult cancelled; returned to customer
+   11                                             │ call:conference                               │ Agent calls POST /call/conference             │ 3-way conference active
+  ──────
+  ### Exact Payloads
+  
+  #### 1. call:ringing (Screen Pop)
+  
+    {
+      "event": "RINGING",
+      "callId": "CALL-2026-94821",
+      "extension": "56001",
+      "callerId": "08307753758",
+      "calledId": "56001",
+      "timestamp": "2026-11-04T10:24:15.123Z",
+      "screenPop": {
+        "callerMobile": "08307753758",
+        "isRegisteredCitizen": true,
+        "citizen": {
+          "_id": "672c89f1a2345678bc901234",
+          "fullName": "Rahul Kumar",
+          "mobile": "08307753758",
+          "email": "rahul@example.com",
+          "address": {
+            "addressLine": "House No 12, Ward 4",
+            "district": "Patna"
+          }
+        },
+        "recentGrievances": [ 
+          {
+            "_id": "672d11...",
+            "grievanceId": "BR-2026-0001",
+            "status": "OPEN",
+            "priority": "HIGH",
+            "classification": { 
+              "subService": "Water Supply Leakage"
+            },
+            "createdAt": "2026-11-01T08:30:00.000Z"
+          }
+        ]
+      }
+    }
+  ──────
+  #### 2. call:answered (Start Call Timer)
+  
+    {
+      "event": "ANSWERED",
+      "callId": "CALL-2026-94821",
+      "extension": "56001",
+      "callerId": "08307753758",
+      "calledId": "56001",
+      "timestamp": "2026-11-04T10:24:20.456Z",
+      "agentStatus": "In Call"
+    }
+  ──────
+  #### 3. call:dropped (Call Disconnected)
+  
+    {
+      "event": "DROPPED",
+      "callId": "CALL-2026-94821",
+      "extension": "56001",
+      "callerId": "08307753758",
+      "calledId": "56001",
+      "durationSeconds": 65, 
+      "timestamp": "2026-11-04T10:25:25.789Z",
+      "agentStatus": "Available"
+    }
+  ──────
+  #### 4. call:hold
+  
+    {
+      "event": "HELD",
+      "callId": "CALL-2026-94821",
+      "extension": "56001",
+      "timestamp": "2026-11-04T10:24:35.000Z"
+    }
+  ──────
+  #### 5. call:unhold
+  
+    {
+      "event": "UNHELD",
+      "callId": "CALL-2026-94821",
+      "extension": "56001",
+      "timestamp": "2026-11-04T10:24:45.000Z"
+    }
+  ──────
+  #### 6. call:mute
+  
+    {
+      "event": "MUTED", 
+      "extension": "56001",
+      "timestamp": "2026-11-04T10:24:50.000Z"
+    }
+  ──────
+  #### 7. call:unmute 
+  
+    {
+      "event": "UNMUTED",
+      "extension": "56001",
+      "timestamp": "2026-11-04T10:24:55.000Z"
+    }
+  ──────
+  #### 8. call:transferred
+  
+    { 
+      "event": "TRANSFERRED",
+      "callId": "CALL-2026-94821",                                                                                                                                                                
+      "extension": "56001",                                                                                                                                                                       
+      "destination": "56002",
+      "timestamp": "2026-11-04T10:25:00.000Z"
+    }
+  ──────
+  #### 9. call:consulting
+  
+    {
+      "event": "CONSULTING",
+      "extension": "56001",
+      "destination": "56002",
+      "targetUser": {
+        "id": "672b1001...",
+        "name": "Supervisor Sharma",
+        "userCode": "SUP001",
+        "extension": "56002"
+      },
+      "timestamp": "2026-11-04T10:25:05.000Z"
+    }
+  ──────
+  #### 10. call:consult_cancelled
+  
+    {
+      "event": "CONSULT_CANCELLED",
+      "extension": "56001",
+      "timestamp": "2026-11-04T10:25:15.000Z"
+    }
+  ──────
+  #### 11. call:conference 
+  
+    {
+      "event": "CONFERENCE_STARTED",
+      "extension": "56001",
+      "destination": "56002",
+      "timestamp": "2026-11-04T10:25:20.000Z"
+    }

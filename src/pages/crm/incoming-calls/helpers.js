@@ -96,7 +96,6 @@ export const mapAgentStatusResponse = (rawResponse) => {
           activeCall.screenPop?.callerMobile ||
           activeCall.callerId ||
           "N/A",
-        callType: activeCall.callType || "Inbound",
         callId: activeCall.callId || activeCall._id,
         duration: activeCall.duration || "0s",
         recordingUrl: activeCall.recordingUrl,

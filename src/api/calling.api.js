@@ -4,20 +4,40 @@ export const postMakeCall = async (data) => {
   return instance.post("/telephony/call", data);
 };
 
-export const postAnswerCall = async (data) => {
-  return instance.post("/telephony/call/pickup", data);
+export const postAnswerCall = async () => {
+  return instance.post("/telephony/call/pickup");
 };
 
-export const postDropCall = async (data = {}) => {
-  return instance.post("/telephony/call/drop", data);
+export const postDropCall = async () => {
+  return instance.post("/telephony/call/drop");
 };
 
-export const postHoldCall = async (data = {}) => {
-  return instance.post("/telephony/call/hold", data);
+export const postHoldCall = async () => {
+  return instance.post("/telephony/call/hold");
 };
 
-export const postUnholdCall = async (data = {}) => {
-  return instance.post("/telephony/call/unhold", data);
+export const postUnholdCall = async () => {
+  return instance.post("/telephony/call/unhold");
+};
+
+export const postTransferCall = async (data = {}) => {
+  return instance.post("/telephony/call/transfer", data);
+};
+
+export const postConsultCall = async (data = {}) => {
+  return instance.post("/telephony/call/consult", data);
+};
+
+export const postConferenceCall = async (data = {}) => {
+  return instance.post("/telephony/call/conference", data);
+};
+
+export const postConsultCancel = async () => {
+  return instance.post("/telephony/call/consult/cancel");
+};
+
+export const getTransferTargets = async (params = {}) => {
+  return instance.get("/telephony/transfer-targets", { params });
 };
 
 export const getCalls = async (params = {}) => {

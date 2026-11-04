@@ -7,7 +7,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   getAgentStatus,
   getCallDetails,
@@ -24,17 +24,20 @@ import notiSound from "@/assets/notification.wav";
 const CallContext = createContext(null);
 
 export function CallProvider({ children }) {
-  const queryClient = useQueryClient();
   const { subscribe } = useSockets() || {};
   const { profiledata } = useAuth();
 
-  const [callDuration, setCallDuration] = useState(0);
-  const [localCallStateOverride, setLocalCallStateOverride] = useState(null); // Used for immediate UI feedback on user actions
+  // Core streamlined states (mutated by webhook events & actions)
+  const [callState, setCallState] = useState("idle"); // "idle" | "ringing" | "connected"
+  const [isHold, setIsHold] = useState(false);
+  // const [isMuted, setIsMuted] = useState(false);
+  // const [isRecording, setIsRecording] = useState(true);
   const [callDetails, setCallDetails] = useState(null);
 
   const audioRef = useRef(null);
+  const isInitialRestoreDone = useRef(false);
 
-  // Poll agent status every 20 seconds
+  // Background polling for agent presence, break & telephony icon (DO NOT invalidate on events/actions)
   const {
     data: responseData,
     isLoading: isStatusLoading,
@@ -43,22 +46,20 @@ export function CallProvider({ children }) {
     queryKey: ["telephonyAgentStatus"],
     queryFn: async () => {
       const response = await getAgentStatus();
-      const data = response?.data?.data ?? response?.data;
-      return data;
+      return response?.data?.data ?? response?.data ?? response;
     },
     enabled: Boolean(profiledata?.isCCE),
     refetchInterval: 20000,
     refetchIntervalInBackground: true,
   });
 
-  
-
-  // Map response using standalone helper (logic outside context)
-  const mappedState = useMemo(() => {
-
+  // Normalized Avaya status from poll for TopCallStatusIcon
+  const mapped = useMemo(() => {
     return mapAgentStatusResponse(responseData);
   }, [responseData]);
-  console.log({mappedState, responseData});
+
+  const currentAvayaStatus =
+    mapped.avayaStatus || responseData?.avayaStatus || null;
 
   const playRingtone = useCallback(() => {
     try {
@@ -86,84 +87,136 @@ export function CallProvider({ children }) {
     }
   }, []);
 
-  // Effective call state: if backend status is idle (e.g. READY_FREE / WORKING_AFTER_CALL), force idle
-  const effectiveCallState =
-    mappedState.callState === "idle"
-      ? "idle"
-      : localCallStateOverride || mappedState.callState || "idle";
-
-  // Manage duration timer when connected
-  // TODO : MAke an seprate component that takes ISO string and rerenders for duration .
-  // useEffect(() => {
-  //   if (effectiveCallState === "connected") {
-  //     const interval = setInterval(() => {
-  //       setCallDuration((prev) => prev + 1);
-  //     }, 1000);
-  //     return () => clearInterval(interval);
-  //   } else {
-  //     setCallDuration(0);
-  //   }
-  // }, [effectiveCallState]);
-
-  // Handle ringtone based on effective state
+  // 1. Initial State Restoration: Only sets initialStates on first load/mount from status data
   useEffect(() => {
-    if (effectiveCallState === "ringing") {
-      playRingtone();
+    if (!responseData || isInitialRestoreDone.current) return;
+    isInitialRestoreDone.current = true;
+
+    if (mapped.callState === "idle") {
+      setCallState("idle");
+      setIsHold(false);
+      setCallDetails(null);
     } else {
-      stopRingtone();
-    }
-  }, [effectiveCallState, playRingtone, stopRingtone]);
+      setCallState(mapped.callState);
+      setIsHold(Boolean(mapped.isHold));
 
-  // Reset local override when mapped state syncs up or becomes idle
+      if (mapped.callState === "ringing") {
+        playRingtone();
+      }
+
+      const active = mapped.activeCall;
+      const restoredDetails = {
+        callId: active?.callId || active?._id,
+        callerId:
+          active?.citizenMobile || active?.callerId || active?.callerName,
+        callStartTime: active?.createdAt,
+        screenPop: active?.screenPop || null,
+      };
+
+      if (mapped.callState === "connected") {
+        getCallDetails()
+          .then((detailsRes) => {
+            const d = detailsRes?.data?.data ?? detailsRes?.data;
+            if (d) {
+              setCallDetails((prev) => ({
+                ...(prev || restoredDetails),
+                callStartTime: d.answerTimeISO,
+              }));
+              // if (typeof d.isMuted === "boolean") {
+              //   setIsMuted(d.isMuted);
+              // }
+            }
+          })
+          .catch((e) =>
+            console.error("[CallContext] Error restoring call details:", e),
+          );
+      }
+
+      setCallDetails(restoredDetails);
+    }
+  }, [responseData, mapped, playRingtone]);
+
+  // 2. Subscribe to Webhook Events for real-time state mutation
   useEffect(() => {
-    if (
-      mappedState.callState === "idle" ||
-      (mappedState.callState && mappedState.callState === localCallStateOverride)
-    ) {
-      setLocalCallStateOverride(null);
-    }
-  }, [mappedState.callState, localCallStateOverride]);
+    if (!profiledata?.isCCE || !subscribe) return;
 
-  // Only subscribe to call socket events if profiledata.isCCE is true
-  useEffect(() => {
-    if (!profiledata?.isCCE || !subscribe) {
-      return;
-    }
-
-    console.log("[CallContext] Agent is CCE. Subscribing to call events...",);
-
-    // 1. Ringing event -> Invalidate/refetch status & ring
+    // 1. call:ringing (Screen Pop)
     const unsubRinging = subscribe("call:ringing", (data) => {
-      console.log("[CallContext] Socket event call:ringing received:", data);
-      setLocalCallStateOverride("ringing");
+      console.log("[CallContext] Webhook event call:ringing received:", data);
+      setCallState("ringing");
+      setIsHold(false);
       playRingtone();
-      queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+
+      setCallDetails({
+        callId: data?.callId,
+        callerId: data?.callerId,
+        callStartTime: data?.timestamp || new Date().toISOString(),
+        screenPop: data?.screenPop || null,
+      });
     });
 
-    // 2. Answered event -> Stop ringtone, connect, invalidate status
+    // 2. call:answered (Start Call Timer)
     const unsubAnswered = subscribe("call:answered", (data) => {
-      console.log("[CallContext] Socket event call:answered received:", data);
+      console.log("[CallContext] Webhook event call:answered received:", data);
       stopRingtone();
-      setLocalCallStateOverride("connected");
-      // queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
-      fetchCallDetails();
+      setCallState("connected");
+      setIsHold(false);
+
+      setCallDetails((prev) => ({
+        callId: data?.callId || prev?.callId,
+        callerId: data?.callerId || prev?.callerId,
+        callStartTime:
+          data?.timestamp || prev?.callStartTime || new Date().toISOString(),
+        screenPop: prev?.screenPop || null,
+      }));
     });
 
-    // 3. Dropped event -> Stop ringtone, reset override to idle, invalidate status
+    // 3. call:dropped (Call Disconnected)
     const unsubDropped = subscribe("call:dropped", (data) => {
-      console.log("[CallContext] Socket event call:dropped received:", data);
+      console.log("[CallContext] Webhook event call:dropped received:", data);
       stopRingtone();
-      setLocalCallStateOverride("idle");
-      // queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+      setCallState("idle");
+      setIsHold(false);
+      // setIsMuted(false);
+      // setIsRecording(true);
+      setCallDetails(null);
     });
+
+    // 4. call:hold
+    const unsubHold = subscribe("call:hold", (data) => {
+      console.log("[CallContext] Webhook event call:hold received:", data);
+      setIsHold(true);
+    });
+
+    // 5. call:unhold
+    const unsubUnhold = subscribe("call:unhold", (data) => {
+      console.log("[CallContext] Webhook event call:unhold received:", data);
+      setIsHold(false);
+    });
+
+    // 6. call:mute (commented out)
+    // const unsubMute = subscribe("call:mute", (data) => {
+    //   console.log("[CallContext] Webhook event call:mute received:", data);
+    //   setIsMuted(true);
+    // });
+
+    // 7. call:unmute (commented out)
+    // const unsubUnmute = subscribe("call:unmute", (data) => {
+    //   console.log("[CallContext] Webhook event call:unmute received:", data);
+    //   setIsMuted(false);
+    // });
 
     return () => {
       stopRingtone();
       unsubRinging?.();
       unsubAnswered?.();
       unsubDropped?.();
+      unsubHold?.();
+      unsubUnhold?.();
+      // unsubMute?.();
+      // unsubUnmute?.();
     };
-  }, [profiledata?.isCCE, subscribe, queryClient, playRingtone, stopRingtone]);
+  }, [profiledata?.isCCE, subscribe, playRingtone, stopRingtone]);
 
   // Clean up audio on unmount
   useEffect(() => {
@@ -172,123 +225,133 @@ export function CallProvider({ children }) {
     };
   }, [stopRingtone]);
 
-  // Fetch full call details on answer
-  const fetchCallDetails = useCallback(async () => {
-    try {
-      const res = await getCallDetails();
-      const details = res?.data?.data ?? res?.data;
-      setCallDetails(details);
-      return details;
-    } catch (err) {
-      console.error("[CallContext] Error fetching /telephony/call/details:", err);
-      return null;
-    }
-  }, []);
-
-  // Whenever call enters connected state, fetch call details (for answerTimeISO, duration, etc.)
-  useEffect(() => {
-    if (effectiveCallState === "connected") {
-      fetchCallDetails();
-    } else if (effectiveCallState === "idle" || effectiveCallState === "ended") {
-      setCallDetails(null);
-    }
-  }, [effectiveCallState, fetchCallDetails]);
-
-  // Action: Answer Call
+  // 3. Direct state mutations on action success (No Query Invalidation)
   const answerCallMutation = useMutation({
-    mutationFn: (payload) => postAnswerCall(payload),
-    onSuccess: async () => {
+    mutationFn: () => postAnswerCall(),
+    onSuccess: () => {
       stopRingtone();
-      setLocalCallStateOverride("connected");
-      await queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
-      fetchCallDetails();
+      setCallState("connected");
+      setCallDetails((prev) => ({
+        ...(prev || {}),
+        callStartTime: prev?.callStartTime || new Date().toISOString(),
+      }));
     },
   });
 
-  // Action: Hold Call
   const holdCallMutation = useMutation({
-    mutationFn: (payload) => postHoldCall(payload),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+    mutationFn: () => postHoldCall(),
+    onSuccess: () => {
+      setIsHold(true);
     },
   });
 
-  // Action: Unhold Call
   const unholdCallMutation = useMutation({
-    mutationFn: (payload) => postUnholdCall(payload),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+    mutationFn: () => postUnholdCall(),
+    onSuccess: () => {
+      setIsHold(false);
     },
   });
 
-  // Action: Drop / Hangup Call
   const dropCallMutation = useMutation({
-    mutationFn: (payload) => postDropCall(payload),
-    onSuccess: async () => {
+    mutationFn: () => postDropCall(),
+    onSuccess: () => {
       stopRingtone();
-      setLocalCallStateOverride("idle");
-      await queryClient.invalidateQueries({ queryKey: ["telephonyAgentStatus"] });
+      setCallState("idle");
+      setIsHold(false);
+      // setIsMuted(false);
+      // setIsRecording(true);
+      setCallDetails(null);
     },
   });
+
+  const toggleHold = useCallback(
+    async (target) => {
+      const nextHold = typeof target === "boolean" ? target : !isHold;
+      setIsHold(nextHold);
+      try {
+        if (nextHold) {
+          await holdCallMutation.mutateAsync();
+        } else {
+          await unholdCallMutation.mutateAsync();
+        }
+      } catch (err) {
+        console.error("[CallContext] Error toggling hold:", err);
+        setIsHold(!nextHold);
+      }
+    },
+    [isHold, holdCallMutation, unholdCallMutation],
+  );
+
+  // Mute & Recording functionality commented out for now
+  // const toggleMute = useCallback(() => {
+  //   setIsMuted((prev) => !prev);
+  // }, []);
+
+  // const toggleRecording = useCallback(() => {
+  //   setIsRecording((prev) => !prev);
+  // }, []);
+
+  // Compute safe caller object for consumers
+  const caller = useMemo(() => {
+    if (!callDetails) return null;
+    return {
+      name:
+        callDetails.screenPop?.citizen?.fullName ||
+        callDetails.callerId ||
+        "Citizen",
+      mobile:
+        callDetails.screenPop?.callerMobile || callDetails.callerId || "N/A",
+      callId: callDetails.callId,
+      district: callDetails.screenPop?.citizen?.address?.district || "Patna",
+      ward: callDetails.screenPop?.citizen?.address?.addressLine || "Ward 4",
+      createdAt: callDetails.callStartTime,
+      screenPop: callDetails.screenPop,
+    };
+  }, [callDetails]);
+
+  const hasActiveCall = callState === "ringing" || callState === "connected";
 
   const value = {
-    // Raw & Mapped state
+    // Core states
+    callState,
+    isHold,
+    setIsHold: toggleHold,
+    toggleHold,
+    // Mute & Recording stubs
+    isMuted: false,
+    setIsMuted: () => {},
+    toggleMute: () => {},
+    isRecording: false,
+    setIsRecording: () => {},
+    toggleRecording: () => {},
+    callDetails,
+    caller,
+    activeCall: callDetails,
+    hasActiveCall,
+
+    // Status & Readiness
+    avayaStatus: currentAvayaStatus,
     responseData,
     isStatusLoading,
     refetchStatus,
-    telephonyState: mappedState,
-    isAvayaReady: mappedState.isAvayaReady,
-    callState: effectiveCallState,
-    isHold: mappedState.isHold,
-    activeCall: mappedState.activeCall,
-    caller: mappedState.caller,
-    avayaStatus: mappedState.avayaStatus,
-    unifiedStatus: mappedState.unifiedStatus,
-    agentId: mappedState.agentId,
-    extension: mappedState.extension,
-    isBreak: mappedState.isBreak,
-
-    // Call details
-    callDetails,
-    fetchCallDetails,
-
-    // Duration timer & audio
-    callDuration,
-    setCallDuration,
-    playRingtone,
-    stopRingtone,
+    isAvayaReady: Boolean(currentAvayaStatus?.isLoggedIn),
+    extension: currentAvayaStatus?.extension,
+    agentId: currentAvayaStatus?.agentId,
 
     // Actions & Mutations
-    answerCall: (callId) =>
-      answerCallMutation.mutateAsync({
-        callId: callId || mappedState.caller?.callId,
-      }),
-    holdCall: (callId) =>
-      holdCallMutation.mutateAsync({
-        callId: callId || mappedState.caller?.callId,
-      }),
-    unholdCall: (callId) =>
-      unholdCallMutation.mutateAsync({
-        callId: callId || mappedState.caller?.callId,
-      }),
-    dropCall: (callId) =>
-      dropCallMutation.mutateAsync({
-        callId: callId || mappedState.caller?.callId,
-      }),
+    answerCall: () => answerCallMutation.mutateAsync(),
+    holdCall: () => holdCallMutation.mutateAsync(),
+    unholdCall: () => unholdCallMutation.mutateAsync(),
+    dropCall: () => dropCallMutation.mutateAsync(),
 
     isAnswering: answerCallMutation.isPending,
     isHolding: holdCallMutation.isPending,
     isUnholding: unholdCallMutation.isPending,
     isDropping: dropCallMutation.isPending,
 
-    // Quick status flags
-    isRinging: effectiveCallState === "ringing",
-    isConnected: effectiveCallState === "connected",
-    isEnded: effectiveCallState === "ended",
-    hasActiveCall: Boolean(
-      effectiveCallState === "ringing" ||
-        effectiveCallState === "connected"
-    ),
+    // Audio
+    playRingtone,
+    stopRingtone,
   };
 
   return <CallContext.Provider value={value}>{children}</CallContext.Provider>;
@@ -298,26 +361,29 @@ export function useCall() {
   const context = useContext(CallContext);
   return (
     context || {
-      responseData: null,
-      isStatusLoading: false,
-      refetchStatus: () => {},
-      telephonyState: {},
-      isAvayaReady: false,
       callState: "idle",
       isHold: false,
-      activeCall: null,
-      caller: null,
-      avayaStatus: null,
-      unifiedStatus: null,
-      agentId: null,
-      extension: null,
-      isBreak: false,
+      setIsHold: () => {},
+      toggleHold: async () => {},
+      isMuted: false,
+      setIsMuted: () => {},
+      toggleMute: () => {},
+      isRecording: true,
+      setIsRecording: () => {},
+      toggleRecording: () => {},
       callDetails: null,
-      fetchCallDetails: async () => null,
-      callDuration: 0,
-      setCallDuration: () => {},
-      playRingtone: () => {},
-      stopRingtone: () => {},
+      caller: null,
+      activeCall: null,
+      hasActiveCall: false,
+      avayaStatus: null,
+      responseData: null,
+      isStatusLoading: false,
+      isRestoring: false,
+      refetchStatus: async () => {},
+      restoreStatus: async () => {},
+      isAvayaReady: false,
+      extension: null,
+      agentId: null,
       answerCall: async () => {},
       holdCall: async () => {},
       unholdCall: async () => {},
@@ -326,10 +392,8 @@ export function useCall() {
       isHolding: false,
       isUnholding: false,
       isDropping: false,
-      isRinging: false,
-      isConnected: false,
-      isEnded: false,
-      hasActiveCall: false,
+      playRingtone: () => {},
+      stopRingtone: () => {},
     }
   );
 }

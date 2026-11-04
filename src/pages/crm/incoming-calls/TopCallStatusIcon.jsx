@@ -56,7 +56,7 @@ const TopCallStatusIcon = () => {
       Icon: PhoneCall,
       badgeText: "Ready",
       tooltipTitle: "Avaya Connected & Ready",
-      tooltipMessage: `Avaya OK with fully connected${extension ? ` (Ext: ${extension})` : ""}`,
+      tooltipMessage: "Avaya OK with fully connected",
     };
   } else {
     // Yellow: isLoggedIn is true and state != "READY_FREE"
@@ -126,10 +126,9 @@ const TopCallStatusIcon = () => {
             {colorScheme.tooltipMessage}
           </p>
 
-          {(agentId || extension || error) && (
+          {(agentId || error) && (
             <div className="pt-1.5 mt-1 border-t border-slate-700/80 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-slate-400 font-mono">
               {agentId && <span>Agent: {agentId}</span>}
-              {extension && <span>Ext: {extension}</span>}
               {error && (
                 <span className="text-red-400 truncate max-w-full">
                   Error: {error}

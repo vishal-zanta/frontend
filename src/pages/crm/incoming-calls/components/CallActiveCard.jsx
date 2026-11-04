@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   PhoneForwarded,
   Pause,
+  Play,
   Mic,
   MicOff,
   PhoneOutgoing,
@@ -36,8 +37,6 @@ export default function CallActiveCard({
   callState,
   callDuration,
   startTime,
-  initialDurationSeconds,
-  initialDuration,
   caller,
   isHold,
   setIsHold,
@@ -56,7 +55,6 @@ export default function CallActiveCard({
   isAcceptPending = false,
 }) {
   const { t } = useLanguage();
-  const previousCallsCount = caller?.previousCalls?.length || 0;
 
   return (
     <div className={`rounded-2xl p-6 text-white ${getGradientClass(callState)}`}>
@@ -71,7 +69,7 @@ export default function CallActiveCard({
         </div>
       </div>
 
-      {/* Recording indicator */}
+      {/* Recording indicator (commented out for now)
       {callState === "connected" && isRecording && (
         <div className="flex items-center gap-2 mb-4">
           <div className="flex items-center gap-1.5 bg-red-500/90 px-2.5 py-1 rounded-full text-xs font-medium">
@@ -88,6 +86,7 @@ export default function CallActiveCard({
           </button>
         </div>
       )}
+      */}
 
       {/* Repeat caller alert */}
       {/* <div className="bg-white/10 rounded-xl p-3 mb-4 flex items-center gap-2">
@@ -126,18 +125,12 @@ export default function CallActiveCard({
               <Phone className="w-8 h-8" />
             </div>
             <div className="text-lg font-semibold font-mono">
-              <CallTimer
-                startTime={startTime || caller?.createdAt}
-                initialDurationSeconds={initialDurationSeconds}
-                fallbackText={initialDuration || "00:00"}
-              />
+              <CallTimer startTime={startTime || caller?.createdAt} />
             </div>
             <div className="text-sm text-white/70">
               {isHold
                 ? t("On Hold", "होल्ड पर")
-                : isMuted
-                  ? t("Muted", "म्यूट")
-                  : t("Connected", "जुड़ा हुआ")}
+                : t("Connected", "जुड़ा हुआ")}
             </div>
           </>
         )}
@@ -202,10 +195,15 @@ export default function CallActiveCard({
                     ? "bg-amber-400 text-white"
                     : "bg-white/20 hover:bg-white/30 text-white"
                 }`}
-                title={t("Hold", "होल्ड")}
+                title={isHold ? t("Resume", "पुनः शुरू") : t("Hold", "होल्ड")}
               >
-                <Pause className="w-4 h-4" />
+                {isHold ? (
+                  <Play className="w-4 h-4" />
+                ) : (
+                  <Pause className="w-4 h-4" />
+                )}
               </button>
+              {/* Mute button commented out for now
               <button
                 type="button"
                 onClick={() => setIsMuted(!isMuted)}
@@ -222,6 +220,7 @@ export default function CallActiveCard({
                   <Mic className="w-4 h-4" />
                 )}
               </button>
+              */}
               <button
                 type="button"
                 onClick={() => setShowReroutePanel(!showReroutePanel)}
