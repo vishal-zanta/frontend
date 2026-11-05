@@ -18,7 +18,7 @@ import MarkEvidenceDialog from "./components/MarkEvidenceDialog";
 import { formatPhoneNumber } from "../incoming-calls/helpers";
 
 function calculateAvgDuration(docs = []) {
-  if (!docs || docs.length === 0) return "—";
+  if (!docs || docs.length === 0) return "-";
   let totalSec = 0;
   let count = 0;
   docs.forEach((c) => {
@@ -35,7 +35,7 @@ function calculateAvgDuration(docs = []) {
       count++;
     }
   });
-  if (count === 0) return "—";
+  if (count === 0) return "-";
   const avg = Math.round(totalSec / count);
   const m = Math.floor(avg / 60);
   const s = avg % 60;
@@ -177,31 +177,31 @@ export default function CallHistoryLog() {
         key: (r) =>
           r.createdAt && moment(r.createdAt).isValid()
             ? moment(r.createdAt).format("DD MMM YYYY, hh:mm A")
-            : r.createdAt || "—",
+            : r.createdAt || "-",
         label: t("Date/Time", "दिनांक/समय"),
       },
       {
-        key: (r) => formatPhoneNumber(r.citizenMobile || "—"),
+        key: (r) => formatPhoneNumber(r.citizenMobile || "-"),
         label: t("Citizen Mobile", "नागरिक मोबाइल"),
       },
       {
         key: (r) =>
-          r.agent?.name || (typeof r.agent === "string" ? r.agent : "—"),
+          r.agent?.name || (typeof r.agent === "string" ? r.agent : "-"),
         label: t("Agent", "एजेंट"),
       },
       {
-        key: (r) => r.duration || r.recordingDuration || "—",
+        key: (r) => r.duration || r.recordingDuration || "-",
         label: t("Duration", "अवधि"),
       },
       {
         key: (r) =>
           r.complaintIdString ||
           r.complaintId?.grievanceId ||
-          (typeof r.complaintId === "string" ? r.complaintId : "—"),
+          (typeof r.complaintId === "string" ? r.complaintId : "-"),
         label: t("Complaint ID", "शिकायत आईडी"),
       },
-      { key: (r) => r.disposition || "—", label: t("Disposition", "निपटान") },
-      { key: (r) => r.status || "—", label: t("Status", "स्थिति") },
+      { key: (r) => r.disposition || "-", label: t("Disposition", "निपटान") },
+      { key: (r) => r.status || "-", label: t("Status", "स्थिति") },
       {
         key: (r) =>
           r.evidenceTagged

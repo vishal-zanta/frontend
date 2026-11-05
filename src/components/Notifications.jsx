@@ -356,7 +356,7 @@ const Notifications = ({ title = "Notifications" }) => {
                         </div>
                       )}
 
-                      {/* Time — absolute bottom-right */}
+                      {/* Time - absolute bottom-right */}
                       <span className="absolute bottom-2.5 right-3 text-[10px] text-muted-foreground/70 font-medium tabular-nums">
                         {formatTime(n.createdAt)}
                       </span>

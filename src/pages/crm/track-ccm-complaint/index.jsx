@@ -32,29 +32,87 @@ export default function TrackCCMComplaint() {
   const analytics = analyticsData?.data || {};
   // console.log({analytics});
 
-
   return (
     <div className="p-3 lg:p-6 space-y-4 lg:space-y-6 relative">
-        {/* Stats — desktop only */}
-        {(isMobile ? !selected : true) && (
-          <div className="block">
-            <StatsCards
-              total={analytics.total ?? 0}
-              totalAssigned={analytics.totalAssigned ?? 0}
-              unassignedCount={analytics.unassignedCount ?? 0}
-              pendingCount={analytics.pendingCount ?? 0}
-              resolvedCount={analytics.resolvedCount ?? 0}
-              escalatedCount={analytics.escalatedCount ?? 0}
-            />
-          </div>
-        )}
+      {/* Stats - desktop only */}
+      {(isMobile ? !selected : true) && (
+        <div className="block">
+          <StatsCards
+            total={analytics.total ?? 0}
+            totalAssigned={analytics.totalAssigned ?? 0}
+            unassignedCount={analytics.unassignedCount ?? 0}
+            pendingCount={analytics.pendingCount ?? 0}
+            resolvedCount={analytics.resolvedCount ?? 0}
+            escalatedCount={analytics.escalatedCount ?? 0}
+          />
+        </div>
+      )}
 
-        {/* Desktop layout */}
-        <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0 items-start">
+      {/* Desktop layout */}
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0 items-start">
+        <ComplaintList
+          selected={selected}
+          onSelect={(value) => {
+            if (value?.departmentCode) {
+              externalDeptProps.setDept(value?.departmentCode);
+            } else {
+              externalDeptProps?.setDept(null);
+            }
+            setSelected(value);
+          }}
+          setStatusUpdate={setStatusUpdate}
+          onStatsChange={setStats}
+          useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
+          autoSelect={!isMobile}
+          isCCE={true}
+          externalDeptProps={externalDeptProps}
+        />
+
+        {/* Detail panel */}
+        {externalDeptProps.isExternalDepartment ? (
+          <ExternalComplaintView
+            selected={selected}
+            externalDeptProps={externalDeptProps}
+          />
+        ) : (
+          <ComplaintDetailView
+            selected={selected}
+            statusUpdate={statusUpdate}
+            setStatusUpdate={setStatusUpdate}
+            isCCE={true}
+          />
+        )}
+      </div>
+
+      {/* Mobile layout */}
+      <div className="md:hidden">
+        {selected ? (
+          <div className="space-y-2">
+            <div
+              onClick={() => setSelected(null)}
+              className="text-primary font-medium hover:underline cursor-pointer text-xs"
+            >
+              <ArrowLeft className="w-3 h-3 inline mr-1" />
+              {t("Back to Complaints", "शिकायतों पर वापस जाएं")}
+            </div>
+            {externalDeptProps.isExternalDepartment ? (
+              <ExternalComplaintView
+                selected={selected}
+                externalDeptProps={externalDeptProps}
+              />
+            ) : (
+              <ComplaintDetailView
+                selected={selected}
+                statusUpdate={statusUpdate}
+                setStatusUpdate={setStatusUpdate}
+                isCCE={true}
+              />
+            )}
+          </div>
+        ) : (
           <ComplaintList
             selected={selected}
             onSelect={(value) => {
-             
               if (value?.departmentCode) {
                 externalDeptProps.setDept(value?.departmentCode);
               } else {
@@ -65,73 +123,12 @@ export default function TrackCCMComplaint() {
             setStatusUpdate={setStatusUpdate}
             onStatsChange={setStats}
             useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
-            autoSelect={!isMobile}
+            autoSelect={false}
             isCCE={true}
             externalDeptProps={externalDeptProps}
           />
-
-          {/* Detail panel */}
-          {externalDeptProps.isExternalDepartment ? (
-            <ExternalComplaintView
-              selected={selected}
-              externalDeptProps={externalDeptProps}
-            />
-          ) : (
-            <ComplaintDetailView
-              selected={selected}
-              statusUpdate={statusUpdate}
-              setStatusUpdate={setStatusUpdate}
-              isCCE={true}
-            />
-          )}
-        </div>
-
-        {/* Mobile layout */}
-        <div className="md:hidden">
-          {selected ? (
-            <div className="space-y-2">
-              <div
-                onClick={() => setSelected(null)}
-                className="text-primary font-medium hover:underline cursor-pointer text-xs"
-              >
-                <ArrowLeft className="w-3 h-3 inline mr-1" />
-                {t("Back to Complaints", "शिकायतों पर वापस जाएं")}
-              </div>
-              {externalDeptProps.isExternalDepartment ? (
-                <ExternalComplaintView
-                  selected={selected}
-                  externalDeptProps={externalDeptProps}
-                />
-              ) : (
-                <ComplaintDetailView
-                  selected={selected}
-                  statusUpdate={statusUpdate}
-                  setStatusUpdate={setStatusUpdate}
-                  isCCE={true}
-                />
-              )}
-            </div>
-          ) : (
-            <ComplaintList
-              selected={selected}
-              onSelect={(value) => {
-              
-                if (value?.departmentCode) {
-                  externalDeptProps.setDept(value?.departmentCode);
-                } else {
-                  externalDeptProps?.setDept(null);
-                }
-                setSelected(value);
-              }}
-              setStatusUpdate={setStatusUpdate}
-              onStatsChange={setStats}
-              useGetComplaintsOfOfiicer={useGetComplaintsForCCEandAdminInfinite}
-              autoSelect={false}
-              isCCE={true}
-              externalDeptProps={externalDeptProps}
-            />
-          )}
-        </div>
+        )}
       </div>
+    </div>
   );
 }

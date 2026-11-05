@@ -32,7 +32,6 @@ export default function ComplaintActionSection({
   maxMbAllowed,
   existingRating,
   existingFeedback,
-
 }) {
   const { t } = useLanguage();
   const { profiledata } = useAuth();
@@ -88,11 +87,16 @@ export default function ComplaintActionSection({
     setStatusErr(null);
     if (statusObj?.requireFieldVisit) {
       console.log({ fieldVisit, geotaggedImages });
-      if ((fieldVisit?.status == "COMPLETED" || fieldVisit?.status === "NOT_APPLICABLE") && !!geotaggedImages?.[0]?.url) {
+      if (
+        (fieldVisit?.status == "COMPLETED" ||
+          fieldVisit?.status === "NOT_APPLICABLE") &&
+        !!geotaggedImages?.[0]?.url
+      ) {
         setSelectedStatus(e.target.value);
       } else {
         getErrorToast(
-         ( fieldVisit?.status !== "COMPLETED" && fieldVisit?.status !== "NOT_APPLICABLE")
+          fieldVisit?.status !== "COMPLETED" &&
+            fieldVisit?.status !== "NOT_APPLICABLE"
             ? t("Field visit not completed", "फील्ड विजिट पूरा नहीं हुआ")
             : t("Geo-tag photo not uploaded", "जियो-टैग फोटो अपलोड नहीं की गई"),
         );
@@ -110,8 +114,7 @@ export default function ComplaintActionSection({
   };
   return (
     <>
-
-     {/* Geo-tag upload */}
+      {/* Geo-tag upload */}
       {profiledata?.isOfficer && (
         <div className="border-t border-border pt-4 mt-4">
           <div className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
@@ -211,7 +214,6 @@ export default function ComplaintActionSection({
             disabled={updateStatusMutation.isPending || profiledata?.isAdmin}
             placeholder={t("Select Status", "स्थिति चुनें")}
             options={STATUS_ACTIONS.map((a) => {
-             
               return {
                 label: t(
                   a.badgeLabel || a.label,
@@ -228,7 +230,7 @@ export default function ComplaintActionSection({
                   //   ((currentStatus === "CLOSED" &&
                   //     !(existingRating && existingFeedback)) ||
                   //     currentStatus != "CLOSED")),
-                  (a.requireFeedback && !(existingRating && existingFeedback))
+                  (a.requireFeedback && !(existingRating && existingFeedback)),
               };
             })}
             className={"w-full"}
@@ -264,8 +266,9 @@ export default function ComplaintActionSection({
         )}
       </div>
 
-      {/* Feedback section when CLOSED — only visible to CCE users */}
-      {((currentStatus === "CLOSED"  && profiledata?.isCCE) || existingRating) && (
+      {/* Feedback section when CLOSED - only visible to CCE users */}
+      {((currentStatus === "CLOSED" && profiledata?.isCCE) ||
+        existingRating) && (
         <OfficerComplaintFeedback
           complaintId={selectedId}
           existingRating={existingRating}
@@ -314,8 +317,6 @@ export default function ComplaintActionSection({
           )}
         </div>
       </div>
-
-     
 
       {remark.isOpen && (
         <EditDialog

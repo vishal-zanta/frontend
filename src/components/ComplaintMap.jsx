@@ -532,7 +532,7 @@ export default function ComplaintMap({
                       </span>{" "}
                       complaints
                     </div>
-                </Tooltip>
+                  </Tooltip>
                 )}
               </CircleMarker>
             );
@@ -617,7 +617,7 @@ export default function ComplaintMap({
             </div>
 
             <div className="text-sm sm:text-base font-bold text-foreground truncate">
-              {active ? active.name : "—"}
+              {active ? active.name : "-"}
             </div>
 
             <div className="text-xs text-muted-foreground mt-0.5 font-medium">

@@ -36,7 +36,7 @@ export default function CallHistoryTable({
     onSuccess: (res) => {
       getSuccessToast(
         res?.data?.message ||
-          t("Call initiated successfully", "कॉल सफलतापूर्वक शुरू की गई")
+          t("Call initiated successfully", "कॉल सफलतापूर्वक शुरू की गई"),
       );
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.COMPLAINT_COMMUNICATIONS],
@@ -60,11 +60,14 @@ export default function CallHistoryTable({
 
     const digitsOnly = String(rawMobile).replace(/\D/g, "");
     const cleanNumber =
-      digitsOnly.length >= 10 ? digitsOnly.slice(-10) : digitsOnly || String(rawMobile).trim();
+      digitsOnly.length >= 10
+        ? digitsOnly.slice(-10)
+        : digitsOnly || String(rawMobile).trim();
 
     const grievanceId = c.complaintIdString || c.complaintId?.grievanceId;
     const complaintDbId =
-      c.complaintId?._id || (typeof c.complaintId === "string" ? c.complaintId : undefined);
+      c.complaintId?._id ||
+      (typeof c.complaintId === "string" ? c.complaintId : undefined);
 
     const callIdentifier = c.callId || c._id;
     setCallingId(callIdentifier);
@@ -130,12 +133,12 @@ export default function CallHistoryTable({
       c.complaintId?.grievanceId ||
       (typeof c.complaintId === "string" ? c.complaintId : null);
     const agentName =
-      c.agent?.name || (typeof c.agent === "string" ? c.agent : "—");
+      c.agent?.name || (typeof c.agent === "string" ? c.agent : "-");
     const formattedTime = c.createdAt
       ? moment(c.createdAt).isValid()
         ? moment(c.createdAt).format("DD MMM YYYY, hh:mm A")
         : c.createdAt
-      : "—";
+      : "-";
 
     const hasMobile =
       c.citizenMobile && c.citizenMobile !== "N/A" && c.citizenMobile !== "-";
@@ -172,12 +175,10 @@ export default function CallHistoryTable({
               "text-[10px] px-1.5 py-0",
               isOutbound
                 ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20"
-                : "bg-primary/10 text-primary border-primary/20"
+                : "bg-primary/10 text-primary border-primary/20",
             )}
           >
-            {isOutbound
-              ? t("Outbound", "आउटबाउंड")
-              : t("Inbound", "इनबाउंड")}
+            {isOutbound ? t("Outbound", "आउटबाउंड") : t("Inbound", "इनबाउंड")}
           </Badge>
         ),
       },
@@ -204,7 +205,7 @@ export default function CallHistoryTable({
               </button>
             )}
             <span className="font-mono text-xs font-medium">
-              {formatPhoneNumber(c.citizenMobile || "—")}
+              {formatPhoneNumber(c.citizenMobile || "-")}
             </span>
           </div>
         ),
@@ -227,7 +228,7 @@ export default function CallHistoryTable({
         render: () => (
           <span className="text-xs text-muted-foreground whitespace-nowrap flex items-center gap-1">
             <Clock className="w-3 h-3 text-muted-foreground/70" />
-            {c.duration || c.recordingDuration || "—"}
+            {c.duration || c.recordingDuration || "-"}
           </span>
         ),
       },
@@ -238,7 +239,7 @@ export default function CallHistoryTable({
               {complaintCode}
             </span>
           ) : (
-            <span className="text-muted-foreground text-xs">—</span>
+            <span className="text-muted-foreground text-xs">-</span>
           ),
       },
       status: {
@@ -250,8 +251,8 @@ export default function CallHistoryTable({
               c.status === "Resolved" || c.status === "Completed"
                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                 : c.status === "Missed" || c.status === "Failed"
-                ? "bg-destructive/10 text-destructive border-destructive/20"
-                : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                  ? "bg-destructive/10 text-destructive border-destructive/20"
+                  : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
             )}
           >
             {c.status || t("Initiated", "आरंभ")}
@@ -298,7 +299,7 @@ export default function CallHistoryTable({
       pagination={pagination}
       emptyText={t(
         "No calls match your filters.",
-        "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।"
+        "आपके फ़िल्टर से कोई कॉल मेल नहीं खाती।",
       )}
     />
   );

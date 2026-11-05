@@ -22,12 +22,16 @@ import {
 import clsx from "clsx";
 import { StatusBadge } from "@/components/Badges";
 
-export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }) {
+export default function CallDetailDialog({
+  call,
+  onClose,
+  onOpenEvidenceDialog,
+}) {
   const { t } = useLanguage();
 
   if (!call) return null;
 
-  const callId = call.callId || call._id || "—";
+  const callId = call.callId || call._id || "-";
   const isOutbound = call.callType === "Outbound";
   const CallIcon = isOutbound ? PhoneOutgoing : PhoneIncoming;
 
@@ -53,7 +57,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
     ? moment(call.createdAt).isValid()
       ? moment(call.createdAt).format("DD MMM YYYY, hh:mm A")
       : call.createdAt
-    : "—";
+    : "-";
 
   const formattedUpdatedAt = call.updatedAt
     ? moment(call.updatedAt).isValid()
@@ -86,7 +90,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
                     "text-xs px-2 py-0.5",
                     isOutbound
                       ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20"
-                      : "bg-primary/10 text-primary border-primary/20"
+                      : "bg-primary/10 text-primary border-primary/20",
                   )}
                 >
                   {isOutbound
@@ -100,8 +104,8 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
                     call.status === "Resolved" || call.status === "Completed"
                       ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                       : call.status === "Missed" || call.status === "Failed"
-                      ? "bg-destructive/10 text-destructive border-destructive/20"
-                      : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                        ? "bg-destructive/10 text-destructive border-destructive/20"
+                        : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
                   )}
                 >
                   {call.status || t("Initiated", "आरंभ किया गया")}
@@ -154,7 +158,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
                     <span>
                       {t("Duration:", "अवधि:")}{" "}
                       <strong className="text-foreground">
-                        {call.recordingDuration || call.duration || "—"}
+                        {call.recordingDuration || call.duration || "-"}
                       </strong>
                     </span>
                   </p>
@@ -183,7 +187,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
               >
                 {t(
                   "Your browser does not support the audio element.",
-                  "आपका ब्राउज़र ऑडियो तत्व का समर्थन नहीं करता।"
+                  "आपका ब्राउज़र ऑडियो तत्व का समर्थन नहीं करता।",
                 )}
               </audio>
             </div>
@@ -197,7 +201,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
             <span>
               {t(
                 "No call recording audio is available for this call log.",
-                "इस कॉल लॉग के लिए कोई कॉल रिकॉर्डिंग ऑडियो उपलब्ध नहीं है।"
+                "इस कॉल लॉग के लिए कोई कॉल रिकॉर्डिंग ऑडियो उपलब्ध नहीं है।",
               )}
             </span>
           </div>
@@ -212,7 +216,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
               {t("Citizen Mobile", "नागरिक मोबाइल")}
             </span>
             <span className="font-mono text-sm font-semibold text-foreground block">
-              {call.citizenMobile || "—"}
+              {call.citizenMobile || "-"}
             </span>
           </div>
 
@@ -227,7 +231,10 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
                 {agentName || t("Not Assigned", "अविभाजित")}
               </span>
               {agentCode && (
-                <Badge variant="secondary" className="font-mono text-[10px] px-1.5 py-0">
+                <Badge
+                  variant="secondary"
+                  className="font-mono text-[10px] px-1.5 py-0"
+                >
                   {agentCode}
                 </Badge>
               )}
@@ -241,7 +248,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
               {t("Call Disposition", "कॉल का परिणाम")}
             </span>
             <span className="text-sm font-semibold text-foreground block">
-              {call.disposition || "—"}
+              {call.disposition || "-"}
             </span>
           </div>
 
@@ -252,7 +259,7 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
               {t("Call Duration", "कॉल अवधि")}
             </span>
             <span className="text-sm font-semibold text-foreground block">
-              {call.duration || call.recordingDuration || "—"}
+              {call.duration || call.recordingDuration || "-"}
             </span>
           </div>
 
@@ -269,8 +276,8 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
                 </span>
                 {complaintStatus && (
                   <>
-                  <StatusBadge status={complaintStatus}/>
-                  {/* <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                    <StatusBadge status={complaintStatus} />
+                    {/* <Badge variant="outline" className="text-[10px] px-1.5 py-0">
                     {complaintStatus}
                   </Badge> */}
                   </>
@@ -278,7 +285,10 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
               </div>
             ) : (
               <span className="text-xs text-muted-foreground">
-                {t("No complaint linked to this call", "इस कॉल से कोई शिकायत संबद्ध नहीं है")}
+                {t(
+                  "No complaint linked to this call",
+                  "इस कॉल से कोई शिकायत संबद्ध नहीं है",
+                )}
               </span>
             )}
           </div>
@@ -292,11 +302,13 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
               </div>
               <p className="text-xs text-foreground mt-1">
                 <strong>{t("Reason:", "कारण:")}</strong>{" "}
-                {call.evidenceReason || t("Marked as evidence", "साक्ष्य के रूप में चिह्नित")}
+                {call.evidenceReason ||
+                  t("Marked as evidence", "साक्ष्य के रूप में चिह्नित")}
               </p>
               {call.taggedDate && (
                 <p className="text-[11px] text-muted-foreground">
-                  <strong>{t("Tagged On:", "चिह्नित दिनांक:")}</strong> {call.taggedDate}
+                  <strong>{t("Tagged On:", "चिह्नित दिनांक:")}</strong>{" "}
+                  {call.taggedDate}
                 </p>
               )}
             </div>
@@ -317,7 +329,12 @@ export default function CallDetailDialog({ call, onClose, onOpenEvidenceDialog }
 
         {/* Close Button */}
         <div className="flex justify-end pt-2">
-          <Button variant="outline" size="sm" onClick={onClose} className="px-5">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onClose}
+            className="px-5"
+          >
             {t("Close", "बंद करें")}
           </Button>
         </div>

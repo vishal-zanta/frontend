@@ -62,7 +62,9 @@ const InfoRow = ({ icon: Icon, label, value }) => {
         <p className="text-[11px] text-muted-foreground leading-none mb-0.5">
           {label}
         </p>
-        <p className="text-sm font-medium text-foreground break-words">{value}</p>
+        <p className="text-sm font-medium text-foreground break-words">
+          {value}
+        </p>
       </div>
     </div>
   );
@@ -108,7 +110,11 @@ const EducationDepartmentDetailView = ({ data }) => {
 
   if (!data) return null;
 
-  const externalId = data?.internalId ||  data?.externalComplaintId || payload?.externalRef || "N/A";
+  const externalId =
+    data?.internalId ||
+    data?.externalComplaintId ||
+    payload?.externalRef ||
+    "N/A";
 
   const registeredAtFormatted = payload?.registeredAt
     ? moment(payload.registeredAt).format("DD MMM YYYY, hh:mm A")
@@ -119,7 +125,10 @@ const EducationDepartmentDetailView = ({ data }) => {
   const shareNumberText =
     complainant?.shareNumberWithOfficer !== undefined
       ? complainant.shareNumberWithOfficer
-        ? t("Yes (Visible to investigating officer)", "हाँ (जांच अधिकारी को दिखाई देगा)")
+        ? t(
+            "Yes (Visible to investigating officer)",
+            "हाँ (जांच अधिकारी को दिखाई देगा)",
+          )
         : t("No (Keep private)", "नहीं (गोपनीय रखें)")
       : null;
 
@@ -127,9 +136,9 @@ const EducationDepartmentDetailView = ({ data }) => {
 
   const hasLocation = Boolean(
     location &&
-      Object.values(location).some(
-        (val) => val !== 0 && val !== "" && val !== undefined && val !== null,
-      ),
+    Object.values(location).some(
+      (val) => val !== 0 && val !== "" && val !== undefined && val !== null,
+    ),
   );
 
   return (
@@ -148,7 +157,8 @@ const EducationDepartmentDetailView = ({ data }) => {
                 </h2>
               </div>
               <p className="text-xs font-semibold text-foreground mt-0.5">
-                {t("Department", "विभाग")}: {t("Education Department", "शिक्षा विभाग")}
+                {t("Department", "विभाग")}:{" "}
+                {t("Education Department", "शिक्षा विभाग")}
               </p>
             </div>
             <StatusBadge status={data?.status} />
@@ -169,7 +179,7 @@ const EducationDepartmentDetailView = ({ data }) => {
                 </span>
                 <CallCitizenButton
                   mobileNumber={data?.mobile || complainant?.mobile}
-                  grievanceId={data?.internalId ||  data?.externalComplaintId}
+                  grievanceId={data?.internalId || data?.externalComplaintId}
                   _id={data?._id}
                 />
               </div>
@@ -180,7 +190,10 @@ const EducationDepartmentDetailView = ({ data }) => {
         {/* Grid layout: 1 col default, 2 cols on xl */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {/* Classification & Grievance Details */}
-          <SectionCard title={t("Complaint Details", "शिकायत विवरण")} icon={FileText}>
+          <SectionCard
+            title={t("Complaint Details", "शिकायत विवरण")}
+            icon={FileText}
+          >
             <InfoRow
               icon={Hash}
               label={t("External Complaint Id", "बाहरी शिकायत संख्या")}
@@ -235,7 +248,10 @@ const EducationDepartmentDetailView = ({ data }) => {
           </SectionCard>
 
           {/* Complainant Details */}
-          <SectionCard title={t("Complainant Details", "शिकायतकर्ता विवरण")} icon={User}>
+          <SectionCard
+            title={t("Complainant Details", "शिकायतकर्ता विवरण")}
+            icon={User}
+          >
             <InfoRow
               icon={User}
               label={t("Complainant Name", "शिकायतकर्ता का नाम")}
@@ -248,14 +264,20 @@ const EducationDepartmentDetailView = ({ data }) => {
             />
             <InfoRow
               icon={Shield}
-              label={t("Share Number with Officer", "अधिकारी के साथ नंबर साझा करें")}
+              label={t(
+                "Share Number with Officer",
+                "अधिकारी के साथ नंबर साझा करें",
+              )}
               value={shareNumberText}
             />
           </SectionCard>
 
           {/* Accused Details (if present) */}
           {hasAccused && (
-            <SectionCard title={t("Accused Person Details", "आरोपी व्यक्ति का विवरण")} icon={UserX}>
+            <SectionCard
+              title={t("Accused Person Details", "आरोपी व्यक्ति का विवरण")}
+              icon={UserX}
+            >
               <InfoRow
                 icon={UserX}
                 label={t("Accused Person Name", "आरोपी व्यक्ति का नाम")}
@@ -271,12 +293,19 @@ const EducationDepartmentDetailView = ({ data }) => {
 
           {/* Location / Hierarchy Codes */}
           {hasLocation && (
-            <SectionCard title={t("Location Details", "स्थान विवरण")} icon={MapPin}>
+            <SectionCard
+              title={t("Location Details", "स्थान विवरण")}
+              icon={MapPin}
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3">
                 <InfoRow
                   icon={MapPin}
                   label={t("District", "जिला")}
-                  value={getLabel(fields?.districtCode, location?.districtCode, t)}
+                  value={getLabel(
+                    fields?.districtCode,
+                    location?.districtCode,
+                    t,
+                  )}
                 />
                 <InfoRow
                   icon={MapPin}
@@ -320,10 +349,13 @@ const EducationDepartmentDetailView = ({ data }) => {
             </SectionCard>
           )}
 
-          {/* Description — spans full width on xl */}
+          {/* Description - spans full width on xl */}
           {payload?.complaint && (
             <div className="xl:col-span-2">
-              <SectionCard title={t("Complaint Description", "शिकायत का विवरण")} icon={FileText}>
+              <SectionCard
+                title={t("Complaint Description", "शिकायत का विवरण")}
+                icon={FileText}
+              >
                 <p className="text-sm text-foreground leading-relaxed pt-1 whitespace-pre-wrap">
                   {payload.complaint}
                 </p>
@@ -331,10 +363,16 @@ const EducationDepartmentDetailView = ({ data }) => {
             </div>
           )}
 
-          {/* Timeline / Activity Log — spans 2 cols on xl */}
+          {/* Timeline / Activity Log - spans 2 cols on xl */}
           {Array.isArray(data?.timeline) && data.timeline.length > 0 && (
             <div className="xl:col-span-2">
-              <SectionCard title={t("Status & Activity Timeline", "स्थिति और गतिविधि समयरेखा")} icon={Clock}>
+              <SectionCard
+                title={t(
+                  "Status & Activity Timeline",
+                  "स्थिति और गतिविधि समयरेखा",
+                )}
+                icon={Clock}
+              >
                 <div className="pt-2">
                   <ComplaintTimeline events={data.timeline} />
                 </div>

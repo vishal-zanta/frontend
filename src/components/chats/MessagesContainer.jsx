@@ -89,7 +89,6 @@ export default function MessagesContainer({
     fetchMessages(currentPage + 1);
   };
 
-
   const readMutation = usePutMarkMessagesAsRead();
 
   useEffect(() => {
@@ -224,7 +223,7 @@ export default function MessagesContainer({
       ref={containerRef}
       className="flex-1 bg-card overflow-y-auto overscroll-contain scrollbar-thin px-4 py-4 space-y-2"
     >
-      {/* Top sentinel — triggers IntersectionObserver to load older messages */}
+      {/* Top sentinel - triggers IntersectionObserver to load older messages */}
       <div ref={topSentinelRef} className="h-1 opacity-0 w-full" />
 
       {/* Loading older messages spinner */}

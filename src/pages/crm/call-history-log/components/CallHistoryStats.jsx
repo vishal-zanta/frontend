@@ -7,7 +7,7 @@ export default function CallHistoryStats({
   totalCalls = 0,
   evidenceCount = 0,
   missedCount = 0,
-  avgDuration = "—",
+  avgDuration = "-",
 }) {
   const { t } = useLanguage();
 

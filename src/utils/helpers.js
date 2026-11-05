@@ -194,7 +194,7 @@ export const getFirstErrorEl = (errors, prefix = "") => {
       return { el, path };
     }
 
-    // Nested error group — recurse.
+    // Nested error group - recurse.
     const result = getFirstErrorEl(node, path);
     if (result.path !== null) return result;
   }
@@ -299,7 +299,7 @@ export const getTokenFromStorage = () => {
   // if(!uuid) return null;
 
   // return localStorage.getItem(`usertoken-${uuid}`);
-  return sessionStorage.getItem("usertoken") 
+  return sessionStorage.getItem("usertoken")
   // || localStorage.getItem("usertoken-latest");
 }
 
@@ -367,8 +367,8 @@ export function getDateInfo({ period, dateRange } = {}) {
   };
 }
 
-export const formatUnderscoreText = (text = "") =>{
-  if(!text){
+export const formatUnderscoreText = (text = "") => {
+  if (!text) {
     return "";
   }
   return text.replace(/_/g, " ");

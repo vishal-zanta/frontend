@@ -58,7 +58,9 @@ const InfoRow = ({ icon: Icon, label, value }) => {
         <p className="text-[11px] text-muted-foreground leading-none mb-0.5">
           {label}
         </p>
-        <p className="text-sm font-medium text-foreground break-words">{value}</p>
+        <p className="text-sm font-medium text-foreground break-words">
+          {value}
+        </p>
       </div>
     </div>
   );
@@ -84,24 +86,25 @@ const FoodDeptView = ({ data }) => {
   const { options } = useGetFoodOptions(departmentCode);
   const { districtOptions } = useGetFoodDistrictOptions(
     payload?.stateId || 10,
-    departmentCode
+    departmentCode,
   );
   const { blockOptions } = useGetFoodBlockOptions(
     payload?.districtId,
-    departmentCode
+    departmentCode,
   );
   const { panchayatOptions } = useGetFoodPanchayatOptions(
     payload?.blockId,
-    departmentCode
+    departmentCode,
   );
   const { villageOptions } = useGetFoodVillageOptions(
     payload?.panchayatId,
-    departmentCode
+    departmentCode,
   );
 
   if (!data) return null;
 
-  const externalId = data?.internalId || 
+  const externalId =
+    data?.internalId ||
     data?.externalComplaintId ||
     payload?.grievanceID ||
     data?._id ||
@@ -137,7 +140,11 @@ const FoodDeptView = ({ data }) => {
                 </h2>
               </div>
               <p className="text-xs font-semibold text-foreground mt-0.5">
-                {t("Department", "विभाग")}: {t("Food & Consumer Protection Department", "खाद्य एवं उपभोक्ता संरक्षण विभाग")}
+                {t("Department", "विभाग")}:{" "}
+                {t(
+                  "Food & Consumer Protection Department",
+                  "खाद्य एवं उपभोक्ता संरक्षण विभाग",
+                )}
               </p>
             </div>
             <StatusBadge status={data?.status || payload?.status} />
@@ -158,7 +165,7 @@ const FoodDeptView = ({ data }) => {
                 </span>
                 <CallCitizenButton
                   mobileNumber={data?.mobile || payload?.mobileNo}
-                  grievanceId={ data?.internalId || data?.externalComplaintId}
+                  grievanceId={data?.internalId || data?.externalComplaintId}
                   _id={data?._id}
                 />
               </div>
@@ -175,43 +182,112 @@ const FoodDeptView = ({ data }) => {
         {/* Grid layout: 1 col default, 2 cols on xl */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {/* Grievance Information */}
-          <SectionCard title={t("Grievance Information", "शिकायत की जानकारी")} icon={FileText}>
-            <InfoRow icon={Hash} label={t("External Complaint Id", "बाहरी शिकायत संख्या")} value={data?.externalComplaintId} />
-            <InfoRow icon={Tag} label={t("Grievance Type", "शिकायत का प्रकार")} value={typeLabel} />
-            <InfoRow icon={Hash} label={t("Category", "श्रेणी")} value={categoryLabel} />
-            <InfoRow icon={UserCheck} label={t("Assigned Officer / Unit", "सौंपे गए अधिकारी / इकाई")} value={payload?.assignTo} />
+          <SectionCard
+            title={t("Grievance Information", "शिकायत की जानकारी")}
+            icon={FileText}
+          >
+            <InfoRow
+              icon={Hash}
+              label={t("External Complaint Id", "बाहरी शिकायत संख्या")}
+              value={data?.externalComplaintId}
+            />
+            <InfoRow
+              icon={Tag}
+              label={t("Grievance Type", "शिकायत का प्रकार")}
+              value={typeLabel}
+            />
+            <InfoRow
+              icon={Hash}
+              label={t("Category", "श्रेणी")}
+              value={categoryLabel}
+            />
+            <InfoRow
+              icon={UserCheck}
+              label={t("Assigned Officer / Unit", "सौंपे गए अधिकारी / इकाई")}
+              value={payload?.assignTo}
+            />
             {/* <InfoRow icon={Activity} label="Created By" value={payload?.createdBy} /> */}
-            <InfoRow icon={Clock} label={t("Registered At", "पंजीकृत तिथि")} value={registeredAtFormatted} />
+            <InfoRow
+              icon={Clock}
+              label={t("Registered At", "पंजीकृत तिथि")}
+              value={registeredAtFormatted}
+            />
             {payload?.resultDescription && (
-              <InfoRow icon={FileText} label={t("Result Description", "परिणाम विवरण")} value={payload.resultDescription} />
+              <InfoRow
+                icon={FileText}
+                label={t("Result Description", "परिणाम विवरण")}
+                value={payload.resultDescription}
+              />
             )}
           </SectionCard>
 
           {/* Citizen / Complainant Details */}
           <SectionCard title={t("Citizen Details", "नागरिक विवरण")} icon={User}>
-            <InfoRow icon={User} label={t("Citizen Name", "नागरिक का नाम")} value={payload?.name} />
-            <InfoRow icon={Phone} label={t("Mobile Number", "मोबाइल नंबर")} value={payload?.mobileNo || data?.mobile} />
-            <InfoRow icon={MapPin} label={t("Address", "पता")} value={payload?.address} />
+            <InfoRow
+              icon={User}
+              label={t("Citizen Name", "नागरिक का नाम")}
+              value={payload?.name}
+            />
+            <InfoRow
+              icon={Phone}
+              label={t("Mobile Number", "मोबाइल नंबर")}
+              value={payload?.mobileNo || data?.mobile}
+            />
+            <InfoRow
+              icon={MapPin}
+              label={t("Address", "पता")}
+              value={payload?.address}
+            />
           </SectionCard>
 
-          {/* Location / Administrative Details — spans 2 cols on xl */}
+          {/* Location / Administrative Details - spans 2 cols on xl */}
           <div className="xl:col-span-2">
-            <SectionCard title={t("Location Details", "स्थान विवरण")} icon={MapPin}>
+            <SectionCard
+              title={t("Location Details", "स्थान विवरण")}
+              icon={MapPin}
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4">
-                <InfoRow icon={MapPin} label={t("State", "राज्य")} value={stateLabel || t("Bihar", "बिहार")} />
-                <InfoRow icon={MapPin} label={t("District", "जिला")} value={districtLabel} />
-                <InfoRow icon={MapPin} label={t("Block", "प्रखंड")} value={blockLabel} />
-                <InfoRow icon={Layers} label={t("Panchayat", "पंचायत")} value={panchayatLabel} />
-                <InfoRow icon={MapPin} label={t("Village", "गाँव")} value={villageLabel} />
-                <InfoRow icon={MapPin} label={t("Detailed Address", "विस्तृत पता")} value={payload?.address} />
+                <InfoRow
+                  icon={MapPin}
+                  label={t("State", "राज्य")}
+                  value={stateLabel || t("Bihar", "बिहार")}
+                />
+                <InfoRow
+                  icon={MapPin}
+                  label={t("District", "जिला")}
+                  value={districtLabel}
+                />
+                <InfoRow
+                  icon={MapPin}
+                  label={t("Block", "प्रखंड")}
+                  value={blockLabel}
+                />
+                <InfoRow
+                  icon={Layers}
+                  label={t("Panchayat", "पंचायत")}
+                  value={panchayatLabel}
+                />
+                <InfoRow
+                  icon={MapPin}
+                  label={t("Village", "गाँव")}
+                  value={villageLabel}
+                />
+                <InfoRow
+                  icon={MapPin}
+                  label={t("Detailed Address", "विस्तृत पता")}
+                  value={payload?.address}
+                />
               </div>
             </SectionCard>
           </div>
 
-          {/* Grievance Description — spans 2 cols on xl */}
+          {/* Grievance Description - spans 2 cols on xl */}
           {payload?.grievancesDescription && (
             <div className="xl:col-span-2">
-              <SectionCard title={t("Grievance Description", "शिकायत का विवरण")} icon={FileText}>
+              <SectionCard
+                title={t("Grievance Description", "शिकायत का विवरण")}
+                icon={FileText}
+              >
                 <p className="text-sm text-foreground leading-relaxed pt-1 whitespace-pre-wrap">
                   {payload.grievancesDescription}
                 </p>
@@ -219,10 +295,16 @@ const FoodDeptView = ({ data }) => {
             </div>
           )}
 
-          {/* Timeline / Activity Log — spans 2 cols on xl */}
+          {/* Timeline / Activity Log - spans 2 cols on xl */}
           {hasTimeline && (
             <div className="xl:col-span-2">
-              <SectionCard title={t("Status & Activity Timeline", "स्थिति और गतिविधि समयरेखा")} icon={Clock}>
+              <SectionCard
+                title={t(
+                  "Status & Activity Timeline",
+                  "स्थिति और गतिविधि समयरेखा",
+                )}
+                icon={Clock}
+              >
                 <div className="pt-2">
                   <ComplaintTimeline events={data.timeline} />
                 </div>

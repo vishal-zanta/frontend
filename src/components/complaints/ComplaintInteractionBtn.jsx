@@ -22,7 +22,11 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useGetComplaintCommunications } from "@/hooks/query/useGetComplaints";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchCallEvidence } from "@/api/calling.api";
-import { getSuccessToast, getErrorToast, getWarningToast } from "@/utils/helpers";
+import {
+  getSuccessToast,
+  getErrorToast,
+  getWarningToast,
+} from "@/utils/helpers";
 import { IMG_BASE_URL, QUERY_KEYS } from "@/utils/constants";
 import ComplaintRemarkDialog from "./ComplaintRemarkDialog";
 import moment from "moment";
@@ -70,8 +74,8 @@ export default function ComplaintInteractionBtn({ id, className = "" }) {
       getSuccessToast(
         t(
           "Call marked as evidence successfully",
-          "कॉल को सफलतापूर्वक साक्ष्य के रूप में चिह्नित किया गया"
-        )
+          "कॉल को सफलतापूर्वक साक्ष्य के रूप में चिह्नित किया गया",
+        ),
       );
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.COMPLAINT_COMMUNICATIONS, id],
@@ -90,7 +94,7 @@ export default function ComplaintInteractionBtn({ id, className = "" }) {
   const handleSaveEvidence = () => {
     if (!evidenceReason.trim()) {
       getWarningToast(
-        t("Please enter an evidence reason", "कृपया साक्ष्य का कारण दर्ज करें")
+        t("Please enter an evidence reason", "कृपया साक्ष्य का कारण दर्ज करें"),
       );
       return;
     }
@@ -335,7 +339,10 @@ export default function ComplaintInteractionBtn({ id, className = "" }) {
                                   <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
                                   <span>
                                     <strong className="font-semibold">
-                                      {t("Evidence Reason:", "साक्ष्य का कारण:")}
+                                      {t(
+                                        "Evidence Reason:",
+                                        "साक्ष्य का कारण:",
+                                      )}
                                     </strong>{" "}
                                     {call.evidenceReason}
                                   </span>
@@ -376,8 +383,14 @@ export default function ComplaintInteractionBtn({ id, className = "" }) {
                                         <ShieldCheck className="w-3.5 h-3.5" />
                                         <span>
                                           {call.evidenceTagged
-                                            ? t("Edit Evidence", "साक्ष्य संपादित करें")
-                                            : t("Mark as evidence", "साक्ष्य चिह्नित करें")}
+                                            ? t(
+                                                "Edit Evidence",
+                                                "साक्ष्य संपादित करें",
+                                              )
+                                            : t(
+                                                "Mark as evidence",
+                                                "साक्ष्य चिह्नित करें",
+                                              )}
                                         </span>
                                       </button>
 
@@ -445,7 +458,7 @@ export default function ComplaintInteractionBtn({ id, className = "" }) {
                           ? moment(emailTime).isValid()
                             ? moment(emailTime).format("DD MMM YYYY, hh:mm A")
                             : emailTime
-                          : "—";
+                          : "-";
 
                         return (
                           <div
@@ -568,7 +581,10 @@ export default function ComplaintInteractionBtn({ id, className = "" }) {
       {/* Mark Call as Evidence Dialog */}
       {evidenceDialogCall && (
         <EditDialog
-          title={t("Mark Call as Evidence", "कॉल को साक्ष्य के रूप में चिह्नित करें")}
+          title={t(
+            "Mark Call as Evidence",
+            "कॉल को साक्ष्य के रूप में चिह्नित करें",
+          )}
           onClose={() => {
             setEvidenceDialogCall(null);
             setEvidenceReason("");
@@ -587,7 +603,7 @@ export default function ComplaintInteractionBtn({ id, className = "" }) {
               onChange={(e) => setEvidenceReason(e.target.value)}
               placeholder={t(
                 "Enter reason for tagging as evidence (e.g., Citizen dispute escalation, resolution statement)...",
-                "साक्ष्य का कारण दर्ज करें..."
+                "साक्ष्य का कारण दर्ज करें...",
               )}
               rows={3}
               className="text-xs"

@@ -29,7 +29,7 @@ export default function OfficerComplaints() {
   return (
     // <PortalLayout role="officer" isHideOverflow={true}>
     <div className="p-3 lg:p-6 space-y-4 lg:space-y-6 relative">
-      {/* Stats — desktop only */}
+      {/* Stats - desktop only */}
       <div className="hidden md:block">
         <StatsCards
           analyticsData={analyticsData}

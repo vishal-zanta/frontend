@@ -125,7 +125,7 @@ export default function ChatHistoryTable({
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="truncate max-w-[280px] sm:max-w-md block cursor-pointer text-foreground hover:text-primary transition-colors">
-                  {item.message || "—"}
+                  {item.message || "-"}
                 </span>
               </TooltipTrigger>
               {item.message && (

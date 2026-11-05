@@ -41,7 +41,7 @@ export default function UsersSidebar({
           onLoadMore?.();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const el = sentinelRef.current;
@@ -60,7 +60,9 @@ export default function UsersSidebar({
     >
       {/* Header */}
       <div className="px-4 pt-4 pb-3 border-b border-border bg-card sticky top-0 z-10">
-        <h3 className="text-sm font-bold text-foreground mb-3">Conversations</h3>
+        <h3 className="text-sm font-bold text-foreground mb-3">
+          Conversations
+        </h3>
         <SearchDebounced
           initialValue={search}
           handleDebouncedChange={onSearchChange}
@@ -110,7 +112,7 @@ export default function UsersSidebar({
               />
             ))}
 
-            {/* Sentinel — opacity-0, triggers IntersectionObserver */}
+            {/* Sentinel - opacity-0, triggers IntersectionObserver */}
             <div ref={sentinelRef} className="h-1 opacity-0 w-full" />
 
             {/* Loading next page spinner */}
