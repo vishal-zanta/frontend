@@ -24,7 +24,7 @@ const LangSelector = ({ triggerClassName }) => {
       </SelectTrigger>
       <SelectContent>
         {LANGUAGES.map((l) => (
-          <SelectItem value={l.value}>{l.label}</SelectItem>
+          <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
         ))}
         {/* <SelectItem value="hi">हिन्दी</SelectItem> */}
       </SelectContent>

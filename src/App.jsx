@@ -215,7 +215,7 @@ const router = createBrowserRouter([
                 path: "incoming-call",
                 element: (
                   <PermissionChecker
-                    rolePermission={{ include: [...CCE_ONLY_ROLES] }}
+                    rolePermission={{ include: [...CCE_ROLES] }}
                   >
                     <IncomingCall />
                   </PermissionChecker>

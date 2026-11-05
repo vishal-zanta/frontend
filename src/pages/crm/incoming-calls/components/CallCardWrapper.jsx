@@ -8,6 +8,7 @@ import CallSidebarCard from "./CallSidebarCard";
 export default function CallCardWrapper({
   variant = "full",
   className = "",
+  isConsult = false,
   // Extended desktop props (for variant="full")
   showReroutePanel,
   setShowReroutePanel,
@@ -41,7 +42,7 @@ export default function CallCardWrapper({
   // VARIANT 1: SIDEBAR (Compact bottom dock)
   // -------------------------------------------------------------
   if (variant === "sidebar") {
-    return <CallSidebarCard className={className} />;
+    return <CallSidebarCard className={className} isConsult={isConsult} />;
   }
 
   const handleAnswer = async () => {
@@ -129,6 +130,7 @@ export default function CallCardWrapper({
       caller={safeCaller}
       isHold={isHold}
       setIsHold={toggleHold}
+      isConsult={isConsult}
       isMuted={isMuted}
       setIsMuted={setIsMuted}
       isRecording={isRecording}

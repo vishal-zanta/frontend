@@ -114,7 +114,7 @@ export default function IncomingCall() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Call panel & Quick info */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 ">
           <CallCardWrapper
             variant="full"
             showReroutePanel={showReroutePanel}
@@ -130,7 +130,7 @@ export default function IncomingCall() {
 
         {/* Right Column: Call history, Complaints, Dial & Transfer panels, Agent board */}
         <div className="lg:col-span-2 space-y-6">
-          <CallerHistoryTable calls={repeatCaller.previousCalls} />
+          <CallerHistoryTable />
 
           <CallerComplaintHistory complaints={callerComplaints} />
 
@@ -158,3 +158,4 @@ export default function IncomingCall() {
     </div>
   );
 }
+

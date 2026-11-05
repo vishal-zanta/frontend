@@ -13,6 +13,7 @@ import { QUERY_KEYS } from "@/utils/constants";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
 import clsx from "clsx";
+import { formatPhoneNumber } from "../../incoming-calls/helpers";
 
 export default function CallHistoryTable({
   calls = [],
@@ -203,7 +204,7 @@ export default function CallHistoryTable({
               </button>
             )}
             <span className="font-mono text-xs font-medium">
-              {c.citizenMobile || "—"}
+              {formatPhoneNumber(c.citizenMobile || "—")}
             </span>
           </div>
         ),

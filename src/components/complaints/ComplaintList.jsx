@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/Badges";
 import { SLATimer } from "./ComplaintDetailHeader";
@@ -26,6 +26,9 @@ export default function ComplaintList({
   autoSelect = true,
   isCCE = false,
   externalDeptProps,
+  heading = null,
+  paramsMandatory={},
+  isHideSearch=false,
 }) {
   const { t, lang } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -139,7 +142,6 @@ export default function ComplaintList({
     ],
     [t, channelOptions, departmentList],
   );
-  
 
   const {
     data,
@@ -164,6 +166,7 @@ export default function ComplaintList({
           ? { departmentCode: filters.department }
           : { department: filters.department }
         : {}),
+        ...paramsMandatory,
       // department: filters?.department
       //   ? departmentList.find((v) => v.key === filters.department)
       //     ? undefined
@@ -253,9 +256,11 @@ export default function ComplaintList({
     <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
       <div className="px-4 py-3 border-b border-border ">
         <div className="flex items-center justify-between shrink-0 h-8">
-          <h3 className="font-bold text-foreground text-sm">
-            {t("Complaints", "शिकायतें")} ({totalComplaintsCount})
-          </h3>
+          {heading ?? (
+            <h3 className="font-bold text-foreground text-sm">
+              {t("Complaints", "शिकायतें")} ({totalComplaintsCount})
+            </h3>
+          )}
           {/* {!isExternalDepartment && ( */}
           <Filter
             filters={filters}
@@ -288,7 +293,7 @@ export default function ComplaintList({
             </div>
           </div>
         )} */}
-        <div className="mt-2">
+      {!isHideSearch &&  <div className="mt-2">
           <SearchDebounced
             placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
             handleDebouncedChange={(val) => {
@@ -315,7 +320,7 @@ export default function ComplaintList({
             delay={500}
             isLog={true}
           />
-        </div>
+        </div>}
       </div>
 
       <div
@@ -323,7 +328,7 @@ export default function ComplaintList({
           maxHeight: window.innerWidth < 768 ? "600px" : "calc(100vh - 385px)",
           minHeight: "380px !important",
         }}
-        className="flex-1 md:overflow-y-auto scrollbar-thin   min-h-[360px] divide-y divide-border "
+        className="flex-1 md:overflow-y-auto scrollbar-thin    min-h-[360px] divide-y divide-border "
       >
         {/* {isExternalDepartment ? (
           <ExternalDepartmentList
@@ -452,6 +457,11 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
 
   const serviceTitle = getEntityLabel(c.classification?.service, t) || "N/A";
 
+  const formattedCreatedAt =
+    c.createdAt && moment(c.createdAt).isValid()
+      ? moment(c.createdAt).format("DD MMM YYYY, hh:mm A")
+      : null;
+
   return (
     <button
       key={c?._id || c.id}
@@ -495,6 +505,12 @@ export const ComplaintListCard = ({ c, onClick, isSelected }) => {
         <MapPin className="w-3 h-3 shrink-0" />{" "}
         <span className="truncate">{locationText}</span>
       </div>
+      {formattedCreatedAt && (
+        <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
+          <Calendar className="w-3 h-3 shrink-0 text-muted-foreground/70" />
+          <span>{formattedCreatedAt}</span>
+        </div>
+      )}
     </button>
   );
 };

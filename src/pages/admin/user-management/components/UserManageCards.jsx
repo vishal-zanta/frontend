@@ -2,7 +2,12 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2, Eye, LogOut, Phone } from "lucide-react";
-import { CCE_ROLES, PERMISSIONS, ADMIN_ROLES, CCE_ONLY_ROLES } from "@/utils/constants";
+import {
+  CCE_ROLES,
+  PERMISSIONS,
+  ADMIN_ROLES,
+  CCE_ONLY_ROLES,
+} from "@/utils/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import clsx from "clsx";
@@ -75,10 +80,9 @@ function UserCard({
     (Array.isArray(u.roles)
       ? u.roles.some((r) => CCE_ROLES.includes(r))
       : CCE_ROLES.includes(u.role));
-              const isCCEOnly=  
-            (Array.isArray(u.roles)
-              ? u.roles.some((r) => CCE_ONLY_ROLES.includes(r))
-              : CCE_ONLY_ROLES.includes(u.role));
+  // const isCCEOnly = Array.isArray(u.roles)
+  //   ? u.roles.some((r) => CCE_ONLY_ROLES.includes(r))
+  //   : CCE_ONLY_ROLES.includes(u.role);
   const isAdmin =
     u.isAdmin ??
     (Array.isArray(u.roles)
@@ -103,9 +107,7 @@ function UserCard({
               {u.name || "N/A"}
             </div>
             <div className="text-[11px] xs:text-xs text-muted-foreground truncate">
-              {!isCCE
-                ? u.email || "N/A"
-                : u?.loginId || u?.email || "N/A"}
+              {!isCCE ? u.email || "N/A" : u?.loginId || u?.email || "N/A"}
             </div>
           </div>
         </div>
@@ -194,7 +196,9 @@ function UserCard({
                 ))}
               </div>
             ) : (
-              <span className="text-muted-foreground text-xs block mt-0.5">N/A</span>
+              <span className="text-muted-foreground text-xs block mt-0.5">
+                N/A
+              </span>
             )}
           </div>
 
@@ -217,7 +221,9 @@ function UserCard({
                 ))}
               </div>
             ) : (
-              <span className="text-muted-foreground text-xs block mt-0.5">N/A</span>
+              <span className="text-muted-foreground text-xs block mt-0.5">
+                N/A
+              </span>
             )}
           </div>
         </div>
@@ -229,10 +235,10 @@ function UserCard({
           "grid gap-1.5 p-3 xs:p-3.5 border-t border-border/60 xs:flex xs:flex-wrap xs:items-center xs:justify-end",
           hasPermission(PERMISSIONS.LOGOUT_USERS)
             ? "grid-cols-2"
-            : "grid-cols-3"
+            : "grid-cols-3",
         )}
       >
-         {isCCEOnly && (
+        {isCCE && (
           <Button
             variant="outline"
             size="sm"
@@ -254,8 +260,6 @@ function UserCard({
           <Eye className="w-3 h-3 xs:w-3.5 xs:h-3.5 mr-1" />
           {t("View", "देखें")}
         </Button>
-
-       
 
         <Button
           variant="outline"

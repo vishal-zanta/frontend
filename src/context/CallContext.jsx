@@ -15,6 +15,10 @@ import {
   postHoldCall,
   postUnholdCall,
   postDropCall,
+  postTransferCall,
+  postConsultCall,
+  postConferenceCall,
+  postConsultCancel,
 } from "@/api/calling.api";
 import { useSockets } from "@/context/SocketContext";
 import { useAuth } from "@/context/AuthContext";
@@ -30,6 +34,9 @@ export function CallProvider({ children }) {
   // Core streamlined states (mutated by webhook events & actions)
   const [callState, setCallState] = useState("idle"); // "idle" | "ringing" | "connected"
   const [isHold, setIsHold] = useState(false);
+  const [isTransfer, setIsTransfer] = useState(false);
+  const [isConsult, setIsConsult] = useState(false);
+  const [isConference, setIsConference] = useState(false);
   // const [isMuted, setIsMuted] = useState(false);
   // const [isRecording, setIsRecording] = useState(true);
   const [callDetails, setCallDetails] = useState(null);
@@ -48,7 +55,7 @@ export function CallProvider({ children }) {
       const response = await getAgentStatus();
       return response?.data?.data ?? response?.data ?? response;
     },
-    enabled: Boolean(profiledata?.isCCE),
+    enabled: Boolean(profiledata?.isCRM),
     refetchInterval: 20000,
     refetchIntervalInBackground: true,
   });
@@ -138,7 +145,7 @@ export function CallProvider({ children }) {
 
   // 2. Subscribe to Webhook Events for real-time state mutation
   useEffect(() => {
-    if (!profiledata?.isCCE || !subscribe) return;
+    if (!profiledata?.isCRM || !subscribe) return;
 
     // 1. call:ringing (Screen Pop)
     const unsubRinging = subscribe("call:ringing", (data) => {
@@ -177,6 +184,9 @@ export function CallProvider({ children }) {
       stopRingtone();
       setCallState("idle");
       setIsHold(false);
+      setIsTransfer(false);
+      setIsConsult(false);
+      setIsConference(false);
       // setIsMuted(false);
       // setIsRecording(true);
       setCallDetails(null);
@@ -216,7 +226,7 @@ export function CallProvider({ children }) {
       // unsubMute?.();
       // unsubUnmute?.();
     };
-  }, [profiledata?.isCCE, subscribe, playRingtone, stopRingtone]);
+  }, [profiledata?.isCRM, subscribe, playRingtone, stopRingtone]);
 
   // Clean up audio on unmount
   useEffect(() => {
@@ -258,9 +268,40 @@ export function CallProvider({ children }) {
       stopRingtone();
       setCallState("idle");
       setIsHold(false);
+      setIsTransfer(false);
+      setIsConsult(false);
+      setIsConference(false);
       // setIsMuted(false);
       // setIsRecording(true);
       setCallDetails(null);
+    },
+  });
+
+  const transferCallMutation = useMutation({
+    mutationFn: ({ targetUserId }) => postTransferCall({ targetUserId }),
+    onSuccess: () => {
+      setIsTransfer(true);
+    },
+  });
+
+  const consultCallMutation = useMutation({
+    mutationFn: ({ targetUserId }) => postConsultCall({ targetUserId }),
+    onSuccess: () => {
+      setIsConsult(true);
+    },
+  });
+
+  const conferenceCallMutation = useMutation({
+    mutationFn: ({ targetUserId }) => postConferenceCall({ targetUserId }),
+    onSuccess: () => {
+      setIsConference(true);
+    },
+  });
+
+  const consultCancelMutation = useMutation({
+    mutationFn: () => postConsultCancel(),
+    onSuccess: () => {
+      setIsConsult(false);
     },
   });
 
@@ -297,13 +338,12 @@ export function CallProvider({ children }) {
     return {
       name:
         callDetails.screenPop?.citizen?.fullName ||
-        callDetails.callerId ||
         "Citizen",
       mobile:
-        callDetails.screenPop?.callerMobile || callDetails.callerId || "N/A",
+        callDetails.screenPop?.callerMobile || callDetails.callerId || "",
       callId: callDetails.callId,
-      district: callDetails.screenPop?.citizen?.address?.district || "Patna",
-      ward: callDetails.screenPop?.citizen?.address?.addressLine || "Ward 4",
+      district: callDetails.screenPop?.citizen?.address?.district || "",
+      ward: callDetails.screenPop?.citizen?.address?.addressLine || "",
       createdAt: callDetails.callStartTime,
       screenPop: callDetails.screenPop,
     };
@@ -317,6 +357,9 @@ export function CallProvider({ children }) {
     isHold,
     setIsHold: toggleHold,
     toggleHold,
+    isTransfer,
+    isConsult,
+    isConference,
     // Mute & Recording stubs
     isMuted: false,
     setIsMuted: () => {},
@@ -343,11 +386,22 @@ export function CallProvider({ children }) {
     holdCall: () => holdCallMutation.mutateAsync(),
     unholdCall: () => unholdCallMutation.mutateAsync(),
     dropCall: () => dropCallMutation.mutateAsync(),
+    transferCall: (targetUserId) =>
+      transferCallMutation.mutateAsync({ targetUserId }),
+    consultCall: (targetUserId) =>
+      consultCallMutation.mutateAsync({ targetUserId }),
+    conferenceCall: (targetUserId) =>
+      conferenceCallMutation.mutateAsync({ targetUserId }),
+    consultCancel: () => consultCancelMutation.mutateAsync(),
 
     isAnswering: answerCallMutation.isPending,
     isHolding: holdCallMutation.isPending,
     isUnholding: unholdCallMutation.isPending,
     isDropping: dropCallMutation.isPending,
+    isTransferring: transferCallMutation.isPending,
+    isConsulting: consultCallMutation.isPending,
+    isConferencing: conferenceCallMutation.isPending,
+    isCancellingConsult: consultCancelMutation.isPending,
 
     // Audio
     playRingtone,
@@ -388,10 +442,21 @@ export function useCall() {
       holdCall: async () => {},
       unholdCall: async () => {},
       dropCall: async () => {},
+      transferCall: async () => {},
+      consultCall: async () => {},
+      conferenceCall: async () => {},
+      consultCancel: async () => {},
+      isTransfer: false,
+      isConsult: false,
+      isConference: false,
       isAnswering: false,
       isHolding: false,
       isUnholding: false,
       isDropping: false,
+      isTransferring: false,
+      isConsulting: false,
+      isConferencing: false,
+      isCancellingConsult: false,
       playRingtone: () => {},
       stopRingtone: () => {},
     }

@@ -86,9 +86,9 @@ export default function UserManageTable({
       (Array.isArray(u.roles)
         ? u.roles.some((r) => CCE_ROLES.includes(r))
         : CCE_ROLES.includes(u.role));
-    const isCCEOnly = Array.isArray(u.roles)
-      ? u.roles.some((r) => CCE_ONLY_ROLES.includes(r))
-      : CCE_ONLY_ROLES.includes(u.role);
+    // const isCCEOnly = Array.isArray(u.roles)
+    //   ? u.roles.some((r) => CCE_ONLY_ROLES.includes(r))
+    //   : CCE_ONLY_ROLES.includes(u.role);
     const isAdmin =
       u.isAdmin ??
       (Array.isArray(u.roles)
@@ -222,7 +222,7 @@ export default function UserManageTable({
           "text-center bg-white dark:bg-[#0f1729] sticky right-0 z-10 whitespace-nowrap",
         value: (
           <div className="flex gap-1 justify-end">
-            {isCCEOnly && (
+            {isCCE && (
               <Button
                 variant="ghost"
                 size="sm"

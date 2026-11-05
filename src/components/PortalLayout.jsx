@@ -74,7 +74,7 @@ export default function PortalLayout({
       </div>
   
       {hasPermission(PERMISSIONS.CHAT) && <ChatWidget />}
-      {profiledata?.isCCE && <CallPill sidebarOpen={sidebarOpen} />}
+      {profiledata?.isCRM && <CallPill sidebarOpen={sidebarOpen} />}
     </div>
   );
 

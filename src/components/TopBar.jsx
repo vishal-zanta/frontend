@@ -309,7 +309,7 @@ const STAFF_NOTIFICATIONS = [
             {t("Start Break", "ब्रेक शुरू करें")}
           </button>
         )}
-        {isCCE && (
+        {isCRM && (
           <TopCallStatusIcon/>
         )}
 

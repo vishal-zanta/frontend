@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Phone,
@@ -13,10 +13,15 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCall } from "@/context/CallContext";
 import CallTimer from "./CallTimer";
+import ExtraCallIcons from "./ExtraCallIcons";
+import TransferTargetsDialog from "./TransferTargetsDialog";
+import { formatPhoneNumber } from "../helpers";
+import { createPortal } from "react-dom";
 
-export default function CallSidebarCard({ className = "" }) {
+export default function CallSidebarCard({ className = "", isConsult = false }) {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const [targetDialogAction, setTargetDialogAction] = useState(null);
 
   const {
     callState,
@@ -25,6 +30,12 @@ export default function CallSidebarCard({ className = "" }) {
     callDetails,
     isHold,
     toggleHold,
+    isConsult: contextIsConsult,
+    isTransferring,
+    isConsulting,
+    isConferencing,
+    isCancellingConsult,
+    consultCancel,
     answerCall,
     dropCall,
     isAnswering,
@@ -33,6 +44,8 @@ export default function CallSidebarCard({ className = "" }) {
     isDropping,
     hasActiveCall,
   } = useCall();
+
+  const effectiveConsult = Boolean(isConsult || contextIsConsult);
 
   // Only show sidebar card when there is an active/ringing call
   if (!hasActiveCall || callState === "idle" || callState === "ended") {
@@ -56,9 +69,7 @@ export default function CallSidebarCard({ className = "" }) {
   };
 
   const timerStartTime =
-    callDetails?.callStartTime ||
-    activeCall?.createdAt ||
-    caller?.createdAt;
+    callDetails?.callStartTime || activeCall?.createdAt || caller?.createdAt;
 
   const safeCaller = caller || {
     name: t("Incoming Caller", "इनकमिंग कॉलर"),
@@ -126,7 +137,7 @@ export default function CallSidebarCard({ className = "" }) {
             {safeCaller.name}
           </div>
           <div className="text-[10px] text-white/70 font-mono truncate">
-            {safeCaller.mobile}
+            {formatPhoneNumber(safeCaller.mobile)}
           </div>
         </div>
       </div>
@@ -168,12 +179,12 @@ export default function CallSidebarCard({ className = "" }) {
         )}
 
         {isConnected && (
-          <>
+          <div className="flex items-center gap-1.5 w-full justify-between">
             <button
               type="button"
               onClick={() => toggleHold()}
               disabled={isHolding || isUnholding}
-              className={`flex-1 h-7 px-2 rounded flex items-center justify-center gap-1 text-xs font-medium transition-all ${
+              className={`h-7 px-2 rounded flex items-center justify-center gap-1 text-xs font-medium transition-all ${
                 isHold
                   ? "bg-amber-500 text-white"
                   : "bg-white/20 hover:bg-white/30 text-white"
@@ -185,21 +196,43 @@ export default function CallSidebarCard({ className = "" }) {
               ) : isHold ? (
                 <>
                   <Play className="w-3 h-3" />
-                  <span>{t("Resume", "शुरू")}</span>
+                  <span className="hidden sm:inline">
+                    {t("Resume", "शुरू")}
+                  </span>
                 </>
               ) : (
                 <>
                   <Pause className="w-3 h-3" />
-                  <span>{t("Hold", "होल्ड")}</span>
+                  <span className="hidden sm:inline">{t("Hold", "होल्ड")}</span>
                 </>
               )}
             </button>
+
+            {/* Telephony Action Icons */}
+            <ExtraCallIcons
+              size="sm"
+              isConsult={effectiveConsult}
+              isTransferLoading={isTransferring}
+              isConsultLoading={isConsulting}
+              isConferenceLoading={isConferencing}
+              isConsultCancelLoading={isCancellingConsult}
+              onTransfer={() => setTargetDialogAction("transfer")}
+              onConsult={() => setTargetDialogAction("consult")}
+              onConference={() => setTargetDialogAction("conference")}
+              onConsultCancel={async () => {
+                try {
+                  await consultCancel();
+                } catch (e) {
+                  console.error("Error cancelling consult:", e);
+                }
+              }}
+            />
 
             <button
               type="button"
               onClick={handleDrop}
               disabled={isDropping}
-              className="w-7 h-7 rounded bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-all disabled:opacity-50"
+              className="w-7 h-7 rounded bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-all disabled:opacity-50 shrink-0"
               title={t("End Call", "कॉल समाप्त करें")}
             >
               {isDropping ? (
@@ -208,7 +241,7 @@ export default function CallSidebarCard({ className = "" }) {
                 <PhoneOff className="w-3.5 h-3.5" />
               )}
             </button>
-          </>
+          </div>
         )}
 
         {callState === "ended" && (
@@ -217,6 +250,34 @@ export default function CallSidebarCard({ className = "" }) {
           </div>
         )}
       </div>
+
+      {/* Transfer / Consult Targets Dialog */}
+
+      {createPortal(
+        <TransferTargetsDialog
+          isOpen={Boolean(targetDialogAction)}
+          actionType={targetDialogAction}
+          onClose={() => setTargetDialogAction(null)}
+        />,
+        document.body,
+      )}
+      {/* <TargetDialog
+        targetDialogAction={targetDialogAction}
+        setTargetDialogAction={setTargetDialogAction}
+      /> */}
     </div>
   );
 }
+
+// const TargetDialog = createPortal(
+//   ({ targetDialogAction, setTargetDialogAction }) => {
+//     return (
+//       <TransferTargetsDialog
+//         isOpen={Boolean(targetDialogAction)}
+//         actionType={targetDialogAction}
+//         onClose={() => setTargetDialogAction(null)}
+//       />
+//     );
+//   },
+//   document.body,
+// );

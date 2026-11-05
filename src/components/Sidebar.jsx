@@ -200,7 +200,7 @@ export const sidebarSections = [
         path: "/crm/incoming-call",
         icon: Phone,
         // permissions: PERMISSIONS.INCOMING_CALL,
-        rolePermissions: { include: [...CCE_ONLY_ROLES] },
+        rolePermissions: { include: [...CCE_ROLES] },
       },
       {
         label: "Call Tracker",
@@ -481,7 +481,7 @@ export default function Sidebar({
 
   const isOnIncomingPage = location.pathname === "/crm/incoming-call";
   const shouldShowSidebarCard = Boolean(
-    profiledata?.isCCE && hasActiveCall && !isOnIncomingPage
+    profiledata?.isCRM && hasActiveCall && !isOnIncomingPage
   );
 
   const navRef = useRef(null);

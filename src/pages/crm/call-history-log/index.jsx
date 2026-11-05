@@ -15,6 +15,7 @@ import CallHistoryTable from "./components/CallHistoryTable";
 import CallHistoryBulkBar from "./components/CallHistoryBulkBar";
 import CallDetailDialog from "./components/CallDetailDialog";
 import MarkEvidenceDialog from "./components/MarkEvidenceDialog";
+import { formatPhoneNumber } from "../incoming-calls/helpers";
 
 function calculateAvgDuration(docs = []) {
   if (!docs || docs.length === 0) return "—";
@@ -180,7 +181,7 @@ export default function CallHistoryLog() {
         label: t("Date/Time", "दिनांक/समय"),
       },
       {
-        key: (r) => r.citizenMobile || "—",
+        key: (r) => formatPhoneNumber(r.citizenMobile || "—"),
         label: t("Citizen Mobile", "नागरिक मोबाइल"),
       },
       {

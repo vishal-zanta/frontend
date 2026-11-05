@@ -127,3 +127,18 @@ export const formatDurationMMSS = (seconds = 0) => {
   const s = Math.floor(seconds % 60);
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 };
+
+/**
+ * Extracts the last 10 digits from a phone number string (e.g. 00917982846689 -> 7982846689).
+ *
+ * @param {string|number} phone
+ * @returns {string}
+ */
+export const formatPhoneNumber = (phone) => {
+  if (!phone) return "";
+  const cleaned = String(phone).replace(/\D/g, "");
+  if (cleaned.length >= 10) {
+    return cleaned.slice(-10);
+  }
+  return String(phone);
+};
