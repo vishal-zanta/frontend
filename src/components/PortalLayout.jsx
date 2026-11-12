@@ -67,7 +67,7 @@ export default function PortalLayout({
           sidebarOpen={sidebarOpen}
         />
         <main
-          className={clsx("flex-1 min-w-0", !isHideOverflow && "overflow-x-hidden")}
+          className={clsx("flex-1 min-w-0 overflow-x-clip")}
         >
           {children || <Outlet />}
         </main>

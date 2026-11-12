@@ -29,6 +29,7 @@ export default function ComplaintList({
   heading = null,
   paramsMandatory={},
   isHideSearch=false,
+  isSticky=true
 }) {
   const { t, lang } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -253,7 +254,7 @@ export default function ComplaintList({
   }, [data?.pages?.[0]?.data?.pagination, filters, dept]);
 
   return (
-    <div className="bg-card rounded-xl border border-border sticky top-20 min-h-0 flex flex-col w-full overflow-hidden">
+    <div className={`bg-card rounded-xl border border-border min-h-0 flex flex-col w-full ${isSticky ? "md:sticky md:top-20" : ""} md:overflow-hidden`}>
       <div className="px-4 py-3 border-b border-border ">
         <div className="flex items-center justify-between shrink-0 h-8">
           {heading ?? (

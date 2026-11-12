@@ -99,6 +99,8 @@ export default function CallerComplaintHistory({ complaints = [] }) {
       paramsMandatory={{
         search : formatPhoneNumber(callDetails?.callerId)
       }}
+
+    isSticky={false}
     />
   );
 }
