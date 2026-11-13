@@ -160,7 +160,7 @@ export default function CallSidebarCard({ className = "", isConsult = false }) {
               )}
               {t("Answer", "उत्तर दें")}
             </Button>
-            <Button
+            {/* <Button
               type="button"
               size="sm"
               variant="destructive"
@@ -174,7 +174,7 @@ export default function CallSidebarCard({ className = "", isConsult = false }) {
               ) : (
                 <PhoneOff className="w-3 h-3" />
               )}
-            </Button>
+            </Button> */}
           </>
         )}
 
