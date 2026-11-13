@@ -109,6 +109,8 @@ export function CallProvider({ children }) {
     } else {
       setCallState(mapped.callState);
       setIsHold(Boolean(mapped.isHold));
+      setIsConsult(Boolean(mapped.isConsult));
+      setIsConference(Boolean(mapped.isConference));
 
       if (mapped.callState === "ringing") {
         playRingtone();
@@ -132,6 +134,12 @@ export function CallProvider({ children }) {
                 ...(prev || restoredDetails),
                 callStartTime: d.answerTimeISO,
               }));
+              if (d?.isConference) {
+                setIsConference(Boolean(d?.isConference));
+              }
+              if (d?.isConsulting) {
+                setIsConsult(Boolean(d?.isConsulting));
+              }
               // if (typeof d.isMuted === "boolean") {
               //   setIsMuted(d.isMuted);
               // }
@@ -145,6 +153,16 @@ export function CallProvider({ children }) {
       setCallDetails(restoredDetails);
     }
   }, [responseData, mapped, playRingtone]);
+
+    const consultCancelMutation = useMutation({
+    mutationFn: () => postConsultCancel(),
+    onSuccess: () => {
+      setIsConsult(false);
+    },
+    onError: (err) => {
+      getErrorToast(err);
+    },
+  });
 
   // 2. Subscribe to Webhook Events for real-time state mutation
   useEffect(() => {
@@ -170,7 +188,7 @@ export function CallProvider({ children }) {
       console.log("[CallContext] Webhook event call:answered received:", data);
       stopRingtone();
       setCallState("connected");
-      setIsHold(false);
+      // setIsHold(false);
 
       setCallDetails((prev) => ({
         callId: data?.callId || prev?.callId,
@@ -207,6 +225,15 @@ export function CallProvider({ children }) {
       setIsHold(false);
     });
 
+    const consultEnded = subscribe("call:consult_ended", (data) => {
+      console.log(
+        "[CallContext] Webhook event call:consult_ended received:",
+        data,
+      );
+      setIsConsult(false);
+      consultCancelMutation.mutate()
+    });
+
     // 6. call:mute (commented out)
     // const unsubMute = subscribe("call:mute", (data) => {
     //   console.log("[CallContext] Webhook event call:mute received:", data);
@@ -226,10 +253,11 @@ export function CallProvider({ children }) {
       unsubDropped?.();
       unsubHold?.();
       unsubUnhold?.();
+      consultEnded?.();
       // unsubMute?.();
       // unsubUnmute?.();
     };
-  }, [profiledata?.isCRM, subscribe, playRingtone, stopRingtone]);
+  }, [profiledata?.isCRM, subscribe, playRingtone, stopRingtone, consultCancelMutation]);
 
   // Clean up audio on unmount
   useEffect(() => {
@@ -249,9 +277,9 @@ export function CallProvider({ children }) {
         callStartTime: prev?.callStartTime || new Date().toISOString(),
       }));
     },
-     onError: (err)=> {
-      getErrorToast(err)
-    }
+    onError: (err) => {
+      getErrorToast(err);
+    },
   });
 
   const holdCallMutation = useMutation({
@@ -259,9 +287,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsHold(true);
     },
-     onError: (err)=> {
-      getErrorToast(err)
-    }
+    onError: (err) => {
+      getErrorToast(err);
+    },
   });
 
   const unholdCallMutation = useMutation({
@@ -269,9 +297,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsHold(false);
     },
-     onError: (err)=> {
-      getErrorToast(err)
-    }
+    onError: (err) => {
+      getErrorToast(err);
+    },
   });
 
   const dropCallMutation = useMutation({
@@ -287,9 +315,9 @@ export function CallProvider({ children }) {
       // setIsRecording(true);
       setCallDetails(null);
     },
-     onError: (err)=> {
-      getErrorToast(err)
-    }
+    onError: (err) => {
+      getErrorToast(err);
+    },
   });
 
   const transferCallMutation = useMutation({
@@ -297,9 +325,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsTransfer(true);
     },
-    onError: (err)=> {
-      getErrorToast(err)
-    }
+    onError: (err) => {
+      getErrorToast(err);
+    },
   });
 
   const consultCallMutation = useMutation({
@@ -307,9 +335,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsConsult(true);
     },
-     onError: (err)=> {
-      getErrorToast(err)
-    }
+    onError: (err) => {
+      getErrorToast(err);
+    },
   });
 
   const conferenceCallMutation = useMutation({
@@ -317,20 +345,20 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsConference(true);
     },
-     onError: (err)=> {
-      getErrorToast(err)
-    }
+    onError: (err) => {
+      getErrorToast(err);
+    },
   });
 
-  const consultCancelMutation = useMutation({
-    mutationFn: () => postConsultCancel(),
-    onSuccess: () => {
-      setIsConsult(false);
-    },
-     onError: (err)=> {
-      getErrorToast(err)
-    }
-  });
+  // const consultCancelMutation = useMutation({
+  //   mutationFn: () => postConsultCancel(),
+  //   onSuccess: () => {
+  //     setIsConsult(false);
+  //   },
+  //   onError: (err) => {
+  //     getErrorToast(err);
+  //   },
+  // });
 
   const toggleHold = useCallback(
     async (target) => {
@@ -368,9 +396,11 @@ export function CallProvider({ children }) {
       callId: callDetails.callId,
       district: getEntityLabel(
         callDetails.screenPop?.citizen?.address?.district || "",
-      t),
+        t,
+      ),
       ward: getEntityLabel(
-        callDetails.screenPop?.citizen?.address?.block || "",t
+        callDetails.screenPop?.citizen?.address?.block || "",
+        t,
       ),
       createdAt: callDetails.callStartTime,
       screenPop: callDetails.screenPop,

@@ -343,13 +343,11 @@ export default function TransferTargetsDialog({
         <div className="pt-3 pb-3 border-t border-border flex items-center justify-end gap-2">
           <Button
             variant="outline"
-            // className="flex-1"
             type="button"
             size="sm"
-            className={""}
             onClick={onClose}
             disabled={isActionLoading}
-            className={"text-black dark:text-white"}
+            className="text-black dark:text-white"
           >
             {t("Cancel", "रद्द करें")}
           </Button>

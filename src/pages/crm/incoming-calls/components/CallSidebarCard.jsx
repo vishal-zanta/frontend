@@ -183,13 +183,19 @@ export default function CallSidebarCard({ className = "", isConsult = false }) {
             <button
               type="button"
               onClick={() => toggleHold()}
-              disabled={isHolding || isUnholding}
-              className={`h-7 px-2 rounded flex items-center justify-center gap-1 text-xs font-medium transition-all ${
+              disabled={isHolding || isUnholding || effectiveConsult}
+              className={`h-7 px-2 rounded flex items-center justify-center gap-1 text-xs font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                 isHold
                   ? "bg-amber-500 text-white"
                   : "bg-white/20 hover:bg-white/30 text-white"
               }`}
-              title={isHold ? t("Resume", "पुनः शुरू") : t("Hold", "होल्ड")}
+              title={
+                effectiveConsult
+                  ? t("Hold disabled during consultation", "परामर्श के दौरान होल्ड अक्षम है")
+                  : isHold
+                  ? t("Resume", "पुनः शुरू")
+                  : t("Hold", "होल्ड")
+              }
             >
               {isHolding || isUnholding ? (
                 <Loader2 className="w-3 h-3 animate-spin" />

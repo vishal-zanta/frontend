@@ -69,6 +69,8 @@ export default function CallActiveCard({
     isConferencing,
     isCancellingConsult,
     consultCancel,
+    isHolding,
+    isUnholding,
   } = useCall();
 
   const effectiveConsult = Boolean(isConsult || contextIsConsult);
@@ -209,14 +211,23 @@ export default function CallActiveCard({
               <button
                 type="button"
                 onClick={() => setIsHold(!isHold)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                disabled={isHolding || isUnholding || effectiveConsult}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                   isHold
                     ? "bg-amber-400 text-white"
                     : "bg-white/20 hover:bg-white/30 text-white"
                 }`}
-                title={isHold ? t("Resume", "पुनः शुरू") : t("Hold", "होल्ड")}
+                title={
+                  effectiveConsult
+                    ? t("Hold disabled during consultation", "परामर्श के दौरान होल्ड अक्षम है")
+                    : isHold
+                    ? t("Resume", "पुनः शुरू")
+                    : t("Hold", "होल्ड")
+                }
               >
-                {isHold ? (
+                {isHolding || isUnholding ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isHold ? (
                   <Play className="w-4 h-4" />
                 ) : (
                   <Pause className="w-4 h-4" />

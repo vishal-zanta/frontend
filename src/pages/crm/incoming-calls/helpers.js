@@ -40,6 +40,8 @@ export const mapAgentStatusResponse = (rawResponse) => {
 
   let callState = "idle";
   let isHold = false;
+  let isConsult = false;
+  let isConference = false;
 
   const isReadyOrAfterCall =
     avayaState === "READY_FREE" ||
@@ -79,6 +81,14 @@ export const mapAgentStatusResponse = (rawResponse) => {
         isHold = false;
       }
     }
+    else if(avayaState === "CONSULTING"){
+        callState = "connected";
+        isConsult = true;
+    }
+      else if(avayaState === "CONFERENCE"){
+      callState = "connected";
+      isConference = true;
+    }
   }
 
   const caller =
@@ -108,6 +118,8 @@ export const mapAgentStatusResponse = (rawResponse) => {
     isAvayaReady,
     callState,
     isHold,
+    isConference,
+    isConsult,
     activeCall: callState !== "idle" ? activeCall : null,
     caller,
     avayaStatus,
