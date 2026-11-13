@@ -24,12 +24,15 @@ import { useSockets } from "@/context/SocketContext";
 import { useAuth } from "@/context/AuthContext";
 import { mapAgentStatusResponse } from "@/pages/crm/incoming-calls/helpers";
 import notiSound from "@/assets/notification.wav";
+import { useLanguage } from "./LanguageContext";
+import { getEntityLabel, getErrorToast } from "@/utils/helpers";
 
 const CallContext = createContext(null);
 
 export function CallProvider({ children }) {
   const { subscribe } = useSockets() || {};
   const { profiledata } = useAuth();
+  const { t } = useLanguage();
 
   // Core streamlined states (mutated by webhook events & actions)
   const [callState, setCallState] = useState("idle"); // "idle" | "ringing" | "connected"
@@ -174,7 +177,7 @@ export function CallProvider({ children }) {
         callerId: data?.callerId || prev?.callerId,
         callStartTime:
           data?.timestamp || prev?.callStartTime || new Date().toISOString(),
-        screenPop: prev?.screenPop || null,
+        screenPop: data?.screenPop || prev?.screenPop || null,
       }));
     });
 
@@ -246,6 +249,9 @@ export function CallProvider({ children }) {
         callStartTime: prev?.callStartTime || new Date().toISOString(),
       }));
     },
+     onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const holdCallMutation = useMutation({
@@ -253,6 +259,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsHold(true);
     },
+     onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const unholdCallMutation = useMutation({
@@ -260,6 +269,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsHold(false);
     },
+     onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const dropCallMutation = useMutation({
@@ -275,6 +287,9 @@ export function CallProvider({ children }) {
       // setIsRecording(true);
       setCallDetails(null);
     },
+     onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const transferCallMutation = useMutation({
@@ -282,6 +297,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsTransfer(true);
     },
+    onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const consultCallMutation = useMutation({
@@ -289,6 +307,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsConsult(true);
     },
+     onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const conferenceCallMutation = useMutation({
@@ -296,6 +317,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsConference(true);
     },
+     onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const consultCancelMutation = useMutation({
@@ -303,6 +327,9 @@ export function CallProvider({ children }) {
     onSuccess: () => {
       setIsConsult(false);
     },
+     onError: (err)=> {
+      getErrorToast(err)
+    }
   });
 
   const toggleHold = useCallback(
@@ -336,18 +363,19 @@ export function CallProvider({ children }) {
   const caller = useMemo(() => {
     if (!callDetails) return null;
     return {
-      name:
-        callDetails.screenPop?.citizen?.fullName ||
-        "Citizen",
-      mobile:
-        callDetails.screenPop?.callerMobile || callDetails.callerId || "",
+      name: callDetails.screenPop?.citizen?.fullName || "Citizen",
+      mobile: callDetails.screenPop?.callerMobile || callDetails.callerId || "",
       callId: callDetails.callId,
-      district: callDetails.screenPop?.citizen?.address?.district || "",
-      ward: callDetails.screenPop?.citizen?.address?.addressLine || "",
+      district: getEntityLabel(
+        callDetails.screenPop?.citizen?.address?.district || "",
+      t),
+      ward: getEntityLabel(
+        callDetails.screenPop?.citizen?.address?.block || "",t
+      ),
       createdAt: callDetails.callStartTime,
       screenPop: callDetails.screenPop,
     };
-  }, [callDetails]);
+  }, [callDetails, t]);
 
   const hasActiveCall = callState === "ringing" || callState === "connected";
 

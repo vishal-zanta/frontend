@@ -27,9 +27,9 @@ export default function ComplaintList({
   isCCE = false,
   externalDeptProps,
   heading = null,
-  paramsMandatory={},
-  isHideSearch=false,
-  isSticky=true
+  paramsMandatory = {},
+  isHideSearch = false,
+  isSticky = true,
 }) {
   const { t, lang } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -167,7 +167,7 @@ export default function ComplaintList({
           ? { departmentCode: filters.department }
           : { department: filters.department }
         : {}),
-        ...paramsMandatory,
+      ...paramsMandatory,
       // department: filters?.department
       //   ? departmentList.find((v) => v.key === filters.department)
       //     ? undefined
@@ -254,7 +254,9 @@ export default function ComplaintList({
   }, [data?.pages?.[0]?.data?.pagination, filters, dept]);
 
   return (
-    <div className={`bg-card rounded-xl border border-border min-h-0 flex flex-col w-full ${isSticky ? "md:sticky md:top-20" : ""} md:overflow-hidden`}>
+    <div
+      className={`bg-card rounded-xl border border-border min-h-0 flex flex-col w-full ${isSticky ? "md:sticky md:top-20" : ""} md:overflow-hidden`}
+    >
       <div className="px-4 py-3 border-b border-border ">
         <div className="flex items-center justify-between shrink-0 h-8">
           {heading ?? (
@@ -294,34 +296,36 @@ export default function ComplaintList({
             </div>
           </div>
         )} */}
-      {!isHideSearch &&  <div className="mt-2">
-          <SearchDebounced
-            placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
-            handleDebouncedChange={(val) => {
-              val !== search &&
-                setSearchParams(
-                  (p) => {
-                    const params = new URLSearchParams(p);
+        {!isHideSearch && (
+          <div className="mt-2">
+            <SearchDebounced
+              placeholder={t("Search by id ...", "आईडी द्वारा खोजें ...")}
+              handleDebouncedChange={(val) => {
+                val !== search &&
+                  setSearchParams(
+                    (p) => {
+                      const params = new URLSearchParams(p);
 
-                    if (val) {
-                      params.set("complaint", val);
-                    } else {
-                      params.delete("complaint");
-                    }
+                      if (val) {
+                        params.set("complaint", val);
+                      } else {
+                        params.delete("complaint");
+                      }
 
-                    return params;
-                  },
-                  { replace: true },
-                );
-              // }
-              setSearch(val);
-            }}
-            initialValue={complaintId}
-            isClearable={true}
-            delay={500}
-            isLog={true}
-          />
-        </div>}
+                      return params;
+                    },
+                    { replace: true },
+                  );
+                // }
+                setSearch(val);
+              }}
+              initialValue={complaintId}
+              isClearable={true}
+              delay={500}
+              isLog={true}
+            />
+          </div>
+        )}
       </div>
 
       <div

@@ -30,6 +30,7 @@ export default function TransferTargetsDialog({
   const { t } = useLanguage();
   const [selectedUserId, setSelectedUserId] = useState(null);
 
+
   const {
     transferCall,
     consultCall,
@@ -151,7 +152,7 @@ export default function TransferTargetsDialog({
       <div
         key={targetId}
         onClick={() => setSelectedUserId(targetId)}
-        className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+        className={`flex items-center justify-between p-3 mx-2 rounded-xl border transition-all cursor-pointer ${
           isSelected
             ? "border-primary bg-primary/10 shadow-sm ring-1 ring-primary"
             : "border-border bg-card hover:bg-muted/60"
@@ -345,8 +346,10 @@ export default function TransferTargetsDialog({
             // className="flex-1"
             type="button"
             size="sm"
+            className={""}
             onClick={onClose}
             disabled={isActionLoading}
+            className={"text-black dark:text-white"}
           >
             {t("Cancel", "रद्द करें")}
           </Button>
