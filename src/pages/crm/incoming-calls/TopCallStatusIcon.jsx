@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useCall } from "@/context/CallContext";
+import { useSockets } from "@/context/SocketContext";
 import { Phone, PhoneCall, PhoneOff } from "lucide-react";
 import {
   Tooltip,
@@ -10,6 +11,7 @@ import {
 
 const TopCallStatusIcon = () => {
   const { responseData } = useCall();
+  const { reconnect } = useSockets() || {};
 
   const avayaStatus =
     responseData?.avayaStatus ??
@@ -36,7 +38,7 @@ const TopCallStatusIcon = () => {
       dotColor: "bg-red-500",
       pulse: false,
       Icon: PhoneOff,
-      badgeText: state === "UNKNOWN" ? "Disconnected" : "Logged Out",
+      badgeText:  "Logged Out",
       tooltipTitle: "Avaya Not Connected / Logged Out",
       tooltipMessage:
         error ||
@@ -82,6 +84,22 @@ const TopCallStatusIcon = () => {
           : `Agent State: ${state || "Not Ready"}`,
     };
   }
+
+  const prevBadgeTextRef = useRef(colorScheme.badgeText);
+
+  useEffect(() => {
+    const prevText = prevBadgeTextRef.current;
+    const currentText = colorScheme.badgeText;
+
+    if (
+      prevText?.toLowerCase() === "logged out" &&
+      currentText?.toLowerCase() === "ready"
+    ) {
+      reconnect?.();
+    }
+
+    prevBadgeTextRef.current = currentText;
+  }, [colorScheme.badgeText, reconnect]);
 
   return (
     <TooltipProvider delayDuration={150}>
