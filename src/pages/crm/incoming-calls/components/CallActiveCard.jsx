@@ -257,8 +257,16 @@ export default function CallActiveCard({
               <button
                 type="button"
                 onClick={onEnd}
-                className="w-10 h-10 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all"
-                title={t("End Call", "कॉल समाप्त करें")}
+                disabled={effectiveConsult}
+                className="w-10 h-10 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                title={
+                  effectiveConsult
+                    ? t(
+                        "End call disabled during consultation",
+                        "परामर्श के दौरान कॉल समाप्त करना अक्षम है"
+                      )
+                    : t("End Call", "कॉल समाप्त करें")
+                }
               >
                 <PhoneOff className="w-4 h-4" />
               </button>

@@ -61,6 +61,7 @@ export default function CallSidebarCard({ className = "", isConsult = false }) {
   };
 
   const handleDrop = async () => {
+    if (effectiveConsult) return;
     try {
       await dropCall();
     } catch (e) {
@@ -237,9 +238,16 @@ export default function CallSidebarCard({ className = "", isConsult = false }) {
             <button
               type="button"
               onClick={handleDrop}
-              disabled={isDropping}
-              className="w-7 h-7 rounded bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-all disabled:opacity-50 shrink-0"
-              title={t("End Call", "कॉल समाप्त करें")}
+              disabled={isDropping || effectiveConsult}
+              className="w-7 h-7 rounded bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+              title={
+                effectiveConsult
+                  ? t(
+                      "End call disabled during consultation",
+                      "परामर्श के दौरान कॉल समाप्त करना अक्षम है"
+                    )
+                  : t("End Call", "कॉल समाप्त करें")
+              }
             >
               {isDropping ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />

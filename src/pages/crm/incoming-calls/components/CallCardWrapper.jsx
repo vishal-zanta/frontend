@@ -27,6 +27,7 @@ export default function CallCardWrapper({
     callDuration,
     isHold,
     toggleHold,
+    isConsult: contextIsConsult,
     isMuted,
     setIsMuted,
     isRecording,
@@ -34,15 +35,18 @@ export default function CallCardWrapper({
     answerCall,
     dropCall,
     isAnswering,
+    isDropping,
     hasActiveCall,
     isAvayaReady,
   } = useCall();
+
+  const effectiveConsult = Boolean(isConsult || contextIsConsult);
 
   // -------------------------------------------------------------
   // VARIANT 1: SIDEBAR (Compact bottom dock)
   // -------------------------------------------------------------
   if (variant === "sidebar") {
-    return <CallSidebarCard className={className} isConsult={isConsult} />;
+    return <CallSidebarCard className={className} isConsult={effectiveConsult} />;
   }
 
   const handleAnswer = async () => {
@@ -54,6 +58,7 @@ export default function CallCardWrapper({
   };
 
   const handleDrop = async () => {
+    if (effectiveConsult) return;
     try {
       await dropCall();
     } catch (e) {
@@ -130,7 +135,7 @@ export default function CallCardWrapper({
       caller={safeCaller}
       isHold={isHold}
       setIsHold={toggleHold}
-      isConsult={isConsult}
+      isConsult={effectiveConsult}
       isMuted={isMuted}
       setIsMuted={setIsMuted}
       isRecording={isRecording}
