@@ -54,7 +54,6 @@ import FieldVisits from "./pages/officer/field-visits";
 import CCEOperationalDashboard from "./pages/crm/CCEOperationalDashboard";
 import Profile from "./pages/profile";
 import Login from "./pages/Login";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import ErrorPage from "./components/ErrorPage";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -445,13 +444,11 @@ function App() {
     <ThemeContextProvider>
       {/* <AuthProvider> */}
       {/* <LanguageContextProvider> */}
-      <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_SITE_KEY}>
-        <QueryClientProvider client={queryClientInstance}>
-          <RouterProvider router={router} />
-          {/* <Toaster /> */}
-          <SonnerToaster richColors position="top-center" />
-        </QueryClientProvider>
-      </GoogleReCaptchaProvider>
+      <QueryClientProvider client={queryClientInstance}>
+        <RouterProvider router={router} />
+        {/* <Toaster /> */}
+        <SonnerToaster richColors position="top-center" />
+      </QueryClientProvider>
       {/* </LanguageContextProvider> */}
       {/* </AuthProvider> */}
     </ThemeContextProvider>

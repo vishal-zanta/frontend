@@ -18,7 +18,6 @@ import { sidebarSections } from "@/components/Sidebar";
 import { checkPermissionManual, getTokenFromStorage, setTokenToStorage } from "@/utils/helpers";
 import { useLanguage } from "@/context/LanguageContext";
 import { RolesList } from "./RoleSelect";
-// import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function Login() {
   const { state } = useLocation();
@@ -33,7 +32,6 @@ export default function Login() {
       ? "loginId"
       : "email";
 
-  // const {executeRecaptcha} = useGoogleReCaptcha();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [loginId, setLoginId] = useState("");
@@ -61,9 +59,6 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    // if(!executeRecaptcha){
-    //   console.log("reCAPTCHA has not loaded yet");
-    // }
     try {
       const payload =
         loginMode === "email" ? { email, password } : { loginId, password };
