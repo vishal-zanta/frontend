@@ -125,7 +125,7 @@ export default function IncomingCall() {
             onSimulateNewCall={handleSimulateNewCall}
           />
 
-          <CallerQuickInfo caller={repeatCaller} />
+          {/* <CallerQuickInfo caller={repeatCaller} /> */}
         </div>
 
         {/* Right Column: Call history, Complaints, Dial & Transfer panels, Agent board */}

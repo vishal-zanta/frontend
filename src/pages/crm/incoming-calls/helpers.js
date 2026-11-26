@@ -61,15 +61,13 @@ export const mapAgentStatusResponse = (rawResponse) => {
     }
     // 2. Ringing state
     else if (
-      (unifiedStatus === "RINGING" ||
-        callStatus.includes("RING") ||
-        callDisposition.includes("RING")) &&
+      (unifiedStatus === "RINGING" ) &&
       avayaState === "ON_CALL"
     ) {
       callState = "ringing";
     }
     // 3. On Call state (Avaya state is ON_CALL or active call ongoing)
-    else if (avayaState === "ON_CALL") {
+    else if (avayaState === "ON_CALL" && unifiedStatus !== "RINGING" ) {
       // Check for Hold vs Active Call
       if (callDisposition.includes("HOLD") || callStatus.includes("HOLD")) {
         callState = "connected";

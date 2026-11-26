@@ -316,7 +316,8 @@ export function CallProvider({ children }) {
       setCallDetails(null);
     },
     onError: (err) => {
-      getErrorToast(err);
+      console.error(err);
+      // getErrorToast(err);
     },
   });
 
